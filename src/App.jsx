@@ -132,7 +132,7 @@ const Hero = () => (
   <section style={{ position: 'relative', minHeight: '75vh', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
     {/* Фон tuvv.png с затемнением */}
     <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-      <div style={{ width: '100%', height: '100%', backgroundColor: 'var(--tuev-dark)', backgroundImage: 'url("tuvv.png")', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.15 }} />
+      <div style={{ width: '100%', height: '100%', backgroundColor: 'var(--tuev-dark)', backgroundImage: 'url("tuvv.jpg")', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.15 }} />
       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg, rgba(0,43,77,0.98) 0%, rgba(0,43,77,0.75) 50%, rgba(0,43,77,0.3) 100%)' }} />
     </div>
 
@@ -424,7 +424,7 @@ export default function App() {
         position: 'fixed',
         inset: 0,
         zIndex: -1,
-        backgroundImage: 'url("tuvv.png")',
+        backgroundImage: 'url("tuvv.jpg")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
