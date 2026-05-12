@@ -280,7 +280,7 @@ const Navbar = ({ onBook }) => {
 const Hero = ({ onBook }) => (
   <div className="section-full" style={{background:'linear-gradient(160deg,#f0f6ff 0%,#f8fafc 55%,#eef4fe 100%)', padding:'60px 0 80px', display:'flex', alignItems:'center', position:'relative', overflow:'hidden'}}>
     {/* ИЗОБРАЖЕНИЕ second.png НА ПЕРВОМ ЭКРАНЕ */}
-    <div style={{position:'absolute', inset:0, backgroundImage:"url('second.jpg')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.1, pointerEvents:'none', zIndex:0}} />
+    <div style={{position:'absolute', inset:0, backgroundImage:"url('second.jpg')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.2, pointerEvents:'none', zIndex:0}} />
     
     <HeroBg/>
 
