@@ -1,5 +1,5 @@
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 const PHONE = "+49 1575 5476991";
 const PHONE_HREF = "tel:+4915755476991";
@@ -40,9 +40,7 @@ const G = () => (
       color:var(--blue); background:var(--ice);
       padding:5px 13px; border-radius:6px; border:1px solid rgba(26,86,219,.15);
     }
-    .tag-dark { color:rgba(255,255,255,.85); background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.2); }
-    .tag-green { color:#166534; background:#dcfce7; border-color:rgba(22,101,52,.18); }
-
+    
     .btn {
       display:inline-flex; align-items:center; justify-content:center; gap:8px;
       font-family:var(--sans); font-weight:700; font-size:13px; letter-spacing:.04em; text-transform:uppercase;
@@ -51,16 +49,12 @@ const G = () => (
     }
     .btn-primary { background:var(--blue); color:#fff; box-shadow:0 4px 18px rgba(26,86,219,.28); }
     .btn-primary:hover { background:var(--mid); transform:translateY(-1px); box-shadow:0 8px 26px rgba(26,86,219,.36); }
-    .btn-white { background:#fff; color:var(--blue); box-shadow:0 2px 12px rgba(0,0,0,.1); }
-    .btn-white:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(0,0,0,.14); }
     .btn-ghost { background:transparent; color:var(--blue); border:1.5px solid var(--border); }
     .btn-ghost:hover { background:var(--ice); border-color:var(--blue); }
     .btn-wa { background:#25D366; color:#fff; box-shadow:0 4px 18px rgba(37,211,102,.3); }
     .btn-wa:hover { background:#1ebe5d; transform:translateY(-1px); }
     .btn-call { background:var(--blue); color:#fff; box-shadow:0 4px 18px rgba(26,86,219,.28); }
     .btn-call:hover { background:var(--mid); transform:translateY(-1px); }
-    .btn-outline-white { background:transparent; color:#fff; border:1.5px solid rgba(255,255,255,.35); }
-    .btn-outline-white:hover { background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.65); }
 
     .card { background:#fff; border-radius:16px; border:1px solid var(--border); box-shadow:0 1px 8px rgba(0,0,0,.03); transition:transform .26s,box-shadow .26s; }
     .card:hover { transform:translateY(-3px); box-shadow:0 12px 36px rgba(0,0,0,.08); }
@@ -97,7 +91,7 @@ const G = () => (
 
     /* Steps */
     .steps-row { display:grid; grid-template-columns:repeat(4,1fr); position:relative; gap:8px; }
-    .steps-row::before { content:''; position:absolute; top:23px; left:calc(12.5%+10px); right:calc(12.5%+10px); height:1px; background:var(--border); }
+    .steps-row::before { content:''; position:absolute; top:24px; left:12%; right:12%; height:2px; background:var(--blue); opacity:0.15; z-index:0; }
 
     /* FAQ */
     .faq-item { border-bottom:1px solid var(--border); }
@@ -115,6 +109,15 @@ const G = () => (
     .g3 { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
     .g4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
 
+    /* Marquee Animation (Left to Right) */
+    @keyframes scrollRight {
+      0% { transform: translateX(-50%); }
+      100% { transform: translateX(0); }
+    }
+    .marquee-wrap { overflow:hidden; white-space:nowrap; width:100%; position:relative; background:#fff; border-bottom:1px solid var(--border); border-top:1px solid var(--border); padding:14px 0; }
+    .marquee-inner { display:flex; width:200%; animation:scrollRight 35s linear infinite; }
+    .marquee-inner:hover { animation-play-state:paused; }
+
     ::-webkit-scrollbar { width:4px; }
     ::-webkit-scrollbar-track { background:transparent; }
     ::-webkit-scrollbar-thumb { background:var(--border); border-radius:8px; }
@@ -125,7 +128,7 @@ const G = () => (
       .sec { padding:56px 0; }
       .g3 { grid-template-columns:1fr 1fr; }
       .g4 { grid-template-columns:1fr 1fr; }
-      .steps-row { grid-template-columns:1fr 1fr; gap:24px; }
+      .steps-row { grid-template-columns:1fr 1fr; gap:36px; }
       .steps-row::before { display:none; }
       .hide-mob { display:none !important; }
       .mob-col { flex-direction:column !important; }
@@ -231,9 +234,10 @@ const Navbar = ({ onBook }) => {
           ))}
         </nav>
 
-        <div className="hide-mob" style={{display:'flex',alignItems:'center',gap:10}}>
-          <a href={PHONE_HREF} style={{display:'flex',alignItems:'center',gap:6,fontSize:12,fontWeight:700,color:'var(--blue)',textDecoration:'none'}}>
-            <Ic.Phone s={13}/>{PHONE}
+        {/* REQ 7: Jetzt anrufen (sekundär) und Termin buchen (primär) */}
+        <div className="hide-mob" style={{display:'flex',alignItems:'center',gap:12}}>
+          <a href={PHONE_HREF} className="btn btn-ghost" style={{padding:'9px 18px',fontSize:11, textDecoration:'none'}}>
+             <Ic.Phone s={13}/> Jetzt anrufen
           </a>
           <button className="btn btn-primary" style={{padding:'9px 18px',fontSize:11}} onClick={onBook}>Termin buchen</button>
         </div>
@@ -273,102 +277,73 @@ const Navbar = ({ onBook }) => {
   );
 };
 
-/* ─── HERO — neue Version: hell, sauber, kein blauer Hintergrund ─────────── */
+/* ─── HERO — REQ 1 & 3: Zentriert, Höher, nur 2 Buttons ─────────────────── */
 const Hero = ({ onBook }) => (
-  <div className="section-full" style={{background:'linear-gradient(160deg,#f0f6ff 0%,#f8fafc 55%,#eef4fe 100%)',minHeight:'88vh',display:'flex',alignItems:'flex-start',position:'relative',overflow:'hidden',paddingTop:0}}>
+  <div className="section-full" style={{background:'linear-gradient(160deg,#f0f6ff 0%,#f8fafc 55%,#eef4fe 100%)', padding:'60px 0 80px', display:'flex', alignItems:'center', position:'relative', overflow:'hidden'}}>
     <HeroBg/>
 
     {/* Dekorative Elemente */}
     <div style={{position:'absolute',top:0,right:0,width:'45%',height:'100%',background:'linear-gradient(135deg,rgba(26,86,219,.06) 0%,rgba(96,165,250,.04) 100%)',clipPath:'polygon(18% 0,100% 0,100% 100%,0% 100%)',pointerEvents:'none'}}/>
     <div style={{position:'absolute',bottom:-60,left:-60,width:300,height:300,borderRadius:'50%',background:'rgba(26,86,219,.04)',pointerEvents:'none'}}/>
 
-    <div className="inner" style={{position:'relative',zIndex:1,paddingTop:60,paddingBottom:60,width:'100%'}}>
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:60,alignItems:'center'}} className="mob-stack">
+    <div className="inner" style={{position:'relative',zIndex:1, width:'100%', textAlign:'center'}}>
+      
+      <motion.div initial={{opacity:0,y:32}} animate={{opacity:1,y:0}} transition={{duration:.8,ease:[.22,1,.36,1]}} style={{maxWidth: 700, margin: '0 auto'}}>
+        {/* REQ 1: Angepasster Text & Design für das Tag */}
+        <div className="tag" style={{marginBottom:24, padding:'8px 18px', fontSize: 11, background: '#fff', boxShadow: '0 4px 12px rgba(26,86,219,0.08)'}}>
+          <Ic.Shield s={12} c="var(--blue)"/> Offiziell zertifizierte Kfz-Prüfstelle
+        </div>
+        
+        <h1 style={{fontWeight:800,fontSize:'clamp(36px,6vw,72px)',color:'var(--ink)',lineHeight:1.06,letterSpacing:'-.025em',marginBottom:24}}>
+          Ihre HU / AU in<br/><span style={{color:'var(--blue)'}}>Oberhausen</span>
+        </h1>
+        
+        <p style={{fontSize:16,color:'var(--smoke)',lineHeight:1.8,marginBottom:40, maxWidth:500, margin:'0 auto 40px'}}>
+          Buchen Sie Ihre Hauptuntersuchung und Abgasuntersuchung schnell und bequem online. Kein Warten, transparente Preise, professionelle Prüfingenieure.
+        </p>
 
-        {/* LEFT: Text */}
-        <motion.div initial={{opacity:0,y:32}} animate={{opacity:1,y:0}} transition={{duration:.8,ease:[.22,1,.36,1]}}>
-          <div className="tag" style={{marginBottom:20}}>
-            <Ic.Shield s={10} c="var(--blue)"/> Amtlich anerkannte Kfz-Prüfstelle
-          </div>
-          <h1 style={{fontWeight:800,fontSize:'clamp(36px,5vw,68px)',color:'var(--ink)',lineHeight:1.06,letterSpacing:'-.025em',marginBottom:20}}>
-            Ihre HU /<br/>AU in<br/><span style={{color:'var(--blue)'}}>Oberhausen</span>
-          </h1>
-          <p style={{fontSize:15,color:'var(--smoke)',lineHeight:1.8,marginBottom:32,maxWidth:420}}>
-            Buchen Sie Ihre Hauptuntersuchung und Abgasuntersuchung schnell und bequem online. Kein Warten, transparente Preise, professionelle Prüfingenieure.
-          </p>
+        {/* REQ 3: Nur 1 Termin Buchen Button und 1 Anruf-Button */}
+        <div style={{display:'flex',gap:16,flexWrap:'wrap', justifyContent:'center'}}>
+          <button className="btn btn-primary" style={{fontSize:14,gap:9,padding:'14px 32px'}} onClick={onBook}>
+            Termin buchen <Ic.Arrow s={16}/>
+          </button>
+          <a href={PHONE_HREF} className="btn btn-ghost" style={{fontSize:14,gap:9,padding:'14px 32px', background:'#fff'}}>
+            <Ic.Phone s={16}/> {PHONE}
+          </a>
+        </div>
+      </motion.div>
 
-          {/* CTA Buttons */}
-          <div style={{display:'flex',gap:12,flexWrap:'wrap',marginBottom:40}}>
-            <button className="btn btn-primary" style={{fontSize:13,gap:9,padding:'13px 26px'}} onClick={onBook}>
-              Termin buchen <Ic.Arrow s={15}/>
-            </button>
-            <a href={PHONE_HREF} className="btn btn-call" style={{fontSize:13,gap:9,padding:'13px 26px'}}>
-              <Ic.Phone s={16}/> Jetzt anrufen
-            </a>
-            <a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer" className="btn btn-wa" style={{fontSize:13,gap:9,padding:'13px 26px'}}>
-              <Ic.Wa s={16} c="#fff"/> WhatsApp
-            </a>
-          </div>
+    </div>
+  </div>
+);
 
-          {/* Trust badges */}
-          <div style={{display:'flex',gap:16,flexWrap:'wrap'}}>
-            {[['✓','Keine Anzahlung'],['✓','Stornierung kostenlos'],['✓','24/7 Online-Buchung']].map(([ic,t]) => (
-              <div key={t} style={{display:'flex',alignItems:'center',gap:6,fontSize:12,fontWeight:600,color:'var(--smoke)'}}>
-                <span style={{color:'var(--blue)',fontWeight:800}}>{ic}</span>{t}
-              </div>
-            ))}
-          </div>
-        </motion.div>
+/* ─── TRUST BAR — REQ 2: Laufschrift (Marquee) ─────────────────────────── */
+const TrustBar = () => {
+  const items = [
+    [<Ic.Award  s={15} c="var(--blue)"/>,'Amtlich anerkannt'],
+    [<Ic.Clock  s={15} c="var(--blue)"/>,'Kurze Wartezeiten'],
+    [<Ic.Cert   s={15} c="var(--blue)"/>,'Transparente Preise'],
+    [<Ic.Shield s={15} c="var(--blue)"/>,'Online-Buchung 24/7'],
+    [<Ic.Wrench s={15} c="var(--blue)"/>,'Qualifizierte Prüfer'],
+    [<Ic.Leaf   s={15} c="var(--blue)"/>,'Umwelt-zertifiziert']
+  ];
+  
+  // Doppeltes Array für durchgängigen Scroll-Effekt
+  const scrollingItems = [...items, ...items, ...items, ...items];
 
-        {/* RIGHT: Info card */}
-        <motion.div initial={{opacity:0,x:24}} animate={{opacity:1,x:0}} transition={{duration:.8,delay:.15,ease:[.22,1,.36,1]}}>
-          <div style={{background:'#fff',borderRadius:24,border:'1px solid var(--border)',padding:32,boxShadow:'0 24px 60px rgba(0,0,0,.06)'}}>
-            <div style={{fontWeight:800,fontSize:16,color:'var(--ink)',marginBottom:6,letterSpacing:'-.01em'}}>Öffnungszeiten</div>
-            <div style={{width:28,height:2,background:'var(--blue)',borderRadius:2,marginBottom:20}}/>
-            <div style={{display:'flex',flexDirection:'column',gap:10,marginBottom:24}}>
-              {[['Mo – Mi','09:00 – 18:00 Uhr',true],['Do & Fr','15:00 – 18:00 Uhr',true],['Sa & So','Geschlossen',false]].map(([d,t,open]) => (
-                <div key={d} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 14px',borderRadius:10,background:open?'var(--ice)':'var(--stone)',border:`1px solid ${open?'rgba(26,86,219,.12)':'var(--border)'}`}}>
-                  <span style={{fontWeight:600,fontSize:13,color:open?'var(--navy)':'var(--smoke)'}}>{d}</span>
-                  <span style={{fontWeight:700,fontSize:13,color:open?'var(--blue)':'var(--smoke)'}}>{t}</span>
-                </div>
-              ))}
-            </div>
-            <div style={{fontSize:11,color:'var(--smoke)',marginBottom:20,lineHeight:1.5}}>Terminabstand: mind. 30 Minuten</div>
-            <div style={{display:'flex',flexDirection:'column',gap:9}}>
-              <a href={PHONE_HREF} className="btn btn-call" style={{justifyContent:'center',gap:9,fontSize:13,padding:'12px'}}>
-                <Ic.Phone s={16}/> {PHONE}
-              </a>
-              <a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer" className="btn btn-wa" style={{justifyContent:'center',gap:9,fontSize:13,padding:'12px'}}>
-                <Ic.Wa s={16} c="#fff"/> Schreiben Sie uns auf WhatsApp
-              </a>
-            </div>
+  return (
+    <div className="marquee-wrap">
+      <div className="marquee-inner">
+        {scrollingItems.map(([ico,t],i) => (
+          <div key={i} style={{display:'flex',alignItems:'center',gap:7,padding:'0 40px', borderRight: '1px solid var(--border)'}}>
+            {ico}
+            <span style={{fontSize:12,fontWeight:700,color:'var(--smoke)',letterSpacing:'.07em',textTransform:'uppercase',whiteSpace:'nowrap'}}>{t}</span>
           </div>
-        </motion.div>
+        ))}
       </div>
     </div>
-  </div>
-);
-
-/* ─── TRUST BAR ─────────────────────────────────────────────────────────── */
-const TrustBar = () => (
-  <div style={{background:'#fff',borderBottom:'1px solid var(--border)',borderTop:'1px solid var(--border)'}}>
-    <div className="inner" style={{display:'flex',justifyContent:'center',alignItems:'center',flexWrap:'wrap',gap:0,padding:'14px 0'}}>
-      {[
-        [<Ic.Award  s={15} c="var(--blue)"/>,'Amtlich anerkannt'],
-        [<Ic.Clock  s={15} c="var(--blue)"/>,'Kurze Wartezeiten'],
-        [<Ic.Cert   s={15} c="var(--blue)"/>,'Transparente Preise'],
-        [<Ic.Shield s={15} c="var(--blue)"/>,'Online-Buchung 24/7'],
-        [<Ic.Wrench s={15} c="var(--blue)"/>,'Qualifizierte Prüfer'],
-        [<Ic.Leaf   s={15} c="var(--blue)"/>,'Umwelt-zertifiziert'],
-      ].map(([ico,t],i,a) => (
-        <div key={t} style={{display:'flex',alignItems:'center',gap:7,padding:'6px 18px',borderRight:i<a.length-1?'1px solid var(--border)':'none'}}>
-          {ico}
-          <span style={{fontSize:11,fontWeight:700,color:'var(--smoke)',letterSpacing:'.07em',textTransform:'uppercase',whiteSpace:'nowrap'}}>{t}</span>
-        </div>
-      ))}
-    </div>
-  </div>
-);
+  );
+};
 
 /* ─── SERVICES ───────────────────────────────────────────────────────────── */
 const Services = () => {
@@ -390,7 +365,7 @@ const Services = () => {
     },
     {
       ico:<Ic.Wrench s={26} c="var(--blue)"/>, title:'Vorab-Check', sub:'Sicherheits-Vorprüfung', tag:'Empfohlen',
-      desc:'Identifizieren Sie Mängel перед der HU, um Nachprüfungen und Zusatzkosten zu vermeiden.',
+      desc:'Identifizieren Sie Mängel vor der HU, um Nachprüfungen und Zusatzkosten zu vermeiden.',
       duration:'ca. 20 Min.',
       details:['Überprüfung aller HU-relevanten Sicherheitspunkte','Identifikation erheblicher und geringfügiger Mängel','Kosten- und Zeiteinschätzung für eventuelle Reparaturen','Persönliche Beratung durch unseren Prüfingenieur','Dokumentation mit Mängelliste zur Weitergabe an Werkstatt'],
       note:'Kostenlos bei anschließender HU. Separat buchbar ab 29 €.'
@@ -511,7 +486,7 @@ const Services = () => {
   );
 };
 
-/* ─── STEPS ──────────────────────────────────────────────────────────────── */
+/* ─── STEPS — REQ 4: Linien, Nummerierung ────────────────────────────────── */
 const Steps = () => {
   const steps = [
     {n:'01',title:'Online buchen',desc:'Leistung, Datum und Zeit wählen — rund um die Uhr verfügbar.'},
@@ -528,16 +503,20 @@ const Steps = () => {
           <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,42px)',color:'var(--ink)',letterSpacing:'-.02em'}}>In 4 Schritten zur Plakette</h2>
           <div className="accent accent-c"/>
         </motion.div>
+        
+        {/* steps-row hat das ::before pseudo-element im CSS für die Verbindungslinie */}
         <div className="steps-row">
           {steps.map((s,i) => (
             <motion.div key={i} initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.1}}
               style={{textAlign:'center',padding:'0 16px',position:'relative',zIndex:1}}>
-              <div style={{width:44,height:44,borderRadius:'50%',background:'var(--blue)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 14px',boxShadow:'0 4px 16px rgba(26,86,219,.24)'}}>
-                <Ic.Check s={18} c="#fff"/>
+              
+              <div style={{width:48,height:48,borderRadius:'50%',background:'var(--blue)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px',boxShadow:'0 4px 16px rgba(26,86,219,.24)', color:'#fff', fontWeight:800, fontSize:18, position:'relative', zIndex:2}}>
+                {i + 1}
               </div>
-              <div style={{fontSize:10,color:'var(--blue)',letterSpacing:'.18em',marginBottom:4,fontWeight:700}}>{s.n}</div>
-              <h3 style={{fontSize:15,marginBottom:6,fontWeight:700,color:'var(--ink)'}}>{s.title}</h3>
-              <p style={{color:'var(--smoke)',fontSize:12.5,lineHeight:1.68}}>{s.desc}</p>
+              
+              <div style={{fontSize:11,color:'var(--blue)',letterSpacing:'.18em',marginBottom:6,fontWeight:700}}>{s.n}</div>
+              <h3 style={{fontSize:16,marginBottom:8,fontWeight:700,color:'var(--ink)'}}>{s.title}</h3>
+              <p style={{color:'var(--smoke)',fontSize:13,lineHeight:1.68}}>{s.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -546,7 +525,7 @@ const Steps = () => {
   );
 };
 
-/* ─── BOOKING FORM — kompakt ─────────────────────────────────────────────── */
+/* ─── BOOKING FORM — REQ 5: Features oben entfernt ───────────────────────── */
 const BookingSection = () => {
   const [form,setForm] = useState({leistung:'',fahrzeug:'PKW',datum:'',zeit:'',kennzeichen:'',name:'',telefon:'',email:'',anmerkungen:''});
   const [sent,setSent] = useState(false);
@@ -555,7 +534,7 @@ const BookingSection = () => {
   return (
     <div id="termin" className="section-full sec" style={{background:'var(--stone)'}}>
       <div className="inner" style={{maxWidth:820}}>
-        <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:28}}>
+        <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:40}}>
           <div className="tag" style={{marginBottom:10}}>Online Buchung</div>
           <h2 style={{fontWeight:800,fontSize:'clamp(24px,3.2vw,38px)',color:'var(--ink)',letterSpacing:'-.02em',marginBottom:10}}>
             Termin sichern — einfach online.
@@ -565,18 +544,7 @@ const BookingSection = () => {
           </p>
         </motion.div>
 
-        {/* Feature pills */}
-        <div style={{display:'flex',justifyContent:'center',gap:10,flexWrap:'wrap',marginBottom:28}}>
-          {[['Vor Ort bezahlen','Bar oder EC'],['Kostenlos stornieren','Bis 24h vorher'],['Schnelle Rückmeldung','Per E-Mail/Telefon'],['Sofort-Dokumente','Plakette direkt']].map(([t,d]) => (
-            <div key={t} style={{background:'#fff',border:'1px solid var(--border)',borderRadius:10,padding:'9px 14px',display:'flex',gap:10,alignItems:'center'}}>
-              <Ic.Check s={13} c="var(--blue)"/>
-              <div>
-                <div style={{fontWeight:700,fontSize:12,color:'var(--ink)'}}>{t}</div>
-                <div style={{fontSize:11,color:'var(--smoke)'}}>{d}</div>
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* Feature Pills wurden hier wie gewünscht entfernt */}
 
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}}>
           <div style={{background:'#fff',borderRadius:18,border:'1px solid var(--border)',overflow:'hidden',boxShadow:'0 8px 32px rgba(0,0,0,.04)'}}>
@@ -726,72 +694,79 @@ const MapEmbed = () => {
   const [accepted, setAccepted] = useState(false);
   useEffect(() => { if (localStorage.getItem('cookie_consent')==='all') setAccepted(true); },[]);
   if (!accepted) return (
-    <div style={{width:'100%',height:360,background:'var(--stone)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:12,borderBottom:'1px solid var(--border)'}}>
+    <div style={{width:'100%',height:'100%',minHeight:360,background:'var(--stone)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:12}}>
       <div style={{width:44,height:44,background:'var(--ice)',borderRadius:12,display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.Pin s={20} c="var(--blue)"/></div>
-      <div style={{textAlign:'center',maxWidth:340}}>
+      <div style={{textAlign:'center',maxWidth:340, padding:'0 16px'}}>
         <div style={{fontWeight:700,fontSize:14,color:'var(--ink)',marginBottom:6}}>Google Maps ist deaktiviert</div>
-        <p style={{fontSize:12.5,color:'var(--smoke)',lineHeight:1.65}}>Um die Karte anzuzeigen, stimmen Sie Google Maps zu (Art. 49 Abs. 1 lit. a DSGVO — Datenübertragung in die USA).</p>
+        <p style={{fontSize:12.5,color:'var(--smoke)',lineHeight:1.65}}>Um die Karte anzuzeigen, stimmen Sie Google Maps zu.</p>
       </div>
       <button className="btn btn-primary" style={{fontSize:12,padding:'10px 18px'}} onClick={()=>{localStorage.setItem('cookie_consent','all');setAccepted(true);}}>
         Google Maps aktivieren
       </button>
-      <a href="https://maps.google.com/?q=51.472992,6.863788" target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:'var(--smoke)',textDecoration:'underline'}}>In Google Maps öffnen ↗</a>
     </div>
   );
-  return <iframe src="https://maps.google.com/maps?q=51.472992,6.863788&hl=de&z=15&output=embed" width="100%" height="360" style={{border:'none',display:'block',filter:'grayscale(.1)'}} allowFullScreen loading="lazy" title="Standort"/>;
+  return <iframe src="https://maps.google.com/maps?q=Oberhausen&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style={{border:'none',display:'block',filter:'grayscale(.1)',minHeight:360}} allowFullScreen loading="lazy" title="Standort"/>;
 };
 
-/* ─── CONTACT ────────────────────────────────────────────────────────────── */
+/* ─── CONTACT — REQ 6: Redesign ──────────────────────────────────────────── */
 const Contact = () => (
-  <div id="standort" className="section-full" style={{background:'var(--stone)'}}>
-    <div style={{width:'100%',lineHeight:0}}><MapEmbed/></div>
-    <div className="inner" style={{padding:'52px 64px'}}>
-      <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{marginBottom:28}}>
+  <div id="standort" className="section-full sec" style={{background:'var(--stone)'}}>
+    <div className="inner">
+      <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{marginBottom:40, textAlign:'center'}}>
         <div className="tag" style={{marginBottom:10}}>Standort & Kontakt</div>
-        <h2 style={{fontWeight:800,fontSize:'clamp(24px,3.2vw,38px)',color:'var(--ink)',letterSpacing:'-.02em'}}>So finden Sie uns</h2>
-        <div className="accent"/>
+        <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,42px)',color:'var(--ink)',letterSpacing:'-.02em'}}>So finden Sie uns</h2>
+        <div className="accent accent-c"/>
       </motion.div>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',borderRadius:14,overflow:'hidden',border:'1px solid var(--border)'}}>
-        <div style={{background:'#fff',padding:24,borderRight:'1px solid var(--border)'}}>
-          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:14}}>
-            <div style={{width:34,height:34,background:'var(--ice)',borderRadius:9,display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.Pin s={14} c="var(--blue)"/></div>
-            <span style={{fontSize:10,fontWeight:700,letterSpacing:'.12em',textTransform:'uppercase',color:'var(--smoke)'}}>Adresse</span>
-          </div>
-          <div style={{fontSize:13.5,fontWeight:500,lineHeight:1.75,color:'var(--ink)',marginBottom:12}}>
-            Musterstraße 123<br/>46045 Oberhausen<br/>Deutschland
-          </div>
-          <a href="https://maps.google.com/?q=51.472992,6.863788" target="_blank" rel="noopener noreferrer" style={{display:'inline-flex',alignItems:'center',gap:4,fontSize:11,fontWeight:700,color:'var(--blue)',textDecoration:'none',letterSpacing:'.06em',textTransform:'uppercase'}}>
-            Route planen <Ic.ChevR s={10} c="var(--blue)"/>
-          </a>
+
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:40}} className="mob-stack">
+        
+        {/* Linke Seite: Karte, modern abgerundet mit Schatten */}
+        <div style={{borderRadius:20,overflow:'hidden',border:'1px solid var(--border)',boxShadow:'0 12px 40px rgba(0,0,0,.06)', height:'100%', minHeight:400}}>
+          <MapEmbed />
         </div>
-        <div style={{background:'#fff',padding:24,borderRight:'1px solid var(--border)'}}>
-          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:14}}>
-            <div style={{width:34,height:34,background:'var(--ice)',borderRadius:9,display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.Phone s={14} c="var(--blue)"/></div>
-            <span style={{fontSize:10,fontWeight:700,letterSpacing:'.12em',textTransform:'uppercase',color:'var(--smoke)'}}>Kontakt</span>
-          </div>
-          <div style={{fontSize:13.5,fontWeight:500,lineHeight:1.9,color:'var(--ink)',marginBottom:14}}>{PHONE}<br/>info@autoservice-ob.de</div>
-          <div style={{display:'flex',flexDirection:'column',gap:8}}>
-            <a href={PHONE_HREF} className="btn btn-call" style={{padding:'8px 14px',fontSize:11,gap:5,justifyContent:'center'}}><Ic.Phone s={12}/> Anrufen</a>
-            <a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer" className="btn btn-wa" style={{padding:'8px 14px',fontSize:11,gap:5,justifyContent:'center'}}><Ic.Wa s={12} c="#fff"/> WhatsApp</a>
-          </div>
-        </div>
-        <div style={{background:'#fff',padding:24,borderRight:'1px solid var(--border)'}}>
-          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:14}}>
-            <div style={{width:34,height:34,background:'var(--ice)',borderRadius:9,display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.Clock s={14} c="var(--blue)"/></div>
-            <span style={{fontSize:10,fontWeight:700,letterSpacing:'.12em',textTransform:'uppercase',color:'var(--smoke)'}}>Öffnungszeiten</span>
-          </div>
-          {[['Mo – Mi','09:00 – 18:00 Uhr'],['Do & Fr','15:00 – 18:00 Uhr'],['Sa & So','Geschlossen']].map(([d,t]) => (
-            <div key={d} style={{display:'flex',justifyContent:'space-between',fontSize:13,borderBottom:'1px solid var(--border)',paddingBottom:5,marginBottom:5,gap:8}}>
-              <span style={{color:'var(--smoke)'}}>{d}</span>
-              <span style={{fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap'}}>{t}</span>
+
+        {/* Rechte Seite: Info Cards */}
+        <div style={{display:'flex',flexDirection:'column',gap:20}}>
+          
+          <div style={{background:'#fff',padding:28,borderRadius:20,border:'1px solid var(--border)',boxShadow:'0 4px 16px rgba(0,0,0,.03)'}}>
+            <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:16}}>
+              <div style={{width:36,height:36,background:'var(--ice)',borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.Pin s={16} c="var(--blue)"/></div>
+              <span style={{fontSize:11,fontWeight:700,letterSpacing:'.12em',textTransform:'uppercase',color:'var(--smoke)'}}>Adresse</span>
             </div>
-          ))}
-          <p style={{fontSize:11,color:'var(--smoke)',marginTop:8}}>Terminabstand mind. 30 Min.</p>
-        </div>
-        <div style={{background:'var(--navy)',padding:24,display:'flex',flexDirection:'column',justifyContent:'center',gap:10}}>
-          <h3 style={{fontWeight:800,fontSize:18,color:'#fff',lineHeight:1.3}}>Bereit für Ihre Hauptuntersuchung?</h3>
-          <p style={{fontSize:12.5,color:'rgba(255,255,255,.52)',lineHeight:1.6}}>Jetzt buchen oder direkt anrufen.</p>
-          <a href="#termin" className="btn btn-white" style={{gap:8,alignSelf:'flex-start',fontSize:12,padding:'10px 18px'}}>Termin buchen <Ic.Arrow s={13}/></a>
+            <div style={{fontSize:14,fontWeight:500,lineHeight:1.75,color:'var(--ink)'}}>
+              Musterstraße 123<br/>46045 Oberhausen, Deutschland
+            </div>
+          </div>
+
+          <div style={{background:'#fff',padding:28,borderRadius:20,border:'1px solid var(--border)',boxShadow:'0 4px 16px rgba(0,0,0,.03)'}}>
+            <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:16}}>
+              <div style={{width:36,height:36,background:'var(--ice)',borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.Phone s={16} c="var(--blue)"/></div>
+              <span style={{fontSize:11,fontWeight:700,letterSpacing:'.12em',textTransform:'uppercase',color:'var(--smoke)'}}>Kontakt</span>
+            </div>
+            <div style={{fontSize:14,fontWeight:500,lineHeight:1.8,color:'var(--ink)',marginBottom:16}}>
+              Telefon: {PHONE}<br/>E-Mail: info@autoservice-ob.de
+            </div>
+            <div style={{display:'flex',gap:10, flexWrap:'wrap'}}>
+              <a href={PHONE_HREF} className="btn btn-call" style={{padding:'10px 18px',fontSize:12,gap:6}}><Ic.Phone s={14}/> Anrufen</a>
+              <a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer" className="btn btn-wa" style={{padding:'10px 18px',fontSize:12,gap:6}}><Ic.Wa s={14} c="#fff"/> WhatsApp</a>
+            </div>
+          </div>
+
+          <div style={{background:'#fff',padding:28,borderRadius:20,border:'1px solid var(--border)',boxShadow:'0 4px 16px rgba(0,0,0,.03)'}}>
+            <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:16}}>
+              <div style={{width:36,height:36,background:'var(--ice)',borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.Clock s={16} c="var(--blue)"/></div>
+              <span style={{fontSize:11,fontWeight:700,letterSpacing:'.12em',textTransform:'uppercase',color:'var(--smoke)'}}>Öffnungszeiten</span>
+            </div>
+            <div style={{display:'flex',flexDirection:'column',gap:8}}>
+              {[['Mo – Mi','09:00 – 18:00 Uhr'],['Do & Fr','15:00 – 18:00 Uhr'],['Sa & So','Geschlossen']].map(([d,t]) => (
+                <div key={d} style={{display:'flex',justifyContent:'space-between',fontSize:13.5,borderBottom:'1px solid var(--stone)',paddingBottom:6}}>
+                  <span style={{color:'var(--smoke)'}}>{d}</span>
+                  <span style={{fontWeight:600,color:'var(--ink)'}}>{t}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -837,7 +812,7 @@ const Footer = ({ openModal }) => (
   </footer>
 );
 
-/* ─── LEGAL MODALS — vollständig, DE-konform ──────────────────────────────*/
+/* ─── LEGAL MODALS ────────────────────────────────────────────────────────*/
 const LegalContent = {
   Impressum: (
     <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.85}}>
@@ -855,10 +830,6 @@ const LegalContent = {
       <p style={{marginBottom:16}}>gemäß § 27a UStG: DE[Ihre USt-IdNr.]</p>
       <h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:6}}>Berufsbezeichnung und berufsrechtliche Regelungen</h4>
       <p style={{marginBottom:16}}>Amtlich anerkannte Kraftfahrzeug-Überwachungsorganisation gemäß §29 StVZO i.V.m. Anlage VIIIb.</p>
-      <h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:6}}>Haftungsausschluss</h4>
-      <p style={{marginBottom:16}}>Die Inhalte dieser Website werden mit größtmöglicher Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte übernehmen wir keine Gewähr (§ 7 Abs. 1 TMG). Als Diensteanbieter sind wir für eigene Inhalte nach den allgemeinen Gesetzen verantwortlich.</p>
-      <h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:6}}>Streitschlichtung</h4>
-      <p>Die EU-Kommission stellt eine Plattform zur Online-Streitbeilegung bereit: <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" style={{color:'var(--blue)'}}>https://ec.europa.eu/consumers/odr</a>. Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
     </div>
   ),
   Datenschutz: (
@@ -867,31 +838,12 @@ const LegalContent = {
       <p style={{marginBottom:12}}>Wir verarbeiten personenbezogene Daten ausschließlich gemäß der Datenschutz-Grundverordnung (DSGVO), dem Bundesdatenschutzgesetz (BDSG) und dem Telekommunikations-Telemedien-Datenschutzgesetz (TTDSG).</p>
       <h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:6}}>Verantwortlicher (Art. 4 Nr. 7 DSGVO)</h4>
       <p style={{marginBottom:12}}>AutoService Oberhausen<br/>Musterstraße 123, 46045 Oberhausen<br/>E-Mail: info@autoservice-ob.de</p>
-      <h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:6}}>Erhobene Daten und Zweck</h4>
-      <p style={{marginBottom:12}}>Bei der Terminanfrage erheben wir: Name, E-Mail-Adresse, Telefonnummer, Kfz-Kennzeichen und Fahrzeugdaten. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Vertragsanbahnung). Die Daten werden ausschließlich zur Terminbearbeitung verwendet.</p>
-      <h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:6}}>Speicherdauer</h4>
-      <p style={{marginBottom:12}}>Daten werden nach Zweckerfüllung gelöscht, spätestens nach 3 Jahren, sofern keine gesetzlichen Aufbewahrungspflichten bestehen (§ 147 AO, § 257 HGB).</p>
-      <h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:6}}>Weitergabe an Dritte</h4>
-      <p style={{marginBottom:12}}>Keine Weitergabe an Dritte, außer bei gesetzlicher Verpflichtung. Bei Einsatz von Google Maps erfolgt eine Datenübertragung an Google LLC (USA) nur nach Ihrer ausdrücklichen Einwilligung (Art. 49 Abs. 1 lit. a DSGVO).</p>
-      <h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:6}}>Ihre Rechte (Art. 15–22 DSGVO)</h4>
-      <p style={{marginBottom:12}}>Sie haben das Recht auf: Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. Zudem besteht ein Beschwerderecht bei der zuständigen Aufsichtsbehörde (LDI NRW, Postfach 20 04 44, 40102 Düsseldorf).</p>
-      <h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:6}}>Cookies und Tracking</h4>
-      <p style={{marginBottom:12}}>Wir verwenden technisch notwendige Cookies (§ 25 Abs. 2 TTDSG). Weitere Cookies (z. B. Analyse) werden nur nach Ihrer Einwilligung gemäß § 25 Abs. 1 TTDSG gesetzt.</p>
-      <h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:6}}>SSL-Verschlüsselung</h4>
-      <p>Diese Website nutzt SSL-Verschlüsselung (TLS) для die sichere Übertragung aller Daten.</p>
     </div>
   ),
   AGB: (
     <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.85}}>
       <h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:8}}>Allgemeine Geschäftsbedingungen</h4>
       <p style={{marginBottom:12}}><strong style={{color:'var(--ink)'}}>§ 1 Geltungsbereich</strong><br/>Diese AGB gelten für alle Terminbuchungen über die Website autoservice-ob.de. Abweichende Bedingungen des Kunden gelten nur bei ausdrücklicher schriftlicher Zustimmung.</p>
-      <p style={{marginBottom:12}}><strong style={{color:'var(--ink)'}}>§ 2 Vertragsschluss</strong><br/>Die Terminanfrage über das Buchungsformular stellt ein Angebot des Kunden dar. Der Vertrag kommt mit unserer schriftlichen Bestätigung zustande.</p>
-      <p style={{marginBottom:12}}><strong style={{color:'var(--ink)'}}>§ 3 Leistungen</strong><br/>Unsere Prüfleistungen richten sich nach den jeweils geltenden gesetzlichen Vorgaben der StVZO und den Prüfrichtlinien der zugelassenen Überwachungsorganisation.</p>
-      <p style={{marginBottom:12}}><strong style={{color:'var(--ink)'}}>§ 4 Stornierung</strong><br/>Eine kostenfreie Stornierung ist bis 24 Stunden vor dem vereinbarten Termin per Telefon oder E-Mail möglich. Bei späterem Nichterscheinen ohne Absage behalten wir uns eine Bearbeitungsgebühr von 15 € vor.</p>
-      <p style={{marginBottom:12}}><strong style={{color:'var(--ink)'}}>§ 5 Preise und Zahlung</strong><br/>Alle Preise sind Endpreise inkl. der gesetzlichen MwSt. Die Bezahlung erfolgt vor Ort bar oder per EC-Karte. Eine Vorauszahlung ist nicht erforderlich.</p>
-      <p style={{marginBottom:12}}><strong style={{color:'var(--ink)'}}>§ 6 Haftung</strong><br/>Unsere Haftung richtet sich nach den gesetzlichen Vorschriften. Eine Haftung für leichte Fahrlässigkeit ist ausgeschlossen, soweit nicht Schäden aus der Verletzung des Lebens, des Körpers oder der Gesundheit betroffen sind.</p>
-      <p style={{marginBottom:12}}><strong style={{color:'var(--ink)'}}>§ 7 Datenschutz</strong><br/>Es gilt unsere Datenschutzerklärung, abrufbar unter dieser Website.</p>
-      <p style={{marginBottom:12}}><strong style={{color:'var(--ink)'}}>§ 8 Schlussbestimmungen</strong><br/>Es gilt das Recht der Bundesrepublik Deutschland. Gerichtsstand ist Oberhausen. Bei Unwirksamkeit einzelner Bestimmungen bleibt die Wirksamkeit der übrigen Bestimmungen unberührt (§ 306 BGB).</p>
     </div>
   ),
   'Cookie-Einstellungen': null,
@@ -995,7 +947,6 @@ export default function App() {
       <Contact/>
       <Footer openModal={setModal}/>
       <ScrollTop/>
-      {/* Исправлен AnimatePresence (должен оборачивать условный рендеринг для работы анимации выхода) */}
       <AnimatePresence>
         {modal && <Modal title={modal} onClose={()=>setModal(null)}/>}
       </AnimatePresence>
