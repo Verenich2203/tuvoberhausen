@@ -280,7 +280,7 @@ const Navbar = ({ onBook }) => {
 const Hero = ({ onBook }) => (
   <div className="section-full" style={{background:'linear-gradient(160deg,#f0f6ff 0%,#f8fafc 55%,#eef4fe 100%)', padding:'60px 0 80px', display:'flex', alignItems:'center', position:'relative', overflow:'hidden'}}>
     {/* ИЗОБРАЖЕНИЕ second.png НА ПЕРВОМ ЭКРАНЕ */}
-    <div style={{position:'absolute', inset:0, backgroundImage:"url('second.jpg')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.06, pointerEvents:'none', zIndex:0}} />
+    <div style={{position:'absolute', inset:0, backgroundImage:"url('second.jpg')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.1, pointerEvents:'none', zIndex:0}} />
     
     <HeroBg/>
 
@@ -393,7 +393,7 @@ const Services = () => {
   return (
     <div id="leistungen" className="section-full sec" style={{background:'var(--stone)',position:'relative',overflow:'hidden'}}>
       {/* ИЗОБРАЖЕНИЕ first.png НА ФОНЕ */}
-      <div style={{position:'absolute', inset:0, backgroundImage:"url('first.png')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.04, pointerEvents:'none', zIndex:0}} />
+      <div style={{position:'absolute', inset:0, backgroundImage:"url('first.png')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.1, pointerEvents:'none', zIndex:0}} />
       
       <SectionDeco side="right"/>
       <div className="inner" style={{position:'relative',zIndex:1}}>
@@ -497,7 +497,7 @@ const Steps = () => {
   return (
     <div id="ablauf" className="section-full sec" style={{background:'#fff',position:'relative',overflow:'hidden'}}>
       {/* ИЗОБРАЖЕНИЕ first.png НА ФОНЕ */}
-      <div style={{position:'absolute', inset:0, backgroundImage:"url('first.png')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.02, pointerEvents:'none', zIndex:0}} />
+      <div style={{position:'absolute', inset:0, backgroundImage:"url('first.png')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.1, pointerEvents:'none', zIndex:0}} />
       
       <SectionDeco side="left"/>
       <div className="inner" style={{position:'relative',zIndex:1}}>
@@ -536,7 +536,7 @@ const BookingSection = () => {
   return (
     <div id="termin" className="section-full sec" style={{background:'var(--stone)', position:'relative', overflow:'hidden'}}>
       {/* ИЗОБРАЖЕНИЕ first.png НА ФОНЕ */}
-      <div style={{position:'absolute', inset:0, backgroundImage:"url('first.png')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.04, pointerEvents:'none', zIndex:0}} />
+      <div style={{position:'absolute', inset:0, backgroundImage:"url('first.png')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.1, pointerEvents:'none', zIndex:0}} />
 
       <div className="inner" style={{maxWidth:820, position:'relative', zIndex:1}}>
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:40}}>
@@ -664,7 +664,7 @@ const FAQ = () => {
   return (
     <div id="faq" className="section-full sec" style={{background:'#fff',position:'relative',overflow:'hidden'}}>
       {/* ИЗОБРАЖЕНИЕ first.png НА ФОНЕ */}
-      <div style={{position:'absolute', inset:0, backgroundImage:"url('first.png')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.02, pointerEvents:'none', zIndex:0}} />
+      <div style={{position:'absolute', inset:0, backgroundImage:"url('first.png')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.1, pointerEvents:'none', zIndex:0}} />
 
       <SectionDeco side="right" opacity={0.025}/>
       <div className="inner" style={{maxWidth:780,margin:'0 auto',position:'relative',zIndex:1}}>
@@ -718,7 +718,7 @@ const MapEmbed = () => {
 const Contact = () => (
   <div id="standort" className="section-full sec" style={{background:'var(--stone)', position:'relative', overflow:'hidden'}}>
     {/* ИЗОБРАЖЕНИЕ first.png НА ФОНЕ */}
-    <div style={{position:'absolute', inset:0, backgroundImage:"url('first.png')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.04, pointerEvents:'none', zIndex:0}} />
+    <div style={{position:'absolute', inset:0, backgroundImage:"url('first.png')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.1, pointerEvents:'none', zIndex:0}} />
 
     <div className="inner" style={{position:'relative', zIndex:1}}>
       <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{marginBottom:40, textAlign:'center'}}>
