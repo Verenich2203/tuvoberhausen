@@ -38,20 +38,12 @@ const G = () => (
       line-height: 1.6;
     }
 
-    #root {
-      width: 100%;
-      min-width: 100%;
-    }
+    #root { width: 100%; min-width: 100%; }
 
     .bc { font-family: 'Barlow Condensed', sans-serif; }
 
-    /* ── True full-bleed sections ── */
-    .section-full {
-      width: 100%;
-      display: block;
-    }
+    .section-full { width: 100%; display: block; }
 
-    /* ── Inner content container ── */
     .inner {
       width: 100%;
       max-width: 1600px;
@@ -62,9 +54,8 @@ const G = () => (
     @media (max-width: 1100px) { .inner { padding: 0 40px; } }
     @media (max-width: 700px)  { .inner { padding: 0 20px; } }
 
-    .sec  { padding: 96px 0; }
+    .sec { padding: 96px 0; }
 
-    /* ── Pill ── */
     .pill {
       display: inline-flex; align-items: center; gap: 8px;
       font-family: 'Barlow Condensed', sans-serif;
@@ -77,7 +68,6 @@ const G = () => (
       border-color: rgba(255,255,255,.22);
     }
 
-    /* ── Buttons ── */
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 10px;
       font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px;
@@ -94,7 +84,6 @@ const G = () => (
     .btn-ghost { background: transparent; color: var(--blue); border: 1.5px solid var(--border); }
     .btn-ghost:hover { background: var(--ice); border-color: var(--blue); }
 
-    /* ── Card ── */
     .card {
       background: #fff; border-radius: 18px; border: 1px solid var(--border);
       box-shadow: 0 2px 14px rgba(0,0,0,.04);
@@ -102,11 +91,9 @@ const G = () => (
     }
     .card:hover { transform: translateY(-4px); box-shadow: 0 14px 44px rgba(0,0,0,.09); }
 
-    /* ── Accent line ── */
     .al   { width: 44px; height: 3px; background: var(--blue); border-radius: 2px; margin: 14px 0 22px; }
     .al-c { margin: 14px auto 22px; }
 
-    /* ── Form fields ── */
     .field { display: flex; flex-direction: column; gap: 6px; }
     .field label {
       font-family: 'Barlow Condensed', sans-serif;
@@ -128,7 +115,6 @@ const G = () => (
     }
     .field textarea { resize: vertical; min-height: 90px; }
 
-    /* ── Nav links ── */
     .nav-link {
       font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 600;
       letter-spacing: .08em; text-transform: uppercase; color: var(--ink);
@@ -142,7 +128,6 @@ const G = () => (
     .nav-link:hover { color: var(--blue); }
     .nav-link:hover::after { transform: scaleX(1); }
 
-    /* ── Steps connector ── */
     .steps-row { display: grid; grid-template-columns: repeat(4, 1fr); position: relative; }
     .steps-row::before {
       content: ''; position: absolute; top: 27px;
@@ -154,12 +139,6 @@ const G = () => (
       .steps-row::before { display: none; }
     }
 
-    /* ── Price cards ── */
-    .pc { border-radius: 18px; overflow: hidden; border: 1.5px solid var(--border); background: #fff; transition: all .28s; }
-    .pc:hover { border-color: var(--blue); box-shadow: 0 18px 52px rgba(12,78,158,.12); transform: translateY(-6px); }
-    .pc.feat { background: linear-gradient(155deg, var(--navy) 0%, var(--blue) 100%); border-color: var(--blue); }
-
-    /* ── FAQ ── */
     .faq-item { border-bottom: 1px solid var(--border); }
     .faq-q {
       width: 100%; background: none; border: none; text-align: left; cursor: pointer;
@@ -175,15 +154,10 @@ const G = () => (
     .faq-q.open .faq-icon { background: var(--blue); border-color: var(--blue); transform: rotate(45deg); }
     .faq-a { font-size: 14px; line-height: 1.8; color: var(--smoke); padding-bottom: 22px; }
 
-    /* ── Stars ── */
-    .stars { color: var(--gold); font-size: 14px; letter-spacing: 2px; }
-
-    /* ── Scrollbar ── */
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
-    /* ── Grid helpers ── */
     .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
     .g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
     .g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
@@ -211,6 +185,9 @@ const Ic = {
   Arrow:   ({s=18,c="currentColor"}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>,
   Mail:    ({s=18,c="currentColor"}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>,
 };
+
+const PHONE = "+49 1575 5476991";
+const PHONE_HREF = "tel:+4915755476991";
 
 /* ─── NAVBAR ─────────────────────────────────────────────────────────────── */
 const Navbar = ({ onBook }) => {
@@ -243,14 +220,14 @@ const Navbar = ({ onBook }) => {
         </div>
 
         <nav style={{display:'flex',gap:28,alignItems:'center'}}>
-          {[['#leistungen','Leistungen'],['#preise','Preise'],['#ablauf','Ablauf'],['#bewertungen','Bewertungen'],['#faq','FAQ'],['#standort','Standort']].map(([h,l]) => (
+          {[['#leistungen','Leistungen'],['#ablauf','Ablauf'],['#faq','FAQ'],['#standort','Standort']].map(([h,l]) => (
             <a key={h} href={h} className="nav-link">{l}</a>
           ))}
         </nav>
 
         <div style={{display:'flex',alignItems:'center',gap:16}}>
-          <a href="tel:+491234567890" style={{display:'flex',alignItems:'center',gap:7,fontSize:14,fontWeight:600,color:'var(--blue)',textDecoration:'none',fontFamily:"'Barlow Condensed',sans-serif",letterSpacing:'.05em'}}>
-            <Ic.Phone s={15}/> +49 123 456789
+          <a href={PHONE_HREF} style={{display:'flex',alignItems:'center',gap:7,fontSize:14,fontWeight:600,color:'var(--blue)',textDecoration:'none',fontFamily:"'Barlow Condensed',sans-serif",letterSpacing:'.05em'}}>
+            <Ic.Phone s={15}/> {PHONE}
           </a>
           <button className="btn btn-solid" style={{padding:'11px 22px',fontSize:13}} onClick={onBook}>
             Termin buchen
@@ -266,7 +243,8 @@ const QuickBook = () => {
   const [step, setStep] = useState(0);
   const [d, setD] = useState({service:'',date:'',time:''});
   const services = ['Hauptuntersuchung (HU)','Abgasuntersuchung (AU)','HU + AU Kombi','Vorab-Check','Eintragung / Abnahme'];
-  const times = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'];
+  // 30-min slots Mo–Mi 09:00–18:00, Do/Fr 15:00–18:00
+  const times = ['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30'];
 
   return (
     <div style={{background:'rgba(255,255,255,.06)',backdropFilter:'blur(20px)',borderRadius:20,border:'1px solid rgba(255,255,255,.14)',overflow:'hidden',width:340,flexShrink:0}}>
@@ -306,7 +284,7 @@ const QuickBook = () => {
         {step===2 && (
           <div>
             <div className="bc" style={{fontSize:11,color:'rgba(255,255,255,.55)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:14}}>Uhrzeit wählen</div>
-            <div style={{display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:7,marginBottom:16}}>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:7,marginBottom:16}}>
               {times.map(t => (
                 <button key={t} onClick={()=>setD(x=>({...x,time:t}))}
                   style={{background:d.time===t?'var(--blue)':'rgba(255,255,255,.08)',border:d.time===t?'none':'1px solid rgba(255,255,255,.12)',borderRadius:8,padding:'9px 2px',color:'#fff',fontSize:12,fontWeight:700,cursor:'pointer',transition:'all .18s',fontFamily:"'Barlow Condensed',sans-serif",letterSpacing:'.04em'}}>
@@ -366,21 +344,13 @@ const Hero = ({ onBook }) => (
             ZUVERLÄSSIG.
           </h1>
           <p style={{fontSize:17,color:'rgba(255,255,255,.68)',lineHeight:1.75,marginBottom:38,maxWidth:540}}>
-            Ihr zertifizierter TÜV-Prüfpunkt in Oberhausen. Buchen Sie Ihre HU&nbsp;&amp;&nbsp;AU online — ohne Wartezeiten, transparent und professionell.
+            Ihr zertifizierter TÜV-Prüfpunkt in Oberhausen. Buchen Sie Ihre HU&nbsp;&amp;&nbsp;AU online — ohne lange Wartezeiten, transparent und professionell.
           </p>
-          <div style={{display:'flex',gap:14,flexWrap:'wrap',marginBottom:56}}>
+          <div style={{display:'flex',gap:14,flexWrap:'wrap'}}>
             <button className="btn btn-light" style={{color:'var(--blue)',fontSize:14,gap:10}} onClick={onBook}>
               Online Termin buchen <Ic.Arrow s={17}/>
             </button>
             <a href="#leistungen" className="btn btn-outline" style={{fontSize:14}}>Alle Leistungen</a>
-          </div>
-          <div style={{display:'flex',gap:48,flexWrap:'wrap',borderTop:'1px solid rgba(255,255,255,.1)',paddingTop:36}}>
-            {[['25+','Jahre Erfahrung'],['18 000+','Prüfungen/Jahr'],['4.9 ★','Google Bewertung'],['98%','Erst-Bestehensquote']].map(([n,l]) => (
-              <div key={l}>
-                <div className="bc" style={{fontSize:32,color:'var(--sky)',lineHeight:1,letterSpacing:'.03em'}}>{n}</div>
-                <div style={{fontSize:12,color:'rgba(255,255,255,.46)',marginTop:4,fontWeight:500}}>{l}</div>
-              </div>
-            ))}
           </div>
         </motion.div>
         <motion.div initial={{opacity:0,x:32}} animate={{opacity:1,x:0}} transition={{duration:.9,delay:.2,ease:[.22,1,.36,1]}}>
@@ -415,12 +385,12 @@ const TrustBar = () => (
 /* ─── SERVICES ───────────────────────────────────────────────────────────── */
 const Services = () => {
   const items = [
-    {ico:<Ic.Shield s={28} c="var(--blue)"/>, title:'Hauptuntersuchung', sub:'HU · §29 StVZO', desc:'Gesetzlich vorgeschriebene Sicherheitsprüfung auf Verkehrstauglichkeit — schnell und zuverlässig.', price:'ab 79 €', tag:'Pflicht'},
-    {ico:<Ic.Leaf   s={28} c="var(--blue)"/>, title:'Abgasuntersuchung', sub:'AU · Emissionsprüfung', desc:'Umweltprüfung der Abgaswerte Ihres Fahrzeugs — oft direkt kombiniert mit der HU.', price:'ab 29 €', tag:'Kombi möglich'},
-    {ico:<Ic.Wrench s={28} c="var(--blue)"/>, title:'Vorab-Check', sub:'Sicherheitscheck', desc:'Wir prüfen Ihr Fahrzeug auf potenzielle Mängel — damit Sie beim ersten Versuch bestehen.', price:'ab 49 €', tag:'Empfohlen'},
-    {ico:<Ic.Clip   s={28} c="var(--blue)"/>, title:'Eintragungen', sub:'§19 StVZO · Abnahmen', desc:'Abnahme von Tuning, Felgen, Fahrwerk und anderen Fahrzeugveränderungen gemäß Vorschrift.', price:'ab 89 €', tag:'Flexibel'},
-    {ico:<Ic.Moto   s={28} c="var(--blue)"/>, title:'Motorrad-HU', sub:'Zweiräder · Saisonal', desc:'Spezialisierte HU für Motorräder und Leichtkrafträder — saisongerecht und professionell.', price:'ab 69 €', tag:'Saisonal'},
-    {ico:<Ic.Award  s={28} c="var(--blue)"/>, title:'Oldtimer-Gutachten', sub:'§23 StVZO · H-Kennzeichen', desc:'Vollständige Begutachtung für das H-Kennzeichen Ihres Klassikers mit offiziellem Gutachten.', price:'ab 149 €', tag:'Speziell'},
+    {ico:<Ic.Shield s={28} c="var(--blue)"/>, title:'Hauptuntersuchung', sub:'HU · §29 StVZO', desc:'Gesetzlich vorgeschriebene Sicherheitsprüfung auf Verkehrstauglichkeit — schnell und zuverlässig.', tag:'Pflicht'},
+    {ico:<Ic.Leaf   s={28} c="var(--blue)"/>, title:'Abgasuntersuchung', sub:'AU · Emissionsprüfung', desc:'Umweltprüfung der Abgaswerte Ihres Fahrzeugs — oft direkt kombiniert mit der HU.', tag:'Kombi möglich'},
+    {ico:<Ic.Wrench s={28} c="var(--blue)"/>, title:'Vorab-Check', sub:'Sicherheitscheck', desc:'Wir prüfen Ihr Fahrzeug auf potenzielle Mängel — damit Sie beim ersten Versuch bestehen.', tag:'Empfohlen'},
+    {ico:<Ic.Clip   s={28} c="var(--blue)"/>, title:'Eintragungen', sub:'§19 StVZO · Abnahmen', desc:'Abnahme von Tuning, Felgen, Fahrwerk und anderen Fahrzeugveränderungen gemäß Vorschrift.', tag:'Flexibel'},
+    {ico:<Ic.Moto   s={28} c="var(--blue)"/>, title:'Motorrad-HU', sub:'Zweiräder · Saisonal', desc:'Spezialisierte HU für Motorräder und Leichtkrafträder — saisongerecht und professionell.', tag:'Saisonal'},
+    {ico:<Ic.Award  s={28} c="var(--blue)"/>, title:'Oldtimer-Gutachten', sub:'§23 StVZO · H-Kennzeichen', desc:'Vollständige Begutachtung für das H-Kennzeichen Ihres Klassikers mit offiziellem Gutachten.', tag:'Speziell'},
   ];
   return (
     <div id="leistungen" className="section-full sec" style={{background:'var(--stone)'}}>
@@ -442,8 +412,7 @@ const Services = () => {
               <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:20}}>
                 <div style={{width:58,height:58,background:'var(--ice)',borderRadius:14,display:'flex',alignItems:'center',justifyContent:'center'}}>{s.ico}</div>
                 <div style={{textAlign:'right'}}>
-                  <div className="pill" style={{fontSize:9,padding:'4px 10px',marginBottom:7}}>{s.tag}</div>
-                  <div className="bc" style={{fontSize:20,color:'var(--blue)',fontWeight:700,letterSpacing:'.04em'}}>{s.price}</div>
+                  <div className="pill" style={{fontSize:9,padding:'4px 10px'}}>{s.tag}</div>
                 </div>
               </div>
               <div className="bc" style={{fontSize:10,color:'var(--smoke)',letterSpacing:'.16em',textTransform:'uppercase',marginBottom:4}}>{s.sub}</div>
@@ -455,81 +424,6 @@ const Services = () => {
             </motion.div>
           ))}
         </div>
-      </div>
-    </div>
-  );
-};
-
-/* ─── STATS BAND ─────────────────────────────────────────────────────────── */
-const StatsBand = () => (
-  <div className="section-full" style={{background:'linear-gradient(105deg,var(--navy) 0%,var(--blue) 100%)',padding:'64px 0'}}>
-    <div className="inner">
-      <div className="g4">
-        {[['18 000+','Prüfungen jährlich'],['25','Jahre im Einsatz'],['4.9 / 5','Google Bewertung'],['98 %','Erst-Bestehensquote']].map(([n,l],i) => (
-          <motion.div key={l} initial={{opacity:0,scale:.92}} whileInView={{opacity:1,scale:1}} viewport={{once:true}} transition={{delay:i*.09}}
-            style={{textAlign:'center',padding:'0 12px',borderRight:i<3?'1px solid rgba(255,255,255,.12)':'none'}}>
-            <div className="bc" style={{fontSize:54,color:'#fff',lineHeight:1,letterSpacing:'.02em'}}>{n}</div>
-            <div className="bc" style={{fontSize:12,color:'rgba(255,255,255,.5)',marginTop:8,letterSpacing:'.12em',textTransform:'uppercase'}}>{l}</div>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  </div>
-);
-
-/* ─── PRICING ─────────────────────────────────────────────────────────────── */
-const Pricing = () => {
-  const plans = [
-    {name:'HU Basis',price:'79',desc:'Hauptuntersuchung für PKW bis 3,5 t',features:['Fahrzeugsicherheitsprüfung','Prüfprotokoll','Mängelprotokoll','Standard-Termin'],feat:false},
-    {name:'HU + AU Kombi',price:'99',desc:'Beste Wahl — alles in einem Termin',features:['Hauptuntersuchung (HU)','Abgasuntersuchung (AU)','Prüfprotokoll & Plakette','Prioritäts-Termin','Online-Vorzugspreis'],feat:true,badge:'Meistgewählt'},
-    {name:'Premium Paket',price:'159',desc:'HU + AU + Vorab-Check + Beratung',features:['HU + AU Kombi','Vorab-Check inklusive','Technische Beratung','Express-Termin','Kostenlose Nachprüfung'],feat:false},
-  ];
-  return (
-    <div id="preise" className="section-full sec" style={{background:'var(--navy)',position:'relative',overflow:'hidden'}}>
-      <div style={{position:'absolute',inset:0,backgroundImage:'radial-gradient(ellipse at 78% 18%,rgba(74,174,224,.1) 0%,transparent 58%)',pointerEvents:'none'}}/>
-      <div className="inner" style={{position:'relative'}}>
-        <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:52}}>
-          <div className="pill pill-dark" style={{marginBottom:14}}>Preise</div>
-          <h2 className="bc" style={{fontSize:'clamp(32px,4vw,50px)',color:'#fff',letterSpacing:'.03em'}}>Transparente Preise</h2>
-          <div className="al al-c"/>
-          <p style={{color:'rgba(255,255,255,.5)',fontSize:15}}>Keine versteckten Kosten. Alle Preise inkl. MwSt.</p>
-        </motion.div>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:24,maxWidth:980,margin:'0 auto'}}>
-          {plans.map((p,i) => (
-            <motion.div key={i} initial={{opacity:0,y:30}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.1}}
-              className="pc" style={p.feat?{transform:'scale(1.04)',zIndex:1}:{}}>
-              {p.badge && (
-                <div style={{background:'rgba(255,255,255,.14)',textAlign:'center',padding:'9px',fontSize:10,fontWeight:700,letterSpacing:'.16em',textTransform:'uppercase',color:'rgba(255,255,255,.9)',fontFamily:"'Barlow Condensed',sans-serif"}}>
-                  — {p.badge} —
-                </div>
-              )}
-              <div style={{padding:30}}>
-                <div className="bc" style={{fontSize:11,fontWeight:700,color:p.feat?'rgba(255,255,255,.55)':'var(--smoke)',letterSpacing:'.14em',textTransform:'uppercase',marginBottom:4}}>{p.name}</div>
-                <div style={{display:'flex',alignItems:'flex-end',gap:4,marginBottom:8}}>
-                  <span className="bc" style={{fontSize:58,color:p.feat?'#fff':'var(--blue)',lineHeight:1,letterSpacing:'.02em'}}>{p.price}</span>
-                  <span style={{fontSize:16,fontWeight:600,color:p.feat?'rgba(255,255,255,.46)':'var(--smoke)',paddingBottom:9}}>€</span>
-                </div>
-                <p style={{fontSize:13,color:p.feat?'rgba(255,255,255,.52)':'var(--smoke)',marginBottom:22,lineHeight:1.55}}>{p.desc}</p>
-                <div style={{display:'flex',flexDirection:'column',gap:12,marginBottom:26}}>
-                  {p.features.map((f,j) => (
-                    <div key={j} style={{display:'flex',alignItems:'center',gap:10}}>
-                      <div style={{width:18,height:18,borderRadius:'50%',background:p.feat?'rgba(255,255,255,.18)':'var(--ice)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                        <Ic.Check s={10} c={p.feat?'#fff':'var(--blue)'}/>
-                      </div>
-                      <span style={{fontSize:13,color:p.feat?'rgba(255,255,255,.78)':'var(--ink)'}}>{f}</span>
-                    </div>
-                  ))}
-                </div>
-                <a href="#termin" className="btn" style={{width:'100%',justifyContent:'center',background:p.feat?'#fff':'var(--blue)',color:p.feat?'var(--blue)':'#fff',fontSize:13,padding:'14px 20px'}}>
-                  Jetzt buchen
-                </a>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-        <p style={{textAlign:'center',color:'rgba(255,255,255,.28)',fontSize:12,marginTop:28}}>
-          * Preise für PKW bis 3,5 t. Abweichungen für LKW, Motorrad und Oldtimer möglich.
-        </p>
       </div>
     </div>
   );
@@ -548,7 +442,6 @@ const Steps = () => {
       <div className="inner">
         <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:60}}>
           <div className="pill" style={{marginBottom:14}}>Ablauf</div>
-          {/* ← FIXED: explicitly dark color so it shows on white bg */}
           <h2 className="bc" style={{fontSize:'clamp(32px,4vw,50px)',letterSpacing:'.03em',color:'var(--ink)'}}>
             In 4 Schritten zur Plakette
           </h2>
@@ -562,56 +455,8 @@ const Steps = () => {
                 <Ic.Check s={22} c="#fff"/>
               </div>
               <div className="bc" style={{fontSize:10,color:'var(--blue)',letterSpacing:'.2em',marginBottom:6}}>{s.n}</div>
-              {/* ← FIXED: dark color on white background */}
               <h3 style={{fontSize:19,marginBottom:10,fontWeight:700,color:'var(--ink)'}}>{s.title}</h3>
               <p style={{color:'var(--smoke)',fontSize:14,lineHeight:1.65}}>{s.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-/* ─── REVIEWS ─────────────────────────────────────────────────────────────── */
-const Reviews = () => {
-  const reviews = [
-    {name:'Michael K.',date:'März 2025',rating:5,text:'Absolut reibungsloser Ablauf. Online-Buchung war intuitiv, kein Warten vor Ort und alles transparent erklärt. Definitiv wieder.',vehicle:'VW Golf'},
-    {name:'Sandra L.',date:'Februar 2025',rating:5,text:'Der Vorab-Check hat mir viel Geld gespart — kleiner Mangel rechtzeitig gefunden. Team ist sehr freundlich und kompetent.',vehicle:'Audi A3'},
-    {name:'Thomas B.',date:'Januar 2025',rating:5,text:'Mein Oldtimer hat hier sein H-Gutachten bekommen. Die Prüfer haben wirklich Ahnung von klassischen Fahrzeugen. Absolute Empfehlung.',vehicle:'BMW 2002'},
-    {name:'Julia M.',date:'April 2025',rating:5,text:'Kurze Wartezeit, professionelles Personal und alles in 45 Minuten erledigt. Deutlich schneller als beim letzten Anbieter.',vehicle:'Mercedes A-Klasse'},
-    {name:'Ralf S.',date:'März 2025',rating:4,text:'Sehr kompetenter Prüfingenieur. Hat Mängel verständlich erklärt und hilfreiche Tipps gegeben. Sehr empfehlenswert.',vehicle:'Ford Focus'},
-    {name:'Anna P.',date:'Mai 2025',rating:5,text:'Zum dritten Mal hier — immer top zufrieden. Die Mitarbeiter erkennen mich sogar noch. Bester TÜV-Punkt in der Region.',vehicle:'Toyota Yaris'},
-  ];
-  return (
-    <div id="bewertungen" className="section-full sec" style={{background:'var(--stone)'}}>
-      <div className="inner">
-        <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}}
-          style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:48,flexWrap:'wrap',gap:20}}>
-          <div>
-            <div className="pill" style={{marginBottom:14}}>Kundenstimmen</div>
-            <h2 className="bc" style={{fontSize:'clamp(32px,4vw,50px)',letterSpacing:'.03em',color:'var(--ink)'}}>Was unsere Kunden sagen</h2>
-            <div className="al"/>
-          </div>
-          <div style={{textAlign:'center'}}>
-            <div className="bc" style={{fontSize:48,color:'var(--blue)',lineHeight:1,letterSpacing:'.02em'}}>4.9</div>
-            <div className="stars">★★★★★</div>
-            <div style={{fontSize:12,color:'var(--smoke)',marginTop:4}}>682 Google-Bewertungen</div>
-          </div>
-        </motion.div>
-        <div className="g3">
-          {reviews.map((r,i) => (
-            <motion.div key={i} initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.07}}
-              className="card" style={{padding:26}}>
-              <div className="stars" style={{marginBottom:14}}>{'★'.repeat(r.rating)}{'☆'.repeat(5-r.rating)}</div>
-              <p style={{fontSize:14,lineHeight:1.72,color:'var(--smoke)',marginBottom:18,fontStyle:'italic'}}>"{r.text}"</p>
-              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',borderTop:'1px solid var(--border)',paddingTop:14}}>
-                <div>
-                  <div style={{fontWeight:700,fontSize:14,color:'var(--ink)'}}>{r.name}</div>
-                  <div className="bc" style={{fontSize:11,color:'var(--smoke)',letterSpacing:'.08em',textTransform:'uppercase',marginTop:2}}>{r.vehicle}</div>
-                </div>
-                <div style={{fontSize:12,color:'var(--smoke)'}}>{r.date}</div>
-              </div>
             </motion.div>
           ))}
         </div>
@@ -626,7 +471,7 @@ const BookingSection = () => {
   const [sent,setSent] = useState(false);
   const set = (k,v) => setForm(f=>({...f,[k]:v}));
   return (
-    <div id="termin" className="section-full sec" style={{background:'#fff'}}>
+    <div id="termin" className="section-full sec" style={{background:'var(--stone)'}}>
       <div className="inner">
         <div style={{display:'grid',gridTemplateColumns:'1fr 520px',gap:72,alignItems:'start'}}>
           <motion.div initial={{opacity:0,x:-20}} whileInView={{opacity:1,x:0}} viewport={{once:true}}>
@@ -679,7 +524,10 @@ const BookingSection = () => {
                     <div className="field">
                       <label>Fahrzeugart *</label>
                       <select value={form.fahrzeug} onChange={e=>set('fahrzeug',e.target.value)} required>
-                        <option>PKW</option><option>Motorrad</option><option>Transporter</option><option>LKW</option><option>Oldtimer</option>
+                        <option>PKW</option>
+                        <option>Motorrad</option>
+                        <option>Transporter</option>
+                        <option>Oldtimer</option>
                       </select>
                     </div>
                   </div>
@@ -692,8 +540,8 @@ const BookingSection = () => {
                       <label>Uhrzeit *</label>
                       <select value={form.zeit} onChange={e=>set('zeit',e.target.value)} required>
                         <option value="">Bitte wählen …</option>
-                        <option>Vormittag (08–12 Uhr)</option>
-                        <option>Nachmittag (12–17 Uhr)</option>
+                        <option>Vormittag (09–12 Uhr)</option>
+                        <option>Nachmittag (12–18 Uhr)</option>
                         <option>Flexibel</option>
                       </select>
                     </div>
@@ -747,15 +595,15 @@ const BookingSection = () => {
 const FAQ = () => {
   const [open,setOpen] = useState(null);
   const faqs = [
-    ['Wie lange dauert eine Hauptuntersuchung?','Eine Standard-HU dauert bei uns 30–45 Minuten. Mit AU-Kombi ca. 50–60 Minuten. Beim Vorab-Check kommen 15–20 Minuten dazu.'],
+    ['Wie lange dauert eine Hauptuntersuchung?','Eine Standard-HU dauert bei uns ca. 30 Minuten. Mit AU-Kombi ca. 45–60 Minuten. Bitte planen Sie zwischen den Terminen eine halbe Stunde ein.'],
     ['Was muss ich zur HU mitbringen?','Den Fahrzeugschein (Zulassungsbescheinigung Teil I). Bei Eintragungen bitte alle ABE-Dokumente oder Gutachten mitbringen.'],
     ['Was passiert, wenn mein Fahrzeug nicht besteht?','Sie erhalten ein Mängelprotokoll. Geringe Mängel können innerhalb eines Monats behoben und kostenlos nachgeprüft werden.'],
     ['Kann ich einen Termin kostenlos stornieren?','Ja — bis 24 Stunden vor dem gebuchten Termin ist eine kostenlose Stornierung per Telefon oder E-Mail möglich.'],
-    ['Welche Fahrzeuge prüfen Sie?','PKW, Motorräder, Transporter, LKW bis 7,5 t sowie Oldtimer (§23). Für schwere Nutzfahrzeuge bitte vorab anfragen.'],
+    ['Welche Fahrzeuge prüfen Sie?','PKW, Motorräder, Transporter sowie Oldtimer (§23). Bitte vorab anfragen, wenn Sie unsicher sind.'],
     ['Gibt es einen Wartebereich?','Ja — komfortabler Wartebereich mit kostenlosem WLAN. Fahrzeug abgeben und später abholen ist ebenfalls möglich.'],
   ];
   return (
-    <div id="faq" className="section-full sec" style={{background:'var(--stone)'}}>
+    <div id="faq" className="section-full sec" style={{background:'#fff'}}>
       <div className="inner" style={{maxWidth:860,margin:'0 auto'}}>
         <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:52}}>
           <div className="pill" style={{marginBottom:14}}>Häufige Fragen</div>
@@ -784,10 +632,9 @@ const FAQ = () => {
   );
 };
 
-/* ─── CONTACT + FULL-BLEED MAP ───────────────────────────────────────────── */
+/* ─── CONTACT + MAP ──────────────────────────────────────────────────────── */
 const Contact = () => (
-  <div id="standort" className="section-full" style={{background:'#fff'}}>
-    {/* Full-bleed map — stretches edge to edge */}
+  <div id="standort" className="section-full" style={{background:'var(--stone)'}}>
     <div style={{width:'100%',lineHeight:0}}>
       <iframe
         src="https://maps.google.com/maps?q=51.472992,6.863788&hl=de&z=15&output=embed"
@@ -797,7 +644,6 @@ const Contact = () => (
       />
     </div>
 
-    {/* Info strip */}
     <div className="inner" style={{padding:'72px 80px'}}>
       <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{marginBottom:48}}>
         <div className="pill" style={{marginBottom:14}}>Standort & Kontakt</div>
@@ -831,9 +677,9 @@ const Contact = () => (
             <div className="bc" style={{fontSize:11,fontWeight:700,letterSpacing:'.15em',textTransform:'uppercase',color:'var(--smoke)'}}>Kontakt</div>
           </div>
           <div style={{fontSize:15,fontWeight:500,lineHeight:1.9,color:'var(--ink)'}}>
-            +49 123 456789<br/>info@tuev-oberhausen.de
+            {PHONE}<br/>info@tuev-oberhausen.de
           </div>
-          <a href="tel:+491234567890" className="btn btn-solid" style={{padding:'10px 20px',fontSize:12,gap:7,marginTop:16,display:'inline-flex'}}>
+          <a href={PHONE_HREF} className="btn btn-solid" style={{padding:'10px 20px',fontSize:12,gap:7,marginTop:16,display:'inline-flex'}}>
             <Ic.Phone s={14}/> Jetzt anrufen
           </a>
         </div>
@@ -847,7 +693,12 @@ const Contact = () => (
             <div className="bc" style={{fontSize:11,fontWeight:700,letterSpacing:'.15em',textTransform:'uppercase',color:'var(--smoke)'}}>Öffnungszeiten</div>
           </div>
           <div style={{display:'flex',flexDirection:'column',gap:8}}>
-            {[['Mo – Fr','08:00 – 17:00 Uhr'],['Samstag','09:00 – 14:00 Uhr'],['Sonntag','Geschlossen']].map(([day,time]) => (
+            {[
+              ['Mo – Mi','09:00 – 18:00 Uhr'],
+              ['Donnerstag','15:00 – 18:00 Uhr'],
+              ['Freitag','15:00 – 18:00 Uhr'],
+              ['Sa & So','Geschlossen'],
+            ].map(([day,time]) => (
               <div key={day} style={{display:'flex',justifyContent:'space-between',fontSize:14,borderBottom:'1px solid var(--border)',paddingBottom:6}}>
                 <span style={{color:'var(--smoke)'}}>{day}</span>
                 <span style={{fontWeight:600,color:'var(--ink)'}}>{time}</span>
@@ -862,7 +713,7 @@ const Contact = () => (
             Bereit für Ihre<br/>Hauptuntersuchung?
           </div>
           <p style={{fontSize:13,color:'var(--smoke)',lineHeight:1.65}}>
-            Buchen Sie jetzt Ihren Termin — schnell, einfach und ohne Wartezeiten.
+            Buchen Sie jetzt Ihren Termin — schnell, einfach und ohne lange Wartezeiten.
           </p>
           <a href="#termin" className="btn btn-solid" style={{gap:10,alignSelf:'flex-start'}}>
             Online buchen <Ic.Arrow s={16}/>
@@ -930,7 +781,7 @@ const Footer = ({ openModal }) => (
 /* ─── LEGAL MODAL ────────────────────────────────────────────────────────── */
 const Modal = ({ title, onClose }) => {
   const content = {
-    Impressum: <div><h4 style={{marginBottom:8,fontSize:15,fontWeight:700,color:'var(--ink)'}}>Angaben gemäß § 5 TMG</h4><p style={{color:'var(--smoke)',lineHeight:1.8}}>TÜV Station Oberhausen GmbH<br/>Musterstraße 123<br/>46045 Oberhausen<br/><br/>Geschäftsführer: Max Mustermann<br/>Telefon: +49 123 456789<br/>E-Mail: info@tuev-oberhausen.de</p></div>,
+    Impressum: <div><h4 style={{marginBottom:8,fontSize:15,fontWeight:700,color:'var(--ink)'}}>Angaben gemäß § 5 TMG</h4><p style={{color:'var(--smoke)',lineHeight:1.8}}>TÜV Station Oberhausen GmbH<br/>Musterstraße 123<br/>46045 Oberhausen<br/><br/>Geschäftsführer: Max Mustermann<br/>Telefon: {PHONE}<br/>E-Mail: info@tuev-oberhausen.de</p></div>,
     Datenschutz: <p style={{color:'var(--smoke)',lineHeight:1.9}}>Wir nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Personenbezogene Daten werden nur im technisch notwendigen Umfang erhoben und gemäß DSGVO verarbeitet.</p>,
     AGB: <p style={{color:'var(--smoke)',lineHeight:1.9}}>Terminbuchungen sind verbindlich. Stornierungen bis 24 h vor Termin sind kostenfrei. Spätere Absagen können mit einer Bearbeitungsgebühr belegt werden.</p>,
   };
@@ -986,10 +837,7 @@ export default function App() {
       <Hero onBook={scrollBook}/>
       <TrustBar/>
       <Services/>
-      <StatsBand/>
-      <Pricing/>
       <Steps/>
-      <Reviews/>
       <BookingSection/>
       <FAQ/>
       <Contact/>
