@@ -234,7 +234,6 @@ const Navbar = ({ onBook }) => {
           ))}
         </nav>
 
-        {/* REQ 7: Jetzt anrufen (sekundär) und Termin buchen (primär) */}
         <div className="hide-mob" style={{display:'flex',alignItems:'center',gap:12}}>
           <a href={PHONE_HREF} className="btn btn-ghost" style={{padding:'9px 18px',fontSize:11, textDecoration:'none'}}>
              <Ic.Phone s={13}/> Jetzt anrufen
@@ -277,9 +276,12 @@ const Navbar = ({ onBook }) => {
   );
 };
 
-/* ─── HERO — REQ 1 & 3: Zentriert, Höher, nur 2 Buttons ─────────────────── */
+/* ─── HERO ───────────────────────────────────────────────────────────────── */
 const Hero = ({ onBook }) => (
   <div className="section-full" style={{background:'linear-gradient(160deg,#f0f6ff 0%,#f8fafc 55%,#eef4fe 100%)', padding:'60px 0 80px', display:'flex', alignItems:'center', position:'relative', overflow:'hidden'}}>
+    {/* ИЗОБРАЖЕНИЕ second.png НА ПЕРВОМ ЭКРАНЕ */}
+    <div style={{position:'absolute', inset:0, backgroundImage:"url('second.png')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.06, pointerEvents:'none', zIndex:0}} />
+    
     <HeroBg/>
 
     {/* Dekorative Elemente */}
@@ -287,9 +289,7 @@ const Hero = ({ onBook }) => (
     <div style={{position:'absolute',bottom:-60,left:-60,width:300,height:300,borderRadius:'50%',background:'rgba(26,86,219,.04)',pointerEvents:'none'}}/>
 
     <div className="inner" style={{position:'relative',zIndex:1, width:'100%', textAlign:'center'}}>
-      
       <motion.div initial={{opacity:0,y:32}} animate={{opacity:1,y:0}} transition={{duration:.8,ease:[.22,1,.36,1]}} style={{maxWidth: 700, margin: '0 auto'}}>
-        {/* REQ 1: Angepasster Text & Design für das Tag */}
         <div className="tag" style={{marginBottom:24, padding:'8px 18px', fontSize: 11, background: '#fff', boxShadow: '0 4px 12px rgba(26,86,219,0.08)'}}>
           <Ic.Shield s={12} c="var(--blue)"/> Offiziell zertifizierte Kfz-Prüfstelle
         </div>
@@ -302,7 +302,6 @@ const Hero = ({ onBook }) => (
           Buchen Sie Ihre Hauptuntersuchung und Abgasuntersuchung schnell und bequem online. Kein Warten, transparente Preise, professionelle Prüfingenieure.
         </p>
 
-        {/* REQ 3: Nur 1 Termin Buchen Button und 1 Anruf-Button */}
         <div style={{display:'flex',gap:16,flexWrap:'wrap', justifyContent:'center'}}>
           <button className="btn btn-primary" style={{fontSize:14,gap:9,padding:'14px 32px'}} onClick={onBook}>
             Termin buchen <Ic.Arrow s={16}/>
@@ -312,12 +311,11 @@ const Hero = ({ onBook }) => (
           </a>
         </div>
       </motion.div>
-
     </div>
   </div>
 );
 
-/* ─── TRUST BAR — REQ 2: Laufschrift (Marquee) ─────────────────────────── */
+/* ─── TRUST BAR ─────────────────────────────────────────────────────────── */
 const TrustBar = () => {
   const items = [
     [<Ic.Award  s={15} c="var(--blue)"/>,'Amtlich anerkannt'],
@@ -328,7 +326,6 @@ const TrustBar = () => {
     [<Ic.Leaf   s={15} c="var(--blue)"/>,'Umwelt-zertifiziert']
   ];
   
-  // Doppeltes Array für durchgängigen Scroll-Effekt
   const scrollingItems = [...items, ...items, ...items, ...items];
 
   return (
@@ -395,6 +392,9 @@ const Services = () => {
 
   return (
     <div id="leistungen" className="section-full sec" style={{background:'var(--stone)',position:'relative',overflow:'hidden'}}>
+      {/* ИЗОБРАЖЕНИЕ first.png НА ФОНЕ */}
+      <div style={{position:'absolute', inset:0, backgroundImage:"url('first.png')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.04, pointerEvents:'none', zIndex:0}} />
+      
       <SectionDeco side="right"/>
       <div className="inner" style={{position:'relative',zIndex:1}}>
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{marginBottom:40}}>
@@ -486,7 +486,7 @@ const Services = () => {
   );
 };
 
-/* ─── STEPS — REQ 4: Linien, Nummerierung ────────────────────────────────── */
+/* ─── STEPS ──────────────────────────────────────────────────────────────── */
 const Steps = () => {
   const steps = [
     {n:'01',title:'Online buchen',desc:'Leistung, Datum und Zeit wählen — rund um die Uhr verfügbar.'},
@@ -496,6 +496,9 @@ const Steps = () => {
   ];
   return (
     <div id="ablauf" className="section-full sec" style={{background:'#fff',position:'relative',overflow:'hidden'}}>
+      {/* ИЗОБРАЖЕНИЕ first.png НА ФОНЕ */}
+      <div style={{position:'absolute', inset:0, backgroundImage:"url('first.png')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.02, pointerEvents:'none', zIndex:0}} />
+      
       <SectionDeco side="left"/>
       <div className="inner" style={{position:'relative',zIndex:1}}>
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:48}}>
@@ -504,7 +507,6 @@ const Steps = () => {
           <div className="accent accent-c"/>
         </motion.div>
         
-        {/* steps-row hat das ::before pseudo-element im CSS für die Verbindungslinie */}
         <div className="steps-row">
           {steps.map((s,i) => (
             <motion.div key={i} initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.1}}
@@ -525,15 +527,18 @@ const Steps = () => {
   );
 };
 
-/* ─── BOOKING FORM — REQ 5: Features oben entfernt ───────────────────────── */
+/* ─── BOOKING FORM ───────────────────────────────────────────────────────── */
 const BookingSection = () => {
   const [form,setForm] = useState({leistung:'',fahrzeug:'PKW',datum:'',zeit:'',kennzeichen:'',name:'',telefon:'',email:'',anmerkungen:''});
   const [sent,setSent] = useState(false);
   const set = (k,v) => setForm(f=>({...f,[k]:v}));
 
   return (
-    <div id="termin" className="section-full sec" style={{background:'var(--stone)'}}>
-      <div className="inner" style={{maxWidth:820}}>
+    <div id="termin" className="section-full sec" style={{background:'var(--stone)', position:'relative', overflow:'hidden'}}>
+      {/* ИЗОБРАЖЕНИЕ first.png НА ФОНЕ */}
+      <div style={{position:'absolute', inset:0, backgroundImage:"url('first.png')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.04, pointerEvents:'none', zIndex:0}} />
+
+      <div className="inner" style={{maxWidth:820, position:'relative', zIndex:1}}>
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:40}}>
           <div className="tag" style={{marginBottom:10}}>Online Buchung</div>
           <h2 style={{fontWeight:800,fontSize:'clamp(24px,3.2vw,38px)',color:'var(--ink)',letterSpacing:'-.02em',marginBottom:10}}>
@@ -543,8 +548,6 @@ const BookingSection = () => {
             Wir bestätigen Ihren Wunschtermin zeitnah per E-Mail oder Telefon.
           </p>
         </motion.div>
-
-        {/* Feature Pills wurden hier wie gewünscht entfernt */}
 
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}}>
           <div style={{background:'#fff',borderRadius:18,border:'1px solid var(--border)',overflow:'hidden',boxShadow:'0 8px 32px rgba(0,0,0,.04)'}}>
@@ -617,7 +620,7 @@ const BookingSection = () => {
                 </div>
                 <div className="field">
                   <label>Anmerkungen</label>
-                  <textarea placeholder="Besonderheiten oder Fragen …" value={form.anmerkungen} onChange={e=>set('anmerkungen',e.target.value)}/>
+                  <textarea placeholder="Besonderheiten или Fragen …" value={form.anmerkungen} onChange={e=>set('anmerkungen',e.target.value)}/>
                 </div>
                 <button type="submit" className="btn btn-primary" style={{justifyContent:'center',padding:'13px',fontSize:13,marginTop:4}}>
                   Termin verbindlich anfragen <Ic.Arrow s={15}/>
@@ -660,6 +663,9 @@ const FAQ = () => {
   ];
   return (
     <div id="faq" className="section-full sec" style={{background:'#fff',position:'relative',overflow:'hidden'}}>
+      {/* ИЗОБРАЖЕНИЕ first.png НА ФОНЕ */}
+      <div style={{position:'absolute', inset:0, backgroundImage:"url('first.png')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.02, pointerEvents:'none', zIndex:0}} />
+
       <SectionDeco side="right" opacity={0.025}/>
       <div className="inner" style={{maxWidth:780,margin:'0 auto',position:'relative',zIndex:1}}>
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:40}}>
@@ -708,10 +714,13 @@ const MapEmbed = () => {
   return <iframe src="https://maps.google.com/maps?q=Oberhausen&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style={{border:'none',display:'block',filter:'grayscale(.1)',minHeight:360}} allowFullScreen loading="lazy" title="Standort"/>;
 };
 
-/* ─── CONTACT — REQ 6: Redesign ──────────────────────────────────────────── */
+/* ─── CONTACT ────────────────────────────────────────────────────────────── */
 const Contact = () => (
-  <div id="standort" className="section-full sec" style={{background:'var(--stone)'}}>
-    <div className="inner">
+  <div id="standort" className="section-full sec" style={{background:'var(--stone)', position:'relative', overflow:'hidden'}}>
+    {/* ИЗОБРАЖЕНИЕ first.png НА ФОНЕ */}
+    <div style={{position:'absolute', inset:0, backgroundImage:"url('first.png')", backgroundSize:'cover', backgroundPosition:'center', opacity:0.04, pointerEvents:'none', zIndex:0}} />
+
+    <div className="inner" style={{position:'relative', zIndex:1}}>
       <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{marginBottom:40, textAlign:'center'}}>
         <div className="tag" style={{marginBottom:10}}>Standort & Kontakt</div>
         <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,42px)',color:'var(--ink)',letterSpacing:'-.02em'}}>So finden Sie uns</h2>
@@ -720,7 +729,7 @@ const Contact = () => (
 
       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:40}} className="mob-stack">
         
-        {/* Linke Seite: Karte, modern abgerundet mit Schatten */}
+        {/* Linke Seite: Karte */}
         <div style={{borderRadius:20,overflow:'hidden',border:'1px solid var(--border)',boxShadow:'0 12px 40px rgba(0,0,0,.06)', height:'100%', minHeight:400}}>
           <MapEmbed />
         </div>
@@ -835,7 +844,7 @@ const LegalContent = {
   Datenschutz: (
     <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.85}}>
       <h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:8}}>Datenschutzerklärung</h4>
-      <p style={{marginBottom:12}}>Wir verarbeiten personenbezogene Daten ausschließlich gemäß der Datenschutz-Grundverordnung (DSGVO), dem Bundesdatenschutzgesetz (BDSG) und dem Telekommunikations-Telemedien-Datenschutzgesetz (TTDSG).</p>
+      <p style={{marginBottom:12}}>Wir verarbeiten personenbezogene Daten исключительно gemäß der Datenschutz-Grundverordnung (DSGVO), dem Bundesdatenschutzgesetz (BDSG) und dem Telekommunikations-Telemedien-Datenschutzgesetz (TTDSG).</p>
       <h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:6}}>Verantwortlicher (Art. 4 Nr. 7 DSGVO)</h4>
       <p style={{marginBottom:12}}>AutoService Oberhausen<br/>Musterstraße 123, 46045 Oberhausen<br/>E-Mail: info@autoservice-ob.de</p>
     </div>
