@@ -783,7 +783,7 @@ const Modal = ({ title, onClose }) => {
           Diese AGB gelten für alle Terminbuchungen über unsere Website.<br/><br/>
           <strong style={{color:'var(--ink)'}}>§ 2 Stornierung</strong><br/>
           Stornierungen sind bis 24 Stunden vor dem Termin kostenlos per Telefon oder E-Mail möglich. Bei späterer Absage behalten wir uns vor, eine Bearbeitungsgebühr zu erheben.<br/><br/>
-          <strong style={{color:'var(--ink)"}}>§ 3 Leistungen</strong><br/>
+          <strong style={{color:'var(--ink)'}}>§ 3 Leistungen</strong><br/>
           Unsere Prüfleistungen richten sich nach den gesetzlichen Vorgaben der StVZO. Es gelten die jeweils aktuellen Prüfvorschriften.<br/><br/>
           <strong style={{color:'var(--ink)'}}>§ 4 Gerichtsstand</strong><br/>
           Gerichtsstand ist Oberhausen. Es gilt deutsches Recht.
