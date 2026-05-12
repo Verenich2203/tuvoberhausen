@@ -7,7 +7,7 @@ const PHONE_HREF = "tel:+4915755476991";
 /* ─── GLOBAL STYLES ─────────────────────────────────────────────────────── */
 const G = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap');
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -22,8 +22,8 @@ const G = () => (
       --stone:  #F8FAFC;
       --smoke:  #64748B;
       --border: #E2E8F0;
-      --serif:  'DM Serif Display', Georgia, serif;
-      --sans:   'DM Sans', system-ui, sans-serif;
+      --serif:  'Montserrat', sans-serif;
+      --sans:   'Montserrat', sans-serif;
     }
 
     html, body { width: 100%; margin: 0; padding: 0; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
@@ -180,7 +180,7 @@ const Navbar = ({ onBook }) => {
             <Ic.Shield s={18} c="#fff"/>
           </div>
           <div>
-            <div style={{fontFamily:'var(--serif)',fontSize:20,color:'var(--ink)',lineHeight:1.1,letterSpacing:'-.01em'}}>
+            <div style={{fontFamily:'var(--sans)',fontWeight:800,fontSize:20,color:'var(--ink)',lineHeight:1.1,letterSpacing:'-.01em'}}>
               TÜV<span style={{color:'var(--blue)'}}>Station</span>
             </div>
             <div style={{fontSize:10,letterSpacing:'.1em',color:'var(--smoke)',textTransform:'uppercase',fontWeight:500}}>Oberhausen</div>
@@ -307,9 +307,9 @@ const Hero = ({ onBook }) => (
           <div className="tag" style={{background:'rgba(255,255,255,.08)',color:'rgba(255,255,255,.75)',borderColor:'rgba(255,255,255,.15)',marginBottom:26}}>
             <Ic.Shield s={10} c="rgba(255,255,255,.75)"/> Amtlich anerkannte Kfz-Prüfstelle
           </div>
-          <h1 style={{fontFamily:'var(--serif)',fontSize:'clamp(48px,6.5vw,88px)',color:'#fff',lineHeight:1.03,letterSpacing:'-.02em',marginBottom:26}}>
+          <h1 style={{fontFamily:'var(--sans)',fontWeight:800,fontSize:'clamp(40px,5.8vw,80px)',color:'#fff',lineHeight:1.06,letterSpacing:'-.02em',marginBottom:26}}>
             Ihre Haupt&shy;unter&shy;suchung<br/>
-            <em style={{fontStyle:'italic',color:'var(--sky)'}}>einfach</em> online buchen.
+            <span style={{color:'var(--sky)'}}>einfach</span> online buchen.
           </h1>
           <p style={{fontSize:16.5,color:'rgba(255,255,255,.62)',lineHeight:1.8,marginBottom:36,maxWidth:520}}>
             Zertifizierter Kfz-Prüfpunkt in Oberhausen. Buchen Sie Ihre HU&nbsp;&amp;&nbsp;AU bequem online — transparent, professionell und ohne Wartezeiten.
@@ -367,7 +367,7 @@ const Services = () => {
           style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:48,flexWrap:'wrap',gap:18}}>
           <div>
             <div className="tag" style={{marginBottom:12}}>Leistungen</div>
-            <h2 style={{fontFamily:'var(--serif)',fontSize:'clamp(30px,3.8vw,46px)',color:'var(--ink)',letterSpacing:'-.02em'}}>Alles aus einer Hand</h2>
+            <h2 style={{fontFamily:'var(--sans)',fontWeight:800,fontSize:'clamp(28px,3.8vw,44px)',color:'var(--ink)',letterSpacing:'-.02em'}}>Alles aus einer Hand</h2>
             <div className="accent"/>
             <p style={{color:'var(--smoke)',fontSize:15,maxWidth:460,lineHeight:1.7}}>Von der Pflichtprüfung bis zum Sondergutachten — alles für Ihr Fahrzeug.</p>
           </div>
@@ -408,7 +408,7 @@ const Steps = () => {
       <div className="inner">
         <motion.div initial={{opacity:0,y:18}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:56}}>
           <div className="tag" style={{marginBottom:12}}>Ablauf</div>
-          <h2 style={{fontFamily:'var(--serif)',fontSize:'clamp(30px,3.8vw,46px)',color:'var(--ink)',letterSpacing:'-.02em'}}>
+          <h2 style={{fontFamily:'var(--sans)',fontWeight:800,fontSize:'clamp(28px,3.8vw,44px)',color:'var(--ink)',letterSpacing:'-.02em'}}>
             In 4 Schritten zur Plakette
           </h2>
           <div className="accent accent-c"/>
@@ -442,7 +442,7 @@ const BookingSection = () => {
         <div style={{display:'grid',gridTemplateColumns:'1fr 500px',gap:68,alignItems:'start'}}>
           <motion.div initial={{opacity:0,x:-18}} whileInView={{opacity:1,x:0}} viewport={{once:true}}>
             <div className="tag" style={{marginBottom:12}}>Online Buchung</div>
-            <h2 style={{fontFamily:'var(--serif)',fontSize:'clamp(28px,3.2vw,44px)',letterSpacing:'-.02em',marginBottom:14,color:'var(--ink)'}}>
+            <h2 style={{fontFamily:'var(--sans)',fontWeight:800,fontSize:'clamp(26px,3.2vw,42px)',letterSpacing:'-.02em',marginBottom:14,color:'var(--ink)'}}>
               Termin sichern —<br/>ganz einfach online.
             </h2>
             <div className="accent"/>
@@ -468,7 +468,7 @@ const BookingSection = () => {
           <motion.div initial={{opacity:0,x:18}} whileInView={{opacity:1,x:0}} viewport={{once:true}}>
             <div className="card" style={{overflow:'hidden'}}>
               <div style={{background:'var(--navy)',padding:'24px 28px'}}>
-                <h3 style={{fontFamily:'var(--serif)',color:'#fff',fontSize:22,marginBottom:4,letterSpacing:'-.01em'}}>Termin vereinbaren</h3>
+                <h3 style={{fontFamily:'var(--sans)',fontWeight:700,color:'#fff',fontSize:20,marginBottom:4,letterSpacing:'-.01em'}}>Termin vereinbaren</h3>
                 <p style={{color:'rgba(255,255,255,.45)',fontSize:12.5}}>Pflichtfelder sind mit * markiert.</p>
               </div>
               {!sent ? (
@@ -546,7 +546,7 @@ const BookingSection = () => {
                   <div style={{width:56,height:56,borderRadius:'50%',background:'var(--ice)',border:'1.5px solid var(--blue)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 18px'}}>
                     <Ic.Check s={24} c="var(--blue)"/>
                   </div>
-                  <h3 style={{fontFamily:'var(--serif)',fontSize:22,marginBottom:9,color:'var(--ink)'}}>Anfrage erhalten!</h3>
+                  <h3 style={{fontFamily:'var(--sans)',fontWeight:700,fontSize:22,marginBottom:9,color:'var(--ink)'}}>Anfrage erhalten!</h3>
                   <p style={{color:'var(--smoke)',fontSize:14,lineHeight:1.7,marginBottom:22}}>Wir melden uns zeitnah bei Ihnen.<br/><strong style={{color:'var(--ink)'}}>{form.datum} · {form.zeit}</strong></p>
                   <button className="btn btn-primary" onClick={()=>setSent(false)} style={{margin:'0 auto'}}>Neuen Termin anfragen</button>
                 </div>
@@ -575,7 +575,7 @@ const FAQ = () => {
       <div className="inner" style={{maxWidth:820,margin:'0 auto'}}>
         <motion.div initial={{opacity:0,y:18}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:48}}>
           <div className="tag" style={{marginBottom:12}}>Häufige Fragen</div>
-          <h2 style={{fontFamily:'var(--serif)',fontSize:'clamp(30px,3.8vw,46px)',color:'var(--ink)',letterSpacing:'-.02em'}}>Alles was Sie wissen müssen</h2>
+          <h2 style={{fontFamily:'var(--sans)',fontWeight:800,fontSize:'clamp(28px,3.8vw,44px)',color:'var(--ink)',letterSpacing:'-.02em'}}>Alles was Sie wissen müssen</h2>
           <div className="accent accent-c"/>
         </motion.div>
         <div className="card" style={{padding:'2px 32px'}}>
@@ -604,17 +604,12 @@ const FAQ = () => {
 const Contact = () => (
   <div id="standort" className="section-full" style={{background:'var(--stone)'}}>
     <div style={{width:'100%',lineHeight:0}}>
-      <iframe
-        src="https://maps.google.com/maps?q=51.472992,6.863788&hl=de&z=15&output=embed"
-        width="100%" height="460"
-        style={{border:'none',display:'block',filter:'grayscale(.1)'}}
-        allowFullScreen loading="lazy" title="Standort Karte"
-      />
+      <MapEmbed/>
     </div>
     <div className="inner" style={{padding:'68px 72px'}}>
       <motion.div initial={{opacity:0,y:18}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{marginBottom:44}}>
         <div className="tag" style={{marginBottom:12}}>Standort & Kontakt</div>
-        <h2 style={{fontFamily:'var(--serif)',fontSize:'clamp(28px,3.5vw,44px)',color:'var(--ink)',letterSpacing:'-.02em'}}>So finden Sie uns</h2>
+        <h2 style={{fontFamily:'var(--sans)',fontWeight:800,fontSize:'clamp(26px,3.5vw,42px)',color:'var(--ink)',letterSpacing:'-.02em'}}>So finden Sie uns</h2>
         <div className="accent"/>
       </motion.div>
 
@@ -677,7 +672,7 @@ const Contact = () => (
 
         {/* CTA */}
         <div style={{display:'flex',flexDirection:'column',justifyContent:'center',gap:12}}>
-          <h3 style={{fontFamily:'var(--serif)',fontSize:24,color:'var(--navy)',letterSpacing:'-.01em',lineHeight:1.2}}>
+          <h3 style={{fontFamily:'var(--sans)',fontWeight:700,fontSize:22,color:'var(--navy)',letterSpacing:'-.01em',lineHeight:1.25}}>
             Bereit für Ihre<br/>Hauptuntersuchung?
           </h3>
           <p style={{fontSize:13,color:'var(--smoke)',lineHeight:1.65}}>
@@ -702,7 +697,7 @@ const Footer = ({ openModal }) => (
             <div style={{width:34,height:34,background:'var(--blue)',borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center'}}>
               <Ic.Shield s={17} c="#fff"/>
             </div>
-            <div style={{fontFamily:'var(--serif)',fontSize:20,letterSpacing:'-.01em',color:'#fff'}}>
+            <div style={{fontFamily:'var(--sans)',fontWeight:800,fontSize:20,letterSpacing:'-.01em',color:'#fff'}}>
               TÜV<span style={{color:'var(--sky)'}}>Station</span>
             </div>
           </div>
@@ -799,7 +794,7 @@ const Modal = ({ title, onClose }) => {
         <motion.div initial={{opacity:0,y:32,scale:.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:16,scale:.97}}
           style={{position:'relative',background:'#fff',width:'100%',maxWidth:540,maxHeight:'80vh',borderRadius:18,display:'flex',flexDirection:'column',boxShadow:'0 28px 56px rgba(0,0,0,.22)',overflow:'hidden'}}>
           <div style={{padding:'22px 28px',borderBottom:'1px solid var(--border)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-            <h3 style={{fontFamily:'var(--serif)',fontSize:21,color:'var(--ink)'}}>{title}</h3>
+            <h3 style={{fontFamily:'var(--sans)',fontWeight:700,fontSize:20,color:'var(--ink)'}}>{title}</h3>
             <button onClick={onClose} style={{background:'var(--stone)',border:'none',width:34,height:34,borderRadius:'50%',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
               <Ic.X s={16}/>
             </button>
@@ -811,7 +806,87 @@ const Modal = ({ title, onClose }) => {
   );
 };
 
-/* ─── SCROLL TOP ─────────────────────────────────────────────────────────── */
+/* ─── COOKIE BANNER (DSGVO / TTDSG) ─────────────────────────────────────── */
+const CookieBanner = () => {
+  const [visible, setVisible] = useState(false);
+  const [details, setDetails] = useState(false);
+  useEffect(() => {
+    const consent = localStorage.getItem('cookie_consent');
+    if (!consent) setVisible(true);
+  }, []);
+  const accept = (all) => {
+    localStorage.setItem('cookie_consent', all ? 'all' : 'essential');
+    setVisible(false);
+  };
+  if (!visible) return null;
+  return (
+    <div style={{position:'fixed',bottom:0,left:0,right:0,zIndex:500,background:'#fff',borderTop:'1px solid var(--border)',boxShadow:'0 -6px 32px rgba(0,0,0,.1)',padding:'20px 0'}}>
+      <div className="inner" style={{display:'flex',flexDirection:'column',gap:14}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',flexWrap:'wrap',gap:12}}>
+          <div style={{flex:1,minWidth:280}}>
+            <div style={{fontWeight:700,fontSize:15,color:'var(--ink)',marginBottom:6}}>🍪 Diese Website verwendet Cookies</div>
+            <p style={{fontSize:13,color:'var(--smoke)',lineHeight:1.65,maxWidth:680}}>
+              Wir verwenden technisch notwendige Cookies für den Betrieb dieser Website. Mit Ihrer Einwilligung verwenden wir auch Analyse-Cookies zur Verbesserung unseres Angebots (§ 25 TTDSG, Art. 6 Abs. 1 lit. a DSGVO).
+              {' '}<button onClick={()=>setDetails(d=>!d)} style={{background:'none',border:'none',color:'var(--blue)',cursor:'pointer',fontSize:13,padding:0,fontFamily:'var(--sans)',textDecoration:'underline'}}>{details?'Weniger anzeigen':'Mehr erfahren'}</button>
+            </p>
+            {details && (
+              <div style={{marginTop:12,padding:14,background:'var(--stone)',borderRadius:10,fontSize:12,color:'var(--smoke)',lineHeight:1.7}}>
+                <strong style={{color:'var(--ink)'}}>Notwendige Cookies:</strong> Sicherheitsrelevante Funktionen, Session-Verwaltung — immer aktiv.<br/>
+                <strong style={{color:'var(--ink)'}}>Analyse-Cookies:</strong> Google Analytics (nur mit Ihrer Einwilligung) zur anonymisierten Nutzungsanalyse.<br/>
+                <strong style={{color:'var(--ink)'}}>Google Maps:</strong> Karte auf dieser Seite nutzt Google-Dienste — nur mit Ihrer Zustimmung geladen.<br/>
+                Sie können Ihre Einwilligung jederzeit widerrufen. Weitere Informationen finden Sie in unserer <a href="#" style={{color:'var(--blue)'}}>Datenschutzerklärung</a>.
+              </div>
+            )}
+          </div>
+          <div style={{display:'flex',gap:10,alignItems:'center',flexShrink:0,flexWrap:'wrap'}}>
+            <button className="btn btn-ghost" style={{padding:'10px 20px',fontSize:13}} onClick={()=>accept(false)}>
+              Nur notwendige
+            </button>
+            <button className="btn btn-primary" style={{padding:'10px 20px',fontSize:13}} onClick={()=>accept(true)}>
+              Alle akzeptieren
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ─── MAP WITH CONSENT WALL ─────────────────────────────────────────────── */
+const MapEmbed = () => {
+  const consent = typeof localStorage !== 'undefined' && localStorage.getItem('cookie_consent');
+  const [accepted, setAccepted] = useState(consent === 'all');
+  if (!accepted) return (
+    <div style={{width:'100%',height:460,background:'var(--stone)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:16,borderBottom:'1px solid var(--border)'}}>
+      <div style={{width:52,height:52,background:'var(--ice)',borderRadius:14,display:'flex',alignItems:'center',justifyContent:'center'}}>
+        <Ic.Pin s={24} c="var(--blue)"/>
+      </div>
+      <div style={{textAlign:'center',maxWidth:380}}>
+        <div style={{fontWeight:700,fontSize:16,color:'var(--ink)',marginBottom:8}}>Google Maps ist deaktiviert</div>
+        <p style={{fontSize:13,color:'var(--smoke)',lineHeight:1.65}}>
+          Um die interaktive Karte anzuzeigen, müssen Sie Google Maps zustimmen. Dabei werden Daten an Google LLC (USA) übertragen (Art. 49 Abs. 1 lit. a DSGVO).
+        </p>
+      </div>
+      <button className="btn btn-primary" style={{fontSize:13,padding:'10px 22px'}} onClick={()=>{ localStorage.setItem('cookie_consent','all'); setAccepted(true); }}>
+        Google Maps aktivieren
+      </button>
+      <a href={`https://maps.google.com/?q=51.472992,6.863788`} target="_blank" rel="noopener noreferrer"
+        style={{fontSize:12,color:'var(--smoke)',textDecoration:'underline'}}>
+        Alternativ: in Google Maps öffnen
+      </a>
+    </div>
+  );
+  return (
+    <iframe
+      src="https://maps.google.com/maps?q=51.472992,6.863788&hl=de&z=15&output=embed"
+      width="100%" height="460"
+      style={{border:'none',display:'block',filter:'grayscale(.1)'}}
+      allowFullScreen loading="lazy" title="Standort Karte"
+    />
+  );
+};
+
+
 const ScrollTop = () => {
   const [vis,setVis] = useState(false);
   useEffect(()=>{
@@ -850,6 +925,7 @@ export default function App() {
       <Footer openModal={setModal}/>
       <ScrollTop/>
       {modal && <Modal title={modal} onClose={()=>setModal(null)}/>}
+      <CookieBanner/>
     </>
   );
 }
