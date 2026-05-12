@@ -63,34 +63,67 @@ const G = () => (
     .btn-ghost { background:transparent; color:var(--blue); border:1.5px solid var(--border); }
     .btn-ghost:hover { background:var(--ice); border-color:var(--blue); }
 
-    /* Card */
-    .card {
-      background:#fff; border-radius:16px; border:1px solid var(--border);
-      box-shadow:0 1px 8px rgba(0,0,0,.03);
-      transition:transform .26s ease, box-shadow .26s ease;
+    /* Service Card */
+    .service-card {
+      background:#fff; border-radius:20px; border:1px solid var(--border);
+      box-shadow:0 4px 14px rgba(0,0,0,.03);
+      transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+      cursor: pointer;
     }
-    .card:hover { transform:translateY(-3px); box-shadow:0 12px 36px rgba(0,0,0,.08); }
+    .service-card:hover { 
+      transform:translateY(-4px); 
+      box-shadow:0 16px 40px rgba(0,0,0,.08); 
+      border-color: rgba(26,86,219,.3);
+    }
+
+    /* Form Modern Design */
+    .modern-form-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+    .modern-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .modern-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-left: 2px;
+    }
+    .modern-input, .modern-select, .modern-textarea {
+      width: 100%;
+      background: var(--stone);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 14px;
+      font-family: var(--sans);
+      color: var(--ink);
+      transition: all 0.2s ease;
+      -webkit-appearance: none;
+    }
+    .modern-select {
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%230A2540' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; cursor:pointer;
+    }
+    .modern-textarea { resize: vertical; min-height: 90px; }
+    .modern-input:focus, .modern-select:focus, .modern-textarea:focus {
+      background: #fff;
+      border-color: var(--blue);
+      outline: none;
+      box-shadow: 0 4px 12px rgba(26,86,219,0.08);
+    }
 
     /* Accent line */
     .accent { width:36px; height:2px; background:var(--blue); border-radius:2px; margin:12px 0 20px; }
     .accent-c { margin:12px auto 20px; }
-
-    /* Form fields */
-    .field { display:flex; flex-direction:column; gap:5px; }
-    .field label { font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--smoke); }
-    .field input, .field select, .field textarea {
-      font-family:var(--sans); font-size:14px; color:var(--ink);
-      background:var(--stone); border:1.5px solid var(--border); border-radius:9px;
-      padding:11px 14px; transition:border-color .18s, box-shadow .18s; -webkit-appearance:none;
-    }
-    .field input:focus, .field select:focus, .field textarea:focus {
-      outline:none; border-color:var(--blue); background:#fff; box-shadow:0 0 0 3px rgba(26,86,219,.1);
-    }
-    .field select {
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-      background-repeat:no-repeat; background-position:right 12px center; padding-right:36px; cursor:pointer;
-    }
-    .field textarea { resize:vertical; min-height:80px; }
 
     /* Nav link */
     .nav-link {
@@ -129,14 +162,6 @@ const G = () => (
     .faq-q.open .faq-icon { background:var(--blue); border-color:var(--blue); transform:rotate(45deg); }
     .faq-a { font-size:13.5px; line-height:1.8; color:var(--smoke); padding-bottom:20px; }
 
-    /* Trust bar single line */
-    .trust-bar {
-      display:flex; flex-wrap:nowrap; justify-content:space-between; align-items:center;
-      gap:0; overflow-x:auto; padding:16px 72px;
-    }
-    .trust-bar::-webkit-scrollbar { display:none; }
-    .trust-item { display:flex; align-items:center; gap:7px; white-space:nowrap; padding:0 8px; }
-
     ::-webkit-scrollbar { width:4px; }
     ::-webkit-scrollbar-track { background:transparent; }
     ::-webkit-scrollbar-thumb { background:var(--border); border-radius:8px; }
@@ -169,7 +194,7 @@ const Ic = {
   Tire:    ({s=70,c="currentColor"}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="22"/><line x1="2" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="22" y2="12"/></svg>,
 };
 
-/* ─── ANIMATED BG SHAPES (Hero) ─────────────────────────────────────────── */
+/* ─── ANIMATED BG SHAPES ───────────────────────────────────────────────── */
 const HeroBg = () => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start","end start"] });
@@ -181,38 +206,25 @@ const HeroBg = () => {
 
   return (
     <div ref={ref} style={{position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none'}}>
-      {/* Gear 1 — large, bottom right */}
       <motion.div style={{position:'absolute', right:'8%', bottom:'10%', y:y1, rotate:rot1, opacity:.06}}>
         <Ic.Gear s={280} c="white"/>
       </motion.div>
-      {/* Gear 2 — small, top left */}
       <motion.div style={{position:'absolute', left:'4%', top:'18%', y:y2, rotate:rot2, opacity:.05}}>
         <Ic.Gear s={140} c="white"/>
       </motion.div>
-      {/* Tire — mid right */}
       <motion.div style={{position:'absolute', right:'28%', top:'8%', y:y3, opacity:.05}}>
         <Ic.Tire s={160} c="white"/>
       </motion.div>
-      {/* Wrench — far left mid */}
       <motion.div style={{position:'absolute', left:'1%', bottom:'30%', y:y2, opacity:.04}}>
         <Ic.Wrench s={120} c="white"/>
       </motion.div>
-      {/* Bolt — top right */}
       <motion.div style={{position:'absolute', right:'3%', top:'14%', y:y1, rotate:rot1, opacity:.05}}>
         <Ic.Bolt s={90} c="white"/>
       </motion.div>
-      {/* Concentric circles */}
-      <svg style={{position:'absolute',right:'-2%',top:'50%',transform:'translateY(-50%)',opacity:.04}} width="520" height="520" viewBox="0 0 520 520" fill="none">
-        <circle cx="260" cy="260" r="259" stroke="white" strokeWidth="1"/>
-        <circle cx="260" cy="260" r="195" stroke="white" strokeWidth="1"/>
-        <circle cx="260" cy="260" r="130" stroke="white" strokeWidth="1"/>
-        <circle cx="260" cy="260" r="65"  stroke="white" strokeWidth="1"/>
-      </svg>
     </div>
   );
 };
 
-/* ─── SECTION BG DECO (light sections) ─────────────────────────────────── */
 const SectionDeco = ({ side = 'right', opacity = 0.035 }) => {
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0,1], [0, -60]);
@@ -253,8 +265,11 @@ const Navbar = ({ onBook }) => {
       transition:'all .3s'
     }}>
       <div className="inner" style={{display:'flex',alignItems:'center',justifyContent:'space-between',height:66}}>
-        {/* Logo */}
-        <div style={{display:'flex',alignItems:'center',gap:10}}>
+        {/* Кликабельное Лого -> скролл наверх */}
+        <div 
+          onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})} 
+          style={{display:'flex',alignItems:'center',gap:10, cursor:'pointer'}}
+        >
           <div style={{width:34,height:34,background:'var(--blue)',borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
             <Ic.Wrench s={16} c="#fff"/>
           </div>
@@ -266,7 +281,6 @@ const Navbar = ({ onBook }) => {
           </div>
         </div>
 
-        {/* Nav */}
         <nav style={{display:'flex',gap:32,alignItems:'center'}}>
           {[['leistungen','Leistungen'],['ablauf','Ablauf'],['faq','FAQ'],['standort','Standort']].map(([id,label]) => (
             <a key={id} href={`#${id}`} className="nav-link"
@@ -299,7 +313,6 @@ const QuickBook = () => {
 
   return (
     <div style={{background:'rgba(255,255,255,.07)',backdropFilter:'blur(28px)',borderRadius:20,border:'1px solid rgba(255,255,255,.16)',overflow:'hidden',width:380,flexShrink:0}}>
-      {/* Steps header */}
       <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',background:'rgba(0,0,0,.14)'}}>
         {['Leistung','Datum','Zeit'].map((s,i) => (
           <div key={s} style={{padding:'13px 8px',textAlign:'center',borderBottom:`2px solid ${i===step?'rgba(255,255,255,.75)':'rgba(255,255,255,.12)'}`}}>
@@ -386,7 +399,7 @@ const Hero = ({ onBook }) => (
             <span style={{color:'var(--sky)'}}>einfach</span> online buchen.
           </h1>
           <p style={{fontSize:15.5,color:'rgba(255,255,255,.6)',lineHeight:1.82,marginBottom:36,maxWidth:500}}>
-            Zertifizierter Kfz-Prüfpunkt in Oberhausen. Buchen Sie Ihre HU&nbsp;&amp;&nbsp;AU bequem online — transparent, professionell und ohne Wartezeiten.
+            Zertifizierter Kfz-Prüfpunkt in Oberhausen. Buchen Sie Ihre HU & AU bequem online — transparent, professionell und ohne Wartezeiten.
           </p>
           <div style={{display:'flex',gap:12,flexWrap:'wrap'}}>
             <button className="btn btn-white" style={{fontSize:13,gap:9}} onClick={onBook}>
@@ -403,37 +416,74 @@ const Hero = ({ onBook }) => (
   </div>
 );
 
-/* ─── TRUST BAR (single line) ───────────────────────────────────────────── */
+/* ─── TRUST BAR (БЕЗ СКРОЛЛА, 1 СТРОКА) ─────────────────────────────────── */
 const TrustBar = () => (
   <div className="section-full" style={{background:'#fff',borderBottom:'1px solid var(--border)'}}>
-    <div className="trust-bar inner" style={{padding:'15px 72px'}}>
+    <div className="inner" style={{display:'flex',justifyContent:'center',alignItems:'center',gap:'4%',flexWrap:'wrap',padding:'20px 0'}}>
       {[
-        [<Ic.Award  s={14} c="var(--blue)"/>,'Amtlich anerkannte Prüfstelle'],
-        [<Ic.Clock  s={14} c="var(--blue)"/>,'Kurze Wartezeiten'],
-        [<Ic.Cert   s={14} c="var(--blue)"/>,'Transparente Preise'],
-        [<Ic.Shield s={14} c="var(--blue)"/>,'Online-Buchung 24/7'],
-        [<Ic.Wrench s={14} c="var(--blue)"/>,'Qualifizierte Prüfingenieure'],
-        [<Ic.Leaf   s={14} c="var(--blue)"/>,'Umwelt-zertifiziert'],
-      ].map(([ico,t],i,arr) => (
-        <div key={t} className="trust-item" style={{borderRight: i<arr.length-1 ? '1px solid var(--border)' : 'none', paddingRight:20, marginRight:4}}>
+        [<Ic.Award  s={18} c="var(--blue)"/>,'Amtlich anerkannt'],
+        [<Ic.Clock  s={18} c="var(--blue)"/>,'Kurze Wartezeiten'],
+        [<Ic.Cert   s={18} c="var(--blue)"/>,'Transparente Preise'],
+        [<Ic.Wrench s={18} c="var(--blue)"/>,'Experten-Team'],
+      ].map(([ico,t], i) => (
+        <div key={t} style={{display:'flex',alignItems:'center',gap:10, padding:'8px 0'}}>
           {ico}
-          <span style={{fontSize:11,fontWeight:700,color:'var(--smoke)',letterSpacing:'.08em',textTransform:'uppercase'}}>{t}</span>
+          <span style={{fontSize:11.5,fontWeight:700,color:'var(--smoke)',letterSpacing:'.08em',textTransform:'uppercase',whiteSpace:'nowrap'}}>{t}</span>
         </div>
       ))}
     </div>
   </div>
 );
 
-/* ─── SERVICES ───────────────────────────────────────────────────────────── */
+/* ─── SERVICES WITH MODAL ───────────────────────────────────────────────── */
 const Services = () => {
+  const [activeModal, setActiveModal] = useState(null);
+
   const items = [
-    {ico:<Ic.Shield s={26} c="var(--blue)"/>, title:'Hauptuntersuchung', sub:'HU · §29 StVZO', desc:'Gesetzlich vorgeschriebene Sicherheitsprüfung auf Verkehrstauglichkeit — schnell und zuverlässig durchgeführt.', tag:'Pflicht'},
-    {ico:<Ic.Leaf   s={26} c="var(--blue)"/>, title:'Abgasuntersuchung', sub:'AU · Emissionsprüfung', desc:'Prüfung der Abgaswerte gemäß gesetzlicher Vorgaben — auch kombiniert mit der HU möglich.', tag:'Kombi möglich'},
-    {ico:<Ic.Wrench s={26} c="var(--blue)"/>, title:'Vorab-Check', sub:'Sicherheitscheck', desc:'Wir prüfen Ihr Fahrzeug vorab auf potenzielle Mängel — damit Sie optimal vorbereitet sind.', tag:'Empfohlen'},
-    {ico:<Ic.Clip   s={26} c="var(--blue)"/>, title:'Eintragungen', sub:'§19 StVZO · Abnahmen', desc:'Abnahme von Fahrzeugveränderungen wie Tuning, Fahrwerk und Felgen gemäß Vorschrift.', tag:'Flexibel'},
-    {ico:<Ic.Moto   s={26} c="var(--blue)"/>, title:'Motorrad-HU', sub:'Zweiräder · Saisonal', desc:'Spezialisierte Hauptuntersuchung für Motorräder und Leichtkrafträder.', tag:'Saisonal'},
-    {ico:<Ic.Award  s={26} c="var(--blue)"/>, title:'Oldtimer-Gutachten', sub:'§23 StVZO · H-Kennzeichen', desc:'Vollständige Begutachtung für das H-Kennzeichen mit offiziellem Gutachten gemäß §23 StVZO.', tag:'Speziell'},
+    {
+      ico:<Ic.Shield s={28} c="var(--blue)"/>, title:'Hauptuntersuchung', sub:'HU · §29 StVZO', desc:'Gesetzlich vorgeschriebene Sicherheitsprüfung auf Verkehrstauglichkeit.', tag:'Pflicht',
+      modal: {
+        duration: 'ca. 30 Minuten', price: 'ab 142,00 €',
+        points: ['Überprüfung von Bremsanlage und Lenkung', 'Sichtprüfung von Fahrgestell und Karosserie', 'Kontrolle der lichttechnischen Einrichtungen', 'Prüfung von Achsen, Rädern und Reifen']
+      }
+    },
+    {
+      ico:<Ic.Leaf s={28} c="var(--blue)"/>, title:'Abgasuntersuchung', sub:'AU · Emissionsprüfung', desc:'Prüfung der Abgaswerte gemäß gesetzlicher Vorgaben — auch als Kombi.', tag:'Kombi',
+      modal: {
+        duration: 'ca. 15 Minuten', price: 'ab 45,00 €',
+        points: ['Sichtprüfung der Abgasanlage', 'Messung der Abgaswerte (CO, HC, Lambda)', 'Überprüfung der Motorelektronik (OBD)', 'Bescheinigung der Messwerte zur Vorlage']
+      }
+    },
+    {
+      ico:<Ic.Wrench s={28} c="var(--blue)"/>, title:'Vorab-Check', sub:'Sicherheitscheck', desc:'Wir prüfen Ihr Fahrzeug vorab auf Mängel — für eine garantierte Plakette.', tag:'Empfohlen',
+      modal: {
+        duration: 'ca. 20 Minuten', price: 'Kostenlos bei anschließender HU',
+        points: ['Identifikation von HU-relevanten Mängeln', 'Vermeidung von Nachprüfungsgebühren', 'Kostenschätzung für eventuelle Reparaturen', 'Kurze Beratung durch Prüfingenieur']
+      }
+    },
+    {
+      ico:<Ic.Clip s={28} c="var(--blue)"/>, title:'Eintragungen', sub:'§19 StVZO · Abnahmen', desc:'Abnahme von Fahrzeugveränderungen wie Tuning, Fahrwerk und Felgen.', tag:'Flexibel',
+      modal: {
+        duration: 'ca. 30–60 Minuten', price: 'ab 65,00 € (je nach Aufwand)',
+        points: ['Prüfung der Anbauteile (Felgen, Fahrwerk, Spoiler)', 'Abgleich mit ABE oder Teilegutachten', 'Sicherstellung der Freigängigkeit und Funktion', 'Ausstellung der Änderungsabnahme']
+      }
+    },
+    {
+      ico:<Ic.Moto s={28} c="var(--blue)"/>, title:'Motorrad-HU', sub:'Zweiräder · Saisonal', desc:'Spezialisierte Hauptuntersuchung für Motorräder und Leichtkrafträder.', tag:'Saisonal',
+      modal: {
+        duration: 'ca. 20 Minuten', price: 'ab 75,00 €',
+        points: ['Prüfung von Bremsanlage und Kettensatz', 'Kontrolle der Reifen (Profil und Alter)', 'Sichtprüfung von Rahmen und Lenkkopf', 'Funktionstest Beleuchtung und Hupe']
+      }
+    },
+    {
+      ico:<Ic.Award s={28} c="var(--blue)"/>, title:'Oldtimer-Gutachten', sub:'§23 StVZO · H-Kennz.', desc:'Vollständige Begutachtung für das H-Kennzeichen mit offiziellem Gutachten.', tag:'Speziell',
+      modal: {
+        duration: 'ca. 60 Minuten', price: 'ab 185,00 €',
+        points: ['Überprüfung auf zeitgenössischen Originalzustand', 'Umfassender Technik- und Sicherheits-Check', 'Prüfung der Fahrzeughistorie', 'Erstellung des Gutachtens für Zulassungsstelle']
+      }
+    },
   ];
+
   return (
     <div id="leistungen" className="section-full sec" style={{background:'var(--stone)',position:'relative',overflow:'hidden'}}>
       <SectionDeco side="right" opacity={0.03}/>
@@ -446,26 +496,84 @@ const Services = () => {
             <div className="accent"/>
             <p style={{color:'var(--smoke)',fontSize:14.5,maxWidth:440,lineHeight:1.72}}>Von der Pflichtprüfung bis zum Sondergutachten.</p>
           </div>
-          <a href="#termin" className="btn btn-primary">Termin buchen</a>
         </motion.div>
+
         <div className="g3">
           {items.map((s,i) => (
             <motion.div key={i} initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.06}}
-              className="card" style={{padding:26}}>
-              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:16}}>
-                <div style={{width:50,height:50,background:'var(--ice)',borderRadius:12,display:'flex',alignItems:'center',justifyContent:'center'}}>{s.ico}</div>
-                <div className="tag" style={{fontSize:9,padding:'3px 9px'}}>{s.tag}</div>
+              className="service-card" style={{padding:30, display:'flex', flexDirection:'column'}}
+              onClick={() => setActiveModal(s)}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:20}}>
+                <div style={{width:56,height:56,background:'linear-gradient(135deg, var(--ice), #fff)',borderRadius:14,border:'1px solid var(--border)',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 10px rgba(0,0,0,.02)'}}>{s.ico}</div>
+                <div className="tag" style={{fontSize:9,padding:'4px 10px'}}>{s.tag}</div>
               </div>
-              <div style={{fontSize:10,color:'var(--smoke)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:4,fontWeight:700}}>{s.sub}</div>
-              <h3 style={{fontSize:17,marginBottom:8,fontWeight:700,color:'var(--ink)'}}>{s.title}</h3>
-              <p style={{color:'var(--smoke)',fontSize:13,lineHeight:1.68,marginBottom:14}}>{s.desc}</p>
-              <div style={{display:'flex',alignItems:'center',gap:4,color:'var(--blue)',fontSize:11,fontWeight:700,cursor:'pointer',letterSpacing:'.08em',textTransform:'uppercase'}}>
-                Mehr erfahren <Ic.ChevR s={11} c="var(--blue)"/>
+              <div style={{fontSize:10,color:'var(--smoke)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:6,fontWeight:700}}>{s.sub}</div>
+              <h3 style={{fontSize:18,marginBottom:10,fontWeight:700,color:'var(--ink)'}}>{s.title}</h3>
+              <p style={{color:'var(--smoke)',fontSize:13.5,lineHeight:1.68,marginBottom:20, flex:1}}>{s.desc}</p>
+              
+              <div style={{display:'inline-flex',alignItems:'center',gap:6,color:'var(--blue)',fontSize:12,fontWeight:700,letterSpacing:'.08em',textTransform:'uppercase', transition:'gap .2s', marginTop:'auto'}}>
+                Mehr erfahren <Ic.ChevR s={12} c="var(--blue)"/>
               </div>
             </motion.div>
           ))}
         </div>
       </div>
+
+      {/* MODAL FÜR LEISTUNGEN */}
+      <AnimatePresence>
+        {activeModal && (
+          <div style={{position:'fixed',inset:0,zIndex:999,display:'flex',alignItems:'center',justifyContent:'center',padding:16}}>
+            <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={() => setActiveModal(null)}
+              style={{position:'absolute',inset:0,background:'rgba(10,37,64,.75)',backdropFilter:'blur(6px)'}}/>
+            <motion.div initial={{opacity:0,y:28,scale:.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:14,scale:.97}}
+              style={{position:'relative',background:'#fff',width:'100%',maxWidth:540,borderRadius:20,display:'flex',flexDirection:'column',boxShadow:'0 24px 52px rgba(0,0,0,.2)',overflow:'hidden'}}>
+              
+              <div style={{padding:'24px 30px',background:'var(--stone)',borderBottom:'1px solid var(--border)',display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+                <div>
+                  <div style={{fontSize:10,color:'var(--smoke)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:4,fontWeight:700}}>{activeModal.sub}</div>
+                  <h3 style={{fontWeight:800,fontSize:22,color:'var(--ink)'}}>{activeModal.title}</h3>
+                </div>
+                <button onClick={() => setActiveModal(null)} style={{background:'#fff',border:'1px solid var(--border)',width:36,height:36,borderRadius:'50%',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 6px rgba(0,0,0,.04)'}}>
+                  <Ic.X s={16}/>
+                </button>
+              </div>
+              
+              <div style={{padding:'30px'}}>
+                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:28}}>
+                  <div style={{background:'var(--ice)',padding:'14px 18px',borderRadius:12}}>
+                    <div style={{display:'flex',alignItems:'center',gap:6,fontSize:11,fontWeight:700,color:'var(--smoke)',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:4}}>
+                      <Ic.Clock s={14}/> Dauer
+                    </div>
+                    <div style={{fontWeight:700,fontSize:15,color:'var(--navy)'}}>{activeModal.modal.duration}</div>
+                  </div>
+                  <div style={{background:'var(--ice)',padding:'14px 18px',borderRadius:12}}>
+                    <div style={{display:'flex',alignItems:'center',gap:6,fontSize:11,fontWeight:700,color:'var(--smoke)',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:4}}>
+                      <Ic.Cert s={14}/> Preis
+                    </div>
+                    <div style={{fontWeight:700,fontSize:15,color:'var(--navy)'}}>{activeModal.modal.price}</div>
+                  </div>
+                </div>
+
+                <div style={{fontWeight:700,fontSize:14,color:'var(--ink)',marginBottom:14,textTransform:'uppercase',letterSpacing:'.04em'}}>Ablauf & Prüfpunkte</div>
+                <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:12}}>
+                  {activeModal.modal.points.map((pt, idx) => (
+                    <li key={idx} style={{display:'flex',alignItems:'flex-start',gap:10,fontSize:14,color:'var(--smoke)',lineHeight:1.5}}>
+                      <div style={{width:20,height:20,borderRadius:'50%',background:'rgba(26,86,219,.1)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,marginTop:1}}>
+                        <Ic.Check s={12} c="var(--blue)"/>
+                      </div>
+                      {pt}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div style={{padding:'20px 30px',borderTop:'1px solid var(--border)',background:'var(--stone)',textAlign:'right'}}>
+                 <a href="#termin" onClick={() => setActiveModal(null)} className="btn btn-primary" style={{padding:'12px 24px'}}>Jetzt Termin buchen</a>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -505,130 +613,138 @@ const Steps = () => {
   );
 };
 
-/* ─── BOOKING FORM (compact) ─────────────────────────────────────────────── */
+/* ─── MODERN BOOKING FORM & SECTION ──────────────────────────────────────── */
 const BookingSection = () => {
   const [form,setForm] = useState({leistung:'',fahrzeug:'PKW',datum:'',zeit:'',kennzeichen:'',name:'',email:'',telefon:'',anmerkungen:''});
   const [sent,setSent] = useState(false);
   const set = (k,v) => setForm(f=>({...f,[k]:v}));
-  return (
-    <div id="termin" className="section-full" style={{background:'var(--stone)',padding:'72px 0'}}>
-      <div className="inner">
-        <div style={{display:'grid',gridTemplateColumns:'1fr 480px',gap:60,alignItems:'start'}}>
-          {/* Left info — compact */}
-          <motion.div initial={{opacity:0,x:-18}} whileInView={{opacity:1,x:0}} viewport={{once:true}}>
-            <div className="tag" style={{marginBottom:11}}>Online Buchung</div>
-            <h2 style={{fontWeight:800,fontSize:'clamp(24px,3vw,40px)',letterSpacing:'-.02em',marginBottom:12,color:'var(--ink)'}}>
-              Termin sichern —<br/>ganz einfach online.
-            </h2>
-            <div className="accent"/>
-            <p style={{color:'var(--smoke)',fontSize:14,lineHeight:1.75,marginBottom:28}}>
-              Wir bestätigen Ihren Wunschtermin zeitnah per E-Mail oder Telefon.
-            </p>
-            <div style={{display:'flex',flexDirection:'column',gap:14}}>
-              {[
-                [<Ic.Clock  s={15} c="var(--blue)"/>,'Schnelle Rückmeldung','Wir melden uns zeitnah bei Ihnen zurück.'],
-                [<Ic.Cert   s={15} c="var(--blue)"/>,'Vor Ort bezahlen','Bar oder EC-Karte — keine Vorauszahlung.'],
-                [<Ic.Shield s={15} c="var(--blue)"/>,'Kostenlose Stornierung','Bis 24 h vor Termin kostenfrei stornierbar.'],
-                [<Ic.Clip   s={15} c="var(--blue)"/>,'Dokumente sofort','Prüfprotokoll und Plakette direkt vor Ort.'],
-              ].map(([ico,t,d]) => (
-                <div key={t} style={{display:'flex',gap:12}}>
-                  <div style={{width:36,height:36,borderRadius:9,background:'var(--ice)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>{ico}</div>
-                  <div>
-                    <div style={{fontWeight:700,fontSize:13.5,marginBottom:1,color:'var(--ink)'}}>{t}</div>
-                    <div style={{color:'var(--smoke)',fontSize:12}}>{d}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
 
-          {/* Right form — compact */}
-          <motion.div initial={{opacity:0,x:18}} whileInView={{opacity:1,x:0}} viewport={{once:true}}>
-            <div className="card" style={{overflow:'hidden'}}>
-              <div style={{background:'var(--navy)',padding:'20px 24px'}}>
-                <h3 style={{fontWeight:700,color:'#fff',fontSize:18,marginBottom:3}}>Termin vereinbaren</h3>
-                <p style={{color:'rgba(255,255,255,.42)',fontSize:12}}>Pflichtfelder sind mit * markiert.</p>
-              </div>
-              {!sent ? (
-                <form onSubmit={e=>{e.preventDefault();setSent(true);}} style={{padding:22,display:'flex',flexDirection:'column',gap:13}}>
-                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
-                    <div className="field">
-                      <label>Leistung *</label>
-                      <select value={form.leistung} onChange={e=>set('leistung',e.target.value)} required>
-                        <option value="">Bitte wählen …</option>
-                        <option>Hauptuntersuchung (HU)</option>
-                        <option>HU + AU Kombi</option>
-                        <option>Abgasuntersuchung (AU)</option>
-                        <option>Vorab-Check</option>
-                        <option>Eintragung / Abnahme</option>
-                        <option>Motorrad-HU</option>
-                        <option>Oldtimer-Gutachten</option>
-                      </select>
-                    </div>
-                    <div className="field">
-                      <label>Fahrzeugart *</label>
-                      <select value={form.fahrzeug} onChange={e=>set('fahrzeug',e.target.value)} required>
-                        <option>PKW</option><option>Motorrad</option><option>Transporter</option><option>Oldtimer</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
-                    <div className="field">
-                      <label>Wunschdatum *</label>
-                      <input type="date" min={new Date().toISOString().split('T')[0]} value={form.datum} onChange={e=>set('datum',e.target.value)} required/>
-                    </div>
-                    <div className="field">
-                      <label>Bevorzugte Zeit *</label>
-                      <select value={form.zeit} onChange={e=>set('zeit',e.target.value)} required>
-                        <option value="">Bitte wählen …</option>
-                        <option>Vormittag (09–12 Uhr)</option>
-                        <option>Nachmittag (12–18 Uhr)</option>
-                        <option>Flexibel</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="field">
-                    <label>Kfz-Kennzeichen *</label>
-                    <input type="text" placeholder="z. B. OB-AB 1234" value={form.kennzeichen} onChange={e=>set('kennzeichen',e.target.value)} required/>
-                  </div>
-                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
-                    <div className="field">
-                      <label>Ihr Name *</label>
-                      <input type="text" placeholder="Max Mustermann" value={form.name} onChange={e=>set('name',e.target.value)} required/>
-                    </div>
-                    <div className="field">
-                      <label>Telefon *</label>
-                      <input type="tel" placeholder="+49 …" value={form.telefon} onChange={e=>set('telefon',e.target.value)} required/>
-                    </div>
-                  </div>
-                  <div className="field">
-                    <label>E-Mail *</label>
-                    <input type="email" placeholder="max@beispiel.de" value={form.email} onChange={e=>set('email',e.target.value)} required/>
-                  </div>
-                  <div className="field">
-                    <label>Anmerkungen</label>
-                    <textarea placeholder="Besonderheiten, Fragen …" style={{minHeight:68}} value={form.anmerkungen} onChange={e=>set('anmerkungen',e.target.value)}/>
-                  </div>
-                  <button type="submit" className="btn btn-primary" style={{justifyContent:'center',padding:14,fontSize:13,gap:9}}>
-                    Termin verbindlich anfragen <Ic.Arrow s={15}/>
-                  </button>
-                  <p style={{fontSize:11,color:'var(--smoke)',textAlign:'center',lineHeight:1.55}}>
-                    Mit dem Absenden stimmen Sie unserer <a href="#" onClick={e=>e.preventDefault()} style={{color:'var(--blue)'}}>Datenschutzerklärung</a> zu.
-                  </p>
-                </form>
-              ) : (
-                <div style={{padding:'44px 24px',textAlign:'center'}}>
-                  <div style={{width:52,height:52,borderRadius:'50%',background:'var(--ice)',border:'1.5px solid var(--blue)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px'}}>
-                    <Ic.Check s={22} c="var(--blue)"/>
-                  </div>
-                  <h3 style={{fontWeight:700,fontSize:20,marginBottom:8,color:'var(--ink)'}}>Anfrage erhalten!</h3>
-                  <p style={{color:'var(--smoke)',fontSize:13,lineHeight:1.7,marginBottom:20}}>Wir melden uns zeitnah.<br/><strong style={{color:'var(--ink)'}}>{form.datum} · {form.zeit}</strong></p>
-                  <button className="btn btn-primary" onClick={()=>setSent(false)} style={{margin:'0 auto'}}>Neuen Termin anfragen</button>
+  return (
+    <div id="termin" className="section-full" style={{background:'var(--stone)',padding:'88px 0'}}>
+      <div className="inner" style={{maxWidth:1100}}>
+        
+        {/* CENTERED INFO TEXT */}
+        <motion.div initial={{opacity:0,y:18}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center', marginBottom:48}}>
+          <div className="tag" style={{marginBottom:11}}>Online Buchung</div>
+          <h2 style={{fontWeight:800,fontSize:'clamp(28px,3.8vw,44px)',color:'var(--ink)',letterSpacing:'-.02em',marginBottom:16}}>
+            Termin sichern — ganz einfach online.
+          </h2>
+          <p style={{color:'var(--smoke)',fontSize:15,maxWidth:600,margin:'0 auto 36px',lineHeight:1.7}}>
+            Wählen Sie Leistung, Datum und Uhrzeit. Wir bestätigen Ihren Wunschtermin zeitnah per E-Mail oder Telefon.
+          </p>
+          
+          {/* FEATURES GRID ABOVE FORM */}
+          <div style={{display:'flex',justifyContent:'center',gap:24,flexWrap:'wrap'}}>
+            {[
+              [<Ic.Clock s={18} c="var(--blue)"/>, 'Schnelle Rückmeldung', 'Wir melden uns zeitnah.'],
+              [<Ic.Cert s={18} c="var(--blue)"/>, 'Vor Ort bezahlen', 'Bar oder EC-Karte.'],
+              [<Ic.Shield s={18} c="var(--blue)"/>, 'Kostenlos stornieren', 'Bis 24h vorher frei.'],
+              [<Ic.Clip s={18} c="var(--blue)"/>, 'Dokumente sofort', 'Alles direkt vor Ort.']
+            ].map(([ico, title, desc], i) => (
+              <div key={i} style={{background:'#fff',padding:'16px 20px',borderRadius:16,display:'flex',alignItems:'center',gap:14,boxShadow:'0 2px 10px rgba(0,0,0,.03)',minWidth:240,textAlign:'left',border:'1px solid var(--border)'}}>
+                <div style={{width:40,height:40,background:'var(--ice)',borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>{ico}</div>
+                <div>
+                  <div style={{fontWeight:700,fontSize:13,color:'var(--ink)'}}>{title}</div>
+                  <div style={{fontSize:12,color:'var(--smoke)'}}>{desc}</div>
                 </div>
-              )}
-            </div>
-          </motion.div>
-        </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* MODERN FORM CARD */}
+        <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}}>
+          <div className="modern-form-card" style={{maxWidth:860, margin:'0 auto'}}>
+            {!sent ? (
+              <form onSubmit={e=>{e.preventDefault();setSent(true);}} style={{display:'flex',flexDirection:'column',gap:20}}>
+                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))',gap:24}}>
+                  <div className="modern-field">
+                    <label className="modern-label">Leistung *</label>
+                    <select className="modern-select" value={form.leistung} onChange={e=>set('leistung',e.target.value)} required>
+                      <option value="">Bitte wählen …</option>
+                      <option>Hauptuntersuchung (HU)</option>
+                      <option>HU + AU Kombi</option>
+                      <option>Abgasuntersuchung (AU)</option>
+                      <option>Vorab-Check</option>
+                      <option>Eintragung / Abnahme</option>
+                      <option>Motorrad-HU</option>
+                      <option>Oldtimer-Gutachten</option>
+                    </select>
+                  </div>
+                  <div className="modern-field">
+                    <label className="modern-label">Fahrzeugart *</label>
+                    <select className="modern-select" value={form.fahrzeug} onChange={e=>set('fahrzeug',e.target.value)} required>
+                      <option>PKW</option><option>Motorrad</option><option>Transporter</option><option>Oldtimer</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))',gap:24}}>
+                  <div className="modern-field">
+                    <label className="modern-label">Wunschdatum *</label>
+                    <input className="modern-input" type="date" min={new Date().toISOString().split('T')[0]} value={form.datum} onChange={e=>set('datum',e.target.value)} required/>
+                  </div>
+                  <div className="modern-field">
+                    <label className="modern-label">Bevorzugte Zeit *</label>
+                    <select className="modern-select" value={form.zeit} onChange={e=>set('zeit',e.target.value)} required>
+                      <option value="">Bitte wählen …</option>
+                      <option>Vormittag (09–12 Uhr)</option>
+                      <option>Nachmittag (12–18 Uhr)</option>
+                      <option>Flexibel</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="modern-field">
+                  <label className="modern-label">Kfz-Kennzeichen *</label>
+                  <input className="modern-input" type="text" placeholder="z. B. OB-AB 1234" value={form.kennzeichen} onChange={e=>set('kennzeichen',e.target.value)} required/>
+                </div>
+
+                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))',gap:24}}>
+                  <div className="modern-field">
+                    <label className="modern-label">Ihr Name *</label>
+                    <input className="modern-input" type="text" placeholder="Max Mustermann" value={form.name} onChange={e=>set('name',e.target.value)} required/>
+                  </div>
+                  <div className="modern-field">
+                    <label className="modern-label">Telefon *</label>
+                    <input className="modern-input" type="tel" placeholder="+49 …" value={form.telefon} onChange={e=>set('telefon',e.target.value)} required/>
+                  </div>
+                </div>
+
+                <div className="modern-field">
+                  <label className="modern-label">E-Mail *</label>
+                  <input className="modern-input" type="email" placeholder="max@beispiel.de" value={form.email} onChange={e=>set('email',e.target.value)} required/>
+                </div>
+
+                <div className="modern-field">
+                  <label className="modern-label">Anmerkungen</label>
+                  <textarea className="modern-textarea" placeholder="Haben Sie besondere Wünsche oder Fragen?" value={form.anmerkungen} onChange={e=>set('anmerkungen',e.target.value)}/>
+                </div>
+
+                <div style={{marginTop:16, display:'flex', flexDirection:'column', alignItems:'center', gap:16}}>
+                  <button type="submit" className="btn btn-primary" style={{padding:'16px 36px',fontSize:14,borderRadius:12}}>
+                    Termin verbindlich anfragen <Ic.Arrow s={16}/>
+                  </button>
+                  <p style={{fontSize:12,color:'var(--smoke)',textAlign:'center'}}>
+                    Ihre Daten werden sicher übertragen und gemäß <a href="#" onClick={e=>e.preventDefault()} style={{color:'var(--blue)'}}>Datenschutz</a> verarbeitet.
+                  </p>
+                </div>
+              </form>
+            ) : (
+              <div style={{padding:'60px 20px',textAlign:'center'}}>
+                <div style={{width:64,height:64,borderRadius:'50%',background:'var(--ice)',border:'2px solid var(--blue)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px'}}>
+                  <Ic.Check s={28} c="var(--blue)"/>
+                </div>
+                <h3 style={{fontWeight:800,fontSize:26,marginBottom:12,color:'var(--ink)'}}>Anfrage erfolgreich!</h3>
+                <p style={{color:'var(--smoke)',fontSize:15,lineHeight:1.7,marginBottom:30,maxWidth:400,margin:'0 auto 30px'}}>
+                  Vielen Dank, {form.name}. Wir haben Ihre Terminanfrage erhalten und melden uns in Kürze zur finalen Bestätigung.<br/><br/>
+                  <strong style={{color:'var(--ink)',background:'var(--stone)',padding:'10px 16px',borderRadius:8,display:'inline-block'}}>Gewählt: {form.datum} · {form.zeit}</strong>
+                </p>
+                <button className="btn btn-primary" onClick={()=>setSent(false)}>Neuen Termin anfragen</button>
+              </div>
+            )}
+          </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -654,9 +770,9 @@ const FAQ = () => {
           <h2 style={{fontWeight:800,fontSize:'clamp(28px,3.8vw,44px)',color:'var(--ink)',letterSpacing:'-.02em'}}>Häufige Fragen</h2>
           <div className="accent accent-c"/>
         </motion.div>
-        <div className="card" style={{padding:'2px 30px'}}>
+        <div className="service-card" style={{padding:'4px 32px'}}>
           {faqs.map(([q,a],i) => (
-            <div key={i} className="faq-item">
+            <div key={i} className="faq-item" style={{borderBottom: i === faqs.length-1 ? 'none' : '1px solid var(--border)'}}>
               <button className={`faq-q${open===i?' open':''}`} onClick={()=>setOpen(open===i?null:i)}>
                 <span>{q}</span>
                 <span className="faq-icon"><Ic.Plus s={12} c={open===i?'#fff':'var(--blue)'}/></span>
@@ -715,9 +831,7 @@ const Contact = () => (
         <div className="accent"/>
       </motion.div>
 
-      {/* 4 info blocks with clear separation */}
-      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:0,borderRadius:16,overflow:'hidden',border:'1px solid var(--border)'}}>
-        {/* Adresse */}
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(240px, 1fr))',gap:0,borderRadius:16,overflow:'hidden',border:'1px solid var(--border)'}}>
         <div style={{background:'#fff',padding:28,borderRight:'1px solid var(--border)'}}>
           <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:16}}>
             <div style={{width:36,height:36,background:'var(--ice)',borderRadius:9,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
@@ -733,7 +847,6 @@ const Contact = () => (
           </a>
         </div>
 
-        {/* Kontakt */}
         <div style={{background:'#fff',padding:28,borderRight:'1px solid var(--border)'}}>
           <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:16}}>
             <div style={{width:36,height:36,background:'var(--ice)',borderRadius:9,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
@@ -749,7 +862,6 @@ const Contact = () => (
           </a>
         </div>
 
-        {/* Öffnungszeiten */}
         <div style={{background:'#fff',padding:28,borderRight:'1px solid var(--border)'}}>
           <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:16}}>
             <div style={{width:36,height:36,background:'var(--ice)',borderRadius:9,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
@@ -765,10 +877,8 @@ const Contact = () => (
               </div>
             ))}
           </div>
-          <p style={{fontSize:11,color:'var(--smoke)',marginTop:10}}>Terminabstand: mind. 30 Min.</p>
         </div>
 
-        {/* CTA */}
         <div style={{background:'var(--navy)',padding:28,display:'flex',flexDirection:'column',justifyContent:'center',gap:12}}>
           <h3 style={{fontWeight:800,fontSize:20,color:'#fff',letterSpacing:'-.01em',lineHeight:1.3}}>
             Bereit für Ihre<br/>Hauptuntersuchung?
@@ -785,12 +895,11 @@ const Contact = () => (
   </div>
 );
 
-/* ─── FOOTER (only Rechtliches + Unternehmen, no social) ────────────────── */
+/* ─── FOOTER ─────────────────────────────────────────────────────────────── */
 const Footer = ({ openModal }) => (
   <footer className="section-full" style={{background:'var(--ink)',color:'#fff'}}>
     <div className="inner" style={{padding:'48px 72px 0'}}>
       <div style={{display:'grid',gridTemplateColumns:'2.2fr 1fr 1fr',gap:48,paddingBottom:40,borderBottom:'1px solid rgba(255,255,255,.07)'}}>
-        {/* Brand */}
         <div>
           <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:14}}>
             <div style={{width:32,height:32,background:'var(--blue)',borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center'}}>
@@ -806,7 +915,6 @@ const Footer = ({ openModal }) => (
           </p>
         </div>
 
-        {/* Unternehmen */}
         <div>
           <div style={{fontSize:10,fontWeight:700,letterSpacing:'.18em',textTransform:'uppercase',color:'rgba(255,255,255,.28)',marginBottom:16}}>Unternehmen</div>
           <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:10}}>
@@ -821,7 +929,6 @@ const Footer = ({ openModal }) => (
           </ul>
         </div>
 
-        {/* Rechtliches */}
         <div>
           <div style={{fontSize:10,fontWeight:700,letterSpacing:'.18em',textTransform:'uppercase',color:'rgba(255,255,255,.28)',marginBottom:16}}>Rechtliches</div>
           <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:10}}>
@@ -866,7 +973,6 @@ const Modal = ({ title, onClose }) => {
           Wir verarbeiten personenbezogene Daten gemäß DSGVO und BDSG.<br/><br/>
           <strong style={{color:'var(--ink)'}}>Verantwortlicher:</strong> AutoService Oberhausen, Musterstraße 123, 46045 Oberhausen<br/><br/>
           <strong style={{color:'var(--ink)'}}>Erhobene Daten:</strong> Name, E-Mail, Telefon, Fahrzeugdaten — ausschließlich zur Terminverarbeitung.<br/><br/>
-          <strong style={{color:'var(--ink)'}}>Weitergabe:</strong> Keine Weitergabe an Dritte.<br/><br/>
           Rechte gemäß Art. 15–18 DSGVO: Auskunft, Berichtigung, Löschung. Kontakt: info@autoservice-ob.de
         </p>
       </div>
@@ -880,9 +986,7 @@ const Modal = ({ title, onClose }) => {
           <strong style={{color:'var(--ink)'}}>§ 2 Stornierung</strong><br/>
           Bis 24 Stunden vor Termin kostenlos per Telefon oder E-Mail stornierbar.<br/><br/>
           <strong style={{color:'var(--ink)'}}>§ 3 Leistungen</strong><br/>
-          Prüfleistungen nach gesetzlichen Vorgaben der StVZO.<br/><br/>
-          <strong style={{color:'var(--ink)'}}>§ 4 Gerichtsstand</strong><br/>
-          Gerichtsstand ist Oberhausen. Es gilt deutsches Recht.
+          Prüfleistungen nach gesetzlichen Vorgaben der StVZO.
         </p>
       </div>
     ),
@@ -907,7 +1011,7 @@ const Modal = ({ title, onClose }) => {
   );
 };
 
-/* ─── COOKIE BANNER (DSGVO / TTDSG) ─────────────────────────────────────── */
+/* ─── COOKIE BANNER ──────────────────────────────────────────────────────── */
 const CookieBanner = () => {
   const [visible, setVisible] = useState(false);
   const [details, setDetails] = useState(false);
@@ -927,8 +1031,7 @@ const CookieBanner = () => {
             {details && (
               <div style={{marginTop:10,padding:12,background:'var(--stone)',borderRadius:8,fontSize:12,color:'var(--smoke)',lineHeight:1.7}}>
                 <strong style={{color:'var(--ink)'}}>Notwendig:</strong> Session-Verwaltung — immer aktiv.<br/>
-                <strong style={{color:'var(--ink)'}}>Analyse:</strong> Anonymisierte Nutzungsauswertung (nur mit Einwilligung).<br/>
-                <strong style={{color:'var(--ink)'}}>Google Maps:</strong> Nur nach Ihrer Zustimmung (Datenübertragung in die USA, Art. 49 Abs. 1 lit. a DSGVO).
+                <strong style={{color:'var(--ink)'}}>Google Maps:</strong> Nur nach Zustimmung.
               </div>
             )}
           </div>
