@@ -379,6 +379,7 @@ const Services = () => {
     {ico:<Ic.Clip s={26} c="var(--accent)"/>,title:'Eintragungen / Abnahmen',sub:'§19 StVZO',tag:'Flexibel',desc:'Offizielle Abnahme von Fahrzeugveränderungen.',duration:'30–60 Min.',details:['Abnahme von Fahrwerksveränderungen','Prüfung von Felgen und Bereifung','Abnahme von Karosserieveränderungen','Prüfung auf Übereinstimmung mit ABE','Eintrag in Zulassungsbescheinigung'],note:'Alle ABE-Dokumente oder Gutachten mitbringen.'},
     {ico:<Ic.Moto s={26} c="var(--accent)"/>,title:'Motorrad-HU',sub:'Zweiräder · §29 StVZO',tag:'Saisonal',desc:'Spezialisierte HU für Motorräder und Roller.',duration:'ca. 25 Min.',details:['Kontrolle der Bremsen','Überprüfung von Reifen','Prüfung von Rahmen und Gabeln','Sichtprüfung Licht und Blinker','Überprüfung Kettensatz oder Kardan'],note:'Fahrzeugschein mitbringen.'},
     {ico:<Ic.Award s={26} c="var(--accent)"/>,title:'Oldtimer-Gutachten',sub:'§23 StVZO · H-Kennzeichen',tag:'Speziell',desc:'Offizielles Gutachten für das H-Kennzeichen.',duration:'ca. 60 Min.',details:['Prüfung auf originalen Fahrzeugzustand','Bewertung von Karosserie und Technik','Sicherheitsüberprüfung §29 StVZO','Prüfung der Fahrzeughistorie','Erstellung des Gutachtens §23 StVZO'],note:'Mindestens 30 Jahre altes Fahrzeug erforderlich.'},
+    {ico:<Ic.Cert s={26} c="var(--accent)"/>,title:'HU + AU Kombi',sub:'§29 StVZO · Kombiangebot',tag:'Kombi',desc:'HU und AU in einem Termin — spart Zeit und ist oft günstiger.',duration:'ca. 40 Min.',details:['Vollständige Hauptuntersuchung §29 StVZO','Abgasuntersuchung inklusive','OBD-Diagnose beider Prüfungen','Einmalige Wartezeit für beide Tests','Kombiniertes Prüfprotokoll','Sofortige Bescheinigung vor Ort'],note:'Empfehlung: HU und AU immer zusammen buchen — keine Extrakosten für die Kombination.'},
   ];
   return (
     <div id="leistungen" className="section-full sec" style={{background:'var(--dark)',position:'relative',overflow:'hidden'}}>
@@ -391,40 +392,65 @@ const Services = () => {
           <div className="accent"/>
           <p style={{color:'var(--smoke)',fontSize:14,maxWidth:480,lineHeight:1.7}}>Klicken Sie auf eine Leistung für Details.</p>
         </motion.div>
-        <div style={{display:'flex',flexDirection:'column'}}>
-          {items.map((s,i) => (
-            <motion.div key={i} initial={{opacity:0,x:-16}} whileInView={{opacity:1,x:0}} viewport={{once:true}} transition={{delay:i*.06}}
-              onClick={()=>setModal(s)}
-              style={{display:'flex',alignItems:'center',gap:28,padding:'26px 0',
-                borderBottom: i<items.length-1 ? '1px solid rgba(255,255,255,.06)' : 'none',
-                cursor:'pointer',transition:'background .2s',borderRadius:0,position:'relative'}}
-              onMouseEnter={e=>{e.currentTarget.style.background='rgba(91,145,244,.03)';e.currentTarget.querySelector('.svc-num').style.color='var(--accent)';}}
-              onMouseLeave={e=>{e.currentTarget.style.background='transparent';e.currentTarget.querySelector('.svc-num').style.color='rgba(255,255,255,.07)';}}>
-              {/* Number */}
-              <div className="svc-num" style={{fontSize:52,fontWeight:900,lineHeight:1,letterSpacing:'-.04em',
-                color:'rgba(255,255,255,.07)',flexShrink:0,width:72,textAlign:'right',
-                transition:'color .2s',userSelect:'none'}}>
-                {String(i+1).padStart(2,'0')}
-              </div>
-              {/* Icon */}
-              <div style={{flexShrink:0,width:46,height:46,borderRadius:12,background:'rgba(91,145,244,.1)',
-                border:'1px solid rgba(91,145,244,.18)',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                {s.ico}
-              </div>
-              {/* Content */}
-              <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:10,color:'var(--smoke)',letterSpacing:'.14em',textTransform:'uppercase',fontWeight:700,marginBottom:4}}>{s.sub}</div>
-                <h3 style={{fontSize:17,fontWeight:800,color:'var(--white)',marginBottom:4,lineHeight:1.25}}>{s.title}</h3>
-                <p style={{color:'var(--smoke)',fontSize:13,lineHeight:1.6,margin:0}}>{s.desc}</p>
-              </div>
-              {/* Right meta */}
-              <div style={{flexShrink:0,display:'flex',flexDirection:'column',alignItems:'flex-end',gap:8}}>
-                <div className="tag-badge">{s.tag}</div>
-                <span style={{fontSize:11,color:'var(--smoke)',display:'flex',alignItems:'center',gap:4}}><Ic.Clock s={11}/>{s.duration}</span>
-                <div style={{display:'flex',alignItems:'center',gap:3,color:'var(--accent)',fontSize:11,fontWeight:700}}>Details <Ic.ChevR s={10} c="var(--accent)"/></div>
-              </div>
-            </motion.div>
-          ))}
+        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:14}}>
+          {items.map((s,i) => {
+            const isWide = i === 0 || i === 3;
+            return (
+              <motion.div key={i}
+                initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.06}}
+                onClick={()=>setModal(s)}
+                style={{
+                  gridColumn: isWide ? 'span 2' : 'span 1',
+                  background:'var(--dark2)', borderRadius:18, padding: isWide ? '32px 32px' : '26px 24px',
+                  border:'1px solid rgba(255,255,255,.06)', cursor:'pointer', position:'relative', overflow:'hidden',
+                  display:'flex', flexDirection: isWide ? 'row' : 'column',
+                  gap: isWide ? 28 : 0,
+                  alignItems: isWide ? 'center' : 'flex-start',
+                  transition:'border-color .22s,transform .22s,box-shadow .22s'
+                }}
+                onMouseEnter={e=>{e.currentTarget.style.borderColor='rgba(91,145,244,.3)';e.currentTarget.style.transform='translateY(-3px)';e.currentTarget.style.boxShadow='0 16px 40px rgba(0,0,0,.3)';}}
+                onMouseLeave={e=>{e.currentTarget.style.borderColor='rgba(255,255,255,.06)';e.currentTarget.style.transform='none';e.currentTarget.style.boxShadow='none';}}>
+
+                {/* Icon block */}
+                <div style={{flexShrink:0,
+                  width: isWide ? 72 : 52, height: isWide ? 72 : 52,
+                  borderRadius: isWide ? 18 : 14,
+                  background:'rgba(91,145,244,.12)', border:'1px solid rgba(91,145,244,.2)',
+                  display:'flex', alignItems:'center', justifyContent:'center',
+                  marginBottom: isWide ? 0 : 20}}>
+                  {isWide
+                    ? (() => { const Comp = s.ico.type; return <Comp s={32} c="var(--accent)"/>; })()
+                    : (() => { const Comp = s.ico.type; return <Comp s={24} c="var(--accent)"/>; })()
+                  }
+                </div>
+
+                {/* Content */}
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{display:'flex',alignItems:'center',gap:8,marginBottom: isWide ? 8 : 10,flexWrap:'wrap'}}>
+                    <div style={{fontSize:10,color:'var(--smoke)',letterSpacing:'.14em',textTransform:'uppercase',fontWeight:700}}>{s.sub}</div>
+                    <div className="tag-badge">{s.tag}</div>
+                  </div>
+                  <h3 style={{fontSize: isWide ? 22 : 16, fontWeight:800, color:'var(--white)',
+                    marginBottom: isWide ? 10 : 8, lineHeight:1.2}}>{s.title}</h3>
+                  <p style={{color:'var(--smoke)',fontSize:13,lineHeight:1.65,
+                    marginBottom:16, maxWidth: isWide ? 480 : 'none'}}>{s.desc}</p>
+                  <div style={{display:'flex',alignItems:'center',gap:16}}>
+                    <div style={{display:'flex',alignItems:'center',gap:4,color:'var(--accent)',fontSize:12,fontWeight:700,letterSpacing:'.04em'}}>
+                      Details & Prüfpunkte <Ic.ChevR s={11} c="var(--accent)"/>
+                    </div>
+                    <span style={{fontSize:11,color:'var(--smoke)',display:'flex',alignItems:'center',gap:4}}>
+                      <Ic.Clock s={11}/>{s.duration}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Corner accent */}
+                <div style={{position:'absolute',top:0,right:0,width:60,height:60,
+                  background:'radial-gradient(circle at top right, rgba(91,145,244,.1) 0%, transparent 70%)',
+                  pointerEvents:'none'}}/>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
       <AnimatePresence>
