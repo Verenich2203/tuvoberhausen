@@ -490,14 +490,37 @@ const BookingSection = () => {
       notes: form.anmerkungen || null,
     });
 
-    const bookingId = result[0]?.id;
-    if (bookingId) {
-      await fetch('/api/send-confirmation', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bookingId }),
-      });
+    // ... внутри handleSubmit
+const bookingId = result[0]?.id;
+
+console.log("Supabase вернул результат:", result);
+console.log("Полученный bookingId:", bookingId);
+
+if (bookingId) {
+  try {
+    console.log("Отправляем запрос на /api/send-confirmation...");
+    const emailRes = await fetch('/api/send-confirmation', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bookingId }),
+    });
+    
+    const emailData = await emailRes.json();
+    console.log("Ответ от Resend API:", emailData);
+    
+    if (!emailRes.ok) {
+      console.error("Ошибка при отправке письма:", emailData);
+      // Опционально: можно показать ошибку юзеру
     }
+  } catch (err) {
+    console.error("Сетевая ошибка при обращении к /api/send-confirmation:", err);
+  }
+} else {
+  console.error("ОШИБКА: bookingId не найден! API письма не вызвано. Проверь RLS в Supabase.");
+}
+
+setSent(true); 
+// ...
 
     setSent(true);
   } catch (err) {
