@@ -185,9 +185,10 @@ const STYLE = `
   .adm-btn:active{transform:scale(.97)}
   .adm-card{background:#fff;border-radius:14px;border:1px solid #E2E8F0;transition:box-shadow .2s}
   .adm-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.07)}
-  .adm-nav-btn{width:100%;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:14px;font-weight:500;color:#94A3B8;transition:all .15s;text-align:left}
+  .adm-nav-btn{width:100%;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:14px;font-weight:500;color:#94A3B8;transition:all .15s;text-align:left;-webkit-background-clip:unset!important;background-clip:unset!important;-webkit-text-fill-color:unset!important}
   .adm-nav-btn:hover{background:rgba(255,255,255,.06);color:#CBD5E1}
-  .adm-nav-btn.active{background:rgba(99,102,241,.18);color:#A5B4FC;font-weight:600}
+  .adm-nav-btn.active{background:rgba(99,102,241,.18);color:#A5B4FC!important;font-weight:600}
+  .adm-nav-btn span{color:inherit!important;-webkit-text-fill-color:currentColor!important;background:none!important;-webkit-background-clip:unset!important;background-clip:unset!important}
   .adm-input{width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;font-family:inherit;color:#1E293B;background:#F8FAFC;outline:none;transition:border-color .15s}
   .adm-input:focus{border-color:#6366F1;background:#fff}
   .adm-tag{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600}
@@ -320,20 +321,37 @@ function BookingCard({ b, onStatus, onSendEmail }) {
 
 // ─── MINI BAR CHART ────────────────────────────────────────────────────────────
 function MiniBar({ bookings }) {
+  const BAR_H = 80;
   const last7 = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(); d.setDate(d.getDate() - (6 - i));
     const str = d.toISOString().split('T')[0];
     return { label: d.toLocaleDateString('de-DE', { weekday: 'short' }), count: bookings.filter(b => b.date === str).length, today: str === today() };
   });
   const max = Math.max(...last7.map(d => d.count), 1);
+
   return (
-    <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end', height: 80, padding: '0 4px' }}>
-      {last7.map((d, i) => (
-        <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-          <div style={{ width: '100%', borderRadius: 6, background: d.today ? '#6366F1' : '#C7D2FE', height: `${Math.max((d.count / max) * 60, d.count ? 8 : 3)}px`, transition: 'height .3s', minHeight: d.count ? 8 : 3 }}/>
-          <span style={{ fontSize: 10, color: d.today ? '#6366F1' : '#94A3B8', fontWeight: d.today ? 700 : 500 }}>{d.label}</span>
-        </div>
-      ))}
+    <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end', height: BAR_H + 32, padding: '0 4px' }}>
+      {last7.map((d, i) => {
+        const pct  = d.count / max;
+        const barH = d.count === 0 ? 4 : Math.max(pct * BAR_H, 14);
+        return (
+          <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0, height: '100%', justifyContent: 'flex-end' }}>
+            {/* Count label */}
+            <span style={{ fontSize: 11, fontWeight: 700, color: d.today ? '#6366F1' : d.count ? '#475569' : 'transparent', marginBottom: 4, lineHeight: 1 }}>
+              {d.count || '·'}
+            </span>
+            {/* Bar */}
+            <div style={{
+              width: '100%', borderRadius: '6px 6px 4px 4px',
+              background: d.today ? 'linear-gradient(180deg,#818CF8,#6366F1)' : d.count ? '#C7D2FE' : '#F1F5F9',
+              height: barH, transition: 'height .4s ease',
+              boxShadow: d.today ? '0 2px 8px rgba(99,102,241,.35)' : 'none',
+            }}/>
+            {/* Day label */}
+            <span style={{ fontSize: 10, color: d.today ? '#6366F1' : '#94A3B8', fontWeight: d.today ? 700 : 500, marginTop: 5 }}>{d.label}</span>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -481,11 +499,15 @@ function CalendarView({ bookings, onStatus }) {
                 onClick={() => setSelected(isSel ? '' : dateStr)}>
                 <span style={{ fontSize: 13, fontWeight: isToday ? 800 : 600, color: isSel ? '#4F46E5' : isToday ? '#6366F1' : '#1E293B' }}>{day}</span>
                 {dayBookings.length > 0 && (
-                  <div style={{ marginTop: 'auto', display: 'flex', gap: 3, flexWrap: 'wrap', paddingTop: 4 }}>
-                    {dayBookings.slice(0, 3).map((b, j) => (
-                      <div key={j} style={{ width: 7, height: 7, borderRadius: '50%', background: ST[validStatus(b.status)].color, flexShrink: 0 }}/>
-                    ))}
-                    {dayBookings.length > 3 && <span style={{ fontSize: 9, color: '#94A3B8', fontWeight: 700 }}>+{dayBookings.length-3}</span>}
+                  <div style={{ marginTop: 'auto', paddingTop: 4 }}>
+                    <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap', marginBottom: dayBookings.length > 3 ? 2 : 0 }}>
+                      {dayBookings.slice(0, 3).map((b, j) => (
+                        <div key={j} style={{ width: 8, height: 8, borderRadius: '50%', background: ST[validStatus(b.status)].color, flexShrink: 0, boxShadow: `0 1px 3px ${ST[validStatus(b.status)].color}66` }}/>
+                      ))}
+                    </div>
+                    {dayBookings.length > 3 && (
+                      <span style={{ fontSize: 9, color: '#6366F1', fontWeight: 800, letterSpacing: '-.01em' }}>+{dayBookings.length - 3} mehr</span>
+                    )}
                   </div>
                 )}
               </div>
