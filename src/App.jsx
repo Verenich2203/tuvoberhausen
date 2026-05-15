@@ -450,6 +450,7 @@ const Steps = () => {
 /* ─── BOOKING SECTION ────────────────────────────────────────────────────── */
 const BookingSection = () => {
   const [form, setForm] = useState({leistung:'',fahrzeug:'PKW',datum:'',zeit:'',kennzeichen:'',name:'',telefon:'',email:'',anmerkungen:''});
+  const [fieldErrors, setFieldErrors] = useState({}); // Состояние для ошибок полей
   const [bookedSlots, setBookedSlots] = useState([]);
   const [slotsLoading, setSlotsLoading] = useState(false);
   const [slotsError, setSlotsError] = useState('');
@@ -457,7 +458,18 @@ const BookingSection = () => {
   const [submitError, setSubmitError] = useState('');
   const [sent, setSent] = useState(false);
 
-  const set = (k,v) => setForm(f=>({...f,[k]:v}));
+  // Функция обновления состояния + очистка ошибки поля при вводе
+  const set = (k, v) => {
+    setForm(f => ({...f, [k]: v}));
+    if (fieldErrors[k]) setFieldErrors(e => ({...e, [k]: null}));
+  };
+
+  // --- ЖЕСТКИЕ ФИЛЬТРЫ ПРИ ВВОДЕ ---
+  // Телефон: разрешаем только цифры, плюс, пробел, скобки и дефис
+  const handlePhoneChange = (e) => set('telefon', e.target.value.replace(/[^\d\+\s\-\(\)]/g, ''));
+  
+  // Номерной знак: делаем заглавными, разрешаем только буквы, цифры, пробел, дефис и умлауты
+  const handleKennzeichenChange = (e) => set('kennzeichen', e.target.value.toUpperCase().replace(/[^A-Z0-9\-\sÄÖÜ]/g, ''));
 
   const loadSlots = useCallback(async (date) => {
     if (!date) return;
@@ -473,8 +485,26 @@ const BookingSection = () => {
 
   const allSlots = generateSlots(form.datum);
 
+  // --- ВАЛИДАЦИЯ ПЕРЕД ОТПРАВКОЙ ---
+  const validateForm = () => {
+    const errs = {};
+    if (form.kennzeichen.trim().length < 3) errs.kennzeichen = "Mindestens 3 Zeichen erforderlich.";
+    if (form.name.trim().length < 2) errs.name = "Bitte geben Sie einen gültigen Namen ein.";
+    // Проверяем, чтобы в телефоне было минимум 6 цифр (игнорируя плюсы и пробелы)
+    if (form.telefon.replace(/[^\d]/g, '').length < 6) errs.telefon = "Gültige Telefonnummer erforderlich.";
+    // Стандартная регулярка для E-Mail
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = "Bitte geben Sie eine gültige E-Mail ein.";
+    
+    setFieldErrors(errs);
+    return Object.keys(errs).length === 0; // Возвращает true, если ошибок нет
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Блокируем отправку, если форма не прошла проверку
+    if (!validateForm()) return;
+
     setSubmitting(true);
     setSubmitError('');
     try {
@@ -490,7 +520,6 @@ const BookingSection = () => {
         notes: form.anmerkungen || null,
       });
 
-      // Если бронирование успешно, вызываем API для отправки письма
       const bookingId = result[0]?.id;
       if (bookingId) {
         try {
@@ -566,14 +595,12 @@ const BookingSection = () => {
                   <input type="date" min={today} value={form.datum} onChange={e=>set('datum',e.target.value)} required/>
                 </div>
 
-                {/* Wochenende */}
                 {form.datum && isWeekend(form.datum) && (
                   <div style={{display:'flex',alignItems:'center',gap:8,padding:'10px 14px',background:'#fffbeb',border:'1px solid #fde68a',borderRadius:10,fontSize:13,color:'#92400e'}}>
                     <Ic.Warn s={14} c="#f59e0b"/> Samstag und Sonntag sind wir geschlossen. Bitte wählen Sie einen Werktag.
                   </div>
                 )}
 
-                {/* Zeitslots */}
                 {form.datum && !isWeekend(form.datum) && (
                   <div className="field">
                     <label style={{display:'flex',alignItems:'center',gap:6}}>
@@ -633,28 +660,32 @@ const BookingSection = () => {
 
                 <div className="field">
                   <label>Kfz-Kennzeichen *</label>
-                  <input type="text" placeholder="z. B. OB-AB 1234" value={form.kennzeichen} onChange={e=>set('kennzeichen',e.target.value)} required/>
+                  <input type="text" placeholder="z. B. OB-AB 1234" maxLength={15} value={form.kennzeichen} onChange={handleKennzeichenChange} required style={{borderColor: fieldErrors.kennzeichen ? '#ef4444' : ''}}/>
+                  {fieldErrors.kennzeichen && <span style={{color:'#ef4444', fontSize:11, fontWeight:600}}>{fieldErrors.kennzeichen}</span>}
                 </div>
 
                 <div className="g2">
                   <div className="field">
                     <label>Ihr Name *</label>
-                    <input type="text" placeholder="Max Mustermann" value={form.name} onChange={e=>set('name',e.target.value)} required/>
+                    <input type="text" placeholder="Max Mustermann" maxLength={50} value={form.name} onChange={e=>set('name',e.target.value)} required style={{borderColor: fieldErrors.name ? '#ef4444' : ''}}/>
+                    {fieldErrors.name && <span style={{color:'#ef4444', fontSize:11, fontWeight:600}}>{fieldErrors.name}</span>}
                   </div>
                   <div className="field">
                     <label>Telefon *</label>
-                    <input type="tel" placeholder="+49 …" value={form.telefon} onChange={e=>set('telefon',e.target.value)} required/>
+                    <input type="tel" placeholder="+49 …" maxLength={20} value={form.telefon} onChange={handlePhoneChange} required style={{borderColor: fieldErrors.telefon ? '#ef4444' : ''}}/>
+                    {fieldErrors.telefon && <span style={{color:'#ef4444', fontSize:11, fontWeight:600}}>{fieldErrors.telefon}</span>}
                   </div>
                 </div>
 
                 <div className="field">
                   <label>E-Mail *</label>
-                  <input type="email" placeholder="max@beispiel.de" value={form.email} onChange={e=>set('email',e.target.value)} required/>
+                  <input type="email" placeholder="max@beispiel.de" maxLength={60} value={form.email} onChange={e=>set('email',e.target.value)} required style={{borderColor: fieldErrors.email ? '#ef4444' : ''}}/>
+                  {fieldErrors.email && <span style={{color:'#ef4444', fontSize:11, fontWeight:600}}>{fieldErrors.email}</span>}
                 </div>
 
                 <div className="field">
                   <label>Anmerkungen</label>
-                  <textarea placeholder="Besonderheiten oder Fragen …" value={form.anmerkungen} onChange={e=>set('anmerkungen',e.target.value)}/>
+                  <textarea placeholder="Besonderheiten oder Fragen …" maxLength={500} value={form.anmerkungen} onChange={e=>set('anmerkungen',e.target.value)}/>
                 </div>
 
                 <AnimatePresence>
