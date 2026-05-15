@@ -474,20 +474,44 @@ const BookingSection = () => {
   const allSlots = generateSlots(form.datum);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitting(true); setSubmitError('');
-    try {
-      await insertBooking({date:form.datum,time_slot:form.zeit,service:form.leistung,vehicle_type:form.fahrzeug,plate:form.kennzeichen,name:form.name,phone:form.telefon,email:form.email,notes:form.anmerkungen||null});
-      setSent(true);
-    } catch(err) {
-      if (err.message==='SLOT_TAKEN') {
-        setSubmitError('Dieser Termin wurde gerade gebucht. Bitte wählen Sie einen anderen Slot.');
-        await loadSlots(form.datum); set('zeit','');
-      } else {
-        setSubmitError('Buchung fehlgeschlagen. Bitte versuchen Sie es erneut oder rufen Sie uns an.');
-      }
-    } finally { setSubmitting(false); }
-  };
+  e.preventDefault();
+  setSubmitting(true);
+  setSubmitError('');
+  try {
+    const result = await insertBooking({
+      date: form.datum,
+      time_slot: form.zeit,
+      service: form.leistung,
+      vehicle_type: form.fahrzeug,
+      plate: form.kennzeichen,
+      name: form.name,
+      phone: form.telefon,
+      email: form.email,
+      notes: form.anmerkungen || null,
+    });
+
+    const bookingId = result[0]?.id;
+    if (bookingId) {
+      await fetch('/api/send-confirmation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bookingId }),
+      });
+    }
+
+    setSent(true);
+  } catch (err) {
+    if (err.message === 'SLOT_TAKEN') {
+      setSubmitError('Dieser Termin wurde gerade gebucht. Bitte wählen Sie einen anderen Slot.');
+      await loadSlots(form.datum);
+      set('zeit', '');
+    } else {
+      setSubmitError('Buchung fehlgeschlagen. Bitte versuchen Sie es erneut oder rufen Sie uns an.');
+    }
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   const today = new Date().toISOString().split('T')[0];
 
