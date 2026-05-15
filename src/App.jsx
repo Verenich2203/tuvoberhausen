@@ -1,5 +1,6 @@
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
+import AdminPanel from "./AdminPanel";
 
 const PHONE = "+49 1575 5476991";
 const PHONE_HREF = "tel:+4915755476991";
@@ -1032,6 +1033,12 @@ const CancelModal = ({ data, onClose }) => {
 export default function App() {
   const [modal, setModal] = useState(null);
   const [cancelData, setCancelData] = useState(null);
+
+  // --- НОВАЯ СТРОКА: ПРОВЕРКА АДРЕСА ---
+  // Если в адресной строке написано /admin, показываем Админку вместо сайта
+  if (window.location.pathname === '/admin') {
+    return <AdminPanel />;
+  }
 
   useEffect(() => {
     // Читаем параметры из адресной строки при загрузке
