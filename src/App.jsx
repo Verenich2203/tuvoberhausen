@@ -190,11 +190,23 @@ const G = () => (
       .g4 { grid-template-columns:1fr 1fr; } .g2 { grid-template-columns:1fr; }
       .mob-stack { grid-template-columns:1fr !important; }
       .svc-list { grid-template-columns:1fr !important; }
+      .svc-wide { grid-column:span 1 !important; }
+      .svc-row { flex-direction:column !important; align-items:flex-start !important; gap:0 !important; }
+      .svc-row .svc-icon { margin-bottom:20px !important; }
     }
     @media (max-width:900px) {
       .svc-list { grid-template-columns:1fr !important; }
+      .svc-wide { grid-column:span 1 !important; }
+      .svc-row { flex-direction:column !important; align-items:flex-start !important; gap:0 !important; }
+      .svc-row .svc-icon { margin-bottom:20px !important; }
       .steps-grid { grid-template-columns:1fr !important; gap:40px !important; }
     }
+    .svc-list { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .svc-wide { grid-column:span 2; }
+    .svc-row { display:flex; flex-direction:row; gap:28px; align-items:center; }
+    .svc-col { display:flex; flex-direction:column; }
+    .svc-icon { flex-shrink:0; margin-bottom:20px; }
+    .svc-row .svc-icon { margin-bottom:0; }
     .contact-map-wrap { position:relative; height:560px; overflow:hidden; }
     .contact-map-wrap iframe { width:100%; height:100%; border:none; display:block; }
     .contact-map-gradient { position:absolute; inset:0; background:linear-gradient(90deg,rgba(20,22,26,.92) 0%,rgba(20,22,26,.6) 38%,transparent 62%); pointer-events:none; z-index:1; }
@@ -373,81 +385,72 @@ const TrustBar = () => {
 const Services = () => {
   const [modal, setModal] = useState(null);
   const items = [
-    {ico:<Ic.Shield s={26} c="var(--accent)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO · Pflichtprüfung',tag:'Pflicht',desc:'Gesetzlich vorgeschriebene Sicherheitsprüfung für alle Kfz.',duration:'ca. 30 Min.',details:['Überprüfung der Bremsanlage','Sicht- und Funktionsprüfung der Beleuchtung','Prüfung von Lenkung, Achsen und Radaufhängung','Kontrolle der Karosserie','Überprüfung von Sichtscheiben und Spiegeln','Prüfung der Abgasanlage','Sicherheitsgurtprüfung','Auslesen der Fahrzeugelektronik / OBD'],note:'Gesetzlich vorgeschrieben §29 StVZO. Nach 3 Jahren bei Neuwagen, danach alle 2 Jahre.'},
-    {ico:<Ic.Leaf s={26} c="var(--accent)"/>,title:'Abgasuntersuchung (AU)',sub:'AU · Emissionsprüfung',tag:'Kombi möglich',desc:'Prüfung der Schadstoffemissionen — schützt Umwelt und vermeidet Bußgelder.',duration:'ca. 15 Min.',details:['Sichtprüfung der Abgasanlage','Messung von CO, HC und Lambda-Werten','Trübungsmessung beim Diesel','Auslesen des OBD-Systems','Prüfung von Katalysator und Partikelfilter','Dokumentation und Bescheinigung'],note:'Pflichtbestandteil der HU. Kombi empfohlen.'},
-    {ico:<Ic.Wrench s={26} c="var(--accent)"/>,title:'Vorab-Check',sub:'Sicherheits-Vorprüfung',tag:'Empfohlen',desc:'Mängel vor der HU erkennen, Nachprüfungen vermeiden.',duration:'ca. 20 Min.',details:['Überprüfung aller HU-relevanten Punkte','Identifikation von Mängeln','Kosten- und Zeiteinschätzung','Beratung durch Prüfingenieur','Dokumentation mit Mängelliste'],note:'Kostenlos bei anschließender HU. Separat ab 29 €.'},
-    {ico:<Ic.Clip s={26} c="var(--accent)"/>,title:'Eintragungen / Abnahmen',sub:'§19 StVZO',tag:'Flexibel',desc:'Offizielle Abnahme von Fahrzeugveränderungen.',duration:'30–60 Min.',details:['Abnahme von Fahrwerksveränderungen','Prüfung von Felgen und Bereifung','Abnahme von Karosserieveränderungen','Prüfung auf Übereinstimmung mit ABE','Eintrag in Zulassungsbescheinigung'],note:'Alle ABE-Dokumente oder Gutachten mitbringen.'},
-    {ico:<Ic.Moto s={26} c="var(--accent)"/>,title:'Motorrad-HU',sub:'Zweiräder · §29 StVZO',tag:'Saisonal',desc:'Spezialisierte HU für Motorräder und Roller.',duration:'ca. 25 Min.',details:['Kontrolle der Bremsen','Überprüfung von Reifen','Prüfung von Rahmen und Gabeln','Sichtprüfung Licht und Blinker','Überprüfung Kettensatz oder Kardan'],note:'Fahrzeugschein mitbringen.'},
-    {ico:<Ic.Award s={26} c="var(--accent)"/>,title:'Oldtimer-Gutachten',sub:'§23 StVZO · H-Kennzeichen',tag:'Speziell',desc:'Offizielles Gutachten für das H-Kennzeichen.',duration:'ca. 60 Min.',details:['Prüfung auf originalen Fahrzeugzustand','Bewertung von Karosserie und Technik','Sicherheitsüberprüfung §29 StVZO','Prüfung der Fahrzeughistorie','Erstellung des Gutachtens §23 StVZO'],note:'Mindestens 30 Jahre altes Fahrzeug erforderlich.'},
-    {ico:<Ic.Cert s={26} c="var(--accent)"/>,title:'HU + AU Kombi',sub:'§29 StVZO · Kombiangebot',tag:'Kombi',desc:'HU und AU in einem Termin — spart Zeit und ist oft günstiger.',duration:'ca. 40 Min.',details:['Vollständige Hauptuntersuchung §29 StVZO','Abgasuntersuchung inklusive','OBD-Diagnose beider Prüfungen','Einmalige Wartezeit für beide Tests','Kombiniertes Prüfprotokoll','Sofortige Bescheinigung vor Ort'],note:'Empfehlung: HU und AU immer zusammen buchen — keine Extrakosten für die Kombination.'},
+    {ico:<Ic.Shield s={26} c="var(--accent)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO · Pflichtprüfung',tag:'Pflicht',desc:'Gesetzlich vorgeschriebene Sicherheitsprüfung für alle Kfz.',duration:'ca. 30 Min.',details:['Überprüfung der Bremsanlage','Sicht- und Funktionsprüfung der Beleuchtung','Prüfung von Lenkung, Achsen und Radaufhängung','Kontrolle der Karosserie','Überprüfung von Sichtscheiben und Spiegeln','Prüfung der Abgasanlage','Sicherheitsgurtprüfung','Auslesen der Fahrzeugelektronik / OBD'],img:null,note:'Gesetzlich vorgeschrieben §29 StVZO. Nach 3 Jahren bei Neuwagen, danach alle 2 Jahre.'},
+    {ico:<Ic.Leaf s={26} c="var(--accent)"/>,title:'Abgasuntersuchung (AU)',sub:'AU · Emissionsprüfung',tag:'Kombi möglich',desc:'Prüfung der Schadstoffemissionen — schützt Umwelt und vermeidet Bußgelder.',duration:'ca. 15 Min.',details:['Sichtprüfung der Abgasanlage','Messung von CO, HC und Lambda-Werten','Trübungsmessung beim Diesel','Auslesen des OBD-Systems','Prüfung von Katalysator und Partikelfilter','Dokumentation und Bescheinigung'],img:null,note:'Pflichtbestandteil der HU. Kombi empfohlen.'},
+    {ico:<Ic.Wrench s={26} c="var(--accent)"/>,title:'Vorab-Check',sub:'Sicherheits-Vorprüfung',tag:'Empfohlen',desc:'Mängel vor der HU erkennen, Nachprüfungen vermeiden.',duration:'ca. 20 Min.',details:['Überprüfung aller HU-relevanten Punkte','Identifikation von Mängeln','Kosten- und Zeiteinschätzung','Beratung durch Prüfingenieur','Dokumentation mit Mängelliste'],img:null,note:'Kostenlos bei anschließender HU. Separat ab 29 €.'},
+    {ico:<Ic.Clip s={26} c="var(--accent)"/>,title:'Eintragungen / Abnahmen',sub:'§19 StVZO',tag:'Flexibel',desc:'Offizielle Abnahme von Fahrzeugveränderungen.',duration:'30–60 Min.',details:['Abnahme von Fahrwerksveränderungen','Prüfung von Felgen und Bereifung','Abnahme von Karosserieveränderungen','Prüfung auf Übereinstimmung mit ABE','Eintrag in Zulassungsbescheinigung'],img:null,note:'Alle ABE-Dokumente oder Gutachten mitbringen.'},
+    {ico:<Ic.Moto s={26} c="var(--accent)"/>,title:'Motorrad-HU',sub:'Zweiräder · §29 StVZO',tag:'Saisonal',desc:'Spezialisierte HU für Motorräder und Roller.',duration:'ca. 25 Min.',details:['Kontrolle der Bremsen','Überprüfung von Reifen','Prüfung von Rahmen und Gabeln','Sichtprüfung Licht und Blinker','Überprüfung Kettensatz oder Kardan'],img:null,note:'Fahrzeugschein mitbringen.'},
+    {ico:<Ic.Award s={26} c="var(--accent)"/>,title:'Oldtimer-Gutachten',sub:'§23 StVZO · H-Kennzeichen',tag:'Speziell',desc:'Offizielles Gutachten für das H-Kennzeichen.',duration:'ca. 60 Min.',details:['Prüfung auf originalen Fahrzeugzustand','Bewertung von Karosserie und Technik','Sicherheitsüberprüfung §29 StVZO','Prüfung der Fahrzeughistorie','Erstellung des Gutachtens §23 StVZO'],img:null,note:'Mindestens 30 Jahre altes Fahrzeug erforderlich.'},
+    {ico:<Ic.Cert s={26} c="var(--accent)"/>,title:'HU + AU Kombi',sub:'§29 StVZO · Kombiangebot',tag:'Kombi',desc:'HU und AU in einem Termin — spart Zeit und ist oft günstiger.',duration:'ca. 40 Min.',details:['Vollständige Hauptuntersuchung §29 StVZO','Abgasuntersuchung inklusive','OBD-Diagnose beider Prüfungen','Einmalige Wartezeit für beide Tests','Kombiniertes Prüfprotokoll','Sofortige Bescheinigung vor Ort'],img:null,note:'Empfehlung: HU und AU immer zusammen buchen — keine Extrakosten für die Kombination.'},
   ];
   return (
     <div id="leistungen" className="section-full sec" style={{background:'var(--dark)',position:'relative',overflow:'hidden'}}>
-      <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.04,pointerEvents:'none',zIndex:0}}/>
+      <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.12,filter:'blur(3px)',transform:'scale(1.05)',pointerEvents:'none',zIndex:0}}/>
       <SectionDeco side="right"/>
       <div className="inner" style={{position:'relative',zIndex:1}}>
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{marginBottom:40}}>
           <div className="tag" style={{marginBottom:14}}>Leistungen</div>
           <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,42px)',color:'var(--white)',letterSpacing:'-.02em'}}>Unsere Prüfleistungen</h2>
           <div className="accent"/>
-          <p style={{color:'var(--smoke)',fontSize:14,maxWidth:480,lineHeight:1.7}}>Klicken Sie auf eine Leistung für Details.</p>
         </motion.div>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:14}}>
+        <div className="svc-list">
           {items.map((s,i) => {
             const isWide = i === 0 || i === 3;
             return (
               <motion.div key={i}
+                className={isWide ? 'svc-wide' : ''}
                 initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.06}}
                 onClick={()=>setModal(s)}
                 style={{
-                  gridColumn: isWide ? 'span 2' : 'span 1',
-                  background:'var(--dark2)', borderRadius:18, padding: isWide ? '32px 32px' : '26px 24px',
-                  border:'1px solid rgba(255,255,255,.06)', cursor:'pointer', position:'relative', overflow:'hidden',
-                  display:'flex', flexDirection: isWide ? 'row' : 'column',
-                  gap: isWide ? 28 : 0,
-                  alignItems: isWide ? 'center' : 'flex-start',
-                  transition:'border-color .22s,transform .22s,box-shadow .22s'
+                  position:'relative', overflow:'hidden',
+                  background:'var(--dark2)', borderRadius:18,
+                  border:'1px solid rgba(255,255,255,.07)', cursor:'pointer',
+                  transition:'transform .22s, box-shadow .22s, border-color .22s'
                 }}
-                onMouseEnter={e=>{e.currentTarget.style.borderColor='rgba(91,145,244,.3)';e.currentTarget.style.transform='translateY(-3px)';e.currentTarget.style.boxShadow='0 16px 40px rgba(0,0,0,.3)';}}
-                onMouseLeave={e=>{e.currentTarget.style.borderColor='rgba(255,255,255,.06)';e.currentTarget.style.transform='none';e.currentTarget.style.boxShadow='none';}}>
+                onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-4px)';e.currentTarget.style.boxShadow='0 20px 50px rgba(0,0,0,.45)';e.currentTarget.style.borderColor='rgba(91,145,244,.28)';}}
+                onMouseLeave={e=>{e.currentTarget.style.transform='none';e.currentTarget.style.boxShadow='none';e.currentTarget.style.borderColor='rgba(255,255,255,.07)';}}>
 
-                {/* Icon block */}
-                <div style={{flexShrink:0,
-                  width: isWide ? 72 : 52, height: isWide ? 72 : 52,
-                  borderRadius: isWide ? 18 : 14,
-                  background:'rgba(91,145,244,.12)', border:'1px solid rgba(91,145,244,.2)',
-                  display:'flex', alignItems:'center', justifyContent:'center',
-                  marginBottom: isWide ? 0 : 20}}>
-                  {isWide
-                    ? (() => { const Comp = s.ico.type; return <Comp s={32} c="var(--accent)"/>; })()
-                    : (() => { const Comp = s.ico.type; return <Comp s={24} c="var(--accent)"/>; })()
-                  }
-                </div>
+                {/* Background image — подвязывай img: 'filename.jpg' в items */}
+                {s.img && <>
+                  <div style={{position:'absolute',inset:0,backgroundImage:`url('${s.img}')`,backgroundSize:'cover',backgroundPosition:'center',zIndex:0}}/>
+                  <div style={{position:'absolute',inset:0,background:'linear-gradient(160deg,rgba(14,16,20,.88) 0%,rgba(14,16,20,.55) 100%)',zIndex:1}}/>
+                </>}
 
-                {/* Content */}
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{display:'flex',alignItems:'center',gap:8,marginBottom: isWide ? 8 : 10,flexWrap:'wrap'}}>
-                    <div style={{fontSize:10,color:'var(--smoke)',letterSpacing:'.14em',textTransform:'uppercase',fontWeight:700}}>{s.sub}</div>
+                {/* Card content */}
+                <div style={{position:'relative',zIndex:2,padding:isWide?'30px 32px':'24px',display:'flex',flexDirection:'column',minHeight:200}}>
+
+                  {/* Top: icon left · tag right */}
+                  <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:20}}>
+                    <div style={{width:44,height:44,borderRadius:12,background:'rgba(91,145,244,.12)',border:'1px solid rgba(91,145,244,.2)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                      {(() => { const Comp = s.ico.type; return <Comp s={20} c="var(--accent)"/>; })()}
+                    </div>
                     <div className="tag-badge">{s.tag}</div>
                   </div>
-                  <h3 style={{fontSize: isWide ? 22 : 16, fontWeight:800, color:'var(--white)',
-                    marginBottom: isWide ? 10 : 8, lineHeight:1.2}}>{s.title}</h3>
-                  <p style={{color:'var(--smoke)',fontSize:13,lineHeight:1.65,
-                    marginBottom:16, maxWidth: isWide ? 480 : 'none'}}>{s.desc}</p>
-                  <div style={{display:'flex',alignItems:'center',gap:16}}>
-                    <div style={{display:'flex',alignItems:'center',gap:4,color:'var(--accent)',fontSize:12,fontWeight:700,letterSpacing:'.04em'}}>
-                      Details & Prüfpunkte <Ic.ChevR s={11} c="var(--accent)"/>
+
+                  {/* Text block */}
+                  <div style={{flex:1}}>
+                    <h3 style={{fontSize:isWide?21:16,fontWeight:800,color:'var(--white)',lineHeight:1.2,marginBottom:6}}>{s.title}</h3>
+                    <div style={{fontSize:10,color:'var(--smoke)',letterSpacing:'.1em',textTransform:'uppercase',fontWeight:600,marginBottom:12}}>{s.sub}</div>
+                    <p style={{fontSize:13,color:'var(--smoke)',lineHeight:1.65,display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical',overflow:'hidden'}}>{s.desc}</p>
+                  </div>
+
+                  {/* Bottom right: Details pill */}
+                  <div style={{marginTop:20,display:'flex',justifyContent:'flex-end'}}>
+                    <div style={{display:'inline-flex',alignItems:'center',gap:5,fontSize:11,fontWeight:700,color:'var(--accent)',background:'rgba(91,145,244,.1)',border:'1px solid rgba(91,145,244,.22)',borderRadius:20,padding:'5px 13px',letterSpacing:'.03em'}}>
+                      Details <Ic.ChevR s={10} c="var(--accent)"/>
                     </div>
-                    <span style={{fontSize:11,color:'var(--smoke)',display:'flex',alignItems:'center',gap:4}}>
-                      <Ic.Clock s={11}/>{s.duration}
-                    </span>
                   </div>
                 </div>
-
-                {/* Corner accent */}
-                <div style={{position:'absolute',top:0,right:0,width:60,height:60,
-                  background:'radial-gradient(circle at top right, rgba(91,145,244,.1) 0%, transparent 70%)',
-                  pointerEvents:'none'}}/>
               </motion.div>
             );
           })}
