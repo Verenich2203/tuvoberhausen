@@ -450,7 +450,8 @@ const Steps = () => {
 /* ─── BOOKING SECTION ────────────────────────────────────────────────────── */
 const BookingSection = () => {
   const [form, setForm] = useState({leistung:'',fahrzeug:'PKW',datum:'',zeit:'',kennzeichen:'',name:'',telefon:'',email:'',anmerkungen:''});
-  const [fieldErrors, setFieldErrors] = useState({}); // Состояние для ошибок полей
+  // Отслеживаем, в каких полях пользователь уже побывал (чтобы не ругаться на пустые поля до того, как в них зашли)
+  const [touched, setTouched] = useState({});
   const [bookedSlots, setBookedSlots] = useState([]);
   const [slotsLoading, setSlotsLoading] = useState(false);
   const [slotsError, setSlotsError] = useState('');
@@ -458,18 +459,32 @@ const BookingSection = () => {
   const [submitError, setSubmitError] = useState('');
   const [sent, setSent] = useState(false);
 
-  // Функция обновления состояния + очистка ошибки поля при вводе
-  const set = (k, v) => {
-    setForm(f => ({...f, [k]: v}));
-    if (fieldErrors[k]) setFieldErrors(e => ({...e, [k]: null}));
+  // --- ЖЕСТКИЕ ФИЛЬТРЫ (не дают ввести мусор) ---
+  const handleChange = (field, value) => {
+    let val = value;
+    if (field === 'name') val = val.replace(/[0-9]/g, ''); // Строго удаляем любые цифры
+    if (field === 'telefon') val = val.replace(/[^\d\+\s\-\(\)]/g, ''); // Только символы телефона
+    if (field === 'kennzeichen') val = val.toUpperCase().replace(/[^A-Z0-9\-\sÄÖÜ]/g, ''); // Формат немецких номеров
+    
+    setForm(prev => ({...prev, [field]: val}));
   };
 
-  // --- ЖЕСТКИЕ ФИЛЬТРЫ ПРИ ВВОДЕ ---
-  // Телефон: разрешаем только цифры, плюс, пробел, скобки и дефис
-  const handlePhoneChange = (e) => set('telefon', e.target.value.replace(/[^\d\+\s\-\(\)]/g, ''));
-  
-  // Номерной знак: делаем заглавными, разрешаем только буквы, цифры, пробел, дефис и умлауты
-  const handleKennzeichenChange = (e) => set('kennzeichen', e.target.value.toUpperCase().replace(/[^A-Z0-9\-\sÄÖÜ]/g, ''));
+  // Отмечаем поле как "тронутое", когда человек из него выходит
+  const handleBlur = (field) => {
+    setTouched(prev => ({...prev, [field]: true}));
+  };
+
+  // --- ДИНАМИЧЕСКАЯ ПРОВЕРКА ОШИБОК ---
+  const getErrors = () => {
+    const errs = {};
+    if (form.kennzeichen.trim().length < 3) errs.kennzeichen = "Bitte gültiges Kennzeichen eingeben (z.B. OB-AB 1234).";
+    if (form.name.trim().length < 2) errs.name = "Bitte geben Sie Ihren vollständigen Namen ein.";
+    if (form.telefon.replace(/[^\d]/g, '').length < 6) errs.telefon = "Bitte gültige Telefonnummer eingeben (z.B. +49 157...).";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) && form.email.length > 0) errs.email = "Bitte gültige E-Mail-Adresse eingeben (z.B. max@beispiel.de).";
+    return errs;
+  };
+
+  const errors = getErrors(); // Вычисляем ошибки на лету
 
   const loadSlots = useCallback(async (date) => {
     if (!date) return;
@@ -480,30 +495,19 @@ const BookingSection = () => {
   }, []);
 
   useEffect(() => {
-    if (form.datum) { set('zeit',''); loadSlots(form.datum); }
+    if (form.datum) { setForm(prev => ({...prev, zeit: ''})); loadSlots(form.datum); }
   }, [form.datum, loadSlots]);
 
   const allSlots = generateSlots(form.datum);
 
-  // --- ВАЛИДАЦИЯ ПЕРЕД ОТПРАВКОЙ ---
-  const validateForm = () => {
-    const errs = {};
-    if (form.kennzeichen.trim().length < 3) errs.kennzeichen = "Mindestens 3 Zeichen erforderlich.";
-    if (form.name.trim().length < 2) errs.name = "Bitte geben Sie einen gültigen Namen ein.";
-    // Проверяем, чтобы в телефоне было минимум 6 цифр (игнорируя плюсы и пробелы)
-    if (form.telefon.replace(/[^\d]/g, '').length < 6) errs.telefon = "Gültige Telefonnummer erforderlich.";
-    // Стандартная регулярка для E-Mail
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = "Bitte geben Sie eine gültige E-Mail ein.";
-    
-    setFieldErrors(errs);
-    return Object.keys(errs).length === 0; // Возвращает true, если ошибок нет
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Блокируем отправку, если форма не прошла проверку
-    if (!validateForm()) return;
+    // Если есть ошибки, отмечаем ВСЕ поля как "тронутые", чтобы они засветились красным, и блокируем отправку
+    if (Object.keys(errors).length > 0) {
+      setTouched({kennzeichen: true, name: true, telefon: true, email: true});
+      return;
+    }
 
     setSubmitting(true);
     setSubmitError('');
@@ -529,16 +533,15 @@ const BookingSection = () => {
             body: JSON.stringify({ bookingId }),
           });
         } catch (err) {
-          console.error("Fehler beim Senden der Bestätigung:", err);
+          console.error("Fehler beim Senden:", err);
         }
       }
-
       setSent(true);
     } catch (err) {
       if (err.message === 'SLOT_TAKEN') {
         setSubmitError('Dieser Termin wurde gerade gebucht. Bitte wählen Sie einen anderen Slot.');
         await loadSlots(form.datum);
-        set('zeit', '');
+        setForm(prev => ({...prev, zeit: ''}));
       } else {
         setSubmitError('Buchung fehlgeschlagen. Bitte versuchen Sie es erneut oder rufen Sie uns an.');
       }
@@ -548,6 +551,15 @@ const BookingSection = () => {
   };
 
   const today = new Date().toISOString().split('T')[0];
+
+  // Вспомогательная функция для стилей ошибочных полей
+  const getFieldStyle = (field) => {
+    const isError = touched[field] && errors[field];
+    return {
+      borderColor: isError ? '#ef4444' : '',
+      backgroundColor: isError ? '#fef2f2' : 'var(--stone)',
+    };
+  };
 
   return (
     <div id="termin" className="section-full sec" style={{background:'var(--stone)',position:'relative',overflow:'hidden'}}>
@@ -575,7 +587,7 @@ const BookingSection = () => {
                 <div className="g2">
                   <div className="field">
                     <label>Leistung *</label>
-                    <select value={form.leistung} onChange={e=>set('leistung',e.target.value)} required>
+                    <select value={form.leistung} onChange={e=>handleChange('leistung', e.target.value)} required>
                       <option value="">Bitte wählen …</option>
                       <option>Hauptuntersuchung (HU)</option><option>HU + AU Kombi</option>
                       <option>Abgasuntersuchung (AU)</option><option>Vorab-Check</option>
@@ -584,7 +596,7 @@ const BookingSection = () => {
                   </div>
                   <div className="field">
                     <label>Fahrzeugart *</label>
-                    <select value={form.fahrzeug} onChange={e=>set('fahrzeug',e.target.value)} required>
+                    <select value={form.fahrzeug} onChange={e=>handleChange('fahrzeug', e.target.value)} required>
                       <option>PKW</option><option>Motorrad</option><option>Transporter</option><option>Oldtimer</option>
                     </select>
                   </div>
@@ -592,7 +604,7 @@ const BookingSection = () => {
 
                 <div className="field">
                   <label>Wunschdatum *</label>
-                  <input type="date" min={today} value={form.datum} onChange={e=>set('datum',e.target.value)} required/>
+                  <input type="date" min={today} value={form.datum} onChange={e=>handleChange('datum', e.target.value)} required/>
                 </div>
 
                 {form.datum && isWeekend(form.datum) && (
@@ -631,7 +643,7 @@ const BookingSection = () => {
                             const selected = form.zeit === slot;
                             return (
                               <button key={slot} type="button" disabled={disabled}
-                                onClick={() => !disabled && set('zeit', slot)}
+                                onClick={() => !disabled && handleChange('zeit', slot)}
                                 className={`slot-btn${selected?' selected':''}`}>
                                 {slot}
                                 {booked && <span style={{display:'block',fontSize:8,color:'var(--smoke)',marginTop:1,letterSpacing:'.04em'}}>BELEGT</span>}
@@ -660,32 +672,48 @@ const BookingSection = () => {
 
                 <div className="field">
                   <label>Kfz-Kennzeichen *</label>
-                  <input type="text" placeholder="z. B. OB-AB 1234" maxLength={15} value={form.kennzeichen} onChange={handleKennzeichenChange} required style={{borderColor: fieldErrors.kennzeichen ? '#ef4444' : ''}}/>
-                  {fieldErrors.kennzeichen && <span style={{color:'#ef4444', fontSize:11, fontWeight:600}}>{fieldErrors.kennzeichen}</span>}
+                  <input type="text" placeholder="OB-AB 1234" maxLength={15} value={form.kennzeichen} onChange={e=>handleChange('kennzeichen', e.target.value)} onBlur={()=>handleBlur('kennzeichen')} required style={getFieldStyle('kennzeichen')}/>
+                  <AnimatePresence>
+                    {touched.kennzeichen && errors.kennzeichen && (
+                      <motion.span initial={{opacity:0, height:0}} animate={{opacity:1, height:'auto'}} exit={{opacity:0, height:0}} style={{color:'#ef4444', fontSize:11, fontWeight:600, display:'flex', alignItems:'center', gap:4}}><Ic.Warn s={11}/> {errors.kennzeichen}</motion.span>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 <div className="g2">
                   <div className="field">
                     <label>Ihr Name *</label>
-                    <input type="text" placeholder="Max Mustermann" maxLength={50} value={form.name} onChange={e=>set('name',e.target.value)} required style={{borderColor: fieldErrors.name ? '#ef4444' : ''}}/>
-                    {fieldErrors.name && <span style={{color:'#ef4444', fontSize:11, fontWeight:600}}>{fieldErrors.name}</span>}
+                    <input type="text" placeholder="Max Mustermann" maxLength={50} value={form.name} onChange={e=>handleChange('name', e.target.value)} onBlur={()=>handleBlur('name')} required style={getFieldStyle('name')}/>
+                    <AnimatePresence>
+                      {touched.name && errors.name && (
+                        <motion.span initial={{opacity:0, height:0}} animate={{opacity:1, height:'auto'}} exit={{opacity:0, height:0}} style={{color:'#ef4444', fontSize:11, fontWeight:600, display:'flex', alignItems:'center', gap:4}}><Ic.Warn s={11}/> {errors.name}</motion.span>
+                      )}
+                    </AnimatePresence>
                   </div>
                   <div className="field">
                     <label>Telefon *</label>
-                    <input type="tel" placeholder="+49 …" maxLength={20} value={form.telefon} onChange={handlePhoneChange} required style={{borderColor: fieldErrors.telefon ? '#ef4444' : ''}}/>
-                    {fieldErrors.telefon && <span style={{color:'#ef4444', fontSize:11, fontWeight:600}}>{fieldErrors.telefon}</span>}
+                    <input type="tel" placeholder="+49 157..." maxLength={20} value={form.telefon} onChange={e=>handleChange('telefon', e.target.value)} onBlur={()=>handleBlur('telefon')} required style={getFieldStyle('telefon')}/>
+                    <AnimatePresence>
+                      {touched.telefon && errors.telefon && (
+                        <motion.span initial={{opacity:0, height:0}} animate={{opacity:1, height:'auto'}} exit={{opacity:0, height:0}} style={{color:'#ef4444', fontSize:11, fontWeight:600, display:'flex', alignItems:'center', gap:4}}><Ic.Warn s={11}/> {errors.telefon}</motion.span>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
 
                 <div className="field">
                   <label>E-Mail *</label>
-                  <input type="email" placeholder="max@beispiel.de" maxLength={60} value={form.email} onChange={e=>set('email',e.target.value)} required style={{borderColor: fieldErrors.email ? '#ef4444' : ''}}/>
-                  {fieldErrors.email && <span style={{color:'#ef4444', fontSize:11, fontWeight:600}}>{fieldErrors.email}</span>}
+                  <input type="email" placeholder="max@beispiel.de" maxLength={60} value={form.email} onChange={e=>handleChange('email', e.target.value)} onBlur={()=>handleBlur('email')} required style={getFieldStyle('email')}/>
+                  <AnimatePresence>
+                    {touched.email && errors.email && (
+                      <motion.span initial={{opacity:0, height:0}} animate={{opacity:1, height:'auto'}} exit={{opacity:0, height:0}} style={{color:'#ef4444', fontSize:11, fontWeight:600, display:'flex', alignItems:'center', gap:4}}><Ic.Warn s={11}/> {errors.email}</motion.span>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 <div className="field">
                   <label>Anmerkungen</label>
-                  <textarea placeholder="Besonderheiten oder Fragen …" maxLength={500} value={form.anmerkungen} onChange={e=>set('anmerkungen',e.target.value)}/>
+                  <textarea placeholder="Besonderheiten oder Fragen …" maxLength={500} value={form.anmerkungen} onChange={e=>handleChange('anmerkungen', e.target.value)}/>
                 </div>
 
                 <AnimatePresence>
@@ -716,7 +744,7 @@ const BookingSection = () => {
                 <p style={{color:'var(--smoke)',fontSize:13,lineHeight:1.7,marginBottom:6}}>Ihr Termin wurde erfolgreich gebucht.</p>
                 <p style={{fontWeight:800,fontSize:17,color:'var(--navy)',marginBottom:4}}>{form.datum} · {form.zeit} Uhr</p>
                 <p style={{fontSize:13,color:'var(--smoke)',marginBottom:24}}>{form.leistung} · {form.fahrzeug}</p>
-                <button className="btn btn-primary" onClick={()=>{setSent(false);setForm({leistung:'',fahrzeug:'PKW',datum:'',zeit:'',kennzeichen:'',name:'',telefon:'',email:'',anmerkungen:''});}}>
+                <button className="btn btn-primary" onClick={()=>{setSent(false);setTouched({});handleChange('leistung','');handleChange('fahrzeug','PKW');handleChange('datum','');handleChange('zeit','');handleChange('kennzeichen','');handleChange('name','');handleChange('telefon','');handleChange('email','');handleChange('anmerkungen','');}}>
                   Neuen Termin buchen
                 </button>
               </motion.div>
