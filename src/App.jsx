@@ -1034,12 +1034,6 @@ export default function App() {
   const [modal, setModal] = useState(null);
   const [cancelData, setCancelData] = useState(null);
 
-  // --- НОВАЯ СТРОКА: ПРОВЕРКА АДРЕСА ---
-  // Если в адресной строке написано /admin, показываем Админку вместо сайта
-  if (window.location.pathname === '/admin') {
-    return <AdminPanel />;
-  }
-
   useEffect(() => {
     // Читаем параметры из адресной строки при загрузке
     const params = new URLSearchParams(window.location.search);
@@ -1058,6 +1052,12 @@ export default function App() {
   }, []);
 
   const scrollBook = () => document.getElementById('termin')?.scrollIntoView({behavior:'smooth'});
+
+  // --- ПРОВЕРКА АДМИНКИ ---
+  // Проверяем адресную строку. Если это /admin, показываем только Админку
+  if (window.location.pathname === '/admin') {
+    return <AdminPanel />;
+  }
 
   return (
     <>
