@@ -24,6 +24,11 @@ const STATUS_CONF = {
   cancelled: { label: 'Storniert', bg: '#FEE2E2', text: '#DC2626', border: '#FECACA', dot: '#EF4444' }
 };
 
+// Железобетонная защита от кривых статусов в базе данных
+const getValidStatus = (status) => {
+  return (status && STATUS_CONF[status]) ? status : 'pending';
+};
+
 // --- АПИ ФУНКЦИИ ---
 async function fetchAllBookings() {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/bookings?order=date.desc,time_slot.desc`, {
@@ -106,8 +111,8 @@ export default function AdminPanel() {
   // --- ВЫЧИСЛЕНИЯ ДЛЯ ДАШБОРДА ---
   const todayStr = new Date().toISOString().split('T')[0];
   const todayBookings = bookings.filter(b => b.date === todayStr);
-  const pendingCount = bookings.filter(b => (b.status || 'pending') === 'pending').length;
-  const completedCount = bookings.filter(b => b.status === 'completed').length;
+  const pendingCount = bookings.filter(b => getValidStatus(b.status) === 'pending').length;
+  const completedCount = bookings.filter(b => getValidStatus(b.status) === 'completed').length;
 
   // --- ЭКРАН ВХОДА ---
   if (!auth) {
@@ -145,8 +150,10 @@ export default function AdminPanel() {
 
   // --- КОМПОНЕНТ КАРТОЧКИ ТЕРМИНА ---
   const BookingCard = ({ b }) => {
-    const st = b.status || 'pending';
+    // Надежно получаем статус
+    const st = getValidStatus(b.status);
     const conf = STATUS_CONF[st];
+    
     return (
       <div style={{background:'#fff', borderRadius:16, padding:20, border:'1px solid #E2E8F0', display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:20, boxShadow:'0 4px 6px -1px rgba(0,0,0,0.05)', transition:'transform 0.2s'}}>
         <div style={{display:'flex', gap:20, flexWrap:'wrap', alignItems:'center'}}>
@@ -318,7 +325,10 @@ export default function AdminPanel() {
                         <div style={{marginTop:'auto', display:'flex', gap:4, flexWrap:'wrap'}}>
                           {dayBookings.map((b, i) => {
                             if(i>2) return null; // Максимум 3 точки
-                            const st = b.status || 'pending';
+                            
+                            // Железобетонно получаем статус для цвета точки
+                            const st = getValidStatus(b.status);
+                            
                             return <div key={i} style={{width:8, height:8, borderRadius:'50%', background:STATUS_CONF[st].dot}}/>
                           })}
                           {dayBookings.length > 3 && <span style={{fontSize:10, color:'#64748B'}}>+{dayBookings.length-3}</span>}
@@ -381,8 +391,10 @@ export default function AdminPanel() {
                     const s = search.toLowerCase();
                     const n = b.name||''; const p = b.plate||''; const t = b.phone||'';
                     const matchSearch = n.toLowerCase().includes(s) || p.toLowerCase().includes(s) || t.includes(s);
-                    const bStatus = b.status || 'pending';
+                    
+                    const bStatus = getValidStatus(b.status);
                     const matchFilter = activeTab === 'all' || bStatus === activeTab;
+                    
                     return matchSearch && matchFilter;
                   });
 
