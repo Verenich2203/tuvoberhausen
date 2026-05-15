@@ -391,29 +391,37 @@ const Services = () => {
           <div className="accent"/>
           <p style={{color:'var(--smoke)',fontSize:14,maxWidth:480,lineHeight:1.7}}>Klicken Sie auf eine Leistung für Details.</p>
         </motion.div>
-        <div className="svc-list" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14}}>
+        <div style={{display:'flex',flexDirection:'column'}}>
           {items.map((s,i) => (
-            <motion.div key={i} initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.06}}
+            <motion.div key={i} initial={{opacity:0,x:-16}} whileInView={{opacity:1,x:0}} viewport={{once:true}} transition={{delay:i*.06}}
               onClick={()=>setModal(s)}
-              style={{display:'flex',gap:18,padding:'20px 22px',background:'var(--dark2)',borderRadius:14,
-                borderLeft:'3px solid var(--accent)',cursor:'pointer',
-                transition:'background .22s,box-shadow .22s',position:'relative',overflow:'hidden'}}
-              onMouseEnter={e=>{e.currentTarget.style.background='var(--dark3)';e.currentTarget.style.boxShadow='0 8px 32px rgba(0,0,0,.25)';}}
-              onMouseLeave={e=>{e.currentTarget.style.background='var(--dark2)';e.currentTarget.style.boxShadow='none';}}>
-              <div style={{flexShrink:0,width:44,height:44,borderRadius:10,background:'rgba(91,145,244,.1)',border:'1px solid rgba(91,145,244,.18)',display:'flex',alignItems:'center',justifyContent:'center',marginTop:2}}>
+              style={{display:'flex',alignItems:'center',gap:28,padding:'26px 0',
+                borderBottom: i<items.length-1 ? '1px solid rgba(255,255,255,.06)' : 'none',
+                cursor:'pointer',transition:'background .2s',borderRadius:0,position:'relative'}}
+              onMouseEnter={e=>{e.currentTarget.style.background='rgba(91,145,244,.03)';e.currentTarget.querySelector('.svc-num').style.color='var(--accent)';}}
+              onMouseLeave={e=>{e.currentTarget.style.background='transparent';e.currentTarget.querySelector('.svc-num').style.color='rgba(255,255,255,.07)';}}>
+              {/* Number */}
+              <div className="svc-num" style={{fontSize:52,fontWeight:900,lineHeight:1,letterSpacing:'-.04em',
+                color:'rgba(255,255,255,.07)',flexShrink:0,width:72,textAlign:'right',
+                transition:'color .2s',userSelect:'none'}}>
+                {String(i+1).padStart(2,'0')}
+              </div>
+              {/* Icon */}
+              <div style={{flexShrink:0,width:46,height:46,borderRadius:12,background:'rgba(91,145,244,.1)',
+                border:'1px solid rgba(91,145,244,.18)',display:'flex',alignItems:'center',justifyContent:'center'}}>
                 {s.ico}
               </div>
+              {/* Content */}
               <div style={{flex:1,minWidth:0}}>
-                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:5,gap:6}}>
-                  <div style={{fontSize:9,color:'var(--smoke)',letterSpacing:'.12em',textTransform:'uppercase',fontWeight:700,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{s.sub}</div>
-                  <div className="tag-badge" style={{flexShrink:0}}>{s.tag}</div>
-                </div>
-                <h3 style={{fontSize:14,fontWeight:700,color:'var(--white)',marginBottom:5,lineHeight:1.3}}>{s.title}</h3>
-                <p style={{color:'var(--smoke)',fontSize:12,lineHeight:1.55,marginBottom:8}}>{s.desc}</p>
-                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                  <div style={{display:'flex',alignItems:'center',gap:4,color:'var(--accent)',fontSize:11,fontWeight:700,letterSpacing:'.04em',textTransform:'uppercase'}}>Details <Ic.ChevR s={10} c="var(--accent)"/></div>
-                  <span style={{fontSize:11,color:'var(--smoke)',display:'flex',alignItems:'center',gap:3}}><Ic.Clock s={11}/>{s.duration}</span>
-                </div>
+                <div style={{fontSize:10,color:'var(--smoke)',letterSpacing:'.14em',textTransform:'uppercase',fontWeight:700,marginBottom:4}}>{s.sub}</div>
+                <h3 style={{fontSize:17,fontWeight:800,color:'var(--white)',marginBottom:4,lineHeight:1.25}}>{s.title}</h3>
+                <p style={{color:'var(--smoke)',fontSize:13,lineHeight:1.6,margin:0}}>{s.desc}</p>
+              </div>
+              {/* Right meta */}
+              <div style={{flexShrink:0,display:'flex',flexDirection:'column',alignItems:'flex-end',gap:8}}>
+                <div className="tag-badge">{s.tag}</div>
+                <span style={{fontSize:11,color:'var(--smoke)',display:'flex',alignItems:'center',gap:4}}><Ic.Clock s={11}/>{s.duration}</span>
+                <div style={{display:'flex',alignItems:'center',gap:3,color:'var(--accent)',fontSize:11,fontWeight:700}}>Details <Ic.ChevR s={10} c="var(--accent)"/></div>
               </div>
             </motion.div>
           ))}
