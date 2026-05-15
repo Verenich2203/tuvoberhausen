@@ -75,28 +75,37 @@ const G = () => (
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap');
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
     :root {
-      --ink:    #0F1923;
-      --navy:   #0A2540;
-      --blue:   #1A56DB;
-      --mid:    #2563EB;
-      --sky:    #60A5FA;
-      --ice:    #EFF6FF;
-      --stone:  #F8FAFC;
-      --smoke:  #64748B;
-      --border: #E2E8F0;
+      --accent:   #5B91F4;
+      --accent-l: #7AABF8;
+      --accent-d: #3A72E0;
+      --black:  #14161A;
+      --dark:   #1B1E24;
+      --dark2:  #23272F;
+      --dark3:  #2B303B;
+      --mid:    #414A59;
+      --text:   #C2C9D6;
+      --white:  #F0F2F5;
+      --smoke:  #8B949E;
+      --border: rgba(255,255,255,.07);
       --sans:   'Montserrat', sans-serif;
     }
     html, body { width:100%; margin:0; padding:0; scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
-    body { font-family:var(--sans); background:var(--stone); color:var(--ink); overflow-x:hidden; line-height:1.6; }
+    body { font-family:var(--sans); background:var(--black); color:var(--text); overflow-x:hidden; line-height:1.6; }
     #root { width:100%; min-width:100%; }
     .section-full { width:100%; display:block; }
     .inner { width:100%; max-width:1280px; margin:0 auto; padding:0 64px; box-sizing:border-box; }
     .sec { padding:80px 0; }
     .tag {
-      display:inline-flex; align-items:center; gap:6px;
-      font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
-      color:var(--blue); background:var(--ice);
-      padding:5px 13px; border-radius:6px; border:1px solid rgba(26,86,219,.15);
+      display:inline-flex; align-items:center; gap:12px;
+      font-size:11px; font-weight:700; letter-spacing:.22em; text-transform:uppercase;
+      color:var(--accent);
+    }
+    .tag::before { content:''; display:inline-block; width:28px; height:2px; background:var(--accent); border-radius:1px; flex-shrink:0; }
+    .tag-badge {
+      display:inline-flex; align-items:center; gap:5px;
+      font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+      color:var(--accent); background:rgba(91,145,244,.1);
+      padding:4px 9px; border-radius:6px; border:1px solid rgba(91,145,244,.2);
     }
     .btn {
       display:inline-flex; align-items:center; justify-content:center; gap:8px;
@@ -104,55 +113,57 @@ const G = () => (
       padding:12px 24px; border-radius:10px; border:none; cursor:pointer;
       transition:all .2s ease; text-decoration:none; white-space:nowrap;
     }
-    .btn-primary { background:var(--blue); color:#fff; box-shadow:0 4px 18px rgba(26,86,219,.28); }
-    .btn-primary:hover { background:var(--mid); transform:translateY(-1px); box-shadow:0 8px 26px rgba(26,86,219,.36); }
-    .btn-ghost { background:transparent; color:var(--blue); border:1.5px solid var(--border); }
-    .btn-ghost:hover { background:var(--ice); border-color:var(--blue); }
+    .btn-primary { background:var(--accent); color:#fff; box-shadow:0 4px 18px rgba(91,145,244,.28); }
+    .btn-primary:hover { background:var(--accent-l); transform:translateY(-1px); box-shadow:0 8px 26px rgba(91,145,244,.38); }
+    .btn-ghost { background:transparent; color:var(--text); border:1.5px solid rgba(255,255,255,.14); }
+    .btn-ghost:hover { background:rgba(255,255,255,.05); border-color:var(--accent); color:var(--accent); }
     .btn-wa { background:#25D366; color:#fff; box-shadow:0 4px 18px rgba(37,211,102,.3); }
     .btn-wa:hover { background:#1ebe5d; transform:translateY(-1px); }
-    .btn-call { background:var(--blue); color:#fff; box-shadow:0 4px 18px rgba(26,86,219,.28); }
-    .btn-call:hover { background:var(--mid); transform:translateY(-1px); }
-    .card { background:#fff; border-radius:16px; border:1px solid var(--border); box-shadow:0 1px 8px rgba(0,0,0,.03); transition:transform .26s,box-shadow .26s; }
-    .card:hover { transform:translateY(-3px); box-shadow:0 12px 36px rgba(0,0,0,.08); }
-    .accent { width:32px; height:2px; background:var(--blue); border-radius:2px; margin:10px 0 18px; }
+    .btn-call { background:var(--accent); color:#fff; box-shadow:0 4px 18px rgba(91,145,244,.28); }
+    .btn-call:hover { background:var(--accent-l); transform:translateY(-1px); }
+    .card { background:rgba(35,39,47,.7); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-radius:16px; border:1px solid var(--border); box-shadow:0 1px 8px rgba(0,0,0,.2); transition:transform .26s,box-shadow .26s; }
+    .card:hover { transform:translateY(-3px); box-shadow:0 12px 36px rgba(0,0,0,.3); }
+    .accent { width:32px; height:2px; background:var(--accent); border-radius:2px; margin:10px 0 18px; }
     .accent-c { margin:10px auto 18px; }
     .field { display:flex; flex-direction:column; gap:5px; }
     .field label { font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--smoke); }
     .field input, .field select, .field textarea {
-      font-family:var(--sans); font-size:13px; color:var(--ink);
-      background:var(--stone); border:1.5px solid var(--border); border-radius:8px;
+      font-family:var(--sans); font-size:13px; color:var(--white);
+      background:var(--dark3); border:1.5px solid rgba(255,255,255,.1); border-radius:8px;
       padding:10px 13px; transition:border-color .18s,box-shadow .18s; -webkit-appearance:none;
     }
     .field input:focus, .field select:focus, .field textarea:focus {
-      outline:none; border-color:var(--blue); background:#fff; box-shadow:0 0 0 3px rgba(26,86,219,.1);
+      outline:none; border-color:var(--accent); background:var(--dark3); box-shadow:0 0 0 3px rgba(91,145,244,.12);
     }
+    .field input::placeholder, .field textarea::placeholder { color:var(--smoke); }
     .field select {
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-      background-repeat:no-repeat; background-position:right 12px center; padding-right:34px; cursor:pointer;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%238B949E' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right 12px center; padding-right:34px; cursor:pointer; background-color:var(--dark3);
     }
+    .field select option { background:var(--dark2); color:var(--white); }
     .field textarea { resize:vertical; min-height:72px; }
     .nav-link {
-      font-size:12px; font-weight:600; color:var(--smoke); letter-spacing:.08em; text-transform:uppercase;
+      font-size:12px; font-weight:600; color:rgba(255,255,255,.5); letter-spacing:.08em; text-transform:uppercase;
       padding:5px 2px; position:relative; transition:color .18s; text-decoration:none;
     }
-    .nav-link::after { content:''; position:absolute; bottom:-3px; left:0; right:0; height:2px; background:var(--blue); border-radius:1px; transform:scaleX(0); transition:transform .2s; }
-    .nav-link:hover { color:var(--ink); }
+    .nav-link::after { content:''; position:absolute; bottom:-3px; left:0; right:0; height:2px; background:var(--accent); border-radius:1px; transform:scaleX(0); transition:transform .2s; }
+    .nav-link:hover { color:var(--white); }
     .nav-link:hover::after, .nav-link.active::after { transform:scaleX(1); }
-    .nav-link.active { color:var(--blue); font-weight:700; }
+    .nav-link.active { color:var(--accent); font-weight:700; }
     .steps-row { display:grid; grid-template-columns:repeat(4,1fr); position:relative; gap:8px; }
-    .steps-row::before { content:''; position:absolute; top:24px; left:12%; right:12%; height:2px; background:var(--blue); opacity:0.15; z-index:0; }
-    .faq-item { border-bottom:1px solid var(--border); }
-    .faq-q { width:100%; background:none; border:none; text-align:left; cursor:pointer; padding:18px 0; display:flex; justify-content:space-between; align-items:center; font-family:var(--sans); font-size:14px; font-weight:600; color:var(--ink); gap:14px; }
-    .faq-icon { width:26px; height:26px; border-radius:50%; background:var(--stone); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .2s; border:1px solid var(--border); }
-    .faq-q.open .faq-icon { background:var(--blue); border-color:var(--blue); transform:rotate(45deg); }
+    .steps-row::before { content:''; position:absolute; top:24px; left:12%; right:12%; height:2px; background:var(--accent); opacity:0.12; z-index:0; }
+    .faq-item { border-bottom:1px solid rgba(255,255,255,.06); }
+    .faq-q { width:100%; background:none; border:none; text-align:left; cursor:pointer; padding:18px 0; display:flex; justify-content:space-between; align-items:center; font-family:var(--sans); font-size:14px; font-weight:600; color:var(--white); gap:14px; }
+    .faq-icon { width:26px; height:26px; border-radius:50%; background:rgba(255,255,255,.05); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .2s; border:1px solid rgba(255,255,255,.1); }
+    .faq-q.open .faq-icon { background:var(--accent); border-color:var(--accent); transform:rotate(45deg); }
     .faq-a { font-size:13px; line-height:1.8; color:var(--smoke); padding-bottom:18px; }
-    .svc-card { background:#fff; border-radius:18px; border:1px solid var(--border); box-shadow:0 2px 12px rgba(0,0,0,.03); transition:transform .28s,box-shadow .28s,border-color .28s; cursor:pointer; }
-    .svc-card:hover { transform:translateY(-4px); box-shadow:0 16px 40px rgba(0,0,0,.08); border-color:rgba(26,86,219,.25); }
+    .svc-card { background:rgba(35,39,47,.7); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-radius:18px; border:1px solid rgba(255,255,255,.06); box-shadow:0 2px 12px rgba(0,0,0,.2); transition:transform .28s,box-shadow .28s,border-color .28s; cursor:pointer; }
+    .svc-card:hover { transform:translateY(-4px); box-shadow:0 16px 40px rgba(0,0,0,.35); border-color:rgba(91,145,244,.22); }
     .g2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
     .g3 { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
     .g4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
     @keyframes scrollRight { 0%{transform:translateX(-50%)} 100%{transform:translateX(0)} }
-    .marquee-wrap { overflow:hidden; white-space:nowrap; width:100%; position:relative; background:#fff; border-bottom:1px solid var(--border); border-top:1px solid var(--border); padding:14px 0; }
+    .marquee-wrap { overflow:hidden; white-space:nowrap; width:100%; position:relative; background:var(--dark); border-bottom:1px solid rgba(255,255,255,.05); border-top:1px solid rgba(255,255,255,.05); padding:14px 0; }
     .marquee-inner { display:flex; width:200%; animation:scrollRight 35s linear infinite; }
     .marquee-inner:hover { animation-play-state:paused; }
     @keyframes spin { to { transform:rotate(360deg); } }
@@ -160,14 +171,14 @@ const G = () => (
     .slot-btn {
       padding:9px 6px; border-radius:8px; cursor:pointer; transition:all .15s;
       font-family:var(--sans); font-weight:700; font-size:13px;
-      border:1.5px solid var(--border); background:#fff; color:var(--ink); text-align:center;
+      border:1.5px solid rgba(255,255,255,.1); background:var(--dark3); color:var(--white); text-align:center;
     }
-    .slot-btn:hover:not(:disabled) { border-color:var(--blue); color:var(--blue); background:var(--ice); }
-    .slot-btn.selected { background:var(--blue); color:#fff; border-color:var(--blue); box-shadow:0 4px 14px rgba(26,86,219,.3); }
-    .slot-btn:disabled { background:var(--stone); color:var(--smoke); cursor:not-allowed; opacity:.5; text-decoration:line-through; }
+    .slot-btn:hover:not(:disabled) { border-color:var(--accent); color:var(--accent); background:rgba(91,145,244,.06); }
+    .slot-btn.selected { background:var(--accent); color:#fff; border-color:var(--accent); box-shadow:0 4px 14px rgba(91,145,244,.3); }
+    .slot-btn:disabled { background:rgba(255,255,255,.03); color:var(--mid); cursor:not-allowed; opacity:.5; text-decoration:line-through; }
     ::-webkit-scrollbar { width:4px; }
     ::-webkit-scrollbar-track { background:transparent; }
-    ::-webkit-scrollbar-thumb { background:var(--border); border-radius:8px; }
+    ::-webkit-scrollbar-thumb { background:rgba(255,255,255,.12); border-radius:8px; }
     @media (max-width:900px) {
       .inner { padding:0 24px; } .sec { padding:56px 0; }
       .g3 { grid-template-columns:1fr 1fr; } .g4 { grid-template-columns:1fr 1fr; }
@@ -178,17 +189,22 @@ const G = () => (
       .inner { padding:0 16px; } .g3 { grid-template-columns:1fr; }
       .g4 { grid-template-columns:1fr 1fr; } .g2 { grid-template-columns:1fr; }
       .mob-stack { grid-template-columns:1fr !important; }
+      .svc-list { grid-template-columns:1fr !important; }
+    }
+    @media (max-width:900px) {
+      .svc-list { grid-template-columns:1fr !important; }
+      .steps-grid { grid-template-columns:1fr !important; gap:40px !important; }
     }
     .contact-map-wrap { position:relative; height:560px; overflow:hidden; }
     .contact-map-wrap iframe { width:100%; height:100%; border:none; display:block; }
-    .contact-map-gradient { position:absolute; inset:0; background:linear-gradient(90deg,rgba(10,15,28,.88) 0%,rgba(10,15,28,.55) 38%,transparent 62%); pointer-events:none; z-index:1; }
+    .contact-map-gradient { position:absolute; inset:0; background:linear-gradient(90deg,rgba(20,22,26,.92) 0%,rgba(20,22,26,.6) 38%,transparent 62%); pointer-events:none; z-index:1; }
     .contact-card {
       position:absolute; z-index:2; top:36px; bottom:36px;
       left:max(24px, calc((100vw - 1280px) / 2 + 56px));
-      width:316px; background:rgba(10,15,28,.82);
+      width:316px; background:rgba(20,22,26,.88);
       backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
       border-radius:18px; padding:28px 28px 24px;
-      border:1px solid rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.08);
       box-shadow:0 28px 64px rgba(0,0,0,.55);
       display:flex; flex-direction:column;
     }
@@ -196,8 +212,8 @@ const G = () => (
     .contact-hours-row:last-child { border-bottom:none; }
     @media (max-width:900px) {
       .contact-map-wrap { height:340px; }
-      .contact-map-gradient { background:linear-gradient(180deg,transparent 30%,rgba(10,15,28,.9) 100%); }
-      .contact-card { position:static; width:100%; border-radius:0 0 0 0; top:auto; bottom:auto; left:auto; backdrop-filter:none; background:#0A0F1C; border:none; border-radius:0; box-shadow:none; }
+      .contact-map-gradient { background:linear-gradient(180deg,transparent 30%,rgba(20,22,26,.9) 100%); }
+      .contact-card { position:static; width:100%; border-radius:0 0 0 0; top:auto; bottom:auto; left:auto; backdrop-filter:none; background:#14161A; border:none; border-radius:0; box-shadow:none; }
     }
   `}</style>
 );
@@ -242,7 +258,7 @@ const HeroBg = () => {
   );
 };
 
-const SectionDeco = ({ side='right', color='var(--blue)', opacity=0.03 }) => {
+const SectionDeco = ({ side='right', color='var(--accent)', opacity=0.04 }) => {
   const { scrollYProgress } = useScroll();
   const rot = useTransform(scrollYProgress,[0,1],[0,40]);
   return (
@@ -270,12 +286,12 @@ const Navbar = ({ onBook }) => {
     return () => window.removeEventListener('scroll', fn);
   }, []);
   return (
-    <header style={{position:'sticky',top:0,zIndex:200,width:'100%',background:scrolled?'rgba(255,255,255,.98)':'rgba(255,255,255,.94)',backdropFilter:'blur(18px)',borderBottom:`1px solid ${scrolled?'var(--border)':'transparent'}`,transition:'all .28s'}}>
+    <header style={{position:'sticky',top:0,zIndex:200,width:'100%',background:scrolled?'rgba(27,30,36,.98)':'rgba(27,30,36,.82)',backdropFilter:'blur(18px)',WebkitBackdropFilter:'blur(18px)',borderBottom:`1px solid ${scrolled?'rgba(255,255,255,.06)':'transparent'}`,transition:'all .28s'}}>
       <div className="inner" style={{display:'flex',alignItems:'center',justifyContent:'space-between',height:62}}>
         <div onClick={()=>window.scrollTo({top:0,behavior:'smooth'})} style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer'}}>
-          <div style={{width:32,height:32,background:'var(--blue)',borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><Ic.Wrench s={15} c="#fff"/></div>
+          <div style={{width:32,height:32,background:'var(--accent)',borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><Ic.Wrench s={15} c="#fff"/></div>
           <div>
-            <div style={{fontWeight:800,fontSize:16,color:'var(--ink)',lineHeight:1.1,letterSpacing:'-.02em'}}>Auto<span style={{color:'var(--blue)'}}>Service</span></div>
+            <div style={{fontWeight:800,fontSize:16,color:'var(--white)',lineHeight:1.1,letterSpacing:'-.02em'}}>Auto<span style={{color:'var(--accent)'}}>Service</span></div>
             <div style={{fontSize:9,letterSpacing:'.12em',color:'var(--smoke)',textTransform:'uppercase',fontWeight:600}}>Oberhausen</div>
           </div>
         </div>
@@ -288,16 +304,16 @@ const Navbar = ({ onBook }) => {
           <a href={PHONE_HREF} className="btn btn-ghost" style={{padding:'9px 18px',fontSize:11,textDecoration:'none'}}><Ic.Phone s={13}/> Jetzt anrufen</a>
           <button className="btn btn-primary" style={{padding:'9px 18px',fontSize:11}} onClick={onBook}>Termin buchen</button>
         </div>
-        <button onClick={()=>setMOpen(o=>!o)} style={{display:'none',background:'none',border:'none',cursor:'pointer',padding:4}} className="mob-menu-btn"><Ic.Menu s={22} c="var(--ink)"/></button>
+        <button onClick={()=>setMOpen(o=>!o)} style={{display:'none',background:'none',border:'none',cursor:'pointer',padding:4}} className="mob-menu-btn"><Ic.Menu s={22} c="var(--white)"/></button>
       </div>
       <AnimatePresence>
         {mOpen && (
-          <motion.div initial={{height:0,opacity:0}} animate={{height:'auto',opacity:1}} exit={{height:0,opacity:0}} style={{overflow:'hidden',background:'#fff',borderTop:'1px solid var(--border)'}}>
+          <motion.div initial={{height:0,opacity:0}} animate={{height:'auto',opacity:1}} exit={{height:0,opacity:0}} style={{overflow:'hidden',background:'var(--dark)',borderTop:'1px solid rgba(255,255,255,.06)'}}>
             <div style={{padding:'16px 24px',display:'flex',flexDirection:'column',gap:14}}>
               {[['leistungen','Leistungen'],['ablauf','Ablauf'],['faq','FAQ'],['standort','Standort']].map(([id,label]) => (
-                <a key={id} href={`#${id}`} onClick={()=>setMOpen(false)} style={{fontSize:14,fontWeight:700,color:active===id?'var(--blue)':'var(--ink)',textDecoration:'none',letterSpacing:'.06em',textTransform:'uppercase'}}>{label}</a>
+                <a key={id} href={`#${id}`} onClick={()=>setMOpen(false)} style={{fontSize:14,fontWeight:700,color:active===id?'var(--accent)':'var(--white)',textDecoration:'none',letterSpacing:'.06em',textTransform:'uppercase'}}>{label}</a>
               ))}
-              <div style={{borderTop:'1px solid var(--border)',paddingTop:14,display:'flex',flexDirection:'column',gap:10}}>
+              <div style={{borderTop:'1px solid rgba(255,255,255,.06)',paddingTop:14,display:'flex',flexDirection:'column',gap:10}}>
                 <a href={PHONE_HREF} className="btn btn-call" style={{justifyContent:'center',gap:8}}><Ic.Phone s={15}/> {PHONE}</a>
                 <a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer" className="btn btn-wa" style={{justifyContent:'center',gap:8}}><Ic.Wa s={16} c="#fff"/> WhatsApp</a>
               </div>
@@ -312,25 +328,24 @@ const Navbar = ({ onBook }) => {
 
 /* ─── HERO ───────────────────────────────────────────────────────────────── */
 const Hero = ({ onBook }) => (
-  <div className="section-full" style={{background:'linear-gradient(160deg,#f0f6ff 0%,#f8fafc 55%,#eef4fe 100%)',padding:'60px 0 80px',display:'flex',alignItems:'center',position:'relative',overflow:'hidden'}}>
-    <div style={{position:'absolute',inset:0,backgroundImage:"url('second.jpg')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.2,pointerEvents:'none',zIndex:0}}/>
+  <div className="section-full" style={{minHeight:'92vh',display:'flex',alignItems:'center',position:'relative',overflow:'hidden',background:'var(--black)'}}>
+    <div style={{position:'absolute',inset:0,backgroundImage:"url('second.jpg')",backgroundSize:'cover',backgroundPosition:'center',backgroundAttachment:'fixed',zIndex:0}}/>
+    <div style={{position:'absolute',inset:0,background:'linear-gradient(160deg,rgba(20,22,26,.92) 0%,rgba(20,22,26,.78) 60%,rgba(20,22,26,.65) 100%)',zIndex:1,pointerEvents:'none'}}/>
     <HeroBg/>
-    <div style={{position:'absolute',top:0,right:0,width:'45%',height:'100%',background:'linear-gradient(135deg,rgba(26,86,219,.06) 0%,rgba(96,165,250,.04) 100%)',clipPath:'polygon(18% 0,100% 0,100% 100%,0% 100%)',pointerEvents:'none'}}/>
-    <div style={{position:'absolute',bottom:-60,left:-60,width:300,height:300,borderRadius:'50%',background:'rgba(26,86,219,.04)',pointerEvents:'none'}}/>
-    <div className="inner" style={{position:'relative',zIndex:1,width:'100%',textAlign:'center'}}>
-      <motion.div initial={{opacity:0,y:32}} animate={{opacity:1,y:0}} transition={{duration:.8,ease:[.22,1,.36,1]}} style={{maxWidth:700,margin:'0 auto'}}>
-        <div className="tag" style={{marginBottom:24,padding:'8px 18px',fontSize:11,background:'#fff',boxShadow:'0 4px 12px rgba(26,86,219,0.08)'}}>
-          <Ic.Shield s={12} c="var(--blue)"/> Offiziell zertifizierte Kfz-Prüfstelle
+    <div className="inner" style={{position:'relative',zIndex:2,width:'100%',textAlign:'center',padding:'80px 64px'}}>
+      <motion.div initial={{opacity:0,y:32}} animate={{opacity:1,y:0}} transition={{duration:.9,ease:[.22,1,.36,1]}} style={{maxWidth:760,margin:'0 auto'}}>
+        <div className="tag" style={{marginBottom:28,justifyContent:'center'}}>
+          Offiziell zertifizierte Kfz-Prüfstelle
         </div>
-        <h1 style={{fontWeight:800,fontSize:'clamp(36px,6vw,72px)',color:'var(--ink)',lineHeight:1.06,letterSpacing:'-.025em',marginBottom:24}}>
-          Ihre HU / AU in<br/><span style={{color:'var(--blue)'}}>Oberhausen</span>
+        <h1 style={{fontWeight:800,fontSize:'clamp(38px,6vw,76px)',color:'var(--white)',lineHeight:1.06,letterSpacing:'-.025em',marginBottom:24}}>
+          Ihre HU / AU in<br/><span style={{color:'var(--accent)'}}>Oberhausen</span>
         </h1>
-        <p style={{fontSize:16,color:'var(--smoke)',lineHeight:1.8,marginBottom:40,maxWidth:500,margin:'0 auto 40px'}}>
-          Buchen Sie Ihre Hauptuntersuchung und Abgasuntersuchung schnell und bequem online. Kein Warten, transparente Preise, professionelle Prüfingenieure.
+        <p style={{fontSize:17,color:'var(--text)',lineHeight:1.8,maxWidth:520,margin:'0 auto 44px'}}>
+          Hauptuntersuchung und Abgasuntersuchung schnell online buchen. Kein Warten, transparente Preise, professionelle Prüfingenieure.
         </p>
         <div style={{display:'flex',gap:16,flexWrap:'wrap',justifyContent:'center'}}>
-          <button className="btn btn-primary" style={{fontSize:14,gap:9,padding:'14px 32px'}} onClick={onBook}>Termin buchen <Ic.Arrow s={16}/></button>
-          <a href={PHONE_HREF} className="btn btn-ghost" style={{fontSize:14,gap:9,padding:'14px 32px',background:'#fff'}}><Ic.Phone s={16}/> {PHONE}</a>
+          <button className="btn btn-primary" style={{fontSize:14,gap:9,padding:'15px 36px'}} onClick={onBook}>Termin buchen <Ic.Arrow s={16}/></button>
+          <a href={PHONE_HREF} className="btn btn-ghost" style={{fontSize:14,gap:9,padding:'15px 36px'}}><Ic.Phone s={16}/> {PHONE}</a>
         </div>
       </motion.div>
     </div>
@@ -339,13 +354,13 @@ const Hero = ({ onBook }) => (
 
 /* ─── TRUST BAR ─────────────────────────────────────────────────────────── */
 const TrustBar = () => {
-  const items = [[<Ic.Award s={15} c="var(--blue)"/>,'Amtlich anerkannt'],[<Ic.Clock s={15} c="var(--blue)"/>,'Kurze Wartezeiten'],[<Ic.Cert s={15} c="var(--blue)"/>,'Transparente Preise'],[<Ic.Shield s={15} c="var(--blue)"/>,'Online-Buchung 24/7'],[<Ic.Wrench s={15} c="var(--blue)"/>,'Qualifizierte Prüfer'],[<Ic.Leaf s={15} c="var(--blue)"/>,'Umwelt-zertifiziert']];
+  const items = [[<Ic.Award s={15} c="var(--accent)"/>,'Amtlich anerkannt'],[<Ic.Clock s={15} c="var(--accent)"/>,'Kurze Wartezeiten'],[<Ic.Cert s={15} c="var(--accent)"/>,'Transparente Preise'],[<Ic.Shield s={15} c="var(--accent)"/>,'Online-Buchung 24/7'],[<Ic.Wrench s={15} c="var(--accent)"/>,'Qualifizierte Prüfer'],[<Ic.Leaf s={15} c="var(--accent)"/>,'Umwelt-zertifiziert']];
   const all = [...items,...items,...items,...items];
   return (
     <div className="marquee-wrap">
       <div className="marquee-inner">
         {all.map(([ico,t],i) => (
-          <div key={i} style={{display:'flex',alignItems:'center',gap:7,padding:'0 40px',borderRight:'1px solid var(--border)'}}>
+          <div key={i} style={{display:'flex',alignItems:'center',gap:7,padding:'0 40px',borderRight:'1px solid rgba(255,255,255,.05)'}}>
             {ico}<span style={{fontSize:12,fontWeight:700,color:'var(--smoke)',letterSpacing:'.07em',textTransform:'uppercase',whiteSpace:'nowrap'}}>{t}</span>
           </div>
         ))}
@@ -358,38 +373,48 @@ const TrustBar = () => {
 const Services = () => {
   const [modal, setModal] = useState(null);
   const items = [
-    {ico:<Ic.Shield s={26} c="var(--blue)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO · Pflichtprüfung',tag:'Pflicht',desc:'Gesetzlich vorgeschriebene Sicherheitsprüfung für alle Kfz.',duration:'ca. 30 Min.',details:['Überprüfung der Bremsanlage','Sicht- und Funktionsprüfung der Beleuchtung','Prüfung von Lenkung, Achsen und Radaufhängung','Kontrolle der Karosserie','Überprüfung von Sichtscheiben und Spiegeln','Prüfung der Abgasanlage','Sicherheitsgurtprüfung','Auslesen der Fahrzeugelektronik / OBD'],note:'Gesetzlich vorgeschrieben §29 StVZO. Nach 3 Jahren bei Neuwagen, danach alle 2 Jahre.'},
-    {ico:<Ic.Leaf s={26} c="var(--blue)"/>,title:'Abgasuntersuchung (AU)',sub:'AU · Emissionsprüfung',tag:'Kombi möglich',desc:'Prüfung der Schadstoffemissionen — schützt Umwelt und vermeidet Bußgelder.',duration:'ca. 15 Min.',details:['Sichtprüfung der Abgasanlage','Messung von CO, HC und Lambda-Werten','Trübungsmessung beim Diesel','Auslesen des OBD-Systems','Prüfung von Katalysator und Partikelfilter','Dokumentation und Bescheinigung'],note:'Pflichtbestandteil der HU. Kombi empfohlen.'},
-    {ico:<Ic.Wrench s={26} c="var(--blue)"/>,title:'Vorab-Check',sub:'Sicherheits-Vorprüfung',tag:'Empfohlen',desc:'Mängel vor der HU erkennen, Nachprüfungen vermeiden.',duration:'ca. 20 Min.',details:['Überprüfung aller HU-relevanten Punkte','Identifikation von Mängeln','Kosten- und Zeiteinschätzung','Beratung durch Prüfingenieur','Dokumentation mit Mängelliste'],note:'Kostenlos bei anschließender HU. Separat ab 29 €.'},
-    {ico:<Ic.Clip s={26} c="var(--blue)"/>,title:'Eintragungen / Abnahmen',sub:'§19 StVZO',tag:'Flexibel',desc:'Offizielle Abnahme von Fahrzeugveränderungen.',duration:'30–60 Min.',details:['Abnahme von Fahrwerksveränderungen','Prüfung von Felgen und Bereifung','Abnahme von Karosserieveränderungen','Prüfung auf Übereinstimmung mit ABE','Eintrag in Zulassungsbescheinigung'],note:'Alle ABE-Dokumente oder Gutachten mitbringen.'},
-    {ico:<Ic.Moto s={26} c="var(--blue)"/>,title:'Motorrad-HU',sub:'Zweiräder · §29 StVZO',tag:'Saisonal',desc:'Spezialisierte HU für Motorräder und Roller.',duration:'ca. 25 Min.',details:['Kontrolle der Bremsen','Überprüfung von Reifen','Prüfung von Rahmen und Gabeln','Sichtprüfung Licht und Blinker','Überprüfung Kettensatz oder Kardan'],note:'Fahrzeugschein mitbringen.'},
-    {ico:<Ic.Award s={26} c="var(--blue)"/>,title:'Oldtimer-Gutachten',sub:'§23 StVZO · H-Kennzeichen',tag:'Speziell',desc:'Offizielles Gutachten für das H-Kennzeichen.',duration:'ca. 60 Min.',details:['Prüfung auf originalen Fahrzeugzustand','Bewertung von Karosserie und Technik','Sicherheitsüberprüfung §29 StVZO','Prüfung der Fahrzeughistorie','Erstellung des Gutachtens §23 StVZO'],note:'Mindestens 30 Jahre altes Fahrzeug erforderlich.'},
+    {ico:<Ic.Shield s={26} c="var(--accent)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO · Pflichtprüfung',tag:'Pflicht',desc:'Gesetzlich vorgeschriebene Sicherheitsprüfung für alle Kfz.',duration:'ca. 30 Min.',details:['Überprüfung der Bremsanlage','Sicht- und Funktionsprüfung der Beleuchtung','Prüfung von Lenkung, Achsen und Radaufhängung','Kontrolle der Karosserie','Überprüfung von Sichtscheiben und Spiegeln','Prüfung der Abgasanlage','Sicherheitsgurtprüfung','Auslesen der Fahrzeugelektronik / OBD'],note:'Gesetzlich vorgeschrieben §29 StVZO. Nach 3 Jahren bei Neuwagen, danach alle 2 Jahre.'},
+    {ico:<Ic.Leaf s={26} c="var(--accent)"/>,title:'Abgasuntersuchung (AU)',sub:'AU · Emissionsprüfung',tag:'Kombi möglich',desc:'Prüfung der Schadstoffemissionen — schützt Umwelt und vermeidet Bußgelder.',duration:'ca. 15 Min.',details:['Sichtprüfung der Abgasanlage','Messung von CO, HC und Lambda-Werten','Trübungsmessung beim Diesel','Auslesen des OBD-Systems','Prüfung von Katalysator und Partikelfilter','Dokumentation und Bescheinigung'],note:'Pflichtbestandteil der HU. Kombi empfohlen.'},
+    {ico:<Ic.Wrench s={26} c="var(--accent)"/>,title:'Vorab-Check',sub:'Sicherheits-Vorprüfung',tag:'Empfohlen',desc:'Mängel vor der HU erkennen, Nachprüfungen vermeiden.',duration:'ca. 20 Min.',details:['Überprüfung aller HU-relevanten Punkte','Identifikation von Mängeln','Kosten- und Zeiteinschätzung','Beratung durch Prüfingenieur','Dokumentation mit Mängelliste'],note:'Kostenlos bei anschließender HU. Separat ab 29 €.'},
+    {ico:<Ic.Clip s={26} c="var(--accent)"/>,title:'Eintragungen / Abnahmen',sub:'§19 StVZO',tag:'Flexibel',desc:'Offizielle Abnahme von Fahrzeugveränderungen.',duration:'30–60 Min.',details:['Abnahme von Fahrwerksveränderungen','Prüfung von Felgen und Bereifung','Abnahme von Karosserieveränderungen','Prüfung auf Übereinstimmung mit ABE','Eintrag in Zulassungsbescheinigung'],note:'Alle ABE-Dokumente oder Gutachten mitbringen.'},
+    {ico:<Ic.Moto s={26} c="var(--accent)"/>,title:'Motorrad-HU',sub:'Zweiräder · §29 StVZO',tag:'Saisonal',desc:'Spezialisierte HU für Motorräder und Roller.',duration:'ca. 25 Min.',details:['Kontrolle der Bremsen','Überprüfung von Reifen','Prüfung von Rahmen und Gabeln','Sichtprüfung Licht und Blinker','Überprüfung Kettensatz oder Kardan'],note:'Fahrzeugschein mitbringen.'},
+    {ico:<Ic.Award s={26} c="var(--accent)"/>,title:'Oldtimer-Gutachten',sub:'§23 StVZO · H-Kennzeichen',tag:'Speziell',desc:'Offizielles Gutachten für das H-Kennzeichen.',duration:'ca. 60 Min.',details:['Prüfung auf originalen Fahrzeugzustand','Bewertung von Karosserie und Technik','Sicherheitsüberprüfung §29 StVZO','Prüfung der Fahrzeughistorie','Erstellung des Gutachtens §23 StVZO'],note:'Mindestens 30 Jahre altes Fahrzeug erforderlich.'},
   ];
   return (
-    <div id="leistungen" className="section-full sec" style={{background:'var(--stone)',position:'relative',overflow:'hidden'}}>
-      <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.1,pointerEvents:'none',zIndex:0}}/>
+    <div id="leistungen" className="section-full sec" style={{background:'var(--dark)',position:'relative',overflow:'hidden'}}>
+      <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.04,pointerEvents:'none',zIndex:0}}/>
       <SectionDeco side="right"/>
       <div className="inner" style={{position:'relative',zIndex:1}}>
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{marginBottom:40}}>
-          <div className="tag" style={{marginBottom:10}}>Leistungen</div>
-          <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,42px)',color:'var(--ink)',letterSpacing:'-.02em'}}>Unsere Prüfleistungen</h2>
+          <div className="tag" style={{marginBottom:14}}>Leistungen</div>
+          <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,42px)',color:'var(--white)',letterSpacing:'-.02em'}}>Unsere Prüfleistungen</h2>
           <div className="accent"/>
           <p style={{color:'var(--smoke)',fontSize:14,maxWidth:480,lineHeight:1.7}}>Klicken Sie auf eine Leistung für Details.</p>
         </motion.div>
-        <div className="g3">
+        <div className="svc-list" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14}}>
           {items.map((s,i) => (
-            <motion.div key={i} initial={{opacity:0,y:18}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.05}} className="svc-card" style={{padding:26}} onClick={()=>setModal(s)}>
-              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:16}}>
-                <div style={{width:50,height:50,background:'linear-gradient(135deg,var(--ice),#fff)',borderRadius:13,border:'1px solid var(--border)',display:'flex',alignItems:'center',justifyContent:'center'}}>{s.ico}</div>
-                <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:5}}>
-                  <div className="tag" style={{fontSize:9,padding:'3px 8px'}}>{s.tag}</div>
-                  <div style={{display:'flex',alignItems:'center',gap:4,fontSize:11,color:'var(--smoke)',fontWeight:500}}><Ic.Clock s={12}/>{s.duration}</div>
+            <motion.div key={i} initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.06}}
+              onClick={()=>setModal(s)}
+              style={{display:'flex',gap:18,padding:'20px 22px',background:'var(--dark2)',borderRadius:14,
+                borderLeft:'3px solid var(--accent)',cursor:'pointer',
+                transition:'background .22s,box-shadow .22s',position:'relative',overflow:'hidden'}}
+              onMouseEnter={e=>{e.currentTarget.style.background='var(--dark3)';e.currentTarget.style.boxShadow='0 8px 32px rgba(0,0,0,.25)';}}
+              onMouseLeave={e=>{e.currentTarget.style.background='var(--dark2)';e.currentTarget.style.boxShadow='none';}}>
+              <div style={{flexShrink:0,width:44,height:44,borderRadius:10,background:'rgba(91,145,244,.1)',border:'1px solid rgba(91,145,244,.18)',display:'flex',alignItems:'center',justifyContent:'center',marginTop:2}}>
+                {s.ico}
+              </div>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:5,gap:6}}>
+                  <div style={{fontSize:9,color:'var(--smoke)',letterSpacing:'.12em',textTransform:'uppercase',fontWeight:700,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{s.sub}</div>
+                  <div className="tag-badge" style={{flexShrink:0}}>{s.tag}</div>
+                </div>
+                <h3 style={{fontSize:14,fontWeight:700,color:'var(--white)',marginBottom:5,lineHeight:1.3}}>{s.title}</h3>
+                <p style={{color:'var(--smoke)',fontSize:12,lineHeight:1.55,marginBottom:8}}>{s.desc}</p>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                  <div style={{display:'flex',alignItems:'center',gap:4,color:'var(--accent)',fontSize:11,fontWeight:700,letterSpacing:'.04em',textTransform:'uppercase'}}>Details <Ic.ChevR s={10} c="var(--accent)"/></div>
+                  <span style={{fontSize:11,color:'var(--smoke)',display:'flex',alignItems:'center',gap:3}}><Ic.Clock s={11}/>{s.duration}</span>
                 </div>
               </div>
-              <div style={{fontSize:9,color:'var(--smoke)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:4,fontWeight:700}}>{s.sub}</div>
-              <h3 style={{fontSize:16,marginBottom:8,fontWeight:700,color:'var(--ink)'}}>{s.title}</h3>
-              <p style={{color:'var(--smoke)',fontSize:13,lineHeight:1.65,marginBottom:14}}>{s.desc}</p>
-              <div style={{display:'flex',alignItems:'center',gap:4,color:'var(--blue)',fontSize:11,fontWeight:700,letterSpacing:'.06em',textTransform:'uppercase'}}>Details & Prüfpunkte <Ic.ChevR s={11} c="var(--blue)"/></div>
             </motion.div>
           ))}
         </div>
@@ -397,39 +422,39 @@ const Services = () => {
       <AnimatePresence>
         {modal && (
           <div style={{position:'fixed',inset:0,zIndex:900,display:'flex',alignItems:'center',justifyContent:'center',padding:16}}>
-            <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={()=>setModal(null)} style={{position:'absolute',inset:0,background:'rgba(10,37,64,.72)',backdropFilter:'blur(6px)'}}/>
-            <motion.div initial={{opacity:0,y:24,scale:.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:12,scale:.97}} style={{position:'relative',background:'#fff',width:'100%',maxWidth:520,maxHeight:'88vh',borderRadius:18,display:'flex',flexDirection:'column',boxShadow:'0 24px 52px rgba(0,0,0,.18)',overflow:'hidden'}}>
-              <div style={{padding:'20px 24px',background:'var(--stone)',borderBottom:'1px solid var(--border)',display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+            <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={()=>setModal(null)} style={{position:'absolute',inset:0,background:'rgba(0,0,0,.75)',backdropFilter:'blur(6px)'}}/>
+            <motion.div initial={{opacity:0,y:24,scale:.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:12,scale:.97}} style={{position:'relative',background:'var(--dark)',width:'100%',maxWidth:520,maxHeight:'88vh',borderRadius:18,display:'flex',flexDirection:'column',boxShadow:'0 24px 52px rgba(0,0,0,.5)',overflow:'hidden',border:'1px solid rgba(255,255,255,.07)'}}>
+              <div style={{padding:'20px 24px',background:'var(--dark2)',borderBottom:'1px solid rgba(255,255,255,.07)',display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
                 <div>
                   <div style={{fontSize:9,color:'var(--smoke)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:3,fontWeight:700}}>{modal.sub}</div>
-                  <h3 style={{fontWeight:800,fontSize:20,color:'var(--ink)'}}>{modal.title}</h3>
+                  <h3 style={{fontWeight:800,fontSize:20,color:'var(--white)'}}>{modal.title}</h3>
                 </div>
-                <button onClick={()=>setModal(null)} style={{background:'#fff',border:'1px solid var(--border)',width:34,height:34,borderRadius:'50%',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><Ic.X s={15}/></button>
+                <button onClick={()=>setModal(null)} style={{background:'rgba(255,255,255,.07)',border:'1px solid rgba(255,255,255,.1)',width:34,height:34,borderRadius:'50%',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><Ic.X s={15} c="var(--text)"/></button>
               </div>
               <div style={{padding:24,overflowY:'auto'}}>
                 <div className="g2" style={{marginBottom:20}}>
                   {[['Dauer',modal.duration],['Kategorie',modal.tag]].map(([k,v]) => (
-                    <div key={k} style={{background:'var(--ice)',padding:'12px 16px',borderRadius:10}}>
+                    <div key={k} style={{background:'rgba(91,145,244,.07)',padding:'12px 16px',borderRadius:10,border:'1px solid rgba(91,145,244,.15)'}}>
                       <div style={{fontSize:10,fontWeight:700,color:'var(--smoke)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:3}}>{k}</div>
-                      <div style={{fontWeight:700,fontSize:14,color:'var(--navy)'}}>{v}</div>
+                      <div style={{fontWeight:700,fontSize:14,color:'var(--accent)'}}>{v}</div>
                     </div>
                   ))}
                 </div>
-                <div style={{fontWeight:700,fontSize:12,color:'var(--ink)',marginBottom:12,textTransform:'uppercase',letterSpacing:'.06em'}}>Prüfpunkte</div>
+                <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:12,textTransform:'uppercase',letterSpacing:'.06em'}}>Prüfpunkte</div>
                 <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:10,marginBottom:16}}>
                   {modal.details.map((pt,j) => (
-                    <li key={j} style={{display:'flex',alignItems:'flex-start',gap:9,fontSize:13,color:'var(--smoke)',lineHeight:1.5}}>
-                      <div style={{width:18,height:18,borderRadius:'50%',background:'rgba(26,86,219,.1)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,marginTop:1}}><Ic.Check s={10} c="var(--blue)"/></div>{pt}
+                    <li key={j} style={{display:'flex',alignItems:'flex-start',gap:9,fontSize:13,color:'var(--text)',lineHeight:1.5}}>
+                      <div style={{width:18,height:18,borderRadius:'50%',background:'rgba(91,145,244,.12)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,marginTop:1}}><Ic.Check s={10} c="var(--accent)"/></div>{pt}
                     </li>
                   ))}
                 </ul>
                 {modal.note && (
-                  <div style={{background:'#fffbeb',border:'1px solid #fde68a',borderRadius:10,padding:'12px 14px',display:'flex',gap:9,alignItems:'flex-start'}}>
-                    <Ic.Info s={14} c="#92400e"/><p style={{fontSize:12,color:'#92400e',lineHeight:1.6}}>{modal.note}</p>
+                  <div style={{background:'rgba(91,145,244,.07)',border:'1px solid rgba(91,145,244,.18)',borderRadius:10,padding:'12px 14px',display:'flex',gap:9,alignItems:'flex-start'}}>
+                    <Ic.Info s={14} c="var(--accent)"/><p style={{fontSize:12,color:'var(--text)',lineHeight:1.6}}>{modal.note}</p>
                   </div>
                 )}
               </div>
-              <div style={{padding:'16px 24px',borderTop:'1px solid var(--border)',background:'var(--stone)'}}>
+              <div style={{padding:'16px 24px',borderTop:'1px solid rgba(255,255,255,.07)',background:'var(--dark2)'}}>
                 <a href="#termin" onClick={()=>setModal(null)} className="btn btn-primary" style={{width:'100%',justifyContent:'center',padding:'12px',fontSize:13}}>Jetzt Termin buchen</a>
               </div>
             </motion.div>
@@ -444,24 +469,33 @@ const Services = () => {
 const Steps = () => {
   const steps = [{n:'01',title:'Online buchen',desc:'Leistung, Datum und Zeit wählen — rund um die Uhr.'},{n:'02',title:'Bestätigung',desc:'Bestätigungsmail mit allen Termindaten.'},{n:'03',title:'Fahrzeug bringen',desc:'Unser Team führt die Prüfung durch.'},{n:'04',title:'Plakette erhalten',desc:'Plakette und Prüfdokumente direkt vor Ort.'}];
   return (
-    <div id="ablauf" className="section-full sec" style={{background:'#fff',position:'relative',overflow:'hidden'}}>
-      <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.1,pointerEvents:'none',zIndex:0}}/>
+    <div id="ablauf" className="section-full sec" style={{background:'var(--black)',position:'relative',overflow:'hidden'}}>
+      <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.04,pointerEvents:'none',zIndex:0}}/>
       <SectionDeco side="left"/>
       <div className="inner" style={{position:'relative',zIndex:1}}>
-        <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:48}}>
-          <div className="tag" style={{marginBottom:10}}>Ablauf</div>
-          <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,42px)',color:'var(--ink)',letterSpacing:'-.02em'}}>In 4 Schritten zur Plakette</h2>
-          <div className="accent accent-c"/>
-        </motion.div>
-        <div className="steps-row">
-          {steps.map((s,i) => (
-            <motion.div key={i} initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.1}} style={{textAlign:'center',padding:'0 16px',position:'relative',zIndex:1}}>
-              <div style={{width:48,height:48,borderRadius:'50%',background:'var(--blue)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px',boxShadow:'0 4px 16px rgba(26,86,219,.24)',color:'#fff',fontWeight:800,fontSize:18,position:'relative',zIndex:2}}>{i+1}</div>
-              <div style={{fontSize:11,color:'var(--blue)',letterSpacing:'.18em',marginBottom:6,fontWeight:700}}>{s.n}</div>
-              <h3 style={{fontSize:16,marginBottom:8,fontWeight:700,color:'var(--ink)'}}>{s.title}</h3>
-              <p style={{color:'var(--smoke)',fontSize:13,lineHeight:1.68}}>{s.desc}</p>
-            </motion.div>
-          ))}
+        <div className="steps-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0 80px',alignItems:'start'}}>
+          <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{paddingTop:8}}>
+            <div className="tag" style={{marginBottom:14}}>Ablauf</div>
+            <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,42px)',color:'var(--white)',letterSpacing:'-.02em',lineHeight:1.1,marginBottom:16}}>In 4 Schritten zur Plakette</h2>
+            <div className="accent"/>
+            <p style={{color:'var(--smoke)',fontSize:14,lineHeight:1.75,marginBottom:32}}>Buchen Sie bequem online — wir erledigen den Rest schnell und transparent.</p>
+            <a href="#termin" className="btn btn-primary" style={{fontSize:13,padding:'13px 28px',gap:9,textDecoration:'none'}}>Jetzt Termin buchen <Ic.Arrow s={14}/></a>
+          </motion.div>
+          <div style={{position:'relative'}}>
+            <div style={{position:'absolute',left:18,top:0,bottom:0,width:1,background:'linear-gradient(180deg,var(--accent) 0%,rgba(91,145,244,.1) 100%)',zIndex:0}}/>
+            {steps.map((s,i) => (
+              <motion.div key={i} initial={{opacity:0,x:16}} whileInView={{opacity:1,x:0}} viewport={{once:true}} transition={{delay:i*.1}}
+                style={{display:'flex',gap:20,paddingLeft:8,paddingBottom:i<steps.length-1?32:0,position:'relative',zIndex:1}}>
+                <div style={{flexShrink:0,width:36,height:36,borderRadius:'50%',background:'var(--dark2)',border:'2px solid var(--accent)',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:800,fontSize:13,color:'var(--accent)'}}>
+                  {i+1}
+                </div>
+                <div style={{paddingTop:6}}>
+                  <h3 style={{fontSize:15,fontWeight:700,color:'var(--white)',marginBottom:5}}>{s.title}</h3>
+                  <p style={{color:'var(--smoke)',fontSize:13,lineHeight:1.65}}>{s.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -578,29 +612,29 @@ const BookingSection = () => {
     const isError = touched[field] && errors[field];
     return {
       borderColor: isError ? '#ef4444' : '',
-      backgroundColor: isError ? '#fef2f2' : 'var(--stone)',
+      backgroundColor: isError ? 'rgba(239,68,68,.08)' : 'var(--dark3)',
     };
   };
 
   return (
-    <div id="termin" className="section-full sec" style={{background:'var(--stone)',position:'relative',overflow:'hidden'}}>
-      <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.1,pointerEvents:'none',zIndex:0}}/>
+    <div id="termin" className="section-full sec" style={{background:'var(--dark)',position:'relative',overflow:'hidden'}}>
+      <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.04,pointerEvents:'none',zIndex:0}}/>
       <div className="inner" style={{maxWidth:820,position:'relative',zIndex:1}}>
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:40}}>
-          <div className="tag" style={{marginBottom:10}}>Online Buchung</div>
-          <h2 style={{fontWeight:800,fontSize:'clamp(24px,3.2vw,38px)',color:'var(--ink)',letterSpacing:'-.02em',marginBottom:10}}>Termin sichern — einfach online.</h2>
+          <div className="tag" style={{marginBottom:14,justifyContent:'center'}}>Online Buchung</div>
+          <h2 style={{fontWeight:800,fontSize:'clamp(24px,3.2vw,38px)',color:'var(--white)',letterSpacing:'-.02em',marginBottom:10}}>Termin sichern — einfach online.</h2>
           <p style={{color:'var(--smoke)',fontSize:14,maxWidth:480,margin:'0 auto'}}>Wählen Sie Datum und Uhrzeit — freie Slots werden automatisch angezeigt.</p>
         </motion.div>
 
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}}>
-          <div style={{background:'#fff',borderRadius:18,border:'1px solid var(--border)',overflow:'hidden',boxShadow:'0 8px 32px rgba(0,0,0,.04)'}}>
+          <div style={{background:'var(--dark2)',borderRadius:18,border:'1px solid rgba(255,255,255,.07)',overflow:'hidden',boxShadow:'0 8px 32px rgba(0,0,0,.25)'}}>
 
-            <div style={{background:'var(--navy)',padding:'16px 24px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+            <div style={{background:'var(--dark3)',borderBottom:'1px solid rgba(255,255,255,.07)',padding:'16px 24px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
               <div>
-                <div style={{fontWeight:700,fontSize:16,color:'#fff',marginBottom:2}}>Termin vereinbaren</div>
-                <div style={{fontSize:11.5,color:'rgba(255,255,255,.45)'}}>Pflichtfelder sind mit * markiert</div>
+                <div style={{fontWeight:700,fontSize:16,color:'var(--white)',marginBottom:2}}>Termin vereinbaren</div>
+                <div style={{fontSize:11.5,color:'var(--smoke)'}}>Pflichtfelder sind mit * markiert</div>
               </div>
-              <a href={PHONE_HREF} style={{display:'flex',alignItems:'center',gap:6,fontSize:12,color:'rgba(255,255,255,.7)',textDecoration:'none',fontWeight:600}}><Ic.Phone s={13}/>{PHONE}</a>
+              <a href={PHONE_HREF} style={{display:'flex',alignItems:'center',gap:6,fontSize:12,color:'var(--accent)',textDecoration:'none',fontWeight:600}}><Ic.Phone s={13}/>{PHONE}</a>
             </div>
 
             {!sent ? (
@@ -629,8 +663,8 @@ const BookingSection = () => {
                 </div>
 
                 {form.datum && isWeekend(form.datum) && (
-                  <div style={{display:'flex',alignItems:'center',gap:8,padding:'10px 14px',background:'#fffbeb',border:'1px solid #fde68a',borderRadius:10,fontSize:13,color:'#92400e'}}>
-                    <Ic.Warn s={14} c="#f59e0b"/> Samstag und Sonntag sind wir geschlossen. Bitte wählen Sie einen Werktag.
+                  <div style={{display:'flex',alignItems:'center',gap:8,padding:'10px 14px',background:'rgba(91,145,244,.08)',border:'1px solid rgba(91,145,244,.2)',borderRadius:10,fontSize:13,color:'var(--accent)'}}>
+                    <Ic.Warn s={14} c="var(--accent)"/> Samstag und Sonntag sind wir geschlossen. Bitte wählen Sie einen Werktag.
                   </div>
                 )}
 
@@ -646,9 +680,9 @@ const BookingSection = () => {
                     </label>
 
                     {slotsError && (
-                      <div style={{padding:'8px 12px',background:'#fef2f2',border:'1px solid #fca5a5',borderRadius:8,fontSize:12,color:'#991b1b',display:'flex',gap:6,alignItems:'center'}}>
+                      <div style={{padding:'8px 12px',background:'rgba(239,68,68,.08)',border:'1px solid rgba(239,68,68,.25)',borderRadius:8,fontSize:12,color:'#fca5a5',display:'flex',gap:6,alignItems:'center'}}>
                         <Ic.Warn s={13} c="#ef4444"/> {slotsError}
-                        <button type="button" onClick={()=>loadSlots(form.datum)} style={{marginLeft:'auto',background:'none',border:'none',color:'var(--blue)',cursor:'pointer',fontSize:12,fontWeight:700}}>
+                        <button type="button" onClick={()=>loadSlots(form.datum)} style={{marginLeft:'auto',background:'none',border:'none',color:'var(--accent)',cursor:'pointer',fontSize:12,fontWeight:700}}>
                           Erneut versuchen
                         </button>
                       </div>
@@ -673,7 +707,7 @@ const BookingSection = () => {
                           })}
                         </div>
                         <div style={{display:'flex',gap:14,marginTop:8,flexWrap:'wrap'}}>
-                          {[{bg:'var(--blue)',label:'Ausgewählt'},{bg:'#fff',border:'1.5px solid var(--border)',label:'Frei'},{bg:'var(--stone)',label:'Belegt / Vergangen'}].map(({bg,border,label}) => (
+                          {[{bg:'var(--accent)',label:'Ausgewählt'},{bg:'var(--dark3)',border:'1.5px solid rgba(255,255,255,.12)',label:'Frei'},{bg:'rgba(255,255,255,.04)',label:'Belegt / Vergangen'}].map(({bg,border,label}) => (
                             <div key={label} style={{display:'flex',alignItems:'center',gap:5}}>
                               <div style={{width:11,height:11,background:bg,border:border||'none',borderRadius:3,flexShrink:0}}/>
                               <span style={{fontSize:10,color:'var(--smoke)',fontWeight:600}}>{label}</span>
@@ -684,7 +718,7 @@ const BookingSection = () => {
                     )}
 
                     {!slotsLoading && !slotsError && allSlots.length === 0 && (
-                      <div style={{padding:'12px 14px',background:'var(--stone)',borderRadius:8,border:'1px solid var(--border)',fontSize:13,color:'var(--smoke)',textAlign:'center'}}>
+                      <div style={{padding:'12px 14px',background:'rgba(255,255,255,.04)',borderRadius:8,border:'1px solid rgba(255,255,255,.08)',fontSize:13,color:'var(--smoke)',textAlign:'center'}}>
                         Keine Termine an diesem Tag verfügbar.
                       </div>
                     )}
@@ -740,7 +774,7 @@ const BookingSection = () => {
                 <AnimatePresence>
                   {submitError && (
                     <motion.div initial={{opacity:0,y:-6}} animate={{opacity:1,y:0}} exit={{opacity:0}}
-                      style={{padding:'12px 14px',background:'#fef2f2',border:'1px solid #fca5a5',borderLeft:'3px solid #ef4444',borderRadius:8,fontSize:13,color:'#991b1b',display:'flex',gap:8,alignItems:'flex-start'}}>
+                      style={{padding:'12px 14px',background:'rgba(239,68,68,.08)',border:'1px solid rgba(239,68,68,.25)',borderLeft:'3px solid #ef4444',borderRadius:8,fontSize:13,color:'#fca5a5',display:'flex',gap:8,alignItems:'flex-start'}}>
                       <Ic.Warn s={14} c="#ef4444"/> {submitError}
                     </motion.div>
                   )}
@@ -753,17 +787,17 @@ const BookingSection = () => {
                 </button>
 
                 <p style={{fontSize:11,color:'var(--smoke)',textAlign:'center',lineHeight:1.55}}>
-                  Mit dem Absenden stimmen Sie unserer <a href="#" onClick={e=>e.preventDefault()} style={{color:'var(--blue)'}}>Datenschutzerklärung</a> zu.
+                  Mit dem Absenden stimmen Sie unserer <a href="#" onClick={e=>e.preventDefault()} style={{color:'var(--accent)'}}>Datenschutzerklärung</a> zu.
                 </p>
               </form>
             ) : (
               <motion.div initial={{opacity:0,scale:.98}} animate={{opacity:1,scale:1}} style={{padding:'44px 24px',textAlign:'center'}}>
-                <div style={{width:56,height:56,borderRadius:'50%',background:'var(--ice)',border:'2px solid var(--blue)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px',boxShadow:'0 4px 20px rgba(26,86,219,.2)'}}>
-                  <Ic.Check s={24} c="var(--blue)"/>
+                <div style={{width:56,height:56,borderRadius:'50%',background:'rgba(91,145,244,.12)',border:'2px solid var(--accent)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px',boxShadow:'0 4px 20px rgba(91,145,244,.2)'}}>
+                  <Ic.Check s={24} c="var(--accent)"/>
                 </div>
-                <h3 style={{fontWeight:800,fontSize:22,marginBottom:8,color:'var(--ink)'}}>Termin bestätigt!</h3>
+                <h3 style={{fontWeight:800,fontSize:22,marginBottom:8,color:'var(--white)'}}>Termin bestätigt!</h3>
                 <p style={{color:'var(--smoke)',fontSize:13,lineHeight:1.7,marginBottom:6}}>Ihr Termin wurde erfolgreich gebucht.</p>
-                <p style={{fontWeight:800,fontSize:17,color:'var(--navy)',marginBottom:4}}>{form.datum} · {form.zeit} Uhr</p>
+                <p style={{fontWeight:800,fontSize:17,color:'var(--accent)',marginBottom:4}}>{form.datum} · {form.zeit} Uhr</p>
                 <p style={{fontSize:13,color:'var(--smoke)',marginBottom:24}}>{form.leistung} · {form.fahrzeug}</p>
                 <button className="btn btn-primary" onClick={()=>{setSent(false);setTouched({});handleChange('leistung','');handleChange('fahrzeug','PKW');handleChange('datum','');handleChange('zeit','');handleChange('kennzeichen','');handleChange('name','');handleChange('telefon','');handleChange('email','');handleChange('anmerkungen','');}}>
                   Neuen Termin buchen
@@ -790,20 +824,20 @@ const FAQ = () => {
     ['Kann ich per WhatsApp buchen?','Ja — schreiben Sie uns, wir bestätigen schnellstmöglich.'],
   ];
   return (
-    <div id="faq" className="section-full sec" style={{background:'#fff',position:'relative',overflow:'hidden'}}>
-      <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.1,pointerEvents:'none',zIndex:0}}/>
-      <SectionDeco side="right" opacity={0.025}/>
+    <div id="faq" className="section-full sec" style={{background:'var(--dark)',position:'relative',overflow:'hidden'}}>
+      <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.04,pointerEvents:'none',zIndex:0}}/>
+      <SectionDeco side="right" opacity={0.04}/>
       <div className="inner" style={{maxWidth:780,margin:'0 auto',position:'relative',zIndex:1}}>
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:40}}>
-          <div className="tag" style={{marginBottom:10}}>FAQ</div>
-          <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,42px)',color:'var(--ink)',letterSpacing:'-.02em'}}>Häufige Fragen</h2>
+          <div className="tag" style={{marginBottom:14,justifyContent:'center'}}>FAQ</div>
+          <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,42px)',color:'var(--white)',letterSpacing:'-.02em'}}>Häufige Fragen</h2>
           <div className="accent accent-c"/>
         </motion.div>
-        <div style={{background:'#fff',borderRadius:16,border:'1px solid var(--border)',padding:'2px 28px'}}>
+        <div style={{background:'rgba(35,39,47,.5)',borderRadius:16,border:'1px solid rgba(255,255,255,.07)',padding:'2px 28px'}}>
           {faqs.map(([q,a],i) => (
-            <div key={i} className="faq-item" style={{borderBottom:i===faqs.length-1?'none':'1px solid var(--border)'}}>
+            <div key={i} className="faq-item" style={{borderBottom:i===faqs.length-1?'none':'1px solid rgba(255,255,255,.06)'}}>
               <button className={`faq-q${open===i?' open':''}`} onClick={()=>setOpen(open===i?null:i)}>
-                <span>{q}</span><span className="faq-icon"><Ic.Plus s={11} c={open===i?'#fff':'var(--blue)'}/></span>
+                <span>{q}</span><span className="faq-icon"><Ic.Plus s={11} c={open===i?'var(--black)':'var(--accent)'}/></span>
               </button>
               <AnimatePresence>
                 {open===i && (
@@ -825,10 +859,10 @@ const MapEmbed = () => {
   const [accepted, setAccepted] = useState(false);
   useEffect(()=>{ if(localStorage.getItem('cookie_consent')==='all') setAccepted(true); },[]);
   if (!accepted) return (
-    <div style={{width:'100%',height:'100%',minHeight:360,background:'var(--stone)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:12}}>
-      <div style={{width:44,height:44,background:'var(--ice)',borderRadius:12,display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.Pin s={20} c="var(--blue)"/></div>
+    <div style={{width:'100%',height:'100%',minHeight:360,background:'var(--dark)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:12}}>
+      <div style={{width:44,height:44,background:'rgba(91,145,244,.12)',borderRadius:12,display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.Pin s={20} c="var(--accent)"/></div>
       <div style={{textAlign:'center',maxWidth:340,padding:'0 16px'}}>
-        <div style={{fontWeight:700,fontSize:14,color:'var(--ink)',marginBottom:6}}>Google Maps ist deaktiviert</div>
+        <div style={{fontWeight:700,fontSize:14,color:'var(--white)',marginBottom:6}}>Google Maps ist deaktiviert</div>
         <p style={{fontSize:12.5,color:'var(--smoke)',lineHeight:1.65}}>Stimmen Sie zu, um die Karte anzuzeigen.</p>
       </div>
       <button className="btn btn-primary" style={{fontSize:12,padding:'10px 18px'}} onClick={()=>{localStorage.setItem('cookie_consent','all');setAccepted(true);}}>Google Maps aktivieren</button>
@@ -848,35 +882,35 @@ const Contact = () => (
       <div className="contact-card">
         {/* Brand */}
         <div style={{display:'flex',alignItems:'center',gap:11,paddingBottom:20,borderBottom:'1px solid rgba(255,255,255,.07)',marginBottom:20,flexShrink:0}}>
-          <div style={{width:38,height:38,background:'rgba(99,102,241,.18)',borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-            <Ic.Wrench s={17} c="#818CF8"/>
+          <div style={{width:38,height:38,background:'rgba(91,145,244,.15)',borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+            <Ic.Wrench s={17} c="var(--accent)"/>
           </div>
           <div>
-            <div style={{fontWeight:800,fontSize:14,color:'#F1F5F9',letterSpacing:'-.01em',lineHeight:1.25}}>AutoService Oberhausen</div>
-            <div style={{fontSize:11,color:'#475569',marginTop:2}}>Amtl. anerk. Kfz-Prüfstelle §29 StVZO</div>
+            <div style={{fontWeight:800,fontSize:14,color:'var(--white)',letterSpacing:'-.01em',lineHeight:1.25}}>AutoService Oberhausen</div>
+            <div style={{fontSize:11,color:'var(--smoke)',marginTop:2}}>Amtl. anerk. Kfz-Prüfstelle §29 StVZO</div>
           </div>
         </div>
 
         {/* Address */}
         <div style={{marginBottom:18,flexShrink:0}}>
-          <div style={{fontSize:10,fontWeight:700,color:'#6366F1',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:7}}>Adresse</div>
-          <div style={{fontSize:14,color:'#94A3B8',lineHeight:1.65}}>Musterstraße 123<br/>46045 Oberhausen, Deutschland</div>
+          <div style={{fontSize:10,fontWeight:700,color:'var(--accent)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:7}}>Adresse</div>
+          <div style={{fontSize:14,color:'var(--text)',lineHeight:1.65}}>Musterstraße 123<br/>46045 Oberhausen, Deutschland</div>
         </div>
 
         {/* Contact */}
         <div style={{marginBottom:18,flexShrink:0}}>
-          <div style={{fontSize:10,fontWeight:700,color:'#6366F1',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:7}}>Kontakt</div>
-          <a href={PHONE_HREF} style={{display:'block',fontSize:14,color:'#CBD5E1',textDecoration:'none',fontWeight:600,marginBottom:3}}>{PHONE}</a>
-          <a href="mailto:info@autoservice-ob.de" style={{fontSize:13,color:'#64748B',textDecoration:'none'}}>info@autoservice-ob.de</a>
+          <div style={{fontSize:10,fontWeight:700,color:'var(--accent)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:7}}>Kontakt</div>
+          <a href={PHONE_HREF} style={{display:'block',fontSize:14,color:'var(--white)',textDecoration:'none',fontWeight:600,marginBottom:3}}>{PHONE}</a>
+          <a href="mailto:info@autoservice-ob.de" style={{fontSize:13,color:'var(--smoke)',textDecoration:'none'}}>info@autoservice-ob.de</a>
         </div>
 
         {/* Hours */}
         <div style={{flexShrink:0}}>
-          <div style={{fontSize:10,fontWeight:700,color:'#6366F1',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:10}}>Öffnungszeiten</div>
+          <div style={{fontSize:10,fontWeight:700,color:'var(--accent)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:10}}>Öffnungszeiten</div>
           {[['Mo – Mi','09:00 – 18:00'],['Do & Fr','15:00 – 18:00'],['Sa & So','Geschlossen']].map(([d,t])=>(
             <div key={d} className="contact-hours-row">
-              <span style={{fontSize:13,color:'#64748B'}}>{d}</span>
-              <span style={{fontSize:13,fontWeight:600,color:t==='Geschlossen'?'#334155':'#E2E8F0'}}>{t}</span>
+              <span style={{fontSize:13,color:'var(--smoke)'}}>{d}</span>
+              <span style={{fontSize:13,fontWeight:600,color:t==='Geschlossen'?'var(--mid)':'var(--white)'}}>{t}</span>
             </div>
           ))}
         </div>
@@ -897,28 +931,28 @@ const Contact = () => (
 
 /* ─── FOOTER ─────────────────────────────────────────────────────────────── */
 const Footer = ({ openModal }) => (
-  <footer style={{background:'var(--ink)',color:'#fff'}}>
+  <footer style={{background:'var(--dark2)',color:'var(--text)',borderTop:'1px solid rgba(255,255,255,.06)'}}>
     <div className="inner" style={{padding:'44px 64px 0'}}>
-      <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr',gap:40,paddingBottom:36,borderBottom:'1px solid rgba(255,255,255,.07)'}} className="mob-stack">
+      <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr',gap:40,paddingBottom:36,borderBottom:'1px solid rgba(255,255,255,.06)'}} className="mob-stack">
         <div>
           <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:14}}>
-            <div style={{width:30,height:30,background:'var(--blue)',borderRadius:7,display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.Wrench s={14} c="#fff"/></div>
-            <span style={{fontWeight:800,fontSize:16,color:'#fff'}}>Auto<span style={{color:'var(--sky)'}}>Service</span> <span style={{fontWeight:400,fontSize:12,color:'rgba(255,255,255,.35)'}}>Oberhausen</span></span>
+            <div style={{width:30,height:30,background:'var(--accent)',borderRadius:7,display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.Wrench s={14} c="#fff"/></div>
+            <span style={{fontWeight:800,fontSize:16,color:'var(--white)'}}>Auto<span style={{color:'var(--accent)'}}>Service</span> <span style={{fontWeight:400,fontSize:12,color:'rgba(255,255,255,.35)'}}>Oberhausen</span></span>
           </div>
-          <p style={{color:'rgba(255,255,255,.36)',fontSize:12.5,lineHeight:1.75,maxWidth:260}}>Amtlich anerkannte Kfz-Prüfstelle. HU und AU — professionell und transparent.</p>
+          <p style={{color:'var(--smoke)',fontSize:12.5,lineHeight:1.75,maxWidth:260}}>Amtlich anerkannte Kfz-Prüfstelle. HU und AU — professionell und transparent.</p>
         </div>
         {[{title:'Unternehmen',items:['Über uns','Team','Karriere','Kontakt']},{title:'Rechtliches',items:['Impressum','Datenschutz','AGB','Cookie-Einstellungen']}].map(({title,items})=>(
           <div key={title}>
             <div style={{fontSize:10,fontWeight:700,letterSpacing:'.16em',textTransform:'uppercase',color:'rgba(255,255,255,.28)',marginBottom:14}}>{title}</div>
             <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:9}}>
-              {items.map(item=><li key={item}><button onClick={()=>['Impressum','Datenschutz','AGB','Cookie-Einstellungen'].includes(item)&&openModal(item)} style={{background:'none',border:'none',color:'rgba(255,255,255,.46)',fontSize:12.5,cursor:'pointer',padding:0,fontFamily:'var(--sans)',transition:'color .16s'}} onMouseOver={e=>e.target.style.color='#fff'} onMouseOut={e=>e.target.style.color='rgba(255,255,255,.46)'}>{item}</button></li>)}
+              {items.map(item=><li key={item}><button onClick={()=>['Impressum','Datenschutz','AGB','Cookie-Einstellungen'].includes(item)&&openModal(item)} style={{background:'none',border:'none',color:'var(--smoke)',fontSize:12.5,cursor:'pointer',padding:0,fontFamily:'var(--sans)',transition:'color .16s'}} onMouseOver={e=>e.target.style.color='var(--white)'} onMouseOut={e=>e.target.style.color='var(--smoke)'}>{item}</button></li>)}
             </ul>
           </div>
         ))}
       </div>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:8,padding:'16px 0'}}>
-        <span style={{color:'rgba(255,255,255,.18)',fontSize:11.5}}>© {new Date().getFullYear()} AutoService Oberhausen — Alle Rechte vorbehalten.</span>
-        <span style={{color:'rgba(255,255,255,.18)',fontSize:10,letterSpacing:'.08em',textTransform:'uppercase'}}>Amtlich anerkannte Prüfstelle · §29 StVZO</span>
+        <span style={{color:'rgba(255,255,255,.2)',fontSize:11.5}}>© {new Date().getFullYear()} AutoService Oberhausen — Alle Rechte vorbehalten.</span>
+        <span style={{color:'rgba(255,255,255,.2)',fontSize:10,letterSpacing:'.08em',textTransform:'uppercase'}}>Amtlich anerkannte Prüfstelle · §29 StVZO</span>
       </div>
     </div>
   </footer>
@@ -936,19 +970,19 @@ const Modal = ({ title, onClose }) => {
   const isCookie = title === 'Cookie-Einstellungen';
   return (
     <div style={{position:'fixed',inset:0,zIndex:999,display:'flex',alignItems:'center',justifyContent:'center',padding:16}}>
-      <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={onClose} style={{position:'absolute',inset:0,background:'rgba(10,37,64,.72)',backdropFilter:'blur(6px)'}}/>
-      <motion.div initial={{opacity:0,y:24,scale:.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:12,scale:.97}} style={{position:'relative',background:'#fff',width:'100%',maxWidth:540,maxHeight:'86vh',borderRadius:16,display:'flex',flexDirection:'column',boxShadow:'0 24px 52px rgba(0,0,0,.2)',overflow:'hidden'}}>
-        <div style={{padding:'18px 24px',borderBottom:'1px solid var(--border)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-          <h3 style={{fontWeight:700,fontSize:18,color:'var(--ink)'}}>{title}</h3>
-          <button onClick={onClose} style={{background:'var(--stone)',border:'none',width:32,height:32,borderRadius:'50%',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.X s={15}/></button>
+      <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={onClose} style={{position:'absolute',inset:0,background:'rgba(0,0,0,.75)',backdropFilter:'blur(6px)'}}/>
+      <motion.div initial={{opacity:0,y:24,scale:.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:12,scale:.97}} style={{position:'relative',background:'var(--dark)',width:'100%',maxWidth:540,maxHeight:'86vh',borderRadius:16,display:'flex',flexDirection:'column',boxShadow:'0 24px 52px rgba(0,0,0,.5)',overflow:'hidden',border:'1px solid rgba(255,255,255,.07)'}}>
+        <div style={{padding:'18px 24px',borderBottom:'1px solid rgba(255,255,255,.07)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+          <h3 style={{fontWeight:700,fontSize:18,color:'var(--white)'}}>{title}</h3>
+          <button onClick={onClose} style={{background:'rgba(255,255,255,.07)',border:'none',width:32,height:32,borderRadius:'50%',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.X s={15} c="var(--text)"/></button>
         </div>
         <div style={{padding:24,overflowY:'auto'}}>
           {isCookie ? (
-            <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.85}}>
+            <div style={{fontSize:13,color:'var(--text)',lineHeight:1.85}}>
               <p style={{marginBottom:16}}>Sie können Ihre Einwilligung jederzeit widerrufen oder anpassen.</p>
               {[['✓ Technisch notwendige Cookies — immer aktiv','Session, Sicherheit. §25 Abs. 2 TTDSG.'],['○ Analyse-Cookies — nur mit Einwilligung','Anonymisierte Nutzungsauswertung. Art. 6 Abs. 1 lit. a DSGVO.']].map(([t,d])=>(
-                <div key={t} style={{marginBottom:12,padding:'12px 14px',background:'var(--stone)',borderRadius:10,border:'1px solid var(--border)'}}>
-                  <div style={{fontWeight:700,fontSize:13,color:'var(--ink)',marginBottom:4}}>{t}</div><p style={{fontSize:12}}>{d}</p>
+                <div key={t} style={{marginBottom:12,padding:'12px 14px',background:'var(--dark2)',borderRadius:10,border:'1px solid rgba(255,255,255,.07)'}}>
+                  <div style={{fontWeight:700,fontSize:13,color:'var(--white)',marginBottom:4}}>{t}</div><p style={{fontSize:12,color:'var(--smoke)'}}>{d}</p>
                 </div>
               ))}
               <div style={{display:'flex',gap:9,flexWrap:'wrap',marginTop:16}}>
@@ -972,20 +1006,20 @@ const CookieBanner = () => {
   const accept = all => { localStorage.setItem('cookie_consent',all?'all':'essential'); setVisible(false); };
   if (!visible) return null;
   return (
-    <div style={{position:'fixed',bottom:0,left:0,right:0,zIndex:600,background:'#fff',borderTop:'2px solid var(--blue)',boxShadow:'0 -8px 40px rgba(0,0,0,.1)'}}>
+    <div style={{position:'fixed',bottom:0,left:0,right:0,zIndex:600,background:'var(--dark)',borderTop:'1px solid rgba(255,255,255,.08)',boxShadow:'0 -8px 40px rgba(0,0,0,.4)'}}>
       <div className="inner" style={{padding:'16px 64px'}}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',flexWrap:'wrap',gap:14}}>
           <div style={{flex:1,minWidth:260}}>
-            <div style={{fontWeight:700,fontSize:14,color:'var(--ink)',marginBottom:4}}>🍪 Diese Website verwendet Cookies</div>
+            <div style={{fontWeight:700,fontSize:14,color:'var(--white)',marginBottom:4}}>Diese Website verwendet Cookies</div>
             <p style={{fontSize:12,color:'var(--smoke)',lineHeight:1.65,maxWidth:620}}>
               Technisch notwendige Cookies sind immer aktiv.{' '}
-              <button onClick={()=>setDetails(d=>!d)} style={{background:'none',border:'none',color:'var(--blue)',cursor:'pointer',fontSize:12,padding:0,fontFamily:'var(--sans)',textDecoration:'underline'}}>{details?'Weniger':'Mehr Infos'}</button>
+              <button onClick={()=>setDetails(d=>!d)} style={{background:'none',border:'none',color:'var(--accent)',cursor:'pointer',fontSize:12,padding:0,fontFamily:'var(--sans)',textDecoration:'underline'}}>{details?'Weniger':'Mehr Infos'}</button>
             </p>
             {details && (
-              <div style={{marginTop:10,padding:12,background:'var(--stone)',borderRadius:8,fontSize:11.5,color:'var(--smoke)',lineHeight:1.7,border:'1px solid var(--border)'}}>
-                <strong style={{color:'var(--ink)'}}>Notwendig:</strong> Session, Sicherheit.<br/>
-                <strong style={{color:'var(--ink)'}}>Analyse:</strong> Anonyme Auswertung.<br/>
-                <strong style={{color:'var(--ink)'}}>Google Maps:</strong> Nur nach Zustimmung.
+              <div style={{marginTop:10,padding:12,background:'var(--dark2)',borderRadius:8,fontSize:11.5,color:'var(--smoke)',lineHeight:1.7,border:'1px solid rgba(255,255,255,.07)'}}>
+                <strong style={{color:'var(--white)'}}>Notwendig:</strong> Session, Sicherheit.<br/>
+                <strong style={{color:'var(--white)'}}>Analyse:</strong> Anonyme Auswertung.<br/>
+                <strong style={{color:'var(--white)'}}>Google Maps:</strong> Nur nach Zustimmung.
               </div>
             )}
           </div>
@@ -1008,7 +1042,7 @@ const ScrollTop = () => {
       {vis && (
         <motion.button initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} exit={{opacity:0,y:10}}
           onClick={()=>window.scrollTo({top:0,behavior:'smooth'})}
-          style={{position:'fixed',bottom:76,right:20,zIndex:80,width:40,height:40,borderRadius:'50%',background:'var(--blue)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 18px rgba(26,86,219,.32)',color:'#fff',fontSize:15,fontWeight:700}}>
+          style={{position:'fixed',bottom:76,right:20,zIndex:80,width:40,height:40,borderRadius:'50%',background:'var(--accent)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 18px rgba(91,145,244,.3)',color:'#fff',fontSize:15,fontWeight:700}}>
           ↑
         </motion.button>
       )}
@@ -1058,11 +1092,11 @@ const CancelModal = ({ data, onClose }) => {
 
   return (
     <div style={{position:'fixed',inset:0,zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center',padding:16}}>
-      <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={onClose} style={{position:'absolute',inset:0,background:'rgba(10,37,64,.72)',backdropFilter:'blur(6px)'}}/>
-      <motion.div initial={{opacity:0,y:24,scale:.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:12,scale:.97}} style={{position:'relative',background:'#fff',width:'100%',maxWidth:420,borderRadius:20,display:'flex',flexDirection:'column',boxShadow:'0 24px 52px rgba(0,0,0,.2)',overflow:'hidden',textAlign:'center',padding:'40px 24px'}}>
-        
+      <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={onClose} style={{position:'absolute',inset:0,background:'rgba(0,0,0,.75)',backdropFilter:'blur(6px)'}}/>
+      <motion.div initial={{opacity:0,y:24,scale:.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:12,scale:.97}} style={{position:'relative',background:'var(--dark)',width:'100%',maxWidth:420,borderRadius:20,display:'flex',flexDirection:'column',boxShadow:'0 24px 52px rgba(0,0,0,.5)',overflow:'hidden',textAlign:'center',padding:'40px 24px',border:'1px solid rgba(255,255,255,.07)'}}>
+
         <div style={{fontSize:48,marginBottom:16,lineHeight:1}}>{c.icon}</div>
-        <h3 style={{fontWeight:800,fontSize:22,color:'var(--ink)',marginBottom:10}}>{c.title}</h3>
+        <h3 style={{fontWeight:800,fontSize:22,color:'var(--white)',marginBottom:10}}>{c.title}</h3>
         <p style={{color:'var(--smoke)',fontSize:14,lineHeight:1.6,marginBottom:24}}>{c.text}</p>
         
         <button className="btn btn-primary" onClick={onClose} style={{width:'100%',justifyContent:'center',padding:'14px',fontSize:14}}>
