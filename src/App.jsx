@@ -474,67 +474,49 @@ const BookingSection = () => {
   const allSlots = generateSlots(form.datum);
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setSubmitting(true);
-  setSubmitError('');
-  try {
-    const result = await insertBooking({
-      date: form.datum,
-      time_slot: form.zeit,
-      service: form.leistung,
-      vehicle_type: form.fahrzeug,
-      plate: form.kennzeichen,
-      name: form.name,
-      phone: form.telefon,
-      email: form.email,
-      notes: form.anmerkungen || null,
-    });
+    e.preventDefault();
+    setSubmitting(true);
+    setSubmitError('');
+    try {
+      const result = await insertBooking({
+        date: form.datum,
+        time_slot: form.zeit,
+        service: form.leistung,
+        vehicle_type: form.fahrzeug,
+        plate: form.kennzeichen,
+        name: form.name,
+        phone: form.telefon,
+        email: form.email,
+        notes: form.anmerkungen || null,
+      });
 
-    // ... внутри handleSubmit
-const bookingId = result[0]?.id;
+      // Если бронирование успешно, вызываем API для отправки письма
+      const bookingId = result[0]?.id;
+      if (bookingId) {
+        try {
+          await fetch('/api/send-confirmation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ bookingId }),
+          });
+        } catch (err) {
+          console.error("Fehler beim Senden der Bestätigung:", err);
+        }
+      }
 
-console.log("Supabase вернул результат:", result);
-console.log("Полученный bookingId:", bookingId);
-
-if (bookingId) {
-  try {
-    console.log("Отправляем запрос на /api/send-confirmation...");
-    const emailRes = await fetch('/api/send-confirmation', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ bookingId }),
-    });
-    
-    const emailData = await emailRes.json();
-    console.log("Ответ от Resend API:", emailData);
-    
-    if (!emailRes.ok) {
-      console.error("Ошибка при отправке письма:", emailData);
-      // Опционально: можно показать ошибку юзеру
+      setSent(true);
+    } catch (err) {
+      if (err.message === 'SLOT_TAKEN') {
+        setSubmitError('Dieser Termin wurde gerade gebucht. Bitte wählen Sie einen anderen Slot.');
+        await loadSlots(form.datum);
+        set('zeit', '');
+      } else {
+        setSubmitError('Buchung fehlgeschlagen. Bitte versuchen Sie es erneut oder rufen Sie uns an.');
+      }
+    } finally {
+      setSubmitting(false);
     }
-  } catch (err) {
-    console.error("Сетевая ошибка при обращении к /api/send-confirmation:", err);
-  }
-} else {
-  console.error("ОШИБКА: bookingId не найден! API письма не вызвано. Проверь RLS в Supabase.");
-}
-
-setSent(true); 
-// ...
-
-    setSent(true);
-  } catch (err) {
-    if (err.message === 'SLOT_TAKEN') {
-      setSubmitError('Dieser Termin wurde gerade gebucht. Bitte wählen Sie einen anderen Slot.');
-      await loadSlots(form.datum);
-      set('zeit', '');
-    } else {
-      setSubmitError('Buchung fehlgeschlagen. Bitte versuchen Sie es erneut oder rufen Sie uns an.');
-    }
-  } finally {
-    setSubmitting(false);
-  }
-};
+  };
 
   const today = new Date().toISOString().split('T')[0];
 
@@ -928,10 +910,89 @@ const ScrollTop = () => {
   );
 };
 
+
+/* ─── CANCEL STATUS MODAL ────────────────────────────────────────────────── */
+const CancelModal = ({ data, onClose }) => {
+  if (!data) return null;
+
+  const contentMap = {
+    success: { 
+      icon: '✅', color: '#10B981', 
+      title: 'Stornierung erfolgreich', 
+      text: `Ihr Termin am ${data.date} um ${data.time} Uhr wurde erfolgreich storniert.` 
+    },
+    already: { 
+      icon: 'ℹ️', color: '#3B82F6', 
+      title: 'Bereits storniert', 
+      text: 'Dieser Termin wurde bereits storniert.' 
+    },
+    toolate: { 
+      icon: '⚠️', color: '#F59E0B', 
+      title: 'Stornierung nicht möglich', 
+      text: 'Eine Online-Stornierung ist nur bis 24 Stunden vor dem Termin möglich. Bitte rufen Sie uns an.' 
+    },
+    notfound: { 
+      icon: '❓', color: '#EF4444', 
+      title: 'Nicht gefunden', 
+      text: 'Der Termin konnte nicht gefunden werden oder der Link ist ungültig.' 
+    },
+    error: { 
+      icon: '❌', color: '#EF4444', 
+      title: 'Fehler', 
+      text: 'Es gab ein Problem bei der Stornierung. Bitte kontaktieren Sie uns telefonisch.' 
+    },
+    invalid: { 
+      icon: '❌', color: '#EF4444', 
+      title: 'Ungültiger Link', 
+      text: 'Der Stornierungslink ist ungültig oder abgelaufen.' 
+    }
+  };
+
+  const c = contentMap[data.status] || contentMap.error;
+
+  return (
+    <div style={{position:'fixed',inset:0,zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center',padding:16}}>
+      <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={onClose} style={{position:'absolute',inset:0,background:'rgba(10,37,64,.72)',backdropFilter:'blur(6px)'}}/>
+      <motion.div initial={{opacity:0,y:24,scale:.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:12,scale:.97}} style={{position:'relative',background:'#fff',width:'100%',maxWidth:420,borderRadius:20,display:'flex',flexDirection:'column',boxShadow:'0 24px 52px rgba(0,0,0,.2)',overflow:'hidden',textAlign:'center',padding:'40px 24px'}}>
+        
+        <div style={{fontSize:48,marginBottom:16,lineHeight:1}}>{c.icon}</div>
+        <h3 style={{fontWeight:800,fontSize:22,color:'var(--ink)',marginBottom:10}}>{c.title}</h3>
+        <p style={{color:'var(--smoke)',fontSize:14,lineHeight:1.6,marginBottom:24}}>{c.text}</p>
+        
+        <button className="btn btn-primary" onClick={onClose} style={{width:'100%',justifyContent:'center',padding:'14px',fontSize:14}}>
+          Schließen
+        </button>
+
+      </motion.div>
+    </div>
+  );
+};
+
+
 /* ─── APP ────────────────────────────────────────────────────────────────── */
 export default function App() {
   const [modal, setModal] = useState(null);
+  const [cancelData, setCancelData] = useState(null);
+
+  useEffect(() => {
+    // Читаем параметры из адресной строки при загрузке
+    const params = new URLSearchParams(window.location.search);
+    const cancelStatus = params.get('cancel');
+    
+    if (cancelStatus) {
+      setCancelData({
+        status: cancelStatus,
+        date: params.get('date'),
+        time: params.get('time')
+      });
+
+      // Очищаем адресную строку, чтобы убрать "?cancel=success..."
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
+
   const scrollBook = () => document.getElementById('termin')?.scrollIntoView({behavior:'smooth'});
+
   return (
     <>
       <G/>
@@ -945,9 +1006,15 @@ export default function App() {
       <Contact/>
       <Footer openModal={setModal}/>
       <ScrollTop/>
+      
       <AnimatePresence>
         {modal && <Modal title={modal} onClose={()=>setModal(null)}/>}
       </AnimatePresence>
+
+      <AnimatePresence>
+        {cancelData && <CancelModal data={cancelData} onClose={()=>setCancelData(null)}/>}
+      </AnimatePresence>
+
       <CookieBanner/>
     </>
   );
