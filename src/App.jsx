@@ -1034,8 +1034,18 @@ export default function App() {
   const [modal, setModal] = useState(null);
   const [cancelData, setCancelData] = useState(null);
 
+  // --- ПУЛЕНЕПРОБИВАЕМАЯ ПРОВЕРКА АДМИНКИ ---
+  const [isAdmin, setIsAdmin] = useState(window.location.hash === '#admin');
+
   useEffect(() => {
-    // Читаем параметры из адресной строки при загрузке
+    // Слушаем изменения хэша (если перешли по ссылке)
+    const handleHashChange = () => setIsAdmin(window.location.hash === '#admin');
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  useEffect(() => {
+    // Читаем параметры из адресной строки при загрузке (для отмены терминов)
     const params = new URLSearchParams(window.location.search);
     const cancelStatus = params.get('cancel');
     
@@ -1046,16 +1056,15 @@ export default function App() {
         time: params.get('time')
       });
 
-      // Очищаем адресную строку, чтобы убрать "?cancel=success..."
+      // Очищаем адресную строку
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);
 
   const scrollBook = () => document.getElementById('termin')?.scrollIntoView({behavior:'smooth'});
 
-  // --- ПРОВЕРКА АДМИНКИ ---
-  // Проверяем адресную строку. Если это /admin, показываем только Админку
-  if (window.location.pathname === '/admin') {
+  // Если в ссылке есть #admin — показываем только панель
+  if (isAdmin) {
     return <AdminPanel />;
   }
 
