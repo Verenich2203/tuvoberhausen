@@ -1,4 +1,3 @@
-// Файл: src/AdminPanel.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 
 // --- НАСТРОЙКИ SUPABASE ---
@@ -46,7 +45,6 @@ export default function AdminPanel() {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('all');
 
-  // Безопасный логин через API
   const handleLogin = async (e) => {
     e.preventDefault();
     setAuthError('');
@@ -56,14 +54,13 @@ export default function AdminPanel() {
       const res = await fetch('/api/admin-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // Используем .trim(), чтобы убрать случайные пробелы до и после пароля
         body: JSON.stringify({ password: password.trim() })
       });
       
       const data = await res.json();
       
       if (data.success) {
-        setAuth(true); // Успех!
+        setAuth(true); 
       } else {
         setAuthError(data.error || 'Login fehlgeschlagen');
       }
@@ -100,7 +97,7 @@ export default function AdminPanel() {
     }
   };
 
-  // ЭКРАН ВХОДА (С исправленным независимым дизайном)
+  // ЭКРАН ВХОДА
   if (!auth) {
     return (
       <div style={{minHeight:'100vh', background:'#F8FAFC', display:'flex', alignItems:'center', justifyContent:'center', padding:20, fontFamily:'sans-serif'}}>
@@ -137,20 +134,29 @@ export default function AdminPanel() {
     );
   }
 
-  // ПАНЕЛЬ УПРАВЛЕНИЯ
-  const filtered = bookings.filter(b => {
-    const s = search.toLowerCase();
-    const matchSearch = b.name.toLowerCase().includes(s) || b.plate.toLowerCase().includes(s) || b.phone.includes(s);
-    const bStatus = b.status || 'pending';
-    const matchFilter = filter === 'all' || bStatus === filter;
-    return matchSearch && matchFilter;
-  });
-
+  // Настройки статусов
   const statusConfig = {
     pending:   { label: 'Ausstehend', color: '#F59E0B', bg: '#FFFBEB' },
     completed: { label: 'Abgeschlossen', color: '#10B981', bg: '#ECFDF5' },
     cancelled: { label: 'Storniert', color: '#EF4444', bg: '#FEF2F2' }
   };
+
+  // ПАНЕЛЬ УПРАВЛЕНИЯ (Защита от пустых данных)
+  const filtered = bookings.filter(b => {
+    const s = search.toLowerCase();
+    
+    // Защита: если поля пустые (null/undefined), заменяем их на пустую строку
+    const name = b.name || '';
+    const plate = b.plate || '';
+    const phone = b.phone || '';
+    
+    const matchSearch = name.toLowerCase().includes(s) || plate.toLowerCase().includes(s) || phone.includes(s);
+    
+    const bStatus = b.status || 'pending';
+    const matchFilter = filter === 'all' || bStatus === filter;
+    
+    return matchSearch && matchFilter;
+  });
 
   return (
     <div style={{minHeight:'100vh', background:'#F8FAFC', fontFamily:'sans-serif'}}>
@@ -182,23 +188,25 @@ export default function AdminPanel() {
           {filtered.length === 0 && <div style={{textAlign:'center', padding:40, color:'#64748B'}}>Keine Buchungen gefunden.</div>}
           
           {filtered.map(b => {
-            const st = b.status || 'pending';
-            const conf = statusConfig[st];
+            // ЗАЩИТА: Если статус кривой (например, пустота или странное слово), приравниваем его к 'pending'
+            const validStatus = (b.status && statusConfig[b.status]) ? b.status : 'pending';
+            const conf = statusConfig[validStatus];
+            
             return (
               <div key={b.id} style={{background:'#fff', borderRadius:16, padding:24, border:'1px solid #E2E8F0', display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:20, boxShadow:'0 2px 8px rgba(0,0,0,.02)'}}>
                 <div style={{display:'flex', gap:24, flexWrap:'wrap'}}>
                   <div style={{background:'#F8FAFC', padding:'12px 16px', borderRadius:10, textAlign:'center', minWidth:100}}>
-                    <div style={{fontSize:11, fontWeight:700, color:'#64748B', textTransform:'uppercase', letterSpacing:'.08em', marginBottom:4}}>{b.date}</div>
-                    <div style={{fontSize:20, fontWeight:800, color:'#1A56DB'}}>{b.time_slot}</div>
+                    <div style={{fontSize:11, fontWeight:700, color:'#64748B', textTransform:'uppercase', letterSpacing:'.08em', marginBottom:4}}>{b.date || 'Kein Datum'}</div>
+                    <div style={{fontSize:20, fontWeight:800, color:'#1A56DB'}}>{b.time_slot || '--:--'}</div>
                   </div>
                   <div style={{display:'flex', flexDirection:'column', justifyContent:'center'}}>
-                    <div style={{fontSize:16, fontWeight:800, color:'#0F1923', marginBottom:4}}>{b.name} <span style={{color:'#64748B', fontWeight:500, fontSize:14}}>— {b.plate}</span></div>
+                    <div style={{fontSize:16, fontWeight:800, color:'#0F1923', marginBottom:4}}>{b.name || 'Unbekannt'} <span style={{color:'#64748B', fontWeight:500, fontSize:14}}>— {b.plate || 'Kein Kennzeichen'}</span></div>
                     <div style={{fontSize:13, color:'#64748B', display:'flex', gap:12, marginBottom:6}}>
-                      <span>{b.service}</span> • <span>{b.vehicle_type}</span>
+                      <span>{b.service || '-'}</span> • <span>{b.vehicle_type || '-'}</span>
                     </div>
                     <div style={{fontSize:12, color:'#64748B', display:'flex', gap:12}}>
-                      <a href={`tel:${b.phone}`} style={{color:'#1A56DB', textDecoration:'none', fontWeight:600}}>{b.phone}</a> • 
-                      <a href={`mailto:${b.email}`} style={{color:'#1A56DB', textDecoration:'none', fontWeight:600}}>{b.email}</a>
+                      {b.phone ? <a href={`tel:${b.phone}`} style={{color:'#1A56DB', textDecoration:'none', fontWeight:600}}>{b.phone}</a> : '-'} • 
+                      {b.email ? <a href={`mailto:${b.email}`} style={{color:'#1A56DB', textDecoration:'none', fontWeight:600}}>{b.email}</a> : '-'}
                     </div>
                     {b.notes && <div style={{marginTop:8, fontSize:12, color:'#92400E', background:'#FFFBEB', padding:'6px 10px', borderRadius:6}}>📝 {b.notes}</div>}
                   </div>
@@ -206,9 +214,9 @@ export default function AdminPanel() {
                 <div style={{display:'flex', flexDirection:'column', alignItems:'flex-end', gap:12}}>
                   <div style={{background:conf.bg, color:conf.color, padding:'6px 14px', borderRadius:20, fontSize:12, fontWeight:700, letterSpacing:'.04em', textTransform:'uppercase'}}>{conf.label}</div>
                   <div style={{display:'flex', gap:8}}>
-                    {st !== 'completed' && <button onClick={()=>changeStatus(b.id, 'completed')} style={{background:'#10B981', color:'#fff', border:'none', padding:'8px 12px', borderRadius:8, fontSize:11, fontWeight:700, cursor:'pointer'}}>✓ Abschließen</button>}
-                    {st !== 'cancelled' && <button onClick={()=>changeStatus(b.id, 'cancelled')} style={{background:'#EF4444', color:'#fff', border:'none', padding:'8px 12px', borderRadius:8, fontSize:11, fontWeight:700, cursor:'pointer'}}>✕ Stornieren</button>}
-                    {st !== 'pending' && <button onClick={()=>changeStatus(b.id, 'pending')} style={{background:'#F8FAFC', color:'#64748B', border:'1px solid #E2E8F0', padding:'8px 12px', borderRadius:8, fontSize:11, fontWeight:700, cursor:'pointer'}}>Zurücksetzen</button>}
+                    {validStatus !== 'completed' && <button onClick={()=>changeStatus(b.id, 'completed')} style={{background:'#10B981', color:'#fff', border:'none', padding:'8px 12px', borderRadius:8, fontSize:11, fontWeight:700, cursor:'pointer'}}>✓ Abschließen</button>}
+                    {validStatus !== 'cancelled' && <button onClick={()=>changeStatus(b.id, 'cancelled')} style={{background:'#EF4444', color:'#fff', border:'none', padding:'8px 12px', borderRadius:8, fontSize:11, fontWeight:700, cursor:'pointer'}}>✕ Stornieren</button>}
+                    {validStatus !== 'pending' && <button onClick={()=>changeStatus(b.id, 'pending')} style={{background:'#F8FAFC', color:'#64748B', border:'1px solid #E2E8F0', padding:'8px 12px', borderRadius:8, fontSize:11, fontWeight:700, cursor:'pointer'}}>Zurücksetzen</button>}
                   </div>
                 </div>
               </div>
