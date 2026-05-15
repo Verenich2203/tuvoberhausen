@@ -179,6 +179,26 @@ const G = () => (
       .g4 { grid-template-columns:1fr 1fr; } .g2 { grid-template-columns:1fr; }
       .mob-stack { grid-template-columns:1fr !important; }
     }
+    .contact-map-wrap { position:relative; height:560px; overflow:hidden; }
+    .contact-map-wrap iframe { width:100%; height:100%; border:none; display:block; }
+    .contact-map-gradient { position:absolute; inset:0; background:linear-gradient(90deg,rgba(10,15,28,.88) 0%,rgba(10,15,28,.55) 38%,transparent 62%); pointer-events:none; z-index:1; }
+    .contact-card {
+      position:absolute; z-index:2; top:36px; bottom:36px;
+      left:max(24px, calc((100vw - 1280px) / 2 + 56px));
+      width:316px; background:rgba(10,15,28,.82);
+      backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+      border-radius:18px; padding:28px 28px 24px;
+      border:1px solid rgba(255,255,255,.07);
+      box-shadow:0 28px 64px rgba(0,0,0,.55);
+      display:flex; flex-direction:column;
+    }
+    .contact-hours-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.05); }
+    .contact-hours-row:last-child { border-bottom:none; }
+    @media (max-width:900px) {
+      .contact-map-wrap { height:340px; }
+      .contact-map-gradient { background:linear-gradient(180deg,transparent 30%,rgba(10,15,28,.9) 100%); }
+      .contact-card { position:static; width:100%; border-radius:0 0 0 0; top:auto; bottom:auto; left:auto; backdrop-filter:none; background:#0A0F1C; border:none; border-radius:0; box-shadow:none; }
+    }
   `}</style>
 );
 
@@ -819,30 +839,56 @@ const MapEmbed = () => {
 
 /* ─── CONTACT ────────────────────────────────────────────────────────────── */
 const Contact = () => (
-  <div id="standort" className="section-full sec" style={{background:'var(--stone)',position:'relative',overflow:'hidden'}}>
-    <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.1,pointerEvents:'none',zIndex:0}}/>
-    <div className="inner" style={{position:'relative',zIndex:1}}>
-      <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{marginBottom:40,textAlign:'center'}}>
-        <div className="tag" style={{marginBottom:10}}>Standort & Kontakt</div>
-        <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,42px)',color:'var(--ink)',letterSpacing:'-.02em'}}>So finden Sie uns</h2>
-        <div className="accent accent-c"/>
-      </motion.div>
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:40}} className="mob-stack">
-        <div style={{borderRadius:20,overflow:'hidden',border:'1px solid var(--border)',boxShadow:'0 12px 40px rgba(0,0,0,.06)',height:'100%',minHeight:400}}><MapEmbed/></div>
-        <div style={{display:'flex',flexDirection:'column',gap:20}}>
-          {[
-            {ico:<Ic.Pin s={16} c="var(--blue)"/>,label:'Adresse',body:<div style={{fontSize:14,fontWeight:500,lineHeight:1.75,color:'var(--ink)'}}>Musterstraße 123<br/>46045 Oberhausen, Deutschland</div>},
-            {ico:<Ic.Phone s={16} c="var(--blue)"/>,label:'Kontakt',body:<><div style={{fontSize:14,fontWeight:500,lineHeight:1.8,color:'var(--ink)',marginBottom:16}}>Telefon: {PHONE}<br/>E-Mail: info@autoservice-ob.de</div><div style={{display:'flex',gap:10,flexWrap:'wrap'}}><a href={PHONE_HREF} className="btn btn-call" style={{padding:'10px 18px',fontSize:12,gap:6}}><Ic.Phone s={14}/> Anrufen</a><a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer" className="btn btn-wa" style={{padding:'10px 18px',fontSize:12,gap:6}}><Ic.Wa s={14} c="#fff"/> WhatsApp</a></div></>},
-            {ico:<Ic.Clock s={16} c="var(--blue)"/>,label:'Öffnungszeiten',body:<div style={{display:'flex',flexDirection:'column',gap:8}}>{[['Mo – Mi','09:00 – 18:00 Uhr'],['Do & Fr','15:00 – 18:00 Uhr'],['Sa & So','Geschlossen']].map(([d,t])=><div key={d} style={{display:'flex',justifyContent:'space-between',fontSize:13.5,borderBottom:'1px solid var(--stone)',paddingBottom:6}}><span style={{color:'var(--smoke)'}}>{d}</span><span style={{fontWeight:600,color:'var(--ink)'}}>{t}</span></div>)}</div>},
-          ].map(({ico,label,body},i)=>(
-            <div key={i} style={{background:'#fff',padding:28,borderRadius:20,border:'1px solid var(--border)',boxShadow:'0 4px 16px rgba(0,0,0,.03)'}}>
-              <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:16}}>
-                <div style={{width:36,height:36,background:'var(--ice)',borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center'}}>{ico}</div>
-                <span style={{fontSize:11,fontWeight:700,letterSpacing:'.12em',textTransform:'uppercase',color:'var(--smoke)'}}>{label}</span>
-              </div>
-              {body}
+  <div id="standort" className="section-full" style={{background:'#0A0F1C',overflow:'hidden'}}>
+    <div className="contact-map-wrap">
+      <MapEmbed/>
+      <div className="contact-map-gradient"/>
+
+      {/* ── INFO CARD ── */}
+      <div className="contact-card">
+        {/* Brand */}
+        <div style={{display:'flex',alignItems:'center',gap:11,paddingBottom:20,borderBottom:'1px solid rgba(255,255,255,.07)',marginBottom:20,flexShrink:0}}>
+          <div style={{width:38,height:38,background:'rgba(99,102,241,.18)',borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+            <Ic.Wrench s={17} c="#818CF8"/>
+          </div>
+          <div>
+            <div style={{fontWeight:800,fontSize:14,color:'#F1F5F9',letterSpacing:'-.01em',lineHeight:1.25}}>AutoService Oberhausen</div>
+            <div style={{fontSize:11,color:'#475569',marginTop:2}}>Amtl. anerk. Kfz-Prüfstelle §29 StVZO</div>
+          </div>
+        </div>
+
+        {/* Address */}
+        <div style={{marginBottom:18,flexShrink:0}}>
+          <div style={{fontSize:10,fontWeight:700,color:'#6366F1',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:7}}>Adresse</div>
+          <div style={{fontSize:14,color:'#94A3B8',lineHeight:1.65}}>Musterstraße 123<br/>46045 Oberhausen, Deutschland</div>
+        </div>
+
+        {/* Contact */}
+        <div style={{marginBottom:18,flexShrink:0}}>
+          <div style={{fontSize:10,fontWeight:700,color:'#6366F1',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:7}}>Kontakt</div>
+          <a href={PHONE_HREF} style={{display:'block',fontSize:14,color:'#CBD5E1',textDecoration:'none',fontWeight:600,marginBottom:3}}>{PHONE}</a>
+          <a href="mailto:info@autoservice-ob.de" style={{fontSize:13,color:'#64748B',textDecoration:'none'}}>info@autoservice-ob.de</a>
+        </div>
+
+        {/* Hours */}
+        <div style={{flexShrink:0}}>
+          <div style={{fontSize:10,fontWeight:700,color:'#6366F1',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:10}}>Öffnungszeiten</div>
+          {[['Mo – Mi','09:00 – 18:00'],['Do & Fr','15:00 – 18:00'],['Sa & So','Geschlossen']].map(([d,t])=>(
+            <div key={d} className="contact-hours-row">
+              <span style={{fontSize:13,color:'#64748B'}}>{d}</span>
+              <span style={{fontSize:13,fontWeight:600,color:t==='Geschlossen'?'#334155':'#E2E8F0'}}>{t}</span>
             </div>
           ))}
+        </div>
+
+        {/* CTAs */}
+        <div style={{display:'flex',gap:9,marginTop:'auto',paddingTop:22,flexShrink:0}}>
+          <a href={PHONE_HREF} className="btn btn-call" style={{flex:1,padding:'10px 0',fontSize:12,justifyContent:'center',gap:6}}>
+            <Ic.Phone s={13}/> Anrufen
+          </a>
+          <a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer" className="btn btn-wa" style={{flex:1,padding:'10px 0',fontSize:12,justifyContent:'center',gap:6}}>
+            <Ic.Wa s={13} c="#fff"/> WhatsApp
+          </a>
         </div>
       </div>
     </div>
