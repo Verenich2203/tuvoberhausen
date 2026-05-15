@@ -4,39 +4,55 @@ const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const SITE_URL = process.env.SITE_URL || "https://tuvoberhausen.vercel.app";
 
 export default async function handler(req, res) {
+  // Разрешаем только POST-запросы
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  const { bookingId } = req.body;
-  if (!bookingId) return res.status(400).json({ error: "bookingId required" });
+  try {
+    const { bookingId } = req.body;
+    if (!bookingId) return res.status(400).json({ error: "bookingId required" });
 
-  // 1. Получить данные брони из Supabase
-  const sbRes = await fetch(
-    `${SUPABASE_URL}/rest/v1/bookings?id=eq.${bookingId}&select=*`,
-    {
-      headers: {
-        apikey: SUPABASE_SERVICE_KEY,
-        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
-      },
+    // 0. Защита: проверяем, загрузились ли переменные из Vercel
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !RESEND_API_KEY) {
+      console.error("КРИТИЧЕСКАЯ ОШИБКА: Отсутствуют переменные окружения в Vercel!");
+      return res.status(500).json({ error: "Missing environment variables" });
     }
-  );
-  const rows = await sbRes.json();
-  if (!rows || rows.length === 0) return res.status(404).json({ error: "Booking not found" });
 
-  const b = rows[0];
-  const cancelUrl = `${SITE_URL}/api/cancel-booking?token=${b.cancel_token}`;
+    // 1. Получить данные брони из Supabase
+    const sbRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/bookings?id=eq.${bookingId}&select=*`,
+      {
+        headers: {
+          apikey: SUPABASE_SERVICE_KEY,
+          Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+        },
+      }
+    );
+    
+    const rows = await sbRes.json();
 
-  // 2. Отправить письмо через Resend
-  const emailRes = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${RESEND_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: "AutoService Oberhausen <onboarding@resend.dev>",
-      to: [b.email],
-      subject: `✅ Terminbestätigung – ${b.date} um ${b.time_slot} Uhr`,
-      html: `
+    // Защита: проверяем, что Supabase вернул массив данных, а не ошибку авторизации
+    if (!Array.isArray(rows)) {
+      console.error("Ошибка при запросе в Supabase:", rows);
+      return res.status(500).json({ error: "Supabase fetch failed", details: rows });
+    }
+
+    if (rows.length === 0) return res.status(404).json({ error: "Booking not found" });
+
+    const b = rows[0];
+    const cancelUrl = `${SITE_URL}/api/cancel-booking?token=${b.cancel_token}`;
+
+    // 2. Отправить письмо через Resend
+    const emailRes = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "AutoService Oberhausen <onboarding@resend.dev>",
+        to: [b.email],
+        subject: `✅ Terminbestätigung – ${b.date} um ${b.time_slot} Uhr`,
+        html: `
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -49,7 +65,6 @@ export default async function handler(req, res) {
       <td align="center">
         <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
           
-          <!-- Header -->
           <tr>
             <td style="background:#1A56DB;padding:32px 40px;text-align:center;">
               <div style="display:inline-flex;align-items:center;gap:10px;">
@@ -60,7 +75,6 @@ export default async function handler(req, res) {
             </td>
           </tr>
 
-          <!-- Success badge -->
           <tr>
             <td style="padding:32px 40px 0;text-align:center;">
               <div style="display:inline-block;width:64px;height:64px;background:#EFF6FF;border-radius:50%;line-height:64px;font-size:28px;margin-bottom:16px;">✅</div>
@@ -69,7 +83,6 @@ export default async function handler(req, res) {
             </td>
           </tr>
 
-          <!-- Booking details -->
           <tr>
             <td style="padding:28px 40px;">
               <table width="100%" cellpadding="0" cellspacing="0" style="background:#F8FAFC;border-radius:12px;border:1px solid #E2E8F0;overflow:hidden;">
@@ -101,7 +114,6 @@ export default async function handler(req, res) {
             </td>
           </tr>
 
-          <!-- What to bring -->
           <tr>
             <td style="padding:0 40px 28px;">
               <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:16px 20px;">
@@ -111,7 +123,6 @@ export default async function handler(req, res) {
             </td>
           </tr>
 
-          <!-- Cancel button -->
           <tr>
             <td style="padding:0 40px 32px;text-align:center;">
               <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:20px 24px;">
@@ -125,7 +136,6 @@ export default async function handler(req, res) {
             </td>
           </tr>
 
-          <!-- Footer -->
           <tr>
             <td style="background:#0A2540;padding:20px 40px;text-align:center;">
               <p style="margin:0;font-size:12px;color:rgba(255,255,255,0.4);line-height:1.6;">
@@ -142,14 +152,23 @@ export default async function handler(req, res) {
 </body>
 </html>
       `,
-    }),
-  });
+      }),
+    });
 
-  if (!emailRes.ok) {
-    const err = await emailRes.json();
-    console.error("Resend error:", err);
-    return res.status(500).json({ error: "Email sending failed", details: err });
+    // Обработка ответа от Resend
+    const emailData = await emailRes.json();
+
+    if (!emailRes.ok) {
+      console.error("Ошибка от Resend API:", emailData);
+      return res.status(500).json({ error: "Email sending failed", details: emailData });
+    }
+
+    console.log("Письмо успешно отправлено для ID:", bookingId);
+    return res.status(200).json({ ok: true });
+
+  } catch (error) {
+    // Этот блок ловит любые фатальные сбои (чтобы не было FUNCTION_INVOCATION_FAILED)
+    console.error("Фатальная ошибка сервера:", error);
+    return res.status(500).json({ error: "Internal Server Error", message: error.message });
   }
-
-  return res.status(200).json({ ok: true });
 }
