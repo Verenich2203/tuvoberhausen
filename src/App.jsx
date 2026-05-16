@@ -393,59 +393,66 @@ const Services = () => {
     {ico:<Ic.Award s={26} c="var(--accent)"/>,title:'Oldtimer-Gutachten',sub:'§23 StVZO · H-Kennzeichen',tag:'Speziell',desc:'Offizielles Gutachten für das H-Kennzeichen.',duration:'ca. 60 Min.',details:['Prüfung auf originalen Fahrzeugzustand','Bewertung von Karosserie und Technik','Sicherheitsüberprüfung §29 StVZO','Prüfung der Fahrzeughistorie','Erstellung des Gutachtens §23 StVZO'],img:'oldtiemer.png',note:'Mindestens 30 Jahre altes Fahrzeug erforderlich.'},
     {ico:<Ic.Cert s={26} c="var(--accent)"/>,title:'HU + AU Kombi',sub:'§29 StVZO · Kombiangebot',tag:'Kombi',desc:'HU und AU in einem Termin — spart Zeit und ist oft günstiger.',duration:'ca. 40 Min.',details:['Vollständige Hauptuntersuchung §29 StVZO','Abgasuntersuchung inklusive','OBD-Diagnose beider Prüfungen','Einmalige Wartezeit für beide Tests','Kombiniertes Prüfprotokoll','Sofortige Bescheinigung vor Ort'],img:'AUKombi.png',note:'Empfehlung: HU und AU immer zusammen buchen — keine Extrakosten für die Kombination.'},
   ];
-  return (
-    <div id="leistungen" className="section-full sec" style={{background:'#ECEEF3',position:'relative'}}>
-      <div className="inner">
 
-        {/* Header */}
+  /* mosaic layout: items[0]=tuvv.jpg tall left, items[0..4] mapped to cells */
+  const mosaicCells = [
+    { img:'tuvv.jpg',       title: items[0].title, sub: items[0].sub, item: items[0], style:{ gridColumn:'1', gridRow:'1/3' } },
+    { img: items[0].img,   title: items[0].title, sub: items[0].sub, item: items[0], style:{ gridColumn:'2', gridRow:'1' } },
+    { img: items[1].img,   title: items[1].title, sub: items[1].sub, item: items[1], style:{ gridColumn:'3', gridRow:'1' } },
+    { img: items[4].img,   title: items[4].title, sub: items[4].sub, item: items[4], style:{ gridColumn:'2', gridRow:'2' } },
+    { img: items[5].img,   title: items[5].title, sub: items[5].sub, item: items[5], style:{ gridColumn:'3', gridRow:'2' } },
+  ];
+
+  return (
+    <div id="leistungen" className="section-full" style={{background:'#F8F9FC',position:'relative',paddingTop:72,paddingBottom:72}}>
+      <style>{`
+        .mosaic-grid { display:grid; grid-template-columns:2fr 1fr 1fr; grid-template-rows:340px 240px; gap:10px; }
+        .mosaic-cell { position:relative; overflow:hidden; cursor:pointer; border-radius:12px; }
+        .mosaic-bg { position:absolute; inset:0; background-size:cover; background-position:center; transition:transform .45s cubic-bezier(.22,1,.36,1); }
+        .mosaic-cell:hover .mosaic-bg { transform:scale(1.06); }
+        .mosaic-gradient { position:absolute; inset:0; background:linear-gradient(180deg,transparent 40%,rgba(10,12,18,.82) 100%); pointer-events:none; }
+        .mosaic-label { position:absolute; bottom:0; left:0; right:0; padding:18px 20px; }
+        .mosaic-sub { font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:4px; }
+        .mosaic-title { font-size:15px; font-weight:800; color:#fff; line-height:1.2; letter-spacing:-.01em; }
+        @media(max-width:900px){
+          .mosaic-grid { grid-template-columns:1fr !important; grid-template-rows:auto !important; }
+          .mosaic-cell { grid-column:1 !important; grid-row:auto !important; height:220px !important; }
+        }
+      `}</style>
+
+      <div className="inner">
+        {/* Section header */}
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}}
-          style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:56,flexWrap:'wrap',gap:20}}>
+          style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:40,flexWrap:'wrap',gap:16}}>
           <div>
-            <div style={{display:'inline-flex',alignItems:'center',gap:10,fontSize:11,fontWeight:700,letterSpacing:'.18em',textTransform:'uppercase',color:'var(--accent)',marginBottom:14}}>
-              <span style={{display:'inline-block',width:24,height:2,background:'var(--accent)',borderRadius:1,flexShrink:0}}/>Leistungen
+            <div style={{display:'inline-flex',alignItems:'center',gap:10,fontSize:11,fontWeight:700,letterSpacing:'.18em',textTransform:'uppercase',color:'var(--accent)',marginBottom:12}}>
+              <span style={{display:'inline-block',width:24,height:2,background:'var(--accent)',borderRadius:1,flexShrink:0}}/>LEISTUNGEN
             </div>
             <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,44px)',color:'#0F172A',letterSpacing:'-.02em',lineHeight:1.1}}>Unsere Prüfleistungen</h2>
           </div>
-          <a href="#termin" className="btn btn-primary" style={{textDecoration:'none',fontSize:13,padding:'13px 28px',gap:9}}>Termin buchen <Ic.Arrow s={14}/></a>
+          <a href="#termin" style={{display:'inline-flex',alignItems:'center',gap:8,fontSize:13,fontWeight:700,color:'var(--accent)',textDecoration:'none',letterSpacing:'.04em',textTransform:'uppercase',border:'1.5px solid rgba(91,145,244,.35)',padding:'10px 22px',borderRadius:8,transition:'all .2s'}}
+            onMouseEnter={e=>{e.currentTarget.style.background='var(--accent)';e.currentTarget.style.color='#fff';}}
+            onMouseLeave={e=>{e.currentTarget.style.background='transparent';e.currentTarget.style.color='var(--accent)';}}>
+            Alle Leistungen <Ic.Arrow s={13}/>
+          </a>
         </motion.div>
 
-        {/* Service rows */}
-        <div style={{borderTop:'1px solid rgba(15,23,42,.08)'}}>
-          {items.map((s,i) => (
-            <motion.div key={i}
-              initial={{opacity:0,x:-16}} whileInView={{opacity:1,x:0}} viewport={{once:true}} transition={{delay:i*.05}}
-              onClick={()=>setModal(s)}
-              style={{display:'flex',alignItems:'center',gap:20,padding:'22px 0',borderBottom:'1px solid rgba(15,23,42,.08)',cursor:'pointer',transition:'padding-left .2s,background .2s',borderRadius:4}}
-              onMouseEnter={e=>{e.currentTarget.style.paddingLeft='14px';e.currentTarget.style.background='rgba(91,145,244,.05)';}}
-              onMouseLeave={e=>{e.currentTarget.style.paddingLeft='0';e.currentTarget.style.background='transparent';}}>
-
-              {/* Number */}
-              <span style={{fontSize:12,fontWeight:800,color:'var(--accent)',minWidth:24,letterSpacing:'.04em',fontFamily:'var(--sans)'}}>
-                {String(i+1).padStart(2,'0')}
-              </span>
-
-              {/* Icon */}
-              <div style={{width:44,height:44,borderRadius:12,background:'rgba(91,145,244,.1)',border:'1px solid rgba(91,145,244,.15)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                {(() => { const C=s.ico.type; return <C s={19} c="var(--accent)"/>; })()}
+        {/* Mosaic grid */}
+        <motion.div className="mosaic-grid" initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:.6}}>
+          {mosaicCells.map((cell, i) => (
+            <div key={i} className="mosaic-cell" style={cell.style} onClick={()=>setModal(cell.item)}>
+              <div className="mosaic-bg" style={{backgroundImage:`url('${cell.img}')`}}/>
+              <div className="mosaic-gradient"/>
+              <div className="mosaic-label">
+                <div className="mosaic-sub">{cell.sub}</div>
+                <div className="mosaic-title">{cell.title}</div>
               </div>
-
-              {/* Title + desc */}
-              <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:16,fontWeight:700,color:'#0F172A',lineHeight:1.2,marginBottom:2}}>{s.title}</div>
-                <div className="hide-mob" style={{fontSize:12,color:'#64748B',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{s.desc}</div>
-              </div>
-
-              {/* Tag + chevron */}
-              <div style={{display:'flex',alignItems:'center',gap:12,flexShrink:0}}>
-                <span className="hide-mob tag-badge">{s.tag}</span>
-                <div style={{width:32,height:32,borderRadius:'50%',border:'1.5px solid rgba(91,145,244,.25)',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  <Ic.ChevR s={13} c="var(--accent)"/>
-                </div>
-              </div>
-            </motion.div>
+            </div>
           ))}
-        </div>
+        </motion.div>
       </div>
+
+      {/* Detail modal */}
       <AnimatePresence>
         {modal && (
           <div style={{position:'fixed',inset:0,zIndex:900,display:'flex',alignItems:'center',justifyContent:'center',padding:16}}>
@@ -531,8 +538,12 @@ const Steps = () => {
 
 /* ─── BOOKING SECTION ────────────────────────────────────────────────────── */
 const BookingSection = () => {
-  const [form, setForm] = useState({leistung:'',fahrzeug:'PKW',datum:'',zeit:'',kennzeichen:'',name:'',telefon:'',email:'',anmerkungen:''});
-  // Отслеживаем, в каких полях пользователь уже побывал (чтобы не ругаться на пустые поля до того, как в них зашли)
+  const [step, setStep] = useState(1);
+  const [form, setForm] = useState({
+    service: '', datum: '', zeit: '',
+    vorname: '', nachname: '', telefon: '', email: '',
+    marke: '', modell: '', anmerkungen: '', kennzeichen: ''
+  });
   const [touched, setTouched] = useState({});
   const [bookedSlots, setBookedSlots] = useState([]);
   const [slotsLoading, setSlotsLoading] = useState(false);
@@ -541,32 +552,34 @@ const BookingSection = () => {
   const [submitError, setSubmitError] = useState('');
   const [sent, setSent] = useState(false);
 
-  // --- ЖЕСТКИЕ ФИЛЬТРЫ (не дают ввести мусор) ---
-  const handleChange = (field, value) => {
-    let val = value;
-    if (field === 'name') val = val.replace(/[0-9]/g, ''); // Строго удаляем любые цифры
-    if (field === 'telefon') val = val.replace(/[^\d\+\s\-\(\)]/g, ''); // Только символы телефона
-    if (field === 'kennzeichen') val = val.toUpperCase().replace(/[^A-Z0-9\-\sÄÖÜ]/g, ''); // Формат немецких номеров
-    
-    setForm(prev => ({...prev, [field]: val}));
-  };
+  /* calendar state */
+  const today = new Date();
+  const [calYear, setCalYear] = useState(today.getFullYear());
+  const [calMonth, setCalMonth] = useState(today.getMonth());
 
-  // Отмечаем поле как "тронутое", когда человек из него выходит
-  const handleBlur = (field) => {
-    setTouched(prev => ({...prev, [field]: true}));
-  };
+  const serviceItems = [
+    {ico:<Ic.Shield s={22} c="var(--accent)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO · Pflichtprüfung',tag:'Pflicht'},
+    {ico:<Ic.Leaf s={22} c="var(--accent)"/>,title:'Abgasuntersuchung (AU)',sub:'AU · Emissionsprüfung',tag:'Kombi möglich'},
+    {ico:<Ic.Wrench s={22} c="var(--accent)"/>,title:'Vorab-Check',sub:'Sicherheits-Vorprüfung',tag:'Empfohlen'},
+    {ico:<Ic.Clip s={22} c="var(--accent)"/>,title:'Eintragungen / Abnahmen',sub:'§19 StVZO',tag:'Flexibel'},
+    {ico:<Ic.Moto s={22} c="var(--accent)"/>,title:'Motorrad-HU',sub:'Zweiräder · §29 StVZO',tag:'Saisonal'},
+    {ico:<Ic.Award s={22} c="var(--accent)"/>,title:'Oldtimer-Gutachten',sub:'§23 StVZO · H-Kennzeichen',tag:'Speziell'},
+    {ico:<Ic.Cert s={22} c="var(--accent)"/>,title:'HU + AU Kombi',sub:'§29 StVZO · Kombiangebot',tag:'Kombi'},
+  ];
 
-  // --- ДИНАМИЧЕСКАЯ ПРОВЕРКА ОШИБОК ---
-  const getErrors = () => {
-    const errs = {};
-    if (form.kennzeichen.trim().length < 3) errs.kennzeichen = "Bitte gültiges Kennzeichen eingeben (z.B. OB-AB 1234).";
-    if (form.name.trim().length < 2) errs.name = "Bitte geben Sie Ihren vollständigen Namen ein.";
-    if (form.telefon.replace(/[^\d]/g, '').length < 6) errs.telefon = "Bitte gültige Telefonnummer eingeben (z.B. +49 157...).";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) && form.email.length > 0) errs.email = "Bitte gültige E-Mail-Adresse eingeben (z.B. max@beispiel.de).";
-    return errs;
-  };
+  const setField = (field, value) => setForm(prev => ({...prev, [field]: value}));
+  const handleBlur = (field) => setTouched(prev => ({...prev, [field]: true}));
 
-  const errors = getErrors(); // Вычисляем ошибки на лету
+  const step3Errors = () => {
+    const e = {};
+    if (!form.vorname.trim()) e.vorname = 'Pflichtfeld';
+    if (!form.nachname.trim()) e.nachname = 'Pflichtfeld';
+    if (form.telefon.replace(/[^\d]/g,'').length < 6) e.telefon = 'Ungültige Telefonnummer';
+    if (!form.marke.trim()) e.marke = 'Pflichtfeld';
+    if (!form.modell.trim()) e.modell = 'Pflichtfeld';
+    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Ungültige E-Mail';
+    return e;
+  };
 
   const loadSlots = useCallback(async (date) => {
     if (!date) return;
@@ -577,262 +590,417 @@ const BookingSection = () => {
   }, []);
 
   useEffect(() => {
-    if (form.datum) { setForm(prev => ({...prev, zeit: ''})); loadSlots(form.datum); }
+    if (form.datum) { setField('zeit', ''); loadSlots(form.datum); }
   }, [form.datum, loadSlots]);
 
-  const allSlots = generateSlots(form.datum);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    // Если есть ошибки, отмечаем ВСЕ поля как "тронутые", чтобы они засветились красным, и блокируем отправку
-    if (Object.keys(errors).length > 0) {
-      setTouched({kennzeichen: true, name: true, telefon: true, email: true});
+  const handleSubmit = async () => {
+    const errs = step3Errors();
+    if (Object.keys(errs).length > 0) {
+      setTouched({vorname:true,nachname:true,telefon:true,marke:true,modell:true,email:true});
       return;
     }
-
-    setSubmitting(true);
-    setSubmitError('');
+    setSubmitting(true); setSubmitError('');
     try {
       const result = await insertBooking({
         date: form.datum,
         time_slot: form.zeit,
-        service: form.leistung,
-        vehicle_type: form.fahrzeug,
-        plate: form.kennzeichen,
-        name: form.name,
+        service: form.service,
+        vehicle_type: `${form.marke} ${form.modell}`.trim(),
+        plate: form.kennzeichen || '—',
+        name: `${form.vorname} ${form.nachname}`.trim(),
         phone: form.telefon,
         email: form.email,
         notes: form.anmerkungen || null,
       });
-
       const bookingId = result[0]?.id;
       if (bookingId) {
         try {
-          await fetch('/api/send-confirmation', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ bookingId }),
-          });
-        } catch (err) {
-          console.error("Fehler beim Senden:", err);
-        }
+          await fetch('/api/send-confirmation', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({bookingId}) });
+        } catch(err) { console.error('Fehler beim Senden:', err); }
       }
       setSent(true);
-    } catch (err) {
+    } catch(err) {
       if (err.message === 'SLOT_TAKEN') {
         setSubmitError('Dieser Termin wurde gerade gebucht. Bitte wählen Sie einen anderen Slot.');
-        await loadSlots(form.datum);
-        setForm(prev => ({...prev, zeit: ''}));
+        await loadSlots(form.datum); setField('zeit',''); setStep(2);
       } else {
         setSubmitError('Buchung fehlgeschlagen. Bitte versuchen Sie es erneut oder rufen Sie uns an.');
       }
-    } finally {
-      setSubmitting(false);
-    }
+    } finally { setSubmitting(false); }
   };
 
-  const today = new Date().toISOString().split('T')[0];
+  /* calendar helpers */
+  const calDays = () => {
+    const first = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
+    const startDow = first === 0 ? 6 : first - 1; // shift to Mon=0
+    const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+    return { startDow, daysInMonth };
+  };
+  const fmtDate = (y, m, d) => `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  const isDayPast = (y, m, d) => {
+    const t = new Date(); t.setHours(0,0,0,0);
+    return new Date(y, m, d) < t;
+  };
+  const isDayWeekend = (y, m, d) => { const dow = new Date(y, m, d).getDay(); return dow === 0 || dow === 6; };
 
-  // Вспомогательная функция для стилей ошибочных полей
-  const getFieldStyle = (field) => {
-    const isError = touched[field] && errors[field];
+  const DE_MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  const DE_DAYS = ['Mo','Di','Mi','Do','Fr','Sa','So'];
+  const DE_WEEKDAYS = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+
+  const fmtGermanDate = (dateStr) => {
+    if (!dateStr) return '';
+    const [y,m,d] = dateStr.split('-').map(Number);
+    const dow = new Date(y, m-1, d).getDay();
+    return `${DE_WEEKDAYS[dow]}, ${d}. ${DE_MONTHS[m-1]}`;
+  };
+
+  const allSlots = generateSlots(form.datum);
+  const morningSlots = allSlots.filter(s => parseInt(s.split(':')[0]) < 12);
+  const afternoonSlots = allSlots.filter(s => parseInt(s.split(':')[0]) >= 12);
+
+  /* input style helpers */
+  const inp = (field) => {
+    const errs = step3Errors();
+    const err = touched[field] && errs[field];
     return {
-      borderColor: isError ? '#ef4444' : '',
-      backgroundColor: isError ? 'rgba(239,68,68,.08)' : 'var(--dark3)',
+      fontFamily:'var(--sans)', fontSize:14, color:'#0F172A',
+      background:'#fff', border:`1.5px solid ${err ? '#ef4444' : '#E2E8F0'}`,
+      borderRadius:8, padding:'10px 13px', width:'100%', outline:'none',
+      transition:'border-color .18s', boxSizing:'border-box',
     };
   };
 
+  const labelStyle = { fontSize:11, fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', color:'#64748B', marginBottom:5, display:'block' };
+  const fieldWrap = { display:'flex', flexDirection:'column', gap:4 };
+
+  /* step indicator */
+  const StepDots = () => (
+    <div style={{display:'flex',alignItems:'center',gap:8,justifyContent:'center',marginBottom:40}}>
+      {[1,2,3].map(n => (
+        <div key={n} style={{display:'flex',alignItems:'center',gap:8}}>
+          <div style={{
+            width:32, height:32, borderRadius:'50%',
+            background: n < step ? 'var(--accent)' : n === step ? 'var(--accent)' : '#E2E8F0',
+            color: n <= step ? '#fff' : '#94A3B8',
+            display:'flex', alignItems:'center', justifyContent:'center',
+            fontWeight:800, fontSize:12, transition:'all .25s',
+            boxShadow: n === step ? '0 4px 14px rgba(91,145,244,.35)' : 'none',
+          }}>{n < step ? <Ic.Check s={13} c="#fff"/> : n}</div>
+          {n < 3 && <div style={{width:40,height:2,background:n < step ? 'var(--accent)' : '#E2E8F0',borderRadius:1,transition:'background .25s'}}/>}
+        </div>
+      ))}
+    </div>
+  );
+
   return (
-    <div id="termin" className="section-full sec" style={{background:'var(--dark)',position:'relative',overflow:'hidden'}}>
-      <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.04,pointerEvents:'none',zIndex:0}}/>
-      <div className="inner" style={{maxWidth:820,position:'relative',zIndex:1}}>
+    <div id="termin" className="section-full" style={{background:'#F8F9FC',paddingTop:72,paddingBottom:72}}>
+      <style>{`
+        .bk-card { background:#fff; border:1px solid #E2E8F0; border-radius:14px; padding:32px; box-shadow:0 2px 16px rgba(0,0,0,.06); }
+        .svc-sel { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+        .svc-sel-card { background:#fff; border:1.5px solid #E2E8F0; border-radius:12px; padding:18px 16px; cursor:pointer; transition:all .2s; position:relative; }
+        .svc-sel-card:hover { border-color:var(--accent); box-shadow:0 4px 16px rgba(91,145,244,.12); }
+        .svc-sel-card.active { border-color:var(--accent); background:rgba(91,145,244,.04); box-shadow:0 4px 16px rgba(91,145,244,.18); }
+        .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+        .cal-day { width:100%; aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; transition:all .15s; border:none; background:transparent; font-family:var(--sans); }
+        .cal-day:hover:not(:disabled):not(.cal-selected):not(.cal-today) { background:#EFF6FF; color:var(--accent); }
+        .cal-day.cal-selected { background:var(--accent); color:#fff; box-shadow:0 3px 10px rgba(91,145,244,.3); }
+        .cal-day.cal-today { border:2px solid var(--accent); color:var(--accent); }
+        .cal-day:disabled { color:#CBD5E1; cursor:not-allowed; }
+        .bk-nav-btn { background:none; border:1.5px solid #E2E8F0; border-radius:8px; width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; }
+        .bk-nav-btn:hover { border-color:var(--accent); color:var(--accent); }
+        @media(max-width:900px){
+          .svc-sel { grid-template-columns:1fr 1fr !important; }
+          .bk-two-col { grid-template-columns:1fr !important; }
+        }
+        @media(max-width:600px){
+          .svc-sel { grid-template-columns:1fr !important; }
+          .bk-card { padding:20px 16px !important; }
+        }
+      `}</style>
+
+      <div className="inner" style={{maxWidth:860}}>
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:40}}>
-          <div className="tag" style={{marginBottom:14,justifyContent:'center'}}>Online Buchung</div>
-          <h2 style={{fontWeight:800,fontSize:'clamp(24px,3.2vw,38px)',color:'var(--white)',letterSpacing:'-.02em',marginBottom:10}}>Termin sichern — einfach online.</h2>
-          <p style={{color:'var(--smoke)',fontSize:14,maxWidth:480,margin:'0 auto'}}>Wählen Sie Datum und Uhrzeit — freie Slots werden automatisch angezeigt.</p>
+          <div style={{display:'inline-flex',alignItems:'center',gap:10,fontSize:11,fontWeight:700,letterSpacing:'.18em',textTransform:'uppercase',color:'var(--accent)',marginBottom:12}}>
+            <span style={{display:'inline-block',width:24,height:2,background:'var(--accent)',borderRadius:1}}/>ONLINE BUCHUNG
+          </div>
+          <h2 style={{fontWeight:800,fontSize:'clamp(24px,3.2vw,38px)',color:'#0F172A',letterSpacing:'-.02em',marginBottom:10}}>Termin sichern — einfach online.</h2>
+          <p style={{color:'#64748B',fontSize:14,maxWidth:480,margin:'0 auto'}}>In drei Schritten zum bestätigten Termin.</p>
         </motion.div>
 
-        <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}}>
-          <div style={{background:'var(--dark2)',borderRadius:18,border:'1px solid rgba(255,255,255,.07)',overflow:'hidden',boxShadow:'0 8px 32px rgba(0,0,0,.25)'}}>
-
-            <div style={{background:'var(--dark3)',borderBottom:'1px solid rgba(255,255,255,.07)',padding:'16px 24px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-              <div>
-                <div style={{fontWeight:700,fontSize:16,color:'var(--white)',marginBottom:2}}>Termin vereinbaren</div>
-                <div style={{fontSize:11.5,color:'var(--smoke)'}}>Pflichtfelder sind mit * markiert</div>
-              </div>
-              <a href={PHONE_HREF} style={{display:'flex',alignItems:'center',gap:6,fontSize:12,color:'var(--accent)',textDecoration:'none',fontWeight:600}}><Ic.Phone s={13}/>{PHONE}</a>
+        {sent ? (
+          <motion.div initial={{opacity:0,scale:.97}} animate={{opacity:1,scale:1}} className="bk-card" style={{textAlign:'center',padding:'56px 32px'}}>
+            <div style={{width:64,height:64,borderRadius:'50%',background:'rgba(16,185,129,.1)',border:'2.5px solid #10B981',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',boxShadow:'0 4px 20px rgba(16,185,129,.2)'}}>
+              <Ic.Check s={28} c="#10B981"/>
             </div>
+            <h3 style={{fontWeight:800,fontSize:26,marginBottom:10,color:'#0F172A'}}>Termin bestätigt!</h3>
+            <p style={{color:'#64748B',fontSize:14,lineHeight:1.7,marginBottom:6}}>Ihr Termin wurde erfolgreich gebucht.</p>
+            <p style={{fontWeight:800,fontSize:18,color:'var(--accent)',marginBottom:4}}>{fmtGermanDate(form.datum)} · {form.zeit} Uhr</p>
+            <p style={{fontSize:14,color:'#64748B',marginBottom:4}}>{form.service}</p>
+            <p style={{fontSize:13,color:'#94A3B8',marginBottom:28}}>Bestätigungsmail wurde gesendet.</p>
+            <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px'}} onClick={()=>{setSent(false);setStep(1);setForm({service:'',datum:'',zeit:'',vorname:'',nachname:'',telefon:'',email:'',marke:'',modell:'',anmerkungen:'',kennzeichen:''});setTouched({});}}>
+              Neuen Termin buchen
+            </button>
+          </motion.div>
+        ) : (
+          <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}}>
+            <StepDots/>
 
-            {!sent ? (
-              <form onSubmit={handleSubmit} style={{padding:22,display:'flex',flexDirection:'column',gap:12}}>
-                <div className="g2">
-                  <div className="field">
-                    <label>Leistung *</label>
-                    <select value={form.leistung} onChange={e=>handleChange('leistung', e.target.value)} required>
-                      <option value="">Bitte wählen …</option>
-                      <option>Hauptuntersuchung (HU)</option><option>HU + AU Kombi</option>
-                      <option>Abgasuntersuchung (AU)</option><option>Vorab-Check</option>
-                      <option>Eintragung / Abnahme</option><option>Motorrad-HU</option><option>Oldtimer-Gutachten</option>
-                    </select>
+            {/* ── STEP 1: Service selection ── */}
+            <AnimatePresence mode="wait">
+            {step === 1 && (
+              <motion.div key="step1" initial={{opacity:0,x:30}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-30}} transition={{duration:.25}}>
+                <div className="bk-card">
+                  <div style={{marginBottom:24}}>
+                    <div style={{fontSize:11,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:8}}>SCHRITT 01</div>
+                    <h3 style={{fontWeight:800,fontSize:22,color:'#0F172A',letterSpacing:'-.01em'}}>Was braucht Ihr Auto?</h3>
                   </div>
-                  <div className="field">
-                    <label>Fahrzeugart *</label>
-                    <select value={form.fahrzeug} onChange={e=>handleChange('fahrzeug', e.target.value)} required>
-                      <option>PKW</option><option>Motorrad</option><option>Transporter</option><option>Oldtimer</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="field">
-                  <label>Wunschdatum *</label>
-                  <input type="date" min={today} value={form.datum} onChange={e=>handleChange('datum', e.target.value)} required/>
-                </div>
-
-                {form.datum && isWeekend(form.datum) && (
-                  <div style={{display:'flex',alignItems:'center',gap:8,padding:'10px 14px',background:'rgba(91,145,244,.08)',border:'1px solid rgba(91,145,244,.2)',borderRadius:10,fontSize:13,color:'var(--accent)'}}>
-                    <Ic.Warn s={14} c="var(--accent)"/> Samstag und Sonntag sind wir geschlossen. Bitte wählen Sie einen Werktag.
-                  </div>
-                )}
-
-                {form.datum && !isWeekend(form.datum) && (
-                  <div className="field">
-                    <label style={{display:'flex',alignItems:'center',gap:6}}>
-                      <Ic.Clock s={11} c="var(--smoke)"/> Uhrzeit *
-                      {slotsLoading && (
-                        <span style={{marginLeft:4,display:'inline-flex',alignItems:'center',gap:4,color:'var(--smoke)',fontSize:11,fontWeight:400,textTransform:'none',letterSpacing:0}}>
-                          <Ic.Spin s={12} c="var(--blue)"/> Lade freie Termine …
-                        </span>
-                      )}
-                    </label>
-
-                    {slotsError && (
-                      <div style={{padding:'8px 12px',background:'rgba(239,68,68,.08)',border:'1px solid rgba(239,68,68,.25)',borderRadius:8,fontSize:12,color:'#fca5a5',display:'flex',gap:6,alignItems:'center'}}>
-                        <Ic.Warn s={13} c="#ef4444"/> {slotsError}
-                        <button type="button" onClick={()=>loadSlots(form.datum)} style={{marginLeft:'auto',background:'none',border:'none',color:'var(--accent)',cursor:'pointer',fontSize:12,fontWeight:700}}>
-                          Erneut versuchen
-                        </button>
-                      </div>
-                    )}
-
-                    {!slotsLoading && !slotsError && allSlots.length > 0 && (
-                      <>
-                        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(82px,1fr))',gap:8,marginTop:4}}>
-                          {allSlots.map(slot => {
-                            const booked = bookedSlots.includes(slot);
-                            const past = isPast(form.datum, slot);
-                            const disabled = booked || past;
-                            const selected = form.zeit === slot;
-                            return (
-                              <button key={slot} type="button" disabled={disabled}
-                                onClick={() => !disabled && handleChange('zeit', slot)}
-                                className={`slot-btn${selected?' selected':''}`}>
-                                {slot}
-                                {booked && <span style={{display:'block',fontSize:8,color:'var(--smoke)',marginTop:1,letterSpacing:'.04em'}}>BELEGT</span>}
-                              </button>
-                            );
-                          })}
+                  <div className="svc-sel">
+                    {serviceItems.map((s,i) => (
+                      <div key={i} className={`svc-sel-card${form.service === s.title ? ' active' : ''}`} onClick={()=>setField('service', s.title)}>
+                        <div style={{position:'absolute',top:14,right:14,width:18,height:18,borderRadius:'50%',border:`2px solid ${form.service===s.title ? 'var(--accent)' : '#CBD5E1'}`,background:form.service===s.title ? 'var(--accent)' : 'transparent',display:'flex',alignItems:'center',justifyContent:'center',transition:'all .18s'}}>
+                          {form.service===s.title && <Ic.Check s={9} c="#fff"/>}
                         </div>
-                        <div style={{display:'flex',gap:14,marginTop:8,flexWrap:'wrap'}}>
-                          {[{bg:'var(--accent)',label:'Ausgewählt'},{bg:'var(--dark3)',border:'1.5px solid rgba(255,255,255,.12)',label:'Frei'},{bg:'rgba(255,255,255,.04)',label:'Belegt / Vergangen'}].map(({bg,border,label}) => (
-                            <div key={label} style={{display:'flex',alignItems:'center',gap:5}}>
-                              <div style={{width:11,height:11,background:bg,border:border||'none',borderRadius:3,flexShrink:0}}/>
-                              <span style={{fontSize:10,color:'var(--smoke)',fontWeight:600}}>{label}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </>
-                    )}
-
-                    {!slotsLoading && !slotsError && allSlots.length === 0 && (
-                      <div style={{padding:'12px 14px',background:'rgba(255,255,255,.04)',borderRadius:8,border:'1px solid rgba(255,255,255,.08)',fontSize:13,color:'var(--smoke)',textAlign:'center'}}>
-                        Keine Termine an diesem Tag verfügbar.
+                        <div style={{marginBottom:10}}>{s.ico}</div>
+                        <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'#94A3B8',marginBottom:5}}>{s.sub}</div>
+                        <div style={{fontWeight:700,fontSize:13,color:'#0F172A',lineHeight:1.3}}>{s.title}</div>
                       </div>
-                    )}
+                    ))}
                   </div>
-                )}
-
-                <div className="field">
-                  <label>Kfz-Kennzeichen *</label>
-                  <input type="text" placeholder="OB-AB 1234" maxLength={15} value={form.kennzeichen} onChange={e=>handleChange('kennzeichen', e.target.value)} onBlur={()=>handleBlur('kennzeichen')} required style={getFieldStyle('kennzeichen')}/>
-                  <AnimatePresence>
-                    {touched.kennzeichen && errors.kennzeichen && (
-                      <motion.span initial={{opacity:0, height:0}} animate={{opacity:1, height:'auto'}} exit={{opacity:0, height:0}} style={{color:'#ef4444', fontSize:11, fontWeight:600, display:'flex', alignItems:'center', gap:4}}><Ic.Warn s={11}/> {errors.kennzeichen}</motion.span>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                <div className="g2">
-                  <div className="field">
-                    <label>Ihr Name *</label>
-                    <input type="text" placeholder="Max Mustermann" maxLength={50} value={form.name} onChange={e=>handleChange('name', e.target.value)} onBlur={()=>handleBlur('name')} required style={getFieldStyle('name')}/>
-                    <AnimatePresence>
-                      {touched.name && errors.name && (
-                        <motion.span initial={{opacity:0, height:0}} animate={{opacity:1, height:'auto'}} exit={{opacity:0, height:0}} style={{color:'#ef4444', fontSize:11, fontWeight:600, display:'flex', alignItems:'center', gap:4}}><Ic.Warn s={11}/> {errors.name}</motion.span>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                  <div className="field">
-                    <label>Telefon *</label>
-                    <input type="tel" placeholder="+49 157..." maxLength={20} value={form.telefon} onChange={e=>handleChange('telefon', e.target.value)} onBlur={()=>handleBlur('telefon')} required style={getFieldStyle('telefon')}/>
-                    <AnimatePresence>
-                      {touched.telefon && errors.telefon && (
-                        <motion.span initial={{opacity:0, height:0}} animate={{opacity:1, height:'auto'}} exit={{opacity:0, height:0}} style={{color:'#ef4444', fontSize:11, fontWeight:600, display:'flex', alignItems:'center', gap:4}}><Ic.Warn s={11}/> {errors.telefon}</motion.span>
-                      )}
-                    </AnimatePresence>
+                  <div style={{display:'flex',justifyContent:'flex-end',marginTop:28}}>
+                    <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px',gap:8,opacity:form.service?1:.45,cursor:form.service?'pointer':'not-allowed'}}
+                      disabled={!form.service} onClick={()=>setStep(2)}>
+                      Weiter <Ic.Arrow s={14}/>
+                    </button>
                   </div>
                 </div>
-
-                <div className="field">
-                  <label>E-Mail *</label>
-                  <input type="email" placeholder="max@beispiel.de" maxLength={60} value={form.email} onChange={e=>handleChange('email', e.target.value)} onBlur={()=>handleBlur('email')} required style={getFieldStyle('email')}/>
-                  <AnimatePresence>
-                    {touched.email && errors.email && (
-                      <motion.span initial={{opacity:0, height:0}} animate={{opacity:1, height:'auto'}} exit={{opacity:0, height:0}} style={{color:'#ef4444', fontSize:11, fontWeight:600, display:'flex', alignItems:'center', gap:4}}><Ic.Warn s={11}/> {errors.email}</motion.span>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                <div className="field">
-                  <label>Anmerkungen</label>
-                  <textarea placeholder="Besonderheiten oder Fragen …" maxLength={500} value={form.anmerkungen} onChange={e=>handleChange('anmerkungen', e.target.value)}/>
-                </div>
-
-                <AnimatePresence>
-                  {submitError && (
-                    <motion.div initial={{opacity:0,y:-6}} animate={{opacity:1,y:0}} exit={{opacity:0}}
-                      style={{padding:'12px 14px',background:'rgba(239,68,68,.08)',border:'1px solid rgba(239,68,68,.25)',borderLeft:'3px solid #ef4444',borderRadius:8,fontSize:13,color:'#fca5a5',display:'flex',gap:8,alignItems:'flex-start'}}>
-                      <Ic.Warn s={14} c="#ef4444"/> {submitError}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                <button type="submit" className="btn btn-primary"
-                  disabled={submitting||!form.zeit}
-                  style={{justifyContent:'center',padding:'13px',fontSize:13,marginTop:4,opacity:submitting||!form.zeit?0.65:1,cursor:submitting||!form.zeit?'not-allowed':'pointer'}}>
-                  {submitting ? <><Ic.Spin s={15} c="#fff"/> Buchung wird gespeichert …</> : <>Termin verbindlich anfragen <Ic.Arrow s={15}/></>}
-                </button>
-
-                <p style={{fontSize:11,color:'var(--smoke)',textAlign:'center',lineHeight:1.55}}>
-                  Mit dem Absenden stimmen Sie unserer <a href="#" onClick={e=>e.preventDefault()} style={{color:'var(--accent)'}}>Datenschutzerklärung</a> zu.
-                </p>
-              </form>
-            ) : (
-              <motion.div initial={{opacity:0,scale:.98}} animate={{opacity:1,scale:1}} style={{padding:'44px 24px',textAlign:'center'}}>
-                <div style={{width:56,height:56,borderRadius:'50%',background:'rgba(91,145,244,.12)',border:'2px solid var(--accent)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px',boxShadow:'0 4px 20px rgba(91,145,244,.2)'}}>
-                  <Ic.Check s={24} c="var(--accent)"/>
-                </div>
-                <h3 style={{fontWeight:800,fontSize:22,marginBottom:8,color:'var(--white)'}}>Termin bestätigt!</h3>
-                <p style={{color:'var(--smoke)',fontSize:13,lineHeight:1.7,marginBottom:6}}>Ihr Termin wurde erfolgreich gebucht.</p>
-                <p style={{fontWeight:800,fontSize:17,color:'var(--accent)',marginBottom:4}}>{form.datum} · {form.zeit} Uhr</p>
-                <p style={{fontSize:13,color:'var(--smoke)',marginBottom:24}}>{form.leistung} · {form.fahrzeug}</p>
-                <button className="btn btn-primary" onClick={()=>{setSent(false);setTouched({});handleChange('leistung','');handleChange('fahrzeug','PKW');handleChange('datum','');handleChange('zeit','');handleChange('kennzeichen','');handleChange('name','');handleChange('telefon','');handleChange('email','');handleChange('anmerkungen','');}}>
-                  Neuen Termin buchen
-                </button>
               </motion.div>
             )}
-          </div>
-        </motion.div>
+
+            {/* ── STEP 2: Date + Time ── */}
+            {step === 2 && (
+              <motion.div key="step2" initial={{opacity:0,x:30}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-30}} transition={{duration:.25}}>
+                <div className="bk-card">
+                  <div style={{marginBottom:24}}>
+                    <div style={{fontSize:11,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:8}}>SCHRITT 02</div>
+                    <h3 style={{fontWeight:800,fontSize:22,color:'#0F172A',letterSpacing:'-.01em'}}>Wann soll es sein?</h3>
+                  </div>
+                  <div className="bk-two-col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:32,alignItems:'start'}}>
+                    {/* Calendar */}
+                    <div>
+                      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
+                        <button className="bk-nav-btn" onClick={()=>{ if(calMonth===0){setCalMonth(11);setCalYear(y=>y-1);}else setCalMonth(m=>m-1); }}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                        </button>
+                        <span style={{fontWeight:700,fontSize:14,color:'#0F172A'}}>{DE_MONTHS[calMonth]} {calYear}</span>
+                        <button className="bk-nav-btn" onClick={()=>{ if(calMonth===11){setCalMonth(0);setCalYear(y=>y+1);}else setCalMonth(m=>m+1); }}>
+                          <Ic.ChevR s={14} c="currentColor"/>
+                        </button>
+                      </div>
+                      <div className="cal-grid" style={{marginBottom:8}}>
+                        {DE_DAYS.map(d => <div key={d} style={{textAlign:'center',fontSize:10,fontWeight:700,color:'#94A3B8',letterSpacing:'.06em',padding:'4px 0'}}>{d}</div>)}
+                      </div>
+                      <div className="cal-grid">
+                        {(() => {
+                          const { startDow, daysInMonth } = calDays();
+                          const cells = [];
+                          for (let i = 0; i < startDow; i++) cells.push(<div key={`e${i}`}/>);
+                          for (let d = 1; d <= daysInMonth; d++) {
+                            const dateStr = fmtDate(calYear, calMonth, d);
+                            const past = isDayPast(calYear, calMonth, d);
+                            const weekend = isDayWeekend(calYear, calMonth, d);
+                            const disabled = past || weekend;
+                            const selected = form.datum === dateStr;
+                            const isToday = dateStr === today.toISOString().split('T')[0];
+                            cells.push(
+                              <button key={d} disabled={disabled}
+                                className={`cal-day${selected?' cal-selected':isToday&&!selected?' cal-today':''}`}
+                                onClick={()=>{ setField('datum', dateStr); setField('zeit',''); }}
+                                style={{color: disabled ? '#CBD5E1' : selected ? '#fff' : '#0F172A'}}>
+                                {d}
+                              </button>
+                            );
+                          }
+                          return cells;
+                        })()}
+                      </div>
+                    </div>
+                    {/* Time slots */}
+                    <div>
+                      {!form.datum ? (
+                        <div style={{padding:'32px 16px',textAlign:'center',color:'#94A3B8',fontSize:13,border:'1.5px dashed #E2E8F0',borderRadius:10}}>
+                          Bitte wählen Sie zuerst einen Tag aus.
+                        </div>
+                      ) : (
+                        <>
+                          <div style={{fontWeight:700,fontSize:14,color:'#0F172A',marginBottom:16}}>{fmtGermanDate(form.datum)}</div>
+                          {slotsLoading && (
+                            <div style={{display:'flex',alignItems:'center',gap:8,color:'#64748B',fontSize:13}}>
+                              <Ic.Spin s={14} c="var(--accent)"/> Lade freie Termine …
+                            </div>
+                          )}
+                          {slotsError && (
+                            <div style={{padding:'10px 12px',background:'#FEF2F2',border:'1px solid #FECACA',borderRadius:8,fontSize:12,color:'#DC2626',display:'flex',gap:6,alignItems:'center',marginBottom:12}}>
+                              <Ic.Warn s={13} c="#DC2626"/> {slotsError}
+                              <button type="button" onClick={()=>loadSlots(form.datum)} style={{marginLeft:'auto',background:'none',border:'none',color:'var(--accent)',cursor:'pointer',fontSize:12,fontWeight:700}}>Erneut</button>
+                            </div>
+                          )}
+                          {!slotsLoading && !slotsError && allSlots.length === 0 && (
+                            <div style={{padding:'12px',background:'#F8FAFC',border:'1px solid #E2E8F0',borderRadius:8,fontSize:13,color:'#64748B',textAlign:'center'}}>
+                              Keine Termine an diesem Tag verfügbar.
+                            </div>
+                          )}
+                          {!slotsLoading && !slotsError && allSlots.length > 0 && (
+                            <>
+                              {morningSlots.length > 0 && (
+                                <div style={{marginBottom:16}}>
+                                  <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'#94A3B8',marginBottom:8}}>VORMITTAG</div>
+                                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(72px,1fr))',gap:6}}>
+                                    {morningSlots.map(slot => {
+                                      const booked = bookedSlots.includes(slot);
+                                      const past = isPast(form.datum, slot);
+                                      const disabled = booked || past;
+                                      const selected = form.zeit === slot;
+                                      return (
+                                        <button key={slot} type="button" disabled={disabled}
+                                          onClick={()=>!disabled && setField('zeit', slot)}
+                                          style={{padding:'8px 4px',borderRadius:7,fontFamily:'var(--sans)',fontWeight:700,fontSize:12,textAlign:'center',cursor:disabled?'not-allowed':'pointer',transition:'all .15s',border:`1.5px solid ${selected ? 'var(--accent)' : disabled ? '#F1F5F9' : '#E2E8F0'}`,background:selected ? 'var(--accent)' : disabled ? '#F8FAFC' : '#fff',color:selected ? '#fff' : disabled ? '#CBD5E1' : '#0F172A',textDecoration:disabled?'line-through':'none',opacity:disabled&&!booked?.75:1}}>
+                                          {slot}
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              )}
+                              {afternoonSlots.length > 0 && (
+                                <div>
+                                  <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'#94A3B8',marginBottom:8}}>NACHMITTAG</div>
+                                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(72px,1fr))',gap:6}}>
+                                    {afternoonSlots.map(slot => {
+                                      const booked = bookedSlots.includes(slot);
+                                      const past = isPast(form.datum, slot);
+                                      const disabled = booked || past;
+                                      const selected = form.zeit === slot;
+                                      return (
+                                        <button key={slot} type="button" disabled={disabled}
+                                          onClick={()=>!disabled && setField('zeit', slot)}
+                                          style={{padding:'8px 4px',borderRadius:7,fontFamily:'var(--sans)',fontWeight:700,fontSize:12,textAlign:'center',cursor:disabled?'not-allowed':'pointer',transition:'all .15s',border:`1.5px solid ${selected ? 'var(--accent)' : disabled ? '#F1F5F9' : '#E2E8F0'}`,background:selected ? 'var(--accent)' : disabled ? '#F8FAFC' : '#fff',color:selected ? '#fff' : disabled ? '#CBD5E1' : '#0F172A',textDecoration:disabled?'line-through':'none'}}>
+                                          {slot}
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              )}
+                            </>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <div style={{display:'flex',justifyContent:'space-between',marginTop:32,gap:12}}>
+                    <button className="btn btn-ghost" style={{fontSize:13,padding:'12px 24px',color:'#64748B',border:'1.5px solid #E2E8F0'}} onClick={()=>setStep(1)}>
+                      ← Zurück
+                    </button>
+                    <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px',gap:8,opacity:(form.datum&&form.zeit)?1:.45,cursor:(form.datum&&form.zeit)?'pointer':'not-allowed'}}
+                      disabled={!form.datum||!form.zeit} onClick={()=>setStep(3)}>
+                      Weiter <Ic.Arrow s={14}/>
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* ── STEP 3: Contact details ── */}
+            {step === 3 && (
+              <motion.div key="step3" initial={{opacity:0,x:30}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-30}} transition={{duration:.25}}>
+                <div className="bk-card">
+                  <div style={{marginBottom:24}}>
+                    <div style={{fontSize:11,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:8}}>SCHRITT 03</div>
+                    <h3 style={{fontWeight:800,fontSize:22,color:'#0F172A',letterSpacing:'-.01em'}}>Ihre Kontaktdaten</h3>
+                  </div>
+
+                  {/* Summary pill */}
+                  <div style={{display:'flex',gap:12,flexWrap:'wrap',marginBottom:24,padding:'12px 16px',background:'rgba(91,145,244,.06)',borderRadius:10,border:'1px solid rgba(91,145,244,.15)'}}>
+                    <span style={{fontSize:12,fontWeight:700,color:'var(--accent)'}}>{form.service}</span>
+                    <span style={{fontSize:12,color:'#64748B'}}>·</span>
+                    <span style={{fontSize:12,color:'#64748B'}}>{fmtGermanDate(form.datum)}</span>
+                    <span style={{fontSize:12,color:'#64748B'}}>·</span>
+                    <span style={{fontSize:12,fontWeight:700,color:'#0F172A'}}>{form.zeit} Uhr</span>
+                  </div>
+
+                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}} className="bk-two-col">
+                    {[
+                      {field:'vorname',label:'Vorname *',placeholder:'Max',type:'text'},
+                      {field:'nachname',label:'Nachname *',placeholder:'Mustermann',type:'text'},
+                      {field:'telefon',label:'Telefon *',placeholder:'+49 157...',type:'tel'},
+                      {field:'email',label:'E-Mail',placeholder:'max@beispiel.de',type:'email'},
+                      {field:'marke',label:'Fahrzeugmarke *',placeholder:'z.B. VW',type:'text'},
+                      {field:'modell',label:'Modell *',placeholder:'z.B. Golf',type:'text'},
+                    ].map(({field,label,placeholder,type}) => {
+                      const errs = step3Errors();
+                      const err = touched[field] && errs[field];
+                      return (
+                        <div key={field} style={fieldWrap}>
+                          <label style={labelStyle}>{label}</label>
+                          <input type={type} placeholder={placeholder} value={form[field]} maxLength={60}
+                            onChange={e=>{
+                              let v = e.target.value;
+                              if(field==='telefon') v = v.replace(/[^\d\+\s\-\(\)]/g,'');
+                              setField(field, v);
+                            }}
+                            onFocus={e=>{ e.target.style.borderColor='var(--accent)'; e.target.style.boxShadow='0 0 0 3px rgba(91,145,244,.12)'; }}
+                            onBlur={e=>{ handleBlur(field); e.target.style.borderColor=step3Errors()[field]?'#ef4444':'#E2E8F0'; e.target.style.boxShadow='none'; }}
+                            style={inp(field)}/>
+                          {err && <span style={{fontSize:11,color:'#ef4444',fontWeight:600,display:'flex',alignItems:'center',gap:3}}><Ic.Warn s={10}/> {err}</span>}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div style={{marginTop:16,...fieldWrap}}>
+                    <label style={labelStyle}>Kennzeichen</label>
+                    <input type="text" placeholder="OB-AB 1234" maxLength={15} value={form.kennzeichen}
+                      onChange={e=>setField('kennzeichen', e.target.value.toUpperCase().replace(/[^A-Z0-9\-\sÄÖÜ]/g,''))}
+                      onFocus={e=>{ e.target.style.borderColor='var(--accent)'; e.target.style.boxShadow='0 0 0 3px rgba(91,145,244,.12)'; }}
+                      onBlur={e=>{ e.target.style.borderColor='#E2E8F0'; e.target.style.boxShadow='none'; }}
+                      style={{...inp('kennzeichen'), border:'1.5px solid #E2E8F0'}}/>
+                  </div>
+
+                  <div style={{marginTop:16,...fieldWrap}}>
+                    <label style={labelStyle}>Anmerkungen</label>
+                    <textarea placeholder="Besonderheiten oder Fragen …" maxLength={500} value={form.anmerkungen}
+                      onChange={e=>setField('anmerkungen', e.target.value)}
+                      onFocus={e=>{ e.target.style.borderColor='var(--accent)'; e.target.style.boxShadow='0 0 0 3px rgba(91,145,244,.12)'; }}
+                      onBlur={e=>{ e.target.style.borderColor='#E2E8F0'; e.target.style.boxShadow='none'; }}
+                      style={{...inp('anmerkungen'), border:'1.5px solid #E2E8F0', resize:'vertical', minHeight:80}}/>
+                  </div>
+
+                  <AnimatePresence>
+                    {submitError && (
+                      <motion.div initial={{opacity:0,y:-6}} animate={{opacity:1,y:0}} exit={{opacity:0}}
+                        style={{marginTop:14,padding:'12px 14px',background:'#FEF2F2',border:'1px solid #FECACA',borderLeft:'3px solid #ef4444',borderRadius:8,fontSize:13,color:'#DC2626',display:'flex',gap:8,alignItems:'flex-start'}}>
+                        <Ic.Warn s={14} c="#ef4444"/> {submitError}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <div style={{display:'flex',justifyContent:'space-between',marginTop:28,gap:12}}>
+                    <button className="btn btn-ghost" style={{fontSize:13,padding:'12px 24px',color:'#64748B',border:'1.5px solid #E2E8F0'}} onClick={()=>setStep(2)}>
+                      ← Zurück
+                    </button>
+                    <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px',gap:8}} disabled={submitting} onClick={handleSubmit}>
+                      {submitting ? <><Ic.Spin s={14} c="#fff"/> Wird gespeichert …</> : <>Termin buchen <Ic.Arrow s={14}/></>}
+                    </button>
+                  </div>
+                  <p style={{fontSize:11,color:'#94A3B8',textAlign:'center',marginTop:14,lineHeight:1.55}}>
+                    Mit dem Absenden stimmen Sie unserer <a href="#" onClick={e=>e.preventDefault()} style={{color:'var(--accent)'}}>Datenschutzerklärung</a> zu.
+                  </p>
+                </div>
+              </motion.div>
+            )}
+            </AnimatePresence>
+          </motion.div>
+        )}
       </div>
     </div>
   );
