@@ -404,8 +404,9 @@ const Services = () => {
   ];
 
   return (
-    <div id="leistungen" className="section-full" style={{position:'relative',paddingTop:72,paddingBottom:72,overflow:'hidden',background:'#F8F9FC'}}>
-      <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.07,pointerEvents:'none',zIndex:0}}/>
+    <div id="leistungen" className="section-full" style={{position:'relative',paddingTop:72,paddingBottom:72,overflow:'hidden',background:'#ECEEF2'}}>
+      <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.1,pointerEvents:'none',zIndex:0}}/>
+      <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 30%, rgba(10,12,18,.45) 100%)',pointerEvents:'none',zIndex:1}}/>
       <style>{`
         .mosaic-grid { display:grid; grid-template-columns:2fr 1fr 1fr; grid-template-rows:340px 240px; gap:10px; }
         .mosaic-cell { position:relative; overflow:hidden; cursor:pointer; border-radius:12px; }
@@ -694,7 +695,9 @@ const BookingSection = () => {
   );
 
   return (
-    <div id="termin" className="section-full" style={{background:'#F8F9FC',paddingTop:72,paddingBottom:72}}>
+    <div id="termin" className="section-full" style={{position:'relative',background:'#ECEEF2',paddingTop:72,paddingBottom:72,overflow:'hidden'}}>
+      <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.1,pointerEvents:'none',zIndex:0}}/>
+      <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 30%, rgba(10,12,18,.45) 100%)',pointerEvents:'none',zIndex:1}}/>
       <style>{`
         .bk-card { background:#fff; border:1px solid #E2E8F0; border-radius:14px; padding:32px; box-shadow:0 2px 16px rgba(0,0,0,.06); }
         .svc-sel { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
