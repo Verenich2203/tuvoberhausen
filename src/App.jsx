@@ -423,7 +423,7 @@ const Services = () => {
         .mosaic-cell { position:relative; overflow:hidden; cursor:pointer; border-radius:12px; }
         .mosaic-bg { position:absolute; inset:0; background-size:cover; background-position:center; transition:transform .45s cubic-bezier(.22,1,.36,1); }
         .mosaic-cell:hover .mosaic-bg { transform:scale(1.06); }
-        .mosaic-gradient { position:absolute; inset:0; background:linear-gradient(180deg,rgba(10,12,18,.10) 0%,rgba(10,12,18,.10) 40%,rgba(10,12,18,.82) 100%); pointer-events:none; }
+        .mosaic-gradient { position:absolute; inset:0; background:linear-gradient(180deg,rgba(10,12,18,.20) 0%,rgba(10,12,18,.20) 40%,rgba(10,12,18,.88) 100%); pointer-events:none; }
         .mosaic-label { position:absolute; bottom:0; left:0; right:0; padding:18px 20px; z-index:3; }
         .mosaic-sub { font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:4px; }
         .mosaic-title { font-size:15px; font-weight:800; color:#fff; line-height:1.2; letter-spacing:-.01em; }
