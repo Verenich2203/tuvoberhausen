@@ -404,7 +404,8 @@ const Services = () => {
   ];
 
   return (
-    <div id="leistungen" className="section-full" style={{background:'#F8F9FC',position:'relative',paddingTop:72,paddingBottom:72}}>
+    <div id="leistungen" className="section-full" style={{position:'relative',paddingTop:72,paddingBottom:72,overflow:'hidden',background:'#F8F9FC'}}>
+      <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.07,pointerEvents:'none',zIndex:0}}/>
       <style>{`
         .mosaic-grid { display:grid; grid-template-columns:2fr 1fr 1fr; grid-template-rows:340px 240px; gap:10px; }
         .mosaic-cell { position:relative; overflow:hidden; cursor:pointer; border-radius:12px; }
