@@ -404,7 +404,7 @@ const Services = () => {
   ];
 
   return (
-    <div id="leistungen" className="section-full" style={{position:'relative',paddingTop:72,paddingBottom:72,overflow:'hidden',background:'#ECEEF2'}}>
+    <div id="leistungen" className="section-full" style={{position:'relative',paddingTop:72,paddingBottom:72,overflow:'hidden',background:'var(--dark)'}}>
       <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.1,pointerEvents:'none',zIndex:0}}/>
       <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 30%, rgba(10,12,18,.45) 100%)',pointerEvents:'none',zIndex:1}}/>
       <style>{`
@@ -422,7 +422,7 @@ const Services = () => {
         }
       `}</style>
 
-      <div className="inner">
+      <div className="inner" style={{position:'relative',zIndex:2}}>
         {/* Section header */}
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}}
           style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:40,flexWrap:'wrap',gap:16}}>
@@ -430,7 +430,7 @@ const Services = () => {
             <div style={{display:'inline-flex',alignItems:'center',gap:10,fontSize:11,fontWeight:700,letterSpacing:'.18em',textTransform:'uppercase',color:'var(--accent)',marginBottom:12}}>
               <span style={{display:'inline-block',width:24,height:2,background:'var(--accent)',borderRadius:1,flexShrink:0}}/>LEISTUNGEN
             </div>
-            <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,44px)',color:'#0F172A',letterSpacing:'-.02em',lineHeight:1.1}}>Unsere Prüfleistungen</h2>
+            <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,44px)',color:'var(--white)',letterSpacing:'-.02em',lineHeight:1.1}}>Unsere Prüfleistungen</h2>
           </div>
           <a href="#termin" style={{display:'inline-flex',alignItems:'center',gap:8,fontSize:13,fontWeight:700,color:'var(--accent)',textDecoration:'none',letterSpacing:'.04em',textTransform:'uppercase',border:'1.5px solid rgba(91,145,244,.35)',padding:'10px 22px',borderRadius:8,transition:'all .2s'}}
             onMouseEnter={e=>{e.currentTarget.style.background='var(--accent)';e.currentTarget.style.color='#fff';}}
@@ -665,14 +665,14 @@ const BookingSection = () => {
     const errs = step3Errors();
     const err = touched[field] && errs[field];
     return {
-      fontFamily:'var(--sans)', fontSize:14, color:'#0F172A',
-      background:'#fff', border:`1.5px solid ${err ? '#ef4444' : '#E2E8F0'}`,
+      fontFamily:'var(--sans)', fontSize:14, color:'var(--white)',
+      background:'var(--dark3)', border:`1.5px solid ${err ? '#ef4444' : 'rgba(255,255,255,.08)'}`,
       borderRadius:8, padding:'10px 13px', width:'100%', outline:'none',
       transition:'border-color .18s', boxSizing:'border-box',
     };
   };
 
-  const labelStyle = { fontSize:11, fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', color:'#64748B', marginBottom:5, display:'block' };
+  const labelStyle = { fontSize:11, fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', color:'var(--smoke)', marginBottom:5, display:'block' };
   const fieldWrap = { display:'flex', flexDirection:'column', gap:4 };
 
   /* step indicator */
@@ -682,37 +682,37 @@ const BookingSection = () => {
         <div key={n} style={{display:'flex',alignItems:'center',gap:8}}>
           <div style={{
             width:32, height:32, borderRadius:'50%',
-            background: n < step ? 'var(--accent)' : n === step ? 'var(--accent)' : '#E2E8F0',
-            color: n <= step ? '#fff' : '#94A3B8',
+            background: n < step ? 'var(--accent)' : n === step ? 'var(--accent)' : 'rgba(255,255,255,.2)',
+            color: n <= step ? '#fff' : 'var(--smoke)',
             display:'flex', alignItems:'center', justifyContent:'center',
             fontWeight:800, fontSize:12, transition:'all .25s',
             boxShadow: n === step ? '0 4px 14px rgba(91,145,244,.35)' : 'none',
           }}>{n < step ? <Ic.Check s={13} c="#fff"/> : n}</div>
-          {n < 3 && <div style={{width:40,height:2,background:n < step ? 'var(--accent)' : '#E2E8F0',borderRadius:1,transition:'background .25s'}}/>}
+          {n < 3 && <div style={{width:40,height:2,background:n < step ? 'var(--accent)' : 'rgba(255,255,255,.2)',borderRadius:1,transition:'background .25s'}}/>}
         </div>
       ))}
     </div>
   );
 
   return (
-    <div id="termin" className="section-full" style={{position:'relative',background:'#ECEEF2',paddingTop:72,paddingBottom:72,overflow:'hidden'}}>
+    <div id="termin" className="section-full" style={{position:'relative',background:'var(--dark)',paddingTop:72,paddingBottom:72,overflow:'hidden'}}>
       <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.1,pointerEvents:'none',zIndex:0}}/>
       <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 30%, rgba(10,12,18,.45) 100%)',pointerEvents:'none',zIndex:1}}/>
       <style>{`
-        .bk-card { background:#fff; border:1px solid #E2E8F0; border-radius:14px; padding:32px; box-shadow:0 2px 16px rgba(0,0,0,.06); }
+        .bk-card { background: var(--dark2); border: 1px solid rgba(255,255,255,.07); border-radius: 14px; padding: 32px; box-shadow: 0 2px 32px rgba(0,0,0,.3); }
         .svc-sel { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
-        .svc-sel-card { background:#fff; border:1.5px solid #E2E8F0; border-radius:12px; padding:18px 16px; cursor:pointer; transition:all .2s; position:relative; }
-        .svc-sel-card:hover { border-color:var(--accent); box-shadow:0 4px 16px rgba(91,145,244,.12); }
-        .svc-sel-card.active { border-color:var(--accent); background:rgba(91,145,244,.04); box-shadow:0 4px 16px rgba(91,145,244,.18); }
+        .svc-sel-card { background: var(--dark3); border: 1.5px solid rgba(255,255,255,.08); border-radius: 12px; padding: 18px 16px; cursor: pointer; transition: all .2s; position: relative; }
+        .svc-sel-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(91,145,244,.15); }
+        .svc-sel-card.active { border-color: var(--accent); background: rgba(91,145,244,.1); box-shadow: 0 4px 16px rgba(91,145,244,.2); }
         .svc-sel-card:last-child { grid-column:span 2; }
         .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
         .cal-day { width:100%; aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; transition:all .15s; border:none; background:transparent; font-family:var(--sans); }
-        .cal-day:hover:not(:disabled):not(.cal-selected):not(.cal-today) { background:#EFF6FF; color:var(--accent); }
-        .cal-day.cal-selected { background:var(--accent); color:#fff; box-shadow:0 3px 10px rgba(91,145,244,.3); }
-        .cal-day.cal-today { border:2px solid var(--accent); color:var(--accent); }
-        .cal-day:disabled { color:#CBD5E1; cursor:not-allowed; }
-        .bk-nav-btn { background:none; border:1.5px solid #E2E8F0; border-radius:8px; width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; }
-        .bk-nav-btn:hover { border-color:var(--accent); color:var(--accent); }
+        .cal-day:hover:not(:disabled):not(.cal-selected):not(.cal-today) { background: rgba(91,145,244,.12); color: var(--accent); }
+        .cal-day.cal-selected { background: var(--accent); color: #fff; box-shadow: 0 3px 10px rgba(91,145,244,.35); }
+        .cal-day.cal-today { border: 2px solid var(--accent); color: var(--accent); }
+        .cal-day:disabled { color: rgba(255,255,255,.2); cursor: not-allowed; }
+        .bk-nav-btn { background: none; border: 1.5px solid rgba(255,255,255,.1); border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .2s; color: var(--text); }
+        .bk-nav-btn:hover { border-color: var(--accent); color: var(--accent); }
         @media(max-width:900px){
           .svc-sel { grid-template-columns:1fr 1fr !important; }
           .svc-sel-card:last-child { grid-column:span 2 !important; }
@@ -730,8 +730,8 @@ const BookingSection = () => {
           <div style={{display:'inline-flex',alignItems:'center',gap:10,fontSize:11,fontWeight:700,letterSpacing:'.18em',textTransform:'uppercase',color:'var(--accent)',marginBottom:12}}>
             <span style={{display:'inline-block',width:24,height:2,background:'var(--accent)',borderRadius:1}}/>ONLINE BUCHUNG
           </div>
-          <h2 style={{fontWeight:800,fontSize:'clamp(24px,3.2vw,38px)',color:'#0F172A',letterSpacing:'-.02em',marginBottom:10}}>Termin sichern — einfach online.</h2>
-          <p style={{color:'#64748B',fontSize:14,maxWidth:480,margin:'0 auto'}}>In drei Schritten zum bestätigten Termin.</p>
+          <h2 style={{fontWeight:800,fontSize:'clamp(24px,3.2vw,38px)',color:'var(--white)',letterSpacing:'-.02em',marginBottom:10}}>Termin sichern — einfach online.</h2>
+          <p style={{color:'var(--smoke)',fontSize:14,maxWidth:480,margin:'0 auto'}}>In drei Schritten zum bestätigten Termin.</p>
         </motion.div>
 
         {sent ? (
@@ -739,11 +739,11 @@ const BookingSection = () => {
             <div style={{width:64,height:64,borderRadius:'50%',background:'rgba(16,185,129,.1)',border:'2.5px solid #10B981',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',boxShadow:'0 4px 20px rgba(16,185,129,.2)'}}>
               <Ic.Check s={28} c="#10B981"/>
             </div>
-            <h3 style={{fontWeight:800,fontSize:26,marginBottom:10,color:'#0F172A'}}>Termin bestätigt!</h3>
-            <p style={{color:'#64748B',fontSize:14,lineHeight:1.7,marginBottom:6}}>Ihr Termin wurde erfolgreich gebucht.</p>
+            <h3 style={{fontWeight:800,fontSize:26,marginBottom:10,color:'var(--white)'}}>Termin bestätigt!</h3>
+            <p style={{color:'var(--smoke)',fontSize:14,lineHeight:1.7,marginBottom:6}}>Ihr Termin wurde erfolgreich gebucht.</p>
             <p style={{fontWeight:800,fontSize:18,color:'var(--accent)',marginBottom:4}}>{fmtGermanDate(form.datum)} · {form.zeit} Uhr</p>
-            <p style={{fontSize:14,color:'#64748B',marginBottom:4}}>{form.service}</p>
-            <p style={{fontSize:13,color:'#94A3B8',marginBottom:28}}>Bestätigungsmail wurde gesendet.</p>
+            <p style={{fontSize:14,color:'var(--smoke)',marginBottom:4}}>{form.service}</p>
+            <p style={{fontSize:13,color:'var(--smoke)',marginBottom:28}}>Bestätigungsmail wurde gesendet.</p>
             <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px'}} onClick={()=>{setSent(false);setStep(1);setForm({service:'',datum:'',zeit:'',vorname:'',nachname:'',telefon:'',email:'',marke:'',modell:'',anmerkungen:'',kennzeichen:''});setTouched({});}}>
               Neuen Termin buchen
             </button>
@@ -759,17 +759,17 @@ const BookingSection = () => {
                 <div className="bk-card">
                   <div style={{marginBottom:24}}>
                     <div style={{fontSize:11,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:8}}>SCHRITT 01</div>
-                    <h3 style={{fontWeight:800,fontSize:22,color:'#0F172A',letterSpacing:'-.01em'}}>Was braucht Ihr Auto?</h3>
+                    <h3 style={{fontWeight:800,fontSize:22,color:'var(--white)',letterSpacing:'-.01em'}}>Was braucht Ihr Auto?</h3>
                   </div>
                   <div className="svc-sel">
                     {serviceItems.map((s,i) => (
                       <div key={i} className={`svc-sel-card${form.service === s.title ? ' active' : ''}`} onClick={()=>setField('service', s.title)}>
-                        <div style={{position:'absolute',top:14,right:14,width:18,height:18,borderRadius:'50%',border:`2px solid ${form.service===s.title ? 'var(--accent)' : '#CBD5E1'}`,background:form.service===s.title ? 'var(--accent)' : 'transparent',display:'flex',alignItems:'center',justifyContent:'center',transition:'all .18s'}}>
+                        <div style={{position:'absolute',top:14,right:14,width:18,height:18,borderRadius:'50%',border:`2px solid ${form.service===s.title ? 'var(--accent)' : 'rgba(255,255,255,.25)'}`,background:form.service===s.title ? 'var(--accent)' : 'transparent',display:'flex',alignItems:'center',justifyContent:'center',transition:'all .18s'}}>
                           {form.service===s.title && <Ic.Check s={9} c="#fff"/>}
                         </div>
                         <div style={{marginBottom:10}}>{s.ico}</div>
-                        <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'#94A3B8',marginBottom:5}}>{s.sub}</div>
-                        <div style={{fontWeight:700,fontSize:13,color:'#0F172A',lineHeight:1.3}}>{s.title}</div>
+                        <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'var(--smoke)',marginBottom:5}}>{s.sub}</div>
+                        <div style={{fontWeight:700,fontSize:13,color:'var(--white)',lineHeight:1.3}}>{s.title}</div>
                       </div>
                     ))}
                   </div>
@@ -789,7 +789,7 @@ const BookingSection = () => {
                 <div className="bk-card">
                   <div style={{marginBottom:24}}>
                     <div style={{fontSize:11,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:8}}>SCHRITT 02</div>
-                    <h3 style={{fontWeight:800,fontSize:22,color:'#0F172A',letterSpacing:'-.01em'}}>Wann soll es sein?</h3>
+                    <h3 style={{fontWeight:800,fontSize:22,color:'var(--white)',letterSpacing:'-.01em'}}>Wann soll es sein?</h3>
                   </div>
                   <div className="bk-two-col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:32,alignItems:'start'}}>
                     {/* Calendar */}
@@ -798,13 +798,13 @@ const BookingSection = () => {
                         <button className="bk-nav-btn" onClick={()=>{ if(calMonth===0){setCalMonth(11);setCalYear(y=>y-1);}else setCalMonth(m=>m-1); }}>
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
                         </button>
-                        <span style={{fontWeight:700,fontSize:14,color:'#0F172A'}}>{DE_MONTHS[calMonth]} {calYear}</span>
+                        <span style={{fontWeight:700,fontSize:14,color:'var(--white)'}}>{DE_MONTHS[calMonth]} {calYear}</span>
                         <button className="bk-nav-btn" onClick={()=>{ if(calMonth===11){setCalMonth(0);setCalYear(y=>y+1);}else setCalMonth(m=>m+1); }}>
                           <Ic.ChevR s={14} c="currentColor"/>
                         </button>
                       </div>
                       <div className="cal-grid" style={{marginBottom:8}}>
-                        {DE_DAYS.map(d => <div key={d} style={{textAlign:'center',fontSize:10,fontWeight:700,color:'#94A3B8',letterSpacing:'.06em',padding:'4px 0'}}>{d}</div>)}
+                        {DE_DAYS.map(d => <div key={d} style={{textAlign:'center',fontSize:10,fontWeight:700,color:'var(--smoke)',letterSpacing:'.06em',padding:'4px 0'}}>{d}</div>)}
                       </div>
                       <div className="cal-grid">
                         {(() => {
@@ -822,7 +822,7 @@ const BookingSection = () => {
                               <button key={d} disabled={disabled}
                                 className={`cal-day${selected?' cal-selected':isToday&&!selected?' cal-today':''}`}
                                 onClick={()=>{ setField('datum', dateStr); setField('zeit',''); }}
-                                style={{color: disabled ? '#CBD5E1' : selected ? '#fff' : '#0F172A'}}>
+                                style={{color: disabled ? 'rgba(255,255,255,.2)' : selected ? '#fff' : 'var(--text)'}}>
                                 {d}
                               </button>
                             );
@@ -834,14 +834,14 @@ const BookingSection = () => {
                     {/* Time slots */}
                     <div>
                       {!form.datum ? (
-                        <div style={{padding:'32px 16px',textAlign:'center',color:'#94A3B8',fontSize:13,border:'1.5px dashed #E2E8F0',borderRadius:10}}>
+                        <div style={{padding:'32px 16px',textAlign:'center',color:'var(--smoke)',fontSize:13,border:'1.5px dashed rgba(255,255,255,.1)',borderRadius:10}}>
                           Bitte wählen Sie zuerst einen Tag aus.
                         </div>
                       ) : (
                         <>
-                          <div style={{fontWeight:700,fontSize:14,color:'#0F172A',marginBottom:16}}>{fmtGermanDate(form.datum)}</div>
+                          <div style={{fontWeight:700,fontSize:14,color:'var(--white)',marginBottom:16}}>{fmtGermanDate(form.datum)}</div>
                           {slotsLoading && (
-                            <div style={{display:'flex',alignItems:'center',gap:8,color:'#64748B',fontSize:13}}>
+                            <div style={{display:'flex',alignItems:'center',gap:8,color:'var(--smoke)',fontSize:13}}>
                               <Ic.Spin s={14} c="var(--accent)"/> Lade freie Termine …
                             </div>
                           )}
@@ -852,7 +852,7 @@ const BookingSection = () => {
                             </div>
                           )}
                           {!slotsLoading && !slotsError && allSlots.length === 0 && (
-                            <div style={{padding:'12px',background:'#F8FAFC',border:'1px solid #E2E8F0',borderRadius:8,fontSize:13,color:'#64748B',textAlign:'center'}}>
+                            <div style={{padding:'12px',background:'var(--dark3)',border:'1px solid rgba(255,255,255,.07)',borderRadius:8,fontSize:13,color:'var(--smoke)',textAlign:'center'}}>
                               Keine Termine an diesem Tag verfügbar.
                             </div>
                           )}
@@ -860,7 +860,7 @@ const BookingSection = () => {
                             <>
                               {morningSlots.length > 0 && (
                                 <div style={{marginBottom:16}}>
-                                  <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'#94A3B8',marginBottom:8}}>VORMITTAG</div>
+                                  <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'var(--smoke)',marginBottom:8}}>VORMITTAG</div>
                                   <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(72px,1fr))',gap:6}}>
                                     {morningSlots.map(slot => {
                                       const booked = bookedSlots.includes(slot);
@@ -870,7 +870,7 @@ const BookingSection = () => {
                                       return (
                                         <button key={slot} type="button" disabled={disabled}
                                           onClick={()=>!disabled && setField('zeit', slot)}
-                                          style={{padding:'8px 4px',borderRadius:7,fontFamily:'var(--sans)',fontWeight:700,fontSize:12,textAlign:'center',cursor:disabled?'not-allowed':'pointer',transition:'all .15s',border:`1.5px solid ${selected ? 'var(--accent)' : disabled ? '#F1F5F9' : '#E2E8F0'}`,background:selected ? 'var(--accent)' : disabled ? '#F8FAFC' : '#fff',color:selected ? '#fff' : disabled ? '#CBD5E1' : '#0F172A',textDecoration:disabled?'line-through':'none',opacity:disabled&&!booked?.75:1}}>
+                                          style={{padding:'8px 4px',borderRadius:7,fontFamily:'var(--sans)',fontWeight:700,fontSize:12,textAlign:'center',cursor:disabled?'not-allowed':'pointer',transition:'all .15s',border:`1.5px solid ${selected ? 'var(--accent)' : disabled ? 'rgba(255,255,255,.04)' : 'rgba(255,255,255,.1)'}`,background:selected ? 'var(--accent)' : disabled ? 'rgba(255,255,255,.04)' : 'var(--dark3)',color:selected ? '#fff' : disabled ? 'rgba(255,255,255,.2)' : 'var(--text)',textDecoration:disabled?'line-through':'none',opacity:disabled&&!booked?.75:1}}>
                                           {slot}
                                         </button>
                                       );
@@ -880,7 +880,7 @@ const BookingSection = () => {
                               )}
                               {afternoonSlots.length > 0 && (
                                 <div>
-                                  <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'#94A3B8',marginBottom:8}}>NACHMITTAG</div>
+                                  <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'var(--smoke)',marginBottom:8}}>NACHMITTAG</div>
                                   <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(72px,1fr))',gap:6}}>
                                     {afternoonSlots.map(slot => {
                                       const booked = bookedSlots.includes(slot);
@@ -890,7 +890,7 @@ const BookingSection = () => {
                                       return (
                                         <button key={slot} type="button" disabled={disabled}
                                           onClick={()=>!disabled && setField('zeit', slot)}
-                                          style={{padding:'8px 4px',borderRadius:7,fontFamily:'var(--sans)',fontWeight:700,fontSize:12,textAlign:'center',cursor:disabled?'not-allowed':'pointer',transition:'all .15s',border:`1.5px solid ${selected ? 'var(--accent)' : disabled ? '#F1F5F9' : '#E2E8F0'}`,background:selected ? 'var(--accent)' : disabled ? '#F8FAFC' : '#fff',color:selected ? '#fff' : disabled ? '#CBD5E1' : '#0F172A',textDecoration:disabled?'line-through':'none'}}>
+                                          style={{padding:'8px 4px',borderRadius:7,fontFamily:'var(--sans)',fontWeight:700,fontSize:12,textAlign:'center',cursor:disabled?'not-allowed':'pointer',transition:'all .15s',border:`1.5px solid ${selected ? 'var(--accent)' : disabled ? 'rgba(255,255,255,.04)' : 'rgba(255,255,255,.1)'}`,background:selected ? 'var(--accent)' : disabled ? 'rgba(255,255,255,.04)' : 'var(--dark3)',color:selected ? '#fff' : disabled ? 'rgba(255,255,255,.2)' : 'var(--text)',textDecoration:disabled?'line-through':'none'}}>
                                           {slot}
                                         </button>
                                       );
@@ -905,7 +905,7 @@ const BookingSection = () => {
                     </div>
                   </div>
                   <div style={{display:'flex',justifyContent:'space-between',marginTop:32,gap:12}}>
-                    <button className="btn btn-ghost" style={{fontSize:13,padding:'12px 24px',color:'#64748B',border:'1.5px solid #E2E8F0'}} onClick={()=>setStep(1)}>
+                    <button className="btn btn-ghost" style={{fontSize:13,padding:'12px 24px',color:'var(--text)',border:'1.5px solid rgba(255,255,255,.1)',background:'rgba(255,255,255,.06)'}} onClick={()=>setStep(1)}>
                       ← Zurück
                     </button>
                     <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px',gap:8,opacity:(form.datum&&form.zeit)?1:.45,cursor:(form.datum&&form.zeit)?'pointer':'not-allowed'}}
@@ -923,16 +923,16 @@ const BookingSection = () => {
                 <div className="bk-card">
                   <div style={{marginBottom:24}}>
                     <div style={{fontSize:11,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:8}}>SCHRITT 03</div>
-                    <h3 style={{fontWeight:800,fontSize:22,color:'#0F172A',letterSpacing:'-.01em'}}>Ihre Kontaktdaten</h3>
+                    <h3 style={{fontWeight:800,fontSize:22,color:'var(--white)',letterSpacing:'-.01em'}}>Ihre Kontaktdaten</h3>
                   </div>
 
                   {/* Summary pill */}
                   <div style={{display:'flex',gap:12,flexWrap:'wrap',marginBottom:24,padding:'12px 16px',background:'rgba(91,145,244,.06)',borderRadius:10,border:'1px solid rgba(91,145,244,.15)'}}>
                     <span style={{fontSize:12,fontWeight:700,color:'var(--accent)'}}>{form.service}</span>
-                    <span style={{fontSize:12,color:'#64748B'}}>·</span>
-                    <span style={{fontSize:12,color:'#64748B'}}>{fmtGermanDate(form.datum)}</span>
-                    <span style={{fontSize:12,color:'#64748B'}}>·</span>
-                    <span style={{fontSize:12,fontWeight:700,color:'#0F172A'}}>{form.zeit} Uhr</span>
+                    <span style={{fontSize:12,color:'var(--smoke)'}}>·</span>
+                    <span style={{fontSize:12,color:'var(--smoke)'}}>{fmtGermanDate(form.datum)}</span>
+                    <span style={{fontSize:12,color:'var(--smoke)'}}>·</span>
+                    <span style={{fontSize:12,fontWeight:700,color:'var(--white)'}}>{form.zeit} Uhr</span>
                   </div>
 
                   <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}} className="bk-two-col">
@@ -956,7 +956,7 @@ const BookingSection = () => {
                               setField(field, v);
                             }}
                             onFocus={e=>{ e.target.style.borderColor='var(--accent)'; e.target.style.boxShadow='0 0 0 3px rgba(91,145,244,.12)'; }}
-                            onBlur={e=>{ handleBlur(field); e.target.style.borderColor=step3Errors()[field]?'#ef4444':'#E2E8F0'; e.target.style.boxShadow='none'; }}
+                            onBlur={e=>{ handleBlur(field); e.target.style.borderColor=step3Errors()[field]?'#ef4444':'rgba(255,255,255,.08)'; e.target.style.boxShadow='none'; }}
                             style={inp(field)}/>
                           {err && <span style={{fontSize:11,color:'#ef4444',fontWeight:600,display:'flex',alignItems:'center',gap:3}}><Ic.Warn s={10}/> {err}</span>}
                         </div>
@@ -969,8 +969,8 @@ const BookingSection = () => {
                     <input type="text" placeholder="OB-AB 1234" maxLength={15} value={form.kennzeichen}
                       onChange={e=>setField('kennzeichen', e.target.value.toUpperCase().replace(/[^A-Z0-9\-\sÄÖÜ]/g,''))}
                       onFocus={e=>{ e.target.style.borderColor='var(--accent)'; e.target.style.boxShadow='0 0 0 3px rgba(91,145,244,.12)'; }}
-                      onBlur={e=>{ e.target.style.borderColor='#E2E8F0'; e.target.style.boxShadow='none'; }}
-                      style={{...inp('kennzeichen'), border:'1.5px solid #E2E8F0'}}/>
+                      onBlur={e=>{ e.target.style.borderColor='rgba(255,255,255,.08)'; e.target.style.boxShadow='none'; }}
+                      style={{...inp('kennzeichen'), border:'1.5px solid rgba(255,255,255,.08)'}}/>
                   </div>
 
                   <div style={{marginTop:16,...fieldWrap}}>
@@ -978,8 +978,8 @@ const BookingSection = () => {
                     <textarea placeholder="Besonderheiten oder Fragen …" maxLength={500} value={form.anmerkungen}
                       onChange={e=>setField('anmerkungen', e.target.value)}
                       onFocus={e=>{ e.target.style.borderColor='var(--accent)'; e.target.style.boxShadow='0 0 0 3px rgba(91,145,244,.12)'; }}
-                      onBlur={e=>{ e.target.style.borderColor='#E2E8F0'; e.target.style.boxShadow='none'; }}
-                      style={{...inp('anmerkungen'), border:'1.5px solid #E2E8F0', resize:'vertical', minHeight:80}}/>
+                      onBlur={e=>{ e.target.style.borderColor='rgba(255,255,255,.08)'; e.target.style.boxShadow='none'; }}
+                      style={{...inp('anmerkungen'), border:'1.5px solid rgba(255,255,255,.08)', resize:'vertical', minHeight:80}}/>
                   </div>
 
                   <AnimatePresence>
@@ -992,14 +992,14 @@ const BookingSection = () => {
                   </AnimatePresence>
 
                   <div style={{display:'flex',justifyContent:'space-between',marginTop:28,gap:12}}>
-                    <button className="btn btn-ghost" style={{fontSize:13,padding:'12px 24px',color:'#64748B',border:'1.5px solid #E2E8F0'}} onClick={()=>setStep(2)}>
+                    <button className="btn btn-ghost" style={{fontSize:13,padding:'12px 24px',color:'var(--text)',border:'1.5px solid rgba(255,255,255,.1)',background:'rgba(255,255,255,.06)'}} onClick={()=>setStep(2)}>
                       ← Zurück
                     </button>
                     <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px',gap:8}} disabled={submitting} onClick={handleSubmit}>
                       {submitting ? <><Ic.Spin s={14} c="#fff"/> Wird gespeichert …</> : <>Termin buchen <Ic.Arrow s={14}/></>}
                     </button>
                   </div>
-                  <p style={{fontSize:11,color:'#94A3B8',textAlign:'center',marginTop:14,lineHeight:1.55}}>
+                  <p style={{fontSize:11,color:'var(--smoke)',textAlign:'center',marginTop:14,lineHeight:1.55}}>
                     Mit dem Absenden stimmen Sie unserer <a href="#" onClick={e=>e.preventDefault()} style={{color:'var(--accent)'}}>Datenschutzerklärung</a> zu.
                   </p>
                 </div>
