@@ -700,10 +700,11 @@ const BookingSection = () => {
       <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 30%, rgba(10,12,18,.45) 100%)',pointerEvents:'none',zIndex:1}}/>
       <style>{`
         .bk-card { background:#fff; border:1px solid #E2E8F0; border-radius:14px; padding:32px; box-shadow:0 2px 16px rgba(0,0,0,.06); }
-        .svc-sel { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+        .svc-sel { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
         .svc-sel-card { background:#fff; border:1.5px solid #E2E8F0; border-radius:12px; padding:18px 16px; cursor:pointer; transition:all .2s; position:relative; }
         .svc-sel-card:hover { border-color:var(--accent); box-shadow:0 4px 16px rgba(91,145,244,.12); }
         .svc-sel-card.active { border-color:var(--accent); background:rgba(91,145,244,.04); box-shadow:0 4px 16px rgba(91,145,244,.18); }
+        .svc-sel-card:last-child { grid-column:span 2; }
         .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
         .cal-day { width:100%; aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; transition:all .15s; border:none; background:transparent; font-family:var(--sans); }
         .cal-day:hover:not(:disabled):not(.cal-selected):not(.cal-today) { background:#EFF6FF; color:var(--accent); }
@@ -714,15 +715,17 @@ const BookingSection = () => {
         .bk-nav-btn:hover { border-color:var(--accent); color:var(--accent); }
         @media(max-width:900px){
           .svc-sel { grid-template-columns:1fr 1fr !important; }
+          .svc-sel-card:last-child { grid-column:span 2 !important; }
           .bk-two-col { grid-template-columns:1fr !important; }
         }
         @media(max-width:600px){
           .svc-sel { grid-template-columns:1fr !important; }
+          .svc-sel-card:last-child { grid-column:span 1 !important; }
           .bk-card { padding:20px 16px !important; }
         }
       `}</style>
 
-      <div className="inner" style={{maxWidth:860}}>
+      <div className="inner" style={{maxWidth:860,position:'relative',zIndex:2}}>
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:40}}>
           <div style={{display:'inline-flex',alignItems:'center',gap:10,fontSize:11,fontWeight:700,letterSpacing:'.18em',textTransform:'uppercase',color:'var(--accent)',marginBottom:12}}>
             <span style={{display:'inline-block',width:24,height:2,background:'var(--accent)',borderRadius:1}}/>ONLINE BUCHUNG
