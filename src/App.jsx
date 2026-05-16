@@ -394,66 +394,56 @@ const Services = () => {
     {ico:<Ic.Cert s={26} c="var(--accent)"/>,title:'HU + AU Kombi',sub:'§29 StVZO · Kombiangebot',tag:'Kombi',desc:'HU und AU in einem Termin — spart Zeit und ist oft günstiger.',duration:'ca. 40 Min.',details:['Vollständige Hauptuntersuchung §29 StVZO','Abgasuntersuchung inklusive','OBD-Diagnose beider Prüfungen','Einmalige Wartezeit für beide Tests','Kombiniertes Prüfprotokoll','Sofortige Bescheinigung vor Ort'],img:'AUKombi.png',note:'Empfehlung: HU und AU immer zusammen buchen — keine Extrakosten für die Kombination.'},
   ];
   return (
-    <div id="leistungen" className="section-full sec" style={{background:'var(--dark)',position:'relative',overflow:'hidden'}}>
-      <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.12,filter:'blur(3px)',transform:'scale(1.05)',pointerEvents:'none',zIndex:0}}/>
-      <SectionDeco side="right"/>
-      <div className="inner" style={{position:'relative',zIndex:1}}>
-        <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{marginBottom:40}}>
-          <div className="tag" style={{marginBottom:14}}>Leistungen</div>
-          <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,42px)',color:'var(--white)',letterSpacing:'-.02em'}}>Unsere Prüfleistungen</h2>
-          <div className="accent"/>
+    <div id="leistungen" className="section-full sec" style={{background:'#ECEEF3',position:'relative'}}>
+      <div className="inner">
+
+        {/* Header */}
+        <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}}
+          style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:56,flexWrap:'wrap',gap:20}}>
+          <div>
+            <div style={{display:'inline-flex',alignItems:'center',gap:10,fontSize:11,fontWeight:700,letterSpacing:'.18em',textTransform:'uppercase',color:'var(--accent)',marginBottom:14}}>
+              <span style={{display:'inline-block',width:24,height:2,background:'var(--accent)',borderRadius:1,flexShrink:0}}/>Leistungen
+            </div>
+            <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,44px)',color:'#0F172A',letterSpacing:'-.02em',lineHeight:1.1}}>Unsere Prüfleistungen</h2>
+          </div>
+          <a href="#termin" className="btn btn-primary" style={{textDecoration:'none',fontSize:13,padding:'13px 28px',gap:9}}>Termin buchen <Ic.Arrow s={14}/></a>
         </motion.div>
-        <div className="svc-list">
-          {items.map((s,i) => {
-            const isWide = i === 0 || i === 3;
-            return (
-              <motion.div key={i}
-                className={isWide ? 'svc-wide' : ''}
-                initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.06}}
-                onClick={()=>setModal(s)}
-                style={{
-                  position:'relative', overflow:'hidden',
-                  background:'var(--dark2)', borderRadius:18,
-                  border:'1px solid rgba(255,255,255,.07)', cursor:'pointer',
-                  transition:'transform .22s, box-shadow .22s, border-color .22s'
-                }}
-                onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-4px)';e.currentTarget.style.boxShadow='0 20px 50px rgba(0,0,0,.45)';e.currentTarget.style.borderColor='rgba(91,145,244,.28)';}}
-                onMouseLeave={e=>{e.currentTarget.style.transform='none';e.currentTarget.style.boxShadow='none';e.currentTarget.style.borderColor='rgba(255,255,255,.07)';}}>
 
-                {/* Background image — подвязывай img: 'filename.jpg' в items */}
-                {s.img && <>
-                  <div style={{position:'absolute',inset:0,backgroundImage:`url('${s.img}')`,backgroundSize:'cover',backgroundPosition:'center',opacity:0.32,zIndex:0}}/>
-                  <div style={{position:'absolute',inset:0,background:'rgba(27,30,36,.82)',zIndex:1}}/>
-                </>}
+        {/* Service rows */}
+        <div style={{borderTop:'1px solid rgba(15,23,42,.08)'}}>
+          {items.map((s,i) => (
+            <motion.div key={i}
+              initial={{opacity:0,x:-16}} whileInView={{opacity:1,x:0}} viewport={{once:true}} transition={{delay:i*.05}}
+              onClick={()=>setModal(s)}
+              style={{display:'flex',alignItems:'center',gap:20,padding:'22px 0',borderBottom:'1px solid rgba(15,23,42,.08)',cursor:'pointer',transition:'padding-left .2s,background .2s',borderRadius:4}}
+              onMouseEnter={e=>{e.currentTarget.style.paddingLeft='14px';e.currentTarget.style.background='rgba(91,145,244,.05)';}}
+              onMouseLeave={e=>{e.currentTarget.style.paddingLeft='0';e.currentTarget.style.background='transparent';}}>
 
-                {/* Card content */}
-                <div style={{position:'relative',zIndex:2,padding:isWide?'30px 32px':'24px',display:'flex',flexDirection:'column',minHeight:200}}>
+              {/* Number */}
+              <span style={{fontSize:12,fontWeight:800,color:'var(--accent)',minWidth:24,letterSpacing:'.04em',fontFamily:'var(--sans)'}}>
+                {String(i+1).padStart(2,'0')}
+              </span>
 
-                  {/* Top: icon left · tag right */}
-                  <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:20}}>
-                    <div style={{width:44,height:44,borderRadius:12,background:'rgba(91,145,244,.12)',border:'1px solid rgba(91,145,244,.2)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                      {(() => { const Comp = s.ico.type; return <Comp s={20} c="var(--accent)"/>; })()}
-                    </div>
-                    <div className="tag-badge">{s.tag}</div>
-                  </div>
+              {/* Icon */}
+              <div style={{width:44,height:44,borderRadius:12,background:'rgba(91,145,244,.1)',border:'1px solid rgba(91,145,244,.15)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                {(() => { const C=s.ico.type; return <C s={19} c="var(--accent)"/>; })()}
+              </div>
 
-                  {/* Text block */}
-                  <div style={{flex:1}}>
-                    <h3 style={{fontSize:isWide?21:16,fontWeight:800,color:'var(--white)',lineHeight:1.2,marginBottom:6}}>{s.title}</h3>
-                    <div style={{fontSize:10,color:'var(--smoke)',letterSpacing:'.1em',textTransform:'uppercase',fontWeight:600,marginBottom:12}}>{s.sub}</div>
-                    <p style={{fontSize:13,color:'var(--smoke)',lineHeight:1.65,display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical',overflow:'hidden'}}>{s.desc}</p>
-                  </div>
+              {/* Title + desc */}
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:16,fontWeight:700,color:'#0F172A',lineHeight:1.2,marginBottom:2}}>{s.title}</div>
+                <div className="hide-mob" style={{fontSize:12,color:'#64748B',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{s.desc}</div>
+              </div>
 
-                  {/* Bottom right: Details pill */}
-                  <div style={{marginTop:20,display:'flex',justifyContent:'flex-end'}}>
-                    <div style={{display:'inline-flex',alignItems:'center',gap:5,fontSize:11,fontWeight:700,color:'var(--accent)',background:'rgba(91,145,244,.1)',border:'1px solid rgba(91,145,244,.22)',borderRadius:20,padding:'5px 13px',letterSpacing:'.03em'}}>
-                      Details <Ic.ChevR s={10} c="var(--accent)"/>
-                    </div>
-                  </div>
+              {/* Tag + chevron */}
+              <div style={{display:'flex',alignItems:'center',gap:12,flexShrink:0}}>
+                <span className="hide-mob tag-badge">{s.tag}</span>
+                <div style={{width:32,height:32,borderRadius:'50%',border:'1.5px solid rgba(91,145,244,.25)',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                  <Ic.ChevR s={13} c="var(--accent)"/>
                 </div>
-              </motion.div>
-            );
-          })}
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
       <AnimatePresence>
