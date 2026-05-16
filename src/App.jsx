@@ -384,6 +384,7 @@ const TrustBar = () => {
 /* ─── SERVICES ───────────────────────────────────────────────────────────── */
 const Services = () => {
   const [modal, setModal] = useState(null);
+  const [featuredIdx, setFeaturedIdx] = useState(0);
   const items = [
     {ico:<Ic.Shield s={26} c="var(--accent)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO · Pflichtprüfung',tag:'Pflicht',desc:'Gesetzlich vorgeschriebene Sicherheitsprüfung für alle Kfz.',duration:'ca. 30 Min.',details:['Überprüfung der Bremsanlage','Sicht- und Funktionsprüfung der Beleuchtung','Prüfung von Lenkung, Achsen und Radaufhängung','Kontrolle der Karosserie','Überprüfung von Sichtscheiben und Spiegeln','Prüfung der Abgasanlage','Sicherheitsgurtprüfung','Auslesen der Fahrzeugelektronik / OBD'],img:'Hauptuntersuchung.png',note:'Gesetzlich vorgeschrieben §29 StVZO. Nach 3 Jahren bei Neuwagen, danach alle 2 Jahre.'},
     {ico:<Ic.Leaf s={26} c="var(--accent)"/>,title:'Abgasuntersuchung (AU)',sub:'AU · Emissionsprüfung',tag:'Kombi möglich',desc:'Prüfung der Schadstoffemissionen — schützt Umwelt und vermeidet Bußgelder.',duration:'ca. 15 Min.',details:['Sichtprüfung der Abgasanlage','Messung von CO, HC und Lambda-Werten','Trübungsmessung beim Diesel','Auslesen des OBD-Systems','Prüfung von Katalysator und Partikelfilter','Dokumentation und Bescheinigung'],img:'Abgasuntersuchung.png',note:'Pflichtbestandteil der HU. Kombi empfohlen.'},
@@ -394,14 +395,24 @@ const Services = () => {
     {ico:<Ic.Cert s={26} c="var(--accent)"/>,title:'HU + AU Kombi',sub:'§29 StVZO · Kombiangebot',tag:'Kombi',desc:'HU und AU in einem Termin — spart Zeit und ist oft günstiger.',duration:'ca. 40 Min.',details:['Vollständige Hauptuntersuchung §29 StVZO','Abgasuntersuchung inklusive','OBD-Diagnose beider Prüfungen','Einmalige Wartezeit für beide Tests','Kombiniertes Prüfprotokoll','Sofortige Bescheinigung vor Ort'],img:'AUKombi.png',note:'Empfehlung: HU und AU immer zusammen buchen — keine Extrakosten für die Kombination.'},
   ];
 
-  /* mosaic layout: items[0]=tuvv.jpg tall left, items[0..4] mapped to cells */
-  const mosaicCells = [
-    { img:'tuvv.jpg',       title: items[0].title, sub: items[0].sub, item: items[0], style:{ gridColumn:'1', gridRow:'1/3' } },
-    { img: items[0].img,   title: items[0].title, sub: items[0].sub, item: items[0], style:{ gridColumn:'2', gridRow:'1' } },
-    { img: items[1].img,   title: items[1].title, sub: items[1].sub, item: items[1], style:{ gridColumn:'3', gridRow:'1' } },
-    { img: items[4].img,   title: items[4].title, sub: items[4].sub, item: items[4], style:{ gridColumn:'2', gridRow:'2' } },
-    { img: items[5].img,   title: items[5].title, sub: items[5].sub, item: items[5], style:{ gridColumn:'3', gridRow:'2' } },
+  /* mosaic layout: big left card cycles through featuredSlides every 3s */
+  const featuredSlides = [
+    { img:'tuvv.jpg',      title:'TÜV Oberhausen',      sub:'Ihr Prüfpartner vor Ort',    item: items[0] },
+    { img: items[0].img,   title: items[0].title,        sub: items[0].sub,                item: items[0] },
+    { img: items[1].img,   title: items[1].title,        sub: items[1].sub,                item: items[1] },
+    { img: items[4].img,   title: items[4].title,        sub: items[4].sub,                item: items[4] },
+    { img: items[5].img,   title: items[5].title,        sub: items[5].sub,                item: items[5] },
   ];
+  const smallCards = [
+    { img: items[0].img, title: items[0].title, sub: items[0].sub, item: items[0], slideIdx:1, gridColumn:'2', gridRow:'1' },
+    { img: items[1].img, title: items[1].title, sub: items[1].sub, item: items[1], slideIdx:2, gridColumn:'3', gridRow:'1' },
+    { img: items[4].img, title: items[4].title, sub: items[4].sub, item: items[4], slideIdx:3, gridColumn:'2', gridRow:'2' },
+    { img: items[5].img, title: items[5].title, sub: items[5].sub, item: items[5], slideIdx:4, gridColumn:'3', gridRow:'2' },
+  ];
+  useEffect(() => {
+    const t = setInterval(() => setFeaturedIdx(p => (p + 1) % featuredSlides.length), 3000);
+    return () => clearInterval(t);
+  }, []);
 
   return (
     <div id="leistungen" className="section-full" style={{position:'relative',paddingTop:72,paddingBottom:72,overflow:'hidden',background:'var(--dark)'}}>
@@ -413,7 +424,7 @@ const Services = () => {
         .mosaic-bg { position:absolute; inset:0; background-size:cover; background-position:center; transition:transform .45s cubic-bezier(.22,1,.36,1); }
         .mosaic-cell:hover .mosaic-bg { transform:scale(1.06); }
         .mosaic-gradient { position:absolute; inset:0; background:linear-gradient(180deg,transparent 40%,rgba(10,12,18,.82) 100%); pointer-events:none; }
-        .mosaic-label { position:absolute; bottom:0; left:0; right:0; padding:18px 20px; }
+        .mosaic-label { position:absolute; bottom:0; left:0; right:0; padding:18px 20px; z-index:3; }
         .mosaic-sub { font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:4px; }
         .mosaic-title { font-size:15px; font-weight:800; color:#fff; line-height:1.2; letter-spacing:-.01em; }
         @media(max-width:900px){
@@ -441,16 +452,60 @@ const Services = () => {
 
         {/* Mosaic grid */}
         <motion.div className="mosaic-grid" initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:.6}}>
-          {mosaicCells.map((cell, i) => (
-            <div key={i} className="mosaic-cell" style={cell.style} onClick={()=>setModal(cell.item)}>
-              <div className="mosaic-bg" style={{backgroundImage:`url('${cell.img}')`}}/>
-              <div className="mosaic-gradient"/>
-              <div className="mosaic-label">
-                <div className="mosaic-sub">{cell.sub}</div>
-                <div className="mosaic-title">{cell.title}</div>
+
+          {/* BIG LEFT CARD — auto-cycles every 3s */}
+          <div className="mosaic-cell" style={{gridColumn:'1',gridRow:'1/3'}} onClick={()=>setModal(featuredSlides[featuredIdx].item)}>
+            <AnimatePresence mode="sync">
+              <motion.div
+                key={featuredIdx}
+                initial={{opacity:0,scale:1.07}}
+                animate={{opacity:1,scale:1}}
+                exit={{opacity:0}}
+                transition={{duration:0.85,ease:[0.22,1,0.36,1]}}
+                style={{position:'absolute',inset:0,backgroundImage:`url('${featuredSlides[featuredIdx].img}')`,backgroundSize:'cover',backgroundPosition:'center'}}
+              />
+            </AnimatePresence>
+            <div className="mosaic-gradient"/>
+            <div className="mosaic-label">
+              <AnimatePresence mode="wait">
+                <motion.div key={featuredIdx} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-6}} transition={{duration:0.35}}>
+                  <div className="mosaic-sub">{featuredSlides[featuredIdx].sub}</div>
+                  <div className="mosaic-title" style={{fontSize:20}}>{featuredSlides[featuredIdx].title}</div>
+                </motion.div>
+              </AnimatePresence>
+              {/* Dot nav */}
+              <div style={{display:'flex',gap:6,marginTop:14}} onClick={e=>e.stopPropagation()}>
+                {featuredSlides.map((_,i)=>(
+                  <button key={i} onClick={()=>setFeaturedIdx(i)}
+                    style={{width:i===featuredIdx?22:7,height:7,borderRadius:4,border:'none',cursor:'pointer',padding:0,
+                      background:i===featuredIdx?'var(--accent)':'rgba(255,255,255,.32)',transition:'all .35s cubic-bezier(.22,1,.36,1)'}}/>
+                ))}
               </div>
             </div>
-          ))}
+            {/* Progress bar */}
+            <div style={{position:'absolute',bottom:0,left:0,right:0,height:3,background:'rgba(255,255,255,.08)',zIndex:3}}>
+              <motion.div key={featuredIdx} initial={{width:'0%'}} animate={{width:'100%'}} transition={{duration:3,ease:'linear'}}
+                style={{height:'100%',background:'var(--accent)'}}/>
+            </div>
+          </div>
+
+          {/* SMALL RIGHT CARDS */}
+          {smallCards.map((card,i)=>{
+            const isActive = featuredIdx === card.slideIdx;
+            return (
+              <div key={i} className="mosaic-cell"
+                style={{gridColumn:card.gridColumn,gridRow:card.gridRow,outline:isActive?'2px solid var(--accent)':'2px solid transparent',transition:'outline .3s'}}
+                onClick={()=>{setFeaturedIdx(card.slideIdx);setModal(card.item);}}>
+                <div className="mosaic-bg" style={{backgroundImage:`url('${card.img}')`}}/>
+                <div className="mosaic-gradient"/>
+                {isActive && <div style={{position:'absolute',inset:0,background:'rgba(91,145,244,.13)',pointerEvents:'none',zIndex:2}}/>}
+                <div className="mosaic-label" style={{zIndex:3}}>
+                  <div className="mosaic-sub">{card.sub}</div>
+                  <div className="mosaic-title">{card.title}</div>
+                </div>
+              </div>
+            );
+          })}
         </motion.div>
       </div>
 
