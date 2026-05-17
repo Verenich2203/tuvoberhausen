@@ -755,11 +755,10 @@ const BookingSection = () => {
       <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 30%, rgba(10,12,18,.45) 100%)',pointerEvents:'none',zIndex:1}}/>
       <style>{`
         .bk-card { background: var(--dark2); border: 1px solid rgba(255,255,255,.07); border-radius: 14px; padding: 32px; box-shadow: 0 2px 32px rgba(0,0,0,.3); }
-        .svc-sel { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
-        .svc-sel-card { background: var(--dark3); border: 1.5px solid rgba(255,255,255,.08); border-radius: 12px; padding: 18px 16px; cursor: pointer; transition: all .2s; position: relative; }
-        .svc-sel-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(91,145,244,.15); }
-        .svc-sel-card.active { border-color: var(--accent); background: rgba(91,145,244,.1); box-shadow: 0 4px 16px rgba(91,145,244,.2); }
-        .svc-sel-card:last-child { grid-column:span 2; }
+        .svc-sel { display:flex; flex-direction:column; gap:8px; }
+        .svc-sel-card { background: var(--dark3); border: 1.5px solid rgba(255,255,255,.07); border-left: 3px solid transparent; border-radius: 12px; padding: 15px 18px; cursor: pointer; transition: all .22s cubic-bezier(.22,1,.36,1); position: relative; display:flex; align-items:center; gap:16px; }
+        .svc-sel-card:hover { border-color: rgba(91,145,244,.3); background: rgba(91,145,244,.05); }
+        .svc-sel-card.active { border-color: rgba(91,145,244,.35); border-left-color: var(--accent); background: rgba(91,145,244,.08); box-shadow: 0 4px 20px rgba(91,145,244,.12); }
         .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
         .cal-day { width:100%; aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; transition:all .15s; border:none; background:transparent; font-family:var(--sans); }
         .cal-day:hover:not(:disabled):not(.cal-selected):not(.cal-today) { background: rgba(91,145,244,.12); color: var(--accent); }
@@ -769,14 +768,12 @@ const BookingSection = () => {
         .bk-nav-btn { background: none; border: 1.5px solid rgba(255,255,255,.1); border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .2s; color: var(--text); }
         .bk-nav-btn:hover { border-color: var(--accent); color: var(--accent); }
         @media(max-width:900px){
-          .svc-sel { grid-template-columns:1fr 1fr !important; }
-          .svc-sel-card:last-child { grid-column:span 2 !important; }
           .bk-two-col { grid-template-columns:1fr !important; }
+          .svc-sel-tag { display:none !important; }
         }
         @media(max-width:600px){
-          .svc-sel { grid-template-columns:1fr !important; }
-          .svc-sel-card:last-child { grid-column:span 1 !important; }
           .bk-card { padding:20px 16px !important; }
+          .svc-sel-card { padding:12px 14px !important; gap:12px !important; }
         }
       `}</style>
 
@@ -817,16 +814,34 @@ const BookingSection = () => {
                     <h3 style={{fontWeight:800,fontSize:22,color:'var(--white)',letterSpacing:'-.01em'}}>Was braucht Ihr Auto?</h3>
                   </div>
                   <div className="svc-sel">
-                    {serviceItems.map((s,i) => (
-                      <div key={i} className={`svc-sel-card${form.service === s.title ? ' active' : ''}`} onClick={()=>setField('service', s.title)}>
-                        <div style={{position:'absolute',top:14,right:14,width:18,height:18,borderRadius:'50%',border:`2px solid ${form.service===s.title ? 'var(--accent)' : 'rgba(255,255,255,.25)'}`,background:form.service===s.title ? 'var(--accent)' : 'transparent',display:'flex',alignItems:'center',justifyContent:'center',transition:'all .18s'}}>
-                          {form.service===s.title && <Ic.Check s={9} c="#fff"/>}
+                    {serviceItems.map((s,i) => {
+                      const active = form.service === s.title;
+                      return (
+                        <div key={i} className={`svc-sel-card${active?' active':''}`} onClick={()=>setField('service', s.title)}>
+                          {/* Icon */}
+                          <div style={{width:44,height:44,borderRadius:11,background:active?'rgba(91,145,244,.18)':'rgba(255,255,255,.05)',border:`1.5px solid ${active?'rgba(91,145,244,.4)':'rgba(255,255,255,.07)'}`,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'all .22s'}}>
+                            {s.ico}
+                          </div>
+                          {/* Text */}
+                          <div style={{flex:1,minWidth:0}}>
+                            <div style={{fontWeight:700,fontSize:14,color:'var(--white)',lineHeight:1.25,marginBottom:3}}>{s.title}</div>
+                            <div style={{fontSize:11,color:'var(--smoke)',fontWeight:500,letterSpacing:'.02em'}}>{s.sub}</div>
+                          </div>
+                          {/* Tag + Check */}
+                          <div style={{flexShrink:0,display:'flex',alignItems:'center',gap:10}}>
+                            <span className="svc-sel-tag" style={{fontSize:10,fontWeight:700,letterSpacing:'.07em',textTransform:'uppercase',padding:'4px 10px',borderRadius:20,transition:'all .22s',
+                              color:active?'var(--accent)':'var(--smoke)',
+                              background:active?'rgba(91,145,244,.15)':'rgba(255,255,255,.05)',
+                              border:`1px solid ${active?'rgba(91,145,244,.35)':'rgba(255,255,255,.08)'}`}}>{s.tag}</span>
+                            <div style={{width:22,height:22,borderRadius:'50%',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',transition:'all .22s',
+                              border:`2px solid ${active?'var(--accent)':'rgba(255,255,255,.2)'}`,
+                              background:active?'var(--accent)':'transparent'}}>
+                              {active && <Ic.Check s={10} c="#fff"/>}
+                            </div>
+                          </div>
                         </div>
-                        <div style={{marginBottom:10}}>{s.ico}</div>
-                        <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'var(--smoke)',marginBottom:5}}>{s.sub}</div>
-                        <div style={{fontWeight:700,fontSize:13,color:'var(--white)',lineHeight:1.3}}>{s.title}</div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                   <div style={{display:'flex',justifyContent:'flex-end',marginTop:28}}>
                     <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px',gap:8,opacity:form.service?1:.45,cursor:form.service?'pointer':'not-allowed'}}
