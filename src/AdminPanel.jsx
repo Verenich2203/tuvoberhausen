@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef, createContext, useContext } from 'react';
-const DarkCtx = createContext(false);
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 const SUPABASE_URL = "https://cglzccturchfveajhtqs.supabase.co";
 const SUPABASE_KEY = "sb_publishable_0UWfCaMn2o-BQXTCfww3tg_2BNkOv9m";
@@ -188,7 +187,6 @@ const H = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Cont
 async function apiFetch(path, opts = {}) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { headers: H, ...opts });
   if (!res.ok) throw new Error(await res.text());
-  if (opts.method === 'DELETE') return null;
   if (res.status === 204) return null;
   return res.json();
 }
@@ -213,10 +211,15 @@ const patchBooking = async (id, fields) => {
   if (!rows || rows.length === 0) throw new Error('Keine Zeile aktualisiert.');
   return rows;
 };
-const deleteBooking = (id) => apiFetch(`bookings?id=eq.${id}`, {
-  method: 'DELETE',
-  headers: { ...H, Prefer: 'return=minimal' },
-});
+// DELETE с return=representation — проверяем что строка реально удалена (RLS не заблокировал)
+const deleteBooking = async (id) => {
+  const rows = await apiFetch(`bookings?id=eq.${id}`, {
+    method: 'DELETE',
+    headers: { ...H, Prefer: 'return=representation' },
+  });
+  if (!rows || rows.length === 0) throw new Error('Keine Zeile gelöscht — Berechtigungen prüfen.');
+  return rows;
+};
 
 // ─── UTILS ─────────────────────────────────────────────────────────────────────
 // Always use LOCAL date components — toISOString() returns UTC which breaks in UTC+2
@@ -251,7 +254,6 @@ const STYLE = `
   ::-webkit-scrollbar{width:5px;height:5px}
   ::-webkit-scrollbar-track{background:transparent}
   ::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:99px}
-  .dark ::-webkit-scrollbar-thumb{background:#334155}
   @keyframes spin{to{transform:rotate(360deg)}}
   @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   @keyframes toastIn{from{opacity:0;transform:translateY(16px) scale(.95)}to{opacity:1;transform:none}}
@@ -269,20 +271,8 @@ const STYLE = `
     --filter-bg:#F8FAFC;--filter-color:#64748B;--filter-border:#E2E8F0;
     --note-color:#94A3B8;--cal-text:#374151;
   }
-  .adm-root.dark{
-    --bg:#0D1117;--card:#161B22;--border:#30363D;
-    --text:#E6EDF3;--sub:#8B949E;--muted:#484F58;
-    --input-bg:#0D1117;--input-border:#30363D;
-    --th-bg:#0D1117;--th-color:#8B949E;--th-border:#21262D;
-    --row-hover:#1C2128;--row-border:#21262D;
-    --hdr-bg:#161B22;--hdr-border:#21262D;
-    --btn-bg:#21262D;--btn-color:#8B949E;--btn-border:#30363D;
-    --sched-border:#21262D;--sched-time:#8B949E;--sched-time-half:#30363D;
-    --filter-bg:#21262D;--filter-color:#8B949E;--filter-border:#30363D;
-    --note-color:#484F58;--cal-text:#C9D1D9;
-  }
 
-  .adm-btn{cursor:pointer;border:none;font-family:inherit;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.adm-btn{cursor:pointer;border:none;font-family:inherit;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
   .adm-btn:active{transform:scale(.97)}
   .adm-card{background:var(--card);border-radius:8px;border:1px solid var(--border)}
   .adm-nav-btn{width:100%;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:500;color:#94A3B8;transition:all .15s;text-align:left}
@@ -300,7 +290,6 @@ const STYLE = `
   .tbl-tr:last-child .tbl-td{border-bottom:none}
   .copy-btn{background:none;border:none;cursor:pointer;color:var(--muted);padding:3px 4px;border-radius:4px;display:inline-flex;align-items:center;transition:color .15s}
   .copy-btn:hover{color:#6366F1;background:#EEF2FF}
-  .dark .copy-btn:hover{background:rgba(99,102,241,.15)}
   .sched-row{display:flex;min-height:48px;border-bottom:1px solid var(--sched-border);transition:background .12s}
   .sched-row.half{border-bottom:1px dashed var(--sched-border);min-height:38px}
   .sched-row.drag-over{background:rgba(99,102,241,.1) !important}
@@ -315,9 +304,6 @@ const STYLE = `
   .filter-chip{padding:5px 14px;border-radius:5px;border:1.5px solid var(--filter-border);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;background:var(--filter-bg);color:var(--filter-color)}
   .filter-chip:hover{border-color:#C7D2FE;color:#6366F1}
   .filter-chip.active{background:#EEF2FF;border-color:#6366F1;color:#4F46E5}
-  .dark .filter-chip.active{background:rgba(99,102,241,.2);border-color:#6366F1;color:#A5B4FC}
-  .dark-theme-picker{background:var(--card);border-color:var(--border)}
-  .dark-theme-picker button:hover{background:var(--row-hover)}
 `;
 
 // ─── TOAST STACK ───────────────────────────────────────────────────────────────
@@ -958,10 +944,7 @@ export default function AdminPanel() {
   const [view, setView]         = useState('dashboard');
   const [toasts, setToasts]     = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('adm-dark') === '1');
   const toastId = useRef(0);
-
-  const toggleDark = () => setDarkMode(d => { const n = !d; localStorage.setItem('adm-dark', n?'1':'0'); return n; });
 
   const showToast = useCallback((msg, ok = true) => {
     const id = ++toastId.current;
@@ -1013,9 +996,9 @@ export default function AdminPanel() {
   const pending = bookings.filter(b => validStatus(b.status) === 'pending').length;
 
   return (
-    <DarkCtx.Provider value={darkMode}>
+    <>
       <style>{STYLE}</style>
-      <div className={`adm-root${darkMode?' dark':''}`} style={{ position:'fixed', inset:0, zIndex:99999, display:'flex', fontFamily:'"Inter",sans-serif', background:'var(--bg)' }}>
+      <div className="adm-root" style={{ position:'fixed', inset:0, zIndex:99999, display:'flex', fontFamily:'"Inter",sans-serif', background:'var(--bg)' }}>
 
         {/* SIDEBAR */}
         <aside style={{ width: sidebarOpen ? 220 : 60, background:'linear-gradient(180deg,#1E1B4B 0%,#2D2A72 100%)', display:'flex', flexDirection:'column', flexShrink:0, transition:'width .2s ease', overflow:'hidden' }}>
@@ -1042,12 +1025,6 @@ export default function AdminPanel() {
             </div>
           )}
           <div style={{ padding:'10px 8px', borderTop:'1px solid rgba(255,255,255,.07)', flexShrink:0, display:'flex', flexDirection:'column', gap:2 }}>
-            {/* Dark mode toggle */}
-            <button className="adm-nav-btn" onClick={toggleDark}
-              style={{ justifyContent: sidebarOpen ? 'flex-start' : 'center', color: darkMode ? '#FCD34D' : '#A5B4FC' }}>
-              {darkMode ? <Icon.Sun/> : <Icon.Moon/>}
-              {sidebarOpen && <span style={{ color: darkMode ? '#FCD34D' : '#A5B4FC' }}>{darkMode ? 'Heller Modus' : 'Dunkler Modus'}</span>}
-            </button>
             <button className="adm-nav-btn" onClick={() => setAuth(false)} style={{ color:'#F87171', justifyContent: sidebarOpen ? 'flex-start' : 'center' }}>
               <Icon.Logout/>{sidebarOpen && 'Abmelden'}
             </button>
@@ -1088,6 +1065,6 @@ export default function AdminPanel() {
       </div>
 
       <ToastStack toasts={toasts}/>
-    </DarkCtx.Provider>
+    </>
   );
 }
