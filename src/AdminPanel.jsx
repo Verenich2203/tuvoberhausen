@@ -917,10 +917,9 @@ function SchedulerView({ bookings, onStatus, onPatch, showToast }) {
                         <span style={{ color:'var(--muted)', fontSize:11 }}>·</span>
                         <span style={{ color:'var(--sub)', maxWidth:100, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{(b.service||'').replace('(','').replace(')','').split(' ').slice(0,2).join(' ')}</span>
                         {b.phone && (
-                          <a href={`tel:${b.phone}`} onClick={e => e.stopPropagation()}
-                            style={{ display:'flex', alignItems:'center', gap:4, fontSize:11, fontWeight:700, color:'#6366F1', textDecoration:'none', background:'rgba(99,102,241,.1)', padding:'2px 8px', borderRadius:4, whiteSpace:'nowrap', flexShrink:0 }}>
+                          <span style={{ display:'flex', alignItems:'center', gap:3, fontSize:11, color:'#94A3B8', whiteSpace:'nowrap', flexShrink:0 }}>
                             <Icon.Phone/>{b.phone}
-                          </a>
+                          </span>
                         )}
                         <StatusPicker value={st} onChange={v => onStatus(b.id, v)}/>
                       </div>
