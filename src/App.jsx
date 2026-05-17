@@ -758,10 +758,16 @@ const BookingSection = () => {
 
   return (
     <div id="termin" className="section-full" style={{position:'relative',background:'var(--dark)',paddingTop:72,paddingBottom:72,overflow:'hidden'}}>
+      {/* Background photo */}
       <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.1,pointerEvents:'none',zIndex:0}}/>
+      {/* Radial vignette */}
       <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 30%, rgba(10,12,18,.45) 100%)',pointerEvents:'none',zIndex:1}}/>
+      {/* Decorative orbs */}
+      <div style={{position:'absolute',top:'-10%',left:'-8%',width:520,height:520,borderRadius:'50%',background:'radial-gradient(circle,rgba(91,145,244,.13) 0%,transparent 70%)',pointerEvents:'none',zIndex:1}}/>
+      <div style={{position:'absolute',bottom:'-15%',right:'-6%',width:600,height:600,borderRadius:'50%',background:'radial-gradient(circle,rgba(91,145,244,.09) 0%,transparent 70%)',pointerEvents:'none',zIndex:1}}/>
+      <div style={{position:'absolute',top:'40%',left:'55%',width:320,height:320,borderRadius:'50%',background:'radial-gradient(circle,rgba(120,80,255,.07) 0%,transparent 70%)',pointerEvents:'none',zIndex:1}}/>
       <style>{`
-        .bk-card { background: var(--dark2); border: 1px solid rgba(255,255,255,.07); border-radius: 14px; padding: 32px; box-shadow: 0 2px 32px rgba(0,0,0,.3); }
+        .bk-card { background: linear-gradient(160deg,rgba(31,35,46,.82) 0%,rgba(19,22,30,.9) 100%); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border: 1px solid rgba(255,255,255,.09); border-top: 1.5px solid rgba(91,145,244,.25); border-radius: 18px; padding: 32px; box-shadow: 0 8px 48px rgba(0,0,0,.45), 0 0 0 1px rgba(91,145,244,.05) inset; }
         .svc-sel { display:flex; flex-direction:column; gap:8px; }
         .svc-sel-card { background: var(--dark3); border: 1.5px solid rgba(255,255,255,.07); border-left: 3px solid transparent; border-radius: 12px; padding: 15px 18px; cursor: pointer; transition: all .22s cubic-bezier(.22,1,.36,1); position: relative; display:flex; align-items:center; gap:16px; }
         .svc-sel-card:hover { border-color: rgba(91,145,244,.3); background: rgba(91,145,244,.05); }
