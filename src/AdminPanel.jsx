@@ -153,6 +153,12 @@ const Icon = {
       <circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>
     </svg>
   ),
+  Trash: () => (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+      <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+    </svg>
+  ),
 };
 
 // ─── STATUS CONFIG ─────────────────────────────────────────────────────────────
@@ -168,11 +174,35 @@ const H = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Cont
 async function apiFetch(path, opts = {}) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { headers: H, ...opts });
   if (!res.ok) throw new Error(await res.text());
-  return (opts.method === 'PATCH' || opts.method === 'DELETE') ? null : res.json();
+  if (opts.method === 'DELETE') return null;
+  if (res.status === 204) return null;
+  return res.json();
 }
 const fetchBookings = () => apiFetch('bookings?order=date.desc,time_slot.asc');
-const patchStatus   = (id, status) => apiFetch(`bookings?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ status }), headers: { ...H, Prefer: 'return=minimal' } });
-const patchBooking  = (id, fields) => apiFetch(`bookings?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify(fields), headers: { ...H, Prefer: 'return=minimal' } });
+
+// PATCH с return=representation — возвращает обновлённые строки, иначе [] если RLS заблокировал
+const patchStatus = async (id, status) => {
+  const rows = await apiFetch(`bookings?id=eq.${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status }),
+    headers: { ...H, Prefer: 'return=representation' },
+  });
+  if (!rows || rows.length === 0) throw new Error('Keine Zeile aktualisiert — Berechtigungen prüfen.');
+  return rows;
+};
+const patchBooking = async (id, fields) => {
+  const rows = await apiFetch(`bookings?id=eq.${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(fields),
+    headers: { ...H, Prefer: 'return=representation' },
+  });
+  if (!rows || rows.length === 0) throw new Error('Keine Zeile aktualisiert.');
+  return rows;
+};
+const deleteBooking = (id) => apiFetch(`bookings?id=eq.${id}`, {
+  method: 'DELETE',
+  headers: { ...H, Prefer: 'return=minimal' },
+});
 
 // ─── UTILS ─────────────────────────────────────────────────────────────────────
 const today = () => new Date().toISOString().split('T')[0];
@@ -491,7 +521,7 @@ function DashboardView({ bookings, onStatus, showToast }) {
 }
 
 // ─── DATA TABLE VIEW ───────────────────────────────────────────────────────────
-function TableView({ bookings, onStatus, onPatch, showToast }) {
+function TableView({ bookings, onStatus, onPatch, onDelete, showToast }) {
   const [search, setSearch]       = useState('');
   const [statusF, setStatusF]     = useState('all');
   const [dateF, setDateF]         = useState('all');
@@ -654,10 +684,16 @@ function TableView({ bookings, onStatus, onPatch, showToast }) {
                       <div style={{ display:'flex', gap:4, alignItems:'center' }}>
                         {b.email && (
                           <button className="adm-btn" onClick={() => handleEmail(b)} disabled={sending === b.id}
-                            style={{ background:'#F1F5F9', color:'#475569', border:'1px solid #E2E8F0', padding:'4px 8px', borderRadius:5, fontSize:11, fontWeight:600, opacity: sending===b.id?.6:1 }}>
+                            style={{ background:'#F1F5F9', color:'#475569', border:'1px solid #E2E8F0', padding:'4px 8px', borderRadius:5, fontSize:11, fontWeight:600, opacity: sending===b.id?.6:1 }}
+                            title="Bestätigung senden">
                             {sending === b.id ? <Icon.Refresh spin/> : <Icon.Send/>}
                           </button>
                         )}
+                        <button className="adm-btn" onClick={() => onDelete(b.id, b.name)}
+                          style={{ background:'#FEF2F2', color:'#B91C1C', border:'1px solid #FECACA', padding:'4px 8px', borderRadius:5, fontSize:11 }}
+                          title="Buchung löschen">
+                          <Icon.Trash/>
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -866,6 +902,15 @@ export default function AdminPanel() {
     setBookings(prev => prev.map(b => b.id === id ? { ...b, ...fields } : b));
   }, []);
 
+  const handleDelete = useCallback(async (id, name) => {
+    if (!window.confirm(`Buchung von „${name}" wirklich löschen?`)) return;
+    try {
+      await deleteBooking(id);
+      setBookings(prev => prev.filter(b => b.id !== id));
+      showToast(`Buchung gelöscht`);
+    } catch { showToast('Löschen fehlgeschlagen.', false); }
+  }, [showToast]);
+
   if (!auth) return <><style>{STYLE}</style><LoginScreen onLogin={() => setAuth(true)}/></>;
 
   const navItems = [
@@ -939,7 +984,7 @@ export default function AdminPanel() {
             ) : (
               <>
                 {view === 'dashboard' && <DashboardView bookings={bookings} onStatus={handleStatus} showToast={showToast}/>}
-                {view === 'table'     && <TableView     bookings={bookings} onStatus={handleStatus} onPatch={handlePatch} showToast={showToast}/>}
+                {view === 'table'     && <TableView     bookings={bookings} onStatus={handleStatus} onPatch={handlePatch} onDelete={handleDelete} showToast={showToast}/>}
                 {view === 'scheduler' && <SchedulerView bookings={bookings} onStatus={handleStatus} onPatch={handlePatch} showToast={showToast}/>}
               </>
             )}
