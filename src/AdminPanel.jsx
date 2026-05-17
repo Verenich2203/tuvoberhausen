@@ -205,8 +205,11 @@ const deleteBooking = (id) => apiFetch(`bookings?id=eq.${id}`, {
 });
 
 // ─── UTILS ─────────────────────────────────────────────────────────────────────
-const today = () => new Date().toISOString().split('T')[0];
-const tomorrow = () => new Date(Date.now() + 86400000).toISOString().split('T')[0];
+// Always use LOCAL date components — toISOString() returns UTC which breaks in UTC+2
+const localDateStr = (d = new Date()) =>
+  `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const today    = () => localDateStr();
+const tomorrow = () => { const d = new Date(); d.setDate(d.getDate()+1); return localDateStr(d); };
 const fmtDate = d => d ? new Date(d + 'T00:00:00').toLocaleDateString('de-DE', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
 const fmtDateShort = d => d ? new Date(d + 'T00:00:00').toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' }) : '—';
 const MONTHS_DE = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
@@ -307,6 +310,43 @@ function StatusSelect({ value, onChange }) {
       <option value="completed">✅ Abgeschlossen</option>
       <option value="cancelled">❌ Storniert</option>
     </select>
+  );
+}
+
+// ─── CHIP STATUS PICKER (replaces ugly emoji select) ──────────────────────────
+function StatusPicker({ value, onChange }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const st = validStatus(value); const c = ST[st];
+
+  useEffect(() => {
+    if (!open) return;
+    const h = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, [open]);
+
+  return (
+    <div ref={ref} style={{ position:'relative' }} onClick={e => e.stopPropagation()}>
+      <button onClick={e => { e.stopPropagation(); setOpen(o => !o); }}
+        style={{ display:'flex', alignItems:'center', gap:5, padding:'3px 8px 3px 6px', borderRadius:5, border:`1.5px solid ${c.border}`, background:c.bg, color:c.dark, fontSize:11, fontWeight:700, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap' }}>
+        <span style={{ width:7, height:7, borderRadius:'50%', background:c.color, flexShrink:0 }}/>
+        {c.label}
+        <Icon.ChevronDown/>
+      </button>
+      {open && (
+        <div style={{ position:'absolute', top:'calc(100% + 5px)', left:0, zIndex:200, background:'#fff', border:'1px solid #E2E8F0', borderRadius:8, boxShadow:'0 8px 28px rgba(0,0,0,.13)', overflow:'hidden', minWidth:160 }}>
+          {Object.entries(ST).map(([k, v]) => (
+            <button key={k} onClick={e => { e.stopPropagation(); onChange(k); setOpen(false); }}
+              style={{ width:'100%', display:'flex', alignItems:'center', gap:9, padding:'9px 14px', background: k === st ? v.bg : '#fff', border:'none', cursor:'pointer', fontFamily:'inherit', fontSize:13, fontWeight: k === st ? 700 : 500, color: k === st ? v.dark : '#374151', transition:'background .1s', textAlign:'left' }}>
+              <span style={{ width:9, height:9, borderRadius:'50%', background:v.color, flexShrink:0 }}/>
+              {v.label}
+              {k === st && <Icon.Check/>}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -720,8 +760,9 @@ function SchedulerView({ bookings, onStatus, onPatch, showToast }) {
   dayBookings.forEach(b => { const s = (b.time_slot||'').slice(0,5); if (!bySlot[s]) bySlot[s] = []; bySlot[s].push(b); });
 
   const changeDate = days => {
-    const d = new Date(selDate + 'T00:00:00'); d.setDate(d.getDate() + days);
-    setSelDate(d.toISOString().split('T')[0]);
+    const [y, m, dd] = selDate.split('-').map(Number);
+    const d = new Date(y, m - 1, dd + days); // Local date — no UTC offset issues
+    setSelDate(localDateStr(d));
   };
 
   const handleDrop = async slot => {
@@ -844,13 +885,7 @@ function SchedulerView({ bookings, onStatus, onPatch, showToast }) {
                         <span style={{ color:'#475569' }}>{b.name}</span>
                         <span style={{ color:'#94A3B8', fontSize:11 }}>·</span>
                         <span style={{ color:'#64748B', maxWidth:110, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{(b.service||'').replace('(','').replace(')','').split(' ').slice(0,2).join(' ')}</span>
-                        <select value={st} onChange={e => onStatus(b.id, e.target.value)}
-                          onClick={e => e.stopPropagation()}
-                          style={{ padding:'2px 4px', border:'none', background:'transparent', fontSize:12, color:c.dark, fontWeight:700, cursor:'pointer', fontFamily:'inherit', outline:'none', marginLeft:2 }}>
-                          <option value="pending">⏳</option>
-                          <option value="completed">✅</option>
-                          <option value="cancelled">❌</option>
-                        </select>
+                        <StatusPicker value={st} onChange={v => onStatus(b.id, v)}/>
                       </div>
                     );
                   })}
