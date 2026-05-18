@@ -600,7 +600,7 @@ const Steps = () => {
             <div className="tag" style={{marginBottom:14}}>Ablauf</div>
             <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,42px)',color:'var(--white)',letterSpacing:'-.02em',lineHeight:1.1,marginBottom:16}}>In 4 Schritten zur Plakette</h2>
             <div className="accent"/>
-            <p style={{color:'var(--smoke)',fontSize:14,lineHeight:1.75,marginBottom:32}}>Buchen Sie bequem online — wir erledigen den Rest schnell und transparent.</p>
+            <p style={{color:'var(--smoke)',fontSize:14,lineHeight:1.75,marginBottom:32}}>Buchen Sie bequem online — wir erledigen den Rest.</p>
             <a href="#termin" className="btn btn-primary" style={{fontSize:13,padding:'13px 28px',gap:9,textDecoration:'none'}}>Jetzt Termin buchen <Ic.Arrow s={14}/></a>
           </motion.div>
           <div style={{position:'relative'}}>
@@ -1130,11 +1130,9 @@ const FAQ = () => {
   const faqs = [
     ['Wie lange dauert eine Hauptuntersuchung?','Eine Standard-HU dauert ca. 30 Minuten, mit AU-Kombi ca. 45–60 Minuten.'],
     ['Was muss ich zur HU mitbringen?','Den Fahrzeugschein (Zulassungsbescheinigung Teil I). Bei Eintragungen alle ABE-Dokumente.'],
-    ['Was passiert, wenn mein Fahrzeug nicht besteht?','Sie erhalten ein Mängelprotokoll. Geringe Mängel können innerhalb eines Monats kostenlos nachgeprüft werden.'],
-    ['Kann ich einen Termin kostenlos stornieren?','Ja — bis 24 Stunden vor dem Termin per Telefon oder E-Mail.'],
-    ['Welche Fahrzeuge prüfen Sie?','PKW, Motorräder, Transporter sowie Oldtimer (§23 StVZO).'],
-    ['Gibt es einen Wartebereich?','Ja — oder Fahrzeug abgeben und später abholen.'],
-    ['Kann ich per WhatsApp buchen?','Ja — schreiben Sie uns, wir bestätigen schnellstmöglich.'],
+    ['Was passiert, wenn mein Fahrzeug nicht besteht?','Sollten bei der Hauptuntersuchung Mängel festgestellt werden, erhalten Sie selbstverständlich ein ausführliches Mängelprotokoll. Der Prüfer erläutert Ihnen die festgestellten Punkte transparent und verständlich direkt am Fahrzeug oder im persönlichen Gespräch.\n\nSie haben anschließend in der Regel einen Monat Zeit, die beanstandeten Mängel beheben zu lassen und das Fahrzeug zur Nachprüfung erneut vorzuführen.\n\nUnser Ziel ist nicht nur die Prüfung Ihres Fahrzeugs, sondern auch eine nachvollziehbare und faire Beratung, damit Sie genau wissen, welche Arbeiten erforderlich sind und wie es weitergeht.'],
+    ['Welche Fahrzeuge prüfen Sie?','Wir prüfen PKW, Motorräder, Transporter und Anhänger. Darüber hinaus bieten wir Oldtimer-Gutachten (§23 StVZO), Gasanlagenprüfungen für LPG- und CNG-Fahrzeuge, BO-Kraft Prüfungen für Taxi und Mietwagen sowie Abnahmen nach §19 Abs. 3 StVZO und §15 FZV an.'],
+    ['Kann ich auch per WhatsApp buchen?','Ja — Sie können uns direkt über WhatsApp kontaktieren und einen Termin anfragen. Wir bestätigen schnellstmöglich.\n\nAuch weitere Anfragen und Anliegen können sie uns gerne über WhatsApp zukommen lassen.'],
   ];
   return (
     <div id="faq" className="section-full sec" style={{background:'var(--dark)',position:'relative',overflow:'hidden'}}>
@@ -1155,7 +1153,7 @@ const FAQ = () => {
               <AnimatePresence>
                 {open===i && (
                   <motion.div initial={{height:0,opacity:0}} animate={{height:'auto',opacity:1}} exit={{height:0,opacity:0}} transition={{duration:.2}} style={{overflow:'hidden'}}>
-                    <p className="faq-a">{a}</p>
+                    <div className="faq-a" style={{display:'flex',flexDirection:'column',gap:10}}>{a.split('\n\n').map((p,j)=><p key={j}>{p}</p>)}</div>
                   </motion.div>
                 )}
               </AnimatePresence>
