@@ -1083,10 +1083,94 @@ const BookingSection = () => {
       <div style={{position:'absolute',top:'40%',left:'55%',width:320,height:320,borderRadius:'50%',background:'radial-gradient(circle,rgba(120,80,255,.07) 0%,transparent 70%)',pointerEvents:'none',zIndex:1}}/>
       <style>{`
         .bk-card { background: linear-gradient(160deg,rgba(31,35,46,.82) 0%,rgba(19,22,30,.9) 100%); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border: 1px solid rgba(255,255,255,.09); border-top: 1.5px solid rgba(91,145,244,.25); border-radius: 18px; padding: 32px; box-shadow: 0 8px 48px rgba(0,0,0,.45), 0 0 0 1px rgba(91,145,244,.05) inset; }
-        .svc-sel { display:flex; flex-direction:column; gap:8px; }
-        .svc-sel-card { background: var(--dark3); border: 1.5px solid rgba(255,255,255,.07); border-left: 3px solid transparent; border-radius: 12px; padding: 15px 18px; cursor: pointer; transition: all .22s cubic-bezier(.22,1,.36,1); position: relative; display:flex; align-items:center; gap:16px; }
-        .svc-sel-card:hover { border-color: rgba(91,145,244,.3); background: rgba(91,145,244,.05); }
-        .svc-sel-card.active { border-color: rgba(91,145,244,.35); border-left-color: var(--accent); background: rgba(91,145,244,.08); box-shadow: 0 4px 20px rgba(91,145,244,.12); }
+
+        /* ── Premium glassmorphism service selector ── */
+        .svc-sel { display:flex; flex-direction:column; gap:9px; }
+        .svc-sel-card {
+          position:relative; display:flex; align-items:center; gap:16px;
+          padding:15px 18px; border-radius:16px; cursor:pointer; overflow:hidden;
+          background:linear-gradient(135deg,rgba(255,255,255,.033) 0%,rgba(255,255,255,.007) 100%);
+          border:1px solid rgba(255,255,255,.07);
+          transition:all .32s cubic-bezier(.22,1,.36,1);
+          backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+        }
+        /* shimmer top edge */
+        .svc-sel-card::before {
+          content:''; position:absolute; top:0; left:0; right:0; height:1px;
+          background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.16) 50%,transparent 100%);
+          opacity:0; transition:opacity .3s;
+        }
+        .svc-sel-card:hover::before { opacity:1; }
+        .svc-sel-card.active::before { opacity:1; background:linear-gradient(90deg,transparent 0%,rgba(91,145,244,.5) 50%,transparent 100%); }
+        /* left accent bar */
+        .svc-sel-card::after {
+          content:''; position:absolute; left:0; top:12%; bottom:12%;
+          width:3px; border-radius:2px;
+          background:var(--accent);
+          opacity:0; transition:opacity .28s, transform .28s;
+          transform:scaleY(.4);
+        }
+        .svc-sel-card.active::after { opacity:1; transform:scaleY(1); }
+        .svc-sel-card:hover {
+          border-color:rgba(91,145,244,.2);
+          background:linear-gradient(135deg,rgba(91,145,244,.055) 0%,rgba(91,145,244,.018) 100%);
+          box-shadow:0 4px 24px rgba(0,0,0,.28), 0 1px 0 rgba(91,145,244,.08) inset;
+        }
+        .svc-sel-card.active {
+          border-color:rgba(91,145,244,.36);
+          background:linear-gradient(135deg,rgba(91,145,244,.10) 0%,rgba(91,145,244,.035) 100%);
+          box-shadow:0 6px 30px rgba(0,0,0,.32), 0 0 0 1px rgba(91,145,244,.10) inset;
+        }
+        /* 3-D metallic icon */
+        .svc-ico {
+          width:46px; height:46px; border-radius:13px; flex-shrink:0;
+          display:flex; align-items:center; justify-content:center;
+          background:linear-gradient(145deg,rgba(54,64,84,.96) 0%,rgba(24,28,42,.98) 100%);
+          border:1px solid rgba(255,255,255,.10);
+          box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.25),0 5px 14px rgba(0,0,0,.44);
+          transition:all .32s cubic-bezier(.22,1,.36,1);
+        }
+        .svc-sel-card:hover .svc-ico,
+        .svc-sel-card.active .svc-ico {
+          background:linear-gradient(145deg,rgba(68,90,130,.9) 0%,rgba(33,48,80,.95) 100%);
+          border-color:rgba(91,145,244,.24);
+          box-shadow:inset 0 1px 0 rgba(91,145,244,.22),inset 0 -1px 0 rgba(0,0,0,.28),0 6px 18px rgba(0,0,0,.48),0 0 14px rgba(91,145,244,.14);
+        }
+        /* status badge */
+        .svc-badge {
+          display:inline-flex; align-items:center; padding:3px 9px;
+          border-radius:20px; font-size:9px; font-weight:800;
+          letter-spacing:.10em; text-transform:uppercase;
+          transition:all .28s; flex-shrink:0; white-space:nowrap;
+          border:1px solid rgba(255,255,255,.07);
+          color:rgba(255,255,255,.38); background:rgba(255,255,255,.04);
+        }
+        .svc-badge.on {
+          color:var(--accent); background:rgba(91,145,244,.12);
+          border-color:rgba(91,145,244,.3); box-shadow:0 0 8px rgba(91,145,244,.18);
+        }
+        /* glowing radio */
+        .svc-radio {
+          width:23px; height:23px; border-radius:50%; flex-shrink:0;
+          display:flex; align-items:center; justify-content:center;
+          border:1.5px solid rgba(255,255,255,.18);
+          background:rgba(255,255,255,.03);
+          transition:all .32s cubic-bezier(.22,1,.36,1);
+        }
+        .svc-radio.on {
+          border-color:var(--accent);
+          background:rgba(91,145,244,.16);
+          box-shadow:0 0 0 3.5px rgba(91,145,244,.15), 0 0 14px rgba(91,145,244,.4);
+        }
+        .svc-radio-dot {
+          width:8px; height:8px; border-radius:50%;
+          background:var(--accent);
+          box-shadow:0 0 8px rgba(91,145,244,.9);
+          animation:radioPop .22s cubic-bezier(.22,1,.36,1) both;
+        }
+        @keyframes radioPop { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+        @media(max-width:900px){ .svc-badge{display:none!important;} }
+        @media(max-width:600px){ .svc-sel-card{padding:12px 13px!important;gap:12px!important;} .svc-ico{width:40px;height:40px;border-radius:11px;} }
         .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
         .cal-day { width:100%; aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; transition:all .15s; border:none; background:transparent; font-family:var(--sans); }
         .cal-day:hover:not(:disabled):not(.cal-selected):not(.cal-today) { background: rgba(91,145,244,.12); color: var(--accent); }
@@ -1137,46 +1221,61 @@ const BookingSection = () => {
             {step === 1 && (
               <motion.div key="step1" initial={{opacity:0,x:30}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-30}} transition={{duration:.25}}>
                 <div className="bk-card">
-                  <div style={{marginBottom:24}}>
-                    <div style={{fontSize:11,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:8}}>SCHRITT 01</div>
-                    <h3 style={{fontWeight:800,fontSize:22,color:'var(--white)',letterSpacing:'-.01em'}}>Was braucht Ihr Auto?</h3>
-                    <p style={{fontSize:12,color:'var(--smoke)',marginTop:6}}>Mehrere Leistungen auswählbar</p>
+
+                  {/* ── Header ── */}
+                  <div style={{marginBottom:26}}>
+                    <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:16}}>
+                      <div style={{width:34,height:34,borderRadius:'50%',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'var(--accent)',background:'linear-gradient(135deg,rgba(91,145,244,.18),rgba(91,145,244,.06))',border:'1.5px solid rgba(91,145,244,.32)',boxShadow:'0 0 14px rgba(91,145,244,.22)'}}>01</div>
+                      <div style={{flex:1,height:1,background:'linear-gradient(90deg,rgba(91,145,244,.28) 0%,transparent 100%)'}}/>
+                      <div style={{fontSize:10,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(255,255,255,.22)'}}>Schritt 1 / 3</div>
+                    </div>
+                    <h3 style={{fontWeight:800,fontSize:22,color:'var(--white)',letterSpacing:'-.02em',marginBottom:6}}>Was braucht Ihr Fahrzeug?</h3>
+                    <p style={{fontSize:12,color:'rgba(255,255,255,.35)',lineHeight:1.6}}>Mehrere Leistungen kombinierbar</p>
                   </div>
+
+                  {/* ── Service cards ── */}
                   <div className="svc-sel">
                     {serviceItems.map((s,i) => {
                       const active = form.services.includes(s.title);
                       return (
-                        <div key={i} className={`svc-sel-card${active?' active':''}`} onClick={()=>setField('services', form.services.includes(s.title) ? form.services.filter(x=>x!==s.title) : [...form.services, s.title])}>
-                          {/* Icon */}
-                          <div style={{width:44,height:44,borderRadius:11,background:active?'rgba(91,145,244,.18)':'rgba(255,255,255,.05)',border:`1.5px solid ${active?'rgba(91,145,244,.4)':'rgba(255,255,255,.07)'}`,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'all .22s'}}>
-                            {s.ico}
-                          </div>
-                          {/* Text */}
+                        <div key={i} className={`svc-sel-card${active?' active':''}`}
+                          onClick={()=>setField('services', active ? form.services.filter(x=>x!==s.title) : [...form.services, s.title])}>
+
+                          {/* 3-D metallic icon */}
+                          <div className="svc-ico">{s.ico}</div>
+
+                          {/* Title + subtitle */}
                           <div style={{flex:1,minWidth:0}}>
-                            <div style={{fontWeight:700,fontSize:14,color:'var(--white)',lineHeight:1.25,marginBottom:3}}>{s.title}</div>
-                            <div style={{fontSize:11,color:'var(--smoke)',fontWeight:500,letterSpacing:'.02em'}}>{s.sub}</div>
+                            <div style={{fontWeight:700,fontSize:14,color:'var(--white)',lineHeight:1.25,marginBottom:4,letterSpacing:'-.01em'}}>{s.title}</div>
+                            <div style={{fontSize:11,color:'rgba(255,255,255,.38)',fontWeight:500,letterSpacing:'.03em'}}>{s.sub}</div>
                           </div>
-                          {/* Tag + Check */}
+
+                          {/* Badge + glowing radio */}
                           <div style={{flexShrink:0,display:'flex',alignItems:'center',gap:10}}>
-                            <span className="svc-sel-tag" style={{fontSize:10,fontWeight:700,letterSpacing:'.07em',textTransform:'uppercase',padding:'4px 10px',borderRadius:20,transition:'all .22s',
-                              color:active?'var(--accent)':'var(--smoke)',
-                              background:active?'rgba(91,145,244,.15)':'rgba(255,255,255,.05)',
-                              border:`1px solid ${active?'rgba(91,145,244,.35)':'rgba(255,255,255,.08)'}`}}>{s.tag}</span>
-                            <div style={{width:22,height:22,borderRadius:'50%',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',transition:'all .22s',
-                              border:`2px solid ${active?'var(--accent)':'rgba(255,255,255,.2)'}`,
-                              background:active?'var(--accent)':'transparent'}}>
-                              {active && <Ic.Check s={10} c="#fff"/>}
+                            <span className={`svc-badge${active?' on':''}`}>{s.tag}</span>
+                            <div className={`svc-radio${active?' on':''}`}>
+                              {active && <div className="svc-radio-dot"/>}
                             </div>
                           </div>
                         </div>
                       );
                     })}
                   </div>
-                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:28,gap:12}}>
-                    {form.services.length > 0 && (
-                      <span style={{fontSize:12,color:'var(--accent)',fontWeight:600}}>{form.services.length} ausgewählt</span>
-                    )}
-                    <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px',gap:8,marginLeft:'auto',opacity:form.services.length>0?1:.45,cursor:form.services.length>0?'pointer':'not-allowed'}}
+
+                  {/* ── Footer: counter + CTA ── */}
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:26,paddingTop:20,borderTop:'1px solid rgba(255,255,255,.05)',gap:12}}>
+                    <div>
+                      {form.services.length > 0 ? (
+                        <div>
+                          <div style={{fontSize:10,fontWeight:700,letterSpacing:'.10em',textTransform:'uppercase',color:'var(--accent)',marginBottom:2}}>Ausgewählt</div>
+                          <div style={{fontSize:13,fontWeight:700,color:'var(--white)'}}>{form.services.length} {form.services.length===1?'Leistung':'Leistungen'}</div>
+                        </div>
+                      ) : (
+                        <div style={{fontSize:12,color:'rgba(255,255,255,.22)',fontStyle:'italic'}}>Bitte wählen Sie eine Leistung</div>
+                      )}
+                    </div>
+                    <button className="btn btn-primary"
+                      style={{fontSize:13,padding:'12px 28px',gap:8,opacity:form.services.length>0?1:.32,cursor:form.services.length>0?'pointer':'not-allowed',transition:'opacity .25s'}}
                       disabled={form.services.length===0} onClick={()=>setStep(2)}>
                       Weiter <Ic.Arrow s={14}/>
                     </button>
