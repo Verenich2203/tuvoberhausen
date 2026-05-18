@@ -310,7 +310,7 @@ const Navbar = ({ onBook }) => {
         <div onClick={()=>window.scrollTo({top:0,behavior:'smooth'})} style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer'}}>
           <div style={{width:32,height:32,background:'var(--accent)',borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><Ic.Wrench s={15} c="#fff"/></div>
           <div>
-            <div style={{fontWeight:800,fontSize:16,color:'var(--white)',lineHeight:1.1,letterSpacing:'-.02em'}}>Auto<span style={{color:'var(--accent)'}}>Service</span></div>
+            <div style={{fontWeight:800,fontSize:14,color:'var(--white)',lineHeight:1.1,letterSpacing:'-.02em'}}>TÜV Nord <span style={{color:'var(--accent)'}}>Prüfstützpunkt</span></div>
             <div style={{fontSize:9,letterSpacing:'.12em',color:'var(--smoke)',textTransform:'uppercase',fontWeight:600}}>Oberhausen</div>
           </div>
         </div>
@@ -354,13 +354,13 @@ const Hero = ({ onBook }) => (
     <div className="inner" style={{position:'relative',zIndex:2,width:'100%',textAlign:'center',padding:'80px 64px'}}>
       <motion.div initial={{opacity:0,y:32}} animate={{opacity:1,y:0}} transition={{duration:.9,ease:[.22,1,.36,1]}} style={{maxWidth:760,margin:'0 auto'}}>
         <div className="tag" style={{marginBottom:28,justifyContent:'center'}}>
-          Offiziell zertifizierte Kfz-Prüfstelle
+          Akkreditierter KFZ-Prüfstützpunkt
         </div>
         <h1 style={{fontWeight:800,fontSize:'clamp(38px,6vw,76px)',color:'var(--white)',lineHeight:1.06,letterSpacing:'-.025em',marginBottom:24}}>
-          Ihre HU / AU in<br/><span style={{color:'var(--accent)'}}>Oberhausen</span>
+          Ihr TÜV in<br/><span style={{color:'var(--accent)'}}>Oberhausen</span>
         </h1>
         <p style={{fontSize:17,color:'var(--text)',lineHeight:1.8,maxWidth:520,margin:'0 auto 44px'}}>
-          Hauptuntersuchung und Abgasuntersuchung schnell online buchen. Kein Warten, transparente Preise, professionelle Prüfingenieure.
+          Haupt- und Abgasuntersuchung einfach schnell online buchen. Auch ohne Termin möglich!
         </p>
         <div style={{display:'flex',gap:16,flexWrap:'wrap',justifyContent:'center'}}>
           <button className="btn btn-primary" style={{fontSize:14,gap:9,padding:'15px 36px'}} onClick={onBook}>Termin buchen <Ic.Arrow s={16}/></button>
@@ -373,7 +373,7 @@ const Hero = ({ onBook }) => (
 
 /* ─── TRUST BAR ─────────────────────────────────────────────────────────── */
 const TrustBar = () => {
-  const items = [[<Ic.Award s={15} c="var(--accent)"/>,'Amtlich anerkannt'],[<Ic.Clock s={15} c="var(--accent)"/>,'Kurze Wartezeiten'],[<Ic.Cert s={15} c="var(--accent)"/>,'Transparente Preise'],[<Ic.Shield s={15} c="var(--accent)"/>,'Online-Buchung 24/7'],[<Ic.Wrench s={15} c="var(--accent)"/>,'Qualifizierte Prüfer'],[<Ic.Leaf s={15} c="var(--accent)"/>,'Umwelt-zertifiziert']];
+  const items = [[<Ic.Clock s={15} c="var(--accent)"/>,'Kurze Wartezeiten'],[<Ic.Award s={15} c="var(--accent)"/>,'Amtlich anerkannt'],[<Ic.Phone s={15} c="var(--accent)"/>,'Persönliche Ansprechpartner'],[<Ic.Shield s={15} c="var(--accent)"/>,'Vertrauen und Erfahrung'],[<Ic.Clock s={15} c="var(--accent)"/>,'Kurze Wartezeiten'],[<Ic.Award s={15} c="var(--accent)"/>,'Amtlich anerkannt'],[<Ic.Phone s={15} c="var(--accent)"/>,'Persönliche Ansprechpartner'],[<Ic.Shield s={15} c="var(--accent)"/>,'Vertrauen und Erfahrung']];
   const all = [...items,...items,...items,...items];
   return (
     <div className="marquee-wrap">
@@ -393,13 +393,17 @@ const Services = () => {
   const [modal, setModal] = useState(null);
   const [featuredIdx, setFeaturedIdx] = useState(0);
   const items = [
-    {ico:<Ic.Shield s={26} c="var(--accent)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO · Pflichtprüfung',tag:'Pflicht',desc:'Gesetzlich vorgeschriebene Sicherheitsprüfung für alle Kfz.',duration:'ca. 30 Min.',details:['Überprüfung der Bremsanlage','Sicht- und Funktionsprüfung der Beleuchtung','Prüfung von Lenkung, Achsen und Radaufhängung','Kontrolle der Karosserie','Überprüfung von Sichtscheiben und Spiegeln','Prüfung der Abgasanlage','Sicherheitsgurtprüfung','Auslesen der Fahrzeugelektronik / OBD'],img:'Hauptuntersuchung.png',note:'Gesetzlich vorgeschrieben §29 StVZO. Nach 3 Jahren bei Neuwagen, danach alle 2 Jahre.'},
-    {ico:<Ic.Leaf s={26} c="var(--accent)"/>,title:'Abgasuntersuchung (AU)',sub:'AU · Emissionsprüfung',tag:'Kombi möglich',desc:'Prüfung der Schadstoffemissionen — schützt Umwelt und vermeidet Bußgelder.',duration:'ca. 15 Min.',details:['Sichtprüfung der Abgasanlage','Messung von CO, HC und Lambda-Werten','Trübungsmessung beim Diesel','Auslesen des OBD-Systems','Prüfung von Katalysator und Partikelfilter','Dokumentation und Bescheinigung'],img:'Abgasuntersuchung.png',note:'Pflichtbestandteil der HU. Kombi empfohlen.'},
+    {ico:<Ic.Shield s={26} c="var(--accent)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO',tag:'Pflicht',desc:'Gesetzlich vorgeschriebene Sicherheitsprüfung für alle Kfz.',duration:'ca. 30 Min.',details:['Überprüfung der Bremsanlage','Sicht- und Funktionsprüfung der Beleuchtung','Prüfung von Lenkung, Achsen und Radaufhängung','Kontrolle der Karosserie','Überprüfung von Sichtscheiben und Spiegeln','Prüfung der Abgasanlage','Sicherheitsgurtprüfung','Auslesen der Fahrzeugelektronik / OBD'],img:'Hauptuntersuchung.png',note:'Gesetzlich vorgeschrieben §29 StVZO. Nach 3 Jahren bei Neuwagen, danach alle 2 Jahre.'},
+    {ico:<Ic.Leaf s={26} c="var(--accent)"/>,title:'Abgasuntersuchung (AU)',sub:'§29 StVZO · Abgasuntersuchung',tag:'Kombi möglich',desc:'Prüfung der Schadstoffemissionen — schützt Umwelt und vermeidet Bußgelder.',duration:'ca. 15 Min.',details:['Sichtprüfung der Abgasanlage','Messung von CO, HC und Lambda-Werten','Trübungsmessung beim Diesel','Auslesen des OBD-Systems','Prüfung von Katalysator und Partikelfilter','Dokumentation und Bescheinigung'],img:'Abgasuntersuchung.png',note:'Pflichtbestandteil der HU. Kombi empfohlen.'},
     {ico:<Ic.Wrench s={26} c="var(--accent)"/>,title:'Vorab-Check',sub:'Sicherheits-Vorprüfung',tag:'Empfohlen',desc:'Mängel vor der HU erkennen, Nachprüfungen vermeiden.',duration:'ca. 20 Min.',details:['Überprüfung aller HU-relevanten Punkte','Identifikation von Mängeln','Kosten- und Zeiteinschätzung','Beratung durch Prüfingenieur','Dokumentation mit Mängelliste'],img:'VorabCheck.png',note:'Kostenlos bei anschließender HU. Separat ab 29 €.'},
     {ico:<Ic.Clip s={26} c="var(--accent)"/>,title:'Eintragungen / Abnahmen',sub:'§19 StVZO',tag:'Flexibel',desc:'Offizielle Abnahme von Fahrzeugveränderungen.',duration:'30–60 Min.',details:['Abnahme von Fahrwerksveränderungen','Prüfung von Felgen und Bereifung','Abnahme von Karosserieveränderungen','Prüfung auf Übereinstimmung mit ABE','Eintrag in Zulassungsbescheinigung'],img:'Eintragungen.png',note:'Alle ABE-Dokumente oder Gutachten mitbringen.'},
     {ico:<Ic.Moto s={26} c="var(--accent)"/>,title:'Motorrad-HU',sub:'Zweiräder · §29 StVZO',tag:'Saisonal',desc:'Spezialisierte HU für Motorräder und Roller.',duration:'ca. 25 Min.',details:['Kontrolle der Bremsen','Überprüfung von Reifen','Prüfung von Rahmen und Gabeln','Sichtprüfung Licht und Blinker','Überprüfung Kettensatz oder Kardan'],img:'motorrad.png',note:'Fahrzeugschein mitbringen.'},
     {ico:<Ic.Award s={26} c="var(--accent)"/>,title:'Oldtimer-Gutachten',sub:'§23 StVZO · H-Kennzeichen',tag:'Speziell',desc:'Offizielles Gutachten für das H-Kennzeichen.',duration:'ca. 60 Min.',details:['Prüfung auf originalen Fahrzeugzustand','Bewertung von Karosserie und Technik','Sicherheitsüberprüfung §29 StVZO','Prüfung der Fahrzeughistorie','Erstellung des Gutachtens §23 StVZO'],img:'oldtiemer.png',note:'Mindestens 30 Jahre altes Fahrzeug erforderlich.'},
     {ico:<Ic.Cert s={26} c="var(--accent)"/>,title:'HU + AU Kombi',sub:'§29 StVZO · Kombiangebot',tag:'Kombi',desc:'HU und AU in einem Termin — spart Zeit und ist oft günstiger.',duration:'ca. 40 Min.',details:['Vollständige Hauptuntersuchung §29 StVZO','Abgasuntersuchung inklusive','OBD-Diagnose beider Prüfungen','Einmalige Wartezeit für beide Tests','Kombiniertes Prüfprotokoll','Sofortige Bescheinigung vor Ort'],img:'AUKombi.png',note:'Empfehlung: HU und AU immer zusammen buchen — keine Extrakosten für die Kombination.'},
+    {ico:<Ic.Clip s={26} c="var(--accent)"/>,title:'Anhänger HU',sub:'Anhänger · §29 StVZO',tag:'Anhänger',desc:'Hauptuntersuchung für Anhänger und Auflieger aller Art.',duration:'ca. 25 Min.',details:['Prüfung von Bremsen und Bremsanlage','Kontrolle von Beleuchtung und Elektrik','Überprüfung von Achsen und Radaufhängung','Prüfung der Kupplungseinrichtung','Sichtprüfung Rahmen und Aufbau','Kontrolle der Stützeinrichtung'],img:'Eintragungen.png',note:'Fahrzeugschein des Anhängers mitbringen. Gilt für PKW-Anhänger, Wohnwagen und Nutzfahrzeuganhänger.'},
+    {ico:<Ic.Leaf s={26} c="var(--accent)"/>,title:'Gasanlagenprüfung',sub:'LPG · CNG · Gasfahrzeuge',tag:'Gas',desc:'Amtliche Prüfung von Flüssiggas- und Erdgasanlagen gemäß ECE-R115.',duration:'ca. 30 Min.',details:['Sichtprüfung der Gasanlage','Dichtheitsprüfung aller Leitungen','Überprüfung der Sicherheitsventile','Prüfung des Druckbehälters','Funktionsprüfung der Gasversorgung','Prüfung gemäß ECE-R115 / ECE-R110'],img:'VorabCheck.png',note:'Prüfbuch der Gasanlage und Einbauattest mitbringen. Prüfintervall alle 2 Jahre.'},
+    {ico:<Ic.Award s={26} c="var(--accent)"/>,title:'BO-Kraft Prüfung',sub:'Taxi · Mietwagen · §57a StVZO',tag:'Gewerblich',desc:'Behördliche Prüfung für Taxi- und Mietwagenfahrzeuge nach BO Kraft.',duration:'ca. 45 Min.',details:['Vollständige Fahrzeugprüfung nach BO Kraft','Überprüfung der Taxameter-Eichung','Kontrolle der Sicherheitsausstattung','Prüfung der Beleuchtungsanlage','Inspektion von Innenraum und Sitzanlage','Ausstellung des Prüfberichts für Behörden'],img:'Hauptuntersuchung.png',note:'Gültige Taxigenehmigung und letzten Prüfbericht mitbringen. Pflichtprüfung für konzessionierte Fahrzeuge.'},
+    {ico:<Ic.Cert s={26} c="var(--accent)"/>,title:'Abnahmen §19.3 / §15 FZV',sub:'§19.3 StVZO · §15 FZV',tag:'Abnahme',desc:'Amtliche Fahrzeugabnahme nach §19 Abs. 3 StVZO und §15 FZV für geänderte oder neu zuzulassende Fahrzeuge.',duration:'30–60 Min.',details:['Abnahme von Einzelfahrzeugen','Prüfung von Fahrzeugänderungen ohne ABE','Abnahme bei Wiederherstellung nach Unfall','Eintragung in Fahrzeugpapiere','Prüfung nach §15 FZV für Neufahrzeuge','Dokumentation und Prüfprotokoll'],img:'Eintragungen.png',note:'Alle relevanten Fahrzeugdokumente und ggf. Gutachten mitbringen.'},
   ];
 
   /* mosaic layout: big left card cycles through featuredSlides every 3s */
@@ -448,7 +452,7 @@ const Services = () => {
             <div style={{display:'inline-flex',alignItems:'center',gap:10,fontSize:11,fontWeight:700,letterSpacing:'.18em',textTransform:'uppercase',color:'var(--accent)',marginBottom:12}}>
               <span style={{display:'inline-block',width:24,height:2,background:'var(--accent)',borderRadius:1,flexShrink:0}}/>LEISTUNGEN
             </div>
-            <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,44px)',color:'var(--white)',letterSpacing:'-.02em',lineHeight:1.1}}>Unsere Prüfleistungen</h2>
+            <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,44px)',color:'var(--white)',letterSpacing:'-.02em',lineHeight:1.1}}>Unsere amtlichen Leistungen</h2>
           </div>
           <a href="#termin" style={{display:'inline-flex',alignItems:'center',gap:8,fontSize:13,fontWeight:700,color:'var(--accent)',textDecoration:'none',letterSpacing:'.04em',textTransform:'uppercase',border:'1.5px solid rgba(91,145,244,.35)',padding:'10px 22px',borderRadius:8,transition:'all .2s'}}
             onMouseEnter={e=>{e.currentTarget.style.background='var(--accent)';e.currentTarget.style.color='#fff';}}
@@ -514,6 +518,26 @@ const Services = () => {
             );
           })}
         </motion.div>
+
+        {/* Additional specialty services */}
+        <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:.1}}
+          className="spec-grid" style={{marginTop:32,display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12}}>
+          {items.slice(7).map((item,i) => (
+            <div key={i} onClick={()=>setModal(item)}
+              style={{background:'rgba(27,30,40,.85)',backdropFilter:'blur(12px)',borderRadius:12,border:'1px solid rgba(255,255,255,.07)',padding:'20px 18px',cursor:'pointer',transition:'all .25s',display:'flex',flexDirection:'column',gap:10}}
+              onMouseEnter={e=>{e.currentTarget.style.borderColor='rgba(91,145,244,.35)';e.currentTarget.style.transform='translateY(-3px)';}}
+              onMouseLeave={e=>{e.currentTarget.style.borderColor='rgba(255,255,255,.07)';e.currentTarget.style.transform='none';}}>
+              <div style={{width:38,height:38,borderRadius:9,background:'rgba(91,145,244,.1)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>{item.ico}</div>
+              <div>
+                <div style={{fontSize:10,fontWeight:700,color:'var(--accent)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:5}}>{item.sub}</div>
+                <div style={{fontSize:14,fontWeight:800,color:'var(--white)',lineHeight:1.25,marginBottom:6}}>{item.title}</div>
+                <div style={{fontSize:12,color:'var(--smoke)',lineHeight:1.55}}>{item.desc}</div>
+              </div>
+              <div style={{marginTop:'auto',fontSize:11,fontWeight:700,color:'var(--accent)',display:'flex',alignItems:'center',gap:5}}>Details <Ic.ChevR s={11}/></div>
+            </div>
+          ))}
+        </motion.div>
+        <style>{`@media(max-width:900px){.spec-grid{grid-template-columns:1fr 1fr !important}}@media(max-width:600px){.spec-grid{grid-template-columns:1fr !important}}`}</style>
       </div>
 
       {/* Detail modal */}
@@ -622,13 +646,17 @@ const BookingSection = () => {
   const [calMonth, setCalMonth] = useState(today.getMonth());
 
   const serviceItems = [
-    {ico:<Ic.Shield s={22} c="var(--accent)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO · Pflichtprüfung',tag:'Pflicht'},
-    {ico:<Ic.Leaf s={22} c="var(--accent)"/>,title:'Abgasuntersuchung (AU)',sub:'AU · Emissionsprüfung',tag:'Kombi möglich'},
+    {ico:<Ic.Shield s={22} c="var(--accent)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO',tag:'Pflicht'},
+    {ico:<Ic.Leaf s={22} c="var(--accent)"/>,title:'Abgasuntersuchung (AU)',sub:'§29 StVZO · Abgasuntersuchung',tag:'Kombi möglich'},
     {ico:<Ic.Wrench s={22} c="var(--accent)"/>,title:'Vorab-Check',sub:'Sicherheits-Vorprüfung',tag:'Empfohlen'},
     {ico:<Ic.Clip s={22} c="var(--accent)"/>,title:'Eintragungen / Abnahmen',sub:'§19 StVZO',tag:'Flexibel'},
     {ico:<Ic.Moto s={22} c="var(--accent)"/>,title:'Motorrad-HU',sub:'Zweiräder · §29 StVZO',tag:'Saisonal'},
     {ico:<Ic.Award s={22} c="var(--accent)"/>,title:'Oldtimer-Gutachten',sub:'§23 StVZO · H-Kennzeichen',tag:'Speziell'},
     {ico:<Ic.Cert s={22} c="var(--accent)"/>,title:'HU + AU Kombi',sub:'§29 StVZO · Kombiangebot',tag:'Kombi'},
+    {ico:<Ic.Clip s={22} c="var(--accent)"/>,title:'Anhänger HU',sub:'Anhänger · §29 StVZO',tag:'Anhänger'},
+    {ico:<Ic.Leaf s={22} c="var(--accent)"/>,title:'Gasanlagenprüfung',sub:'LPG · CNG · Gasfahrzeuge',tag:'Gas'},
+    {ico:<Ic.Award s={22} c="var(--accent)"/>,title:'BO-Kraft Prüfung',sub:'Taxi · Mietwagen · §57a StVZO',tag:'Gewerblich'},
+    {ico:<Ic.Cert s={22} c="var(--accent)"/>,title:'Abnahmen §19.3 / §15 FZV',sub:'§19.3 StVZO · §15 FZV',tag:'Abnahme'},
   ];
 
   const setField = (field, value) => setForm(prev => ({...prev, [field]: value}));
