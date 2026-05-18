@@ -432,13 +432,18 @@ const Services = () => {
     return off;
   };
 
-  /* ── autoplay: pauses when mouse is inside the block ── */
+  // pauseUntil: timestamp after which autoplay is allowed to fire.
+  // Set by manual swipe so the timer never fires right after user input.
+  const pauseUntil = useRef(0);
+
+  /* ── autoplay: ONE interval, checks pauseUntil before advancing ── */
   useEffect(() => {
     if (isAreaHovered) { clearInterval(autoTimer.current); return; }
-    autoTimer.current = setInterval(goNext, 3000);
+    autoTimer.current = setInterval(() => {
+      if (Date.now() >= pauseUntil.current) goNext();
+    }, 3000);
     return () => clearInterval(autoTimer.current);
   }, [isAreaHovered, goNext]);
-
 
   /* ── magnetic 3-D tilt on the active card ── */
   const onStageMouseMove = useCallback((e) => {
@@ -462,27 +467,34 @@ const Services = () => {
     if (!drag.current.on) return;
     const d = e.clientX - drag.current.startX;
     if (Math.abs(d) > 35) {
-      // Reset autoplay so the next tick starts fresh after manual swipe
-      clearInterval(autoTimer.current);
-      autoTimer.current = setInterval(goNext, 3000);
+      // Block autoplay for 3 s after manual swipe — no second interval needed
+      pauseUntil.current = Date.now() + 3000;
       d < 0 ? goNext() : goPrev();
     }
     drag.current.on = false;
   };
 
-  /* ── per-card visual transform values ── */
-  const SPACING = 248; // px between card centres
+  /* ── per-card visual transform — fixed lookup, max 2 cards each side ── */
+  // x offsets, scales, opacities, rotations keyed by abs distance from centre
+  const CX = [0, 235, 415];          // horizontal distance from centre (px)
+  const CS = [1.12, 0.86, 0.68];     // scale
+  const CO = [1, 0.70, 0.32];        // opacity
+  const CR = [0, 9, 16];             // rotateY magnitude (°) — right leans left, left leans right
+  const CB = [0, 2.5, 6];            // blur (px)
+  const CBR= [1, 0.82, 0.52];        // brightness
+
   const cardProps = (offset) => {
     const abs = Math.abs(offset);
-    if (abs > 4) return null;
+    if (abs > 2) return null;        // only centre + 2 neighbours visible
+    const sign = offset >= 0 ? 1 : -1;
     return {
-      x         : offset * SPACING,
-      scale     : offset === 0 ? 1.14 : Math.max(0.58, 1 - abs * 0.145),
-      opacity   : offset === 0 ? 1    : Math.max(0.18, 1 - abs * 0.22),
-      rotateY   : offset === 0 ? 0    : offset * -7,
-      blur      : offset === 0 ? 0    : Math.min(abs * 2.5, 9),
-      brightness: offset === 0 ? 1    : Math.max(0.36, 1 - abs * 0.18),
-      zIndex    : 20 - abs * 4,
+      x         : sign * CX[abs],
+      scale     : CS[abs],
+      opacity   : CO[abs],
+      rotateY   : -sign * CR[abs],   // left card tilts right (+), right card tilts left (-)
+      blur      : CB[abs],
+      brightness: CBR[abs],
+      zIndex    : 20 - abs * 6,
     };
   };
 
