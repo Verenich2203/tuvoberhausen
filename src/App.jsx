@@ -454,8 +454,9 @@ const Services = () => {
     setTilt({ x: ny * -11, y: nx * 13 });
   }, [cardHovered]);
 
-  /* ── pointer drag (covers mouse + touch) ── */
+  /* ── pointer drag — touch only, mouse ignored ── */
   const pDown = (e) => {
+    if (e.pointerType === 'mouse') return;
     drag.current = { on: true, startX: e.clientX, moved: false };
     e.currentTarget.setPointerCapture?.(e.pointerId);
   };
@@ -509,8 +510,12 @@ const Services = () => {
       {/* ── scoped styles ── */}
       <style>{`
         /* Stage */
-        .cine-stage{position:relative;height:430px;overflow:visible;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;}
-        .cine-stage:active{cursor:grabbing;}
+        .cine-stage{position:relative;height:430px;overflow:visible;cursor:default;user-select:none;-webkit-user-select:none;touch-action:none;}
+        /* Mobile nav arrows (shown only on touch screens) */
+        .cine-mob-arrows{display:none;justify-content:center;align-items:center;gap:14px;margin-top:20px;}
+        .cine-mob-btn{width:48px;height:48px;border-radius:50%;border:1.5px solid rgba(255,255,255,.12);background:rgba(10,12,18,.6);backdrop-filter:blur(10px);cursor:pointer;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.6);transition:border-color .22s,background .22s,color .22s;}
+        .cine-mob-btn:active{border-color:var(--accent);background:rgba(91,145,244,.18);color:var(--accent);}
+        @media(max-width:768px){.cine-mob-arrows{display:flex;} .cine-arrow{display:none;}}
         /* Perspective wrapper */
         .cine-persp{perspective:1400px;perspective-origin:50% 50%;}
         /* Card shell */
@@ -822,6 +827,16 @@ const Services = () => {
               aria-label={items[i].title}
             />
           ))}
+        </div>
+
+        {/* Mobile-only arrow buttons */}
+        <div className="cine-mob-arrows">
+          <button className="cine-mob-btn" onClick={goPrev} aria-label="Zurück">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </button>
+          <button className="cine-mob-btn" onClick={goNext} aria-label="Weiter">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </button>
         </div>
       </div>
 
