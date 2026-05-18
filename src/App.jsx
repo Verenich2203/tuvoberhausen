@@ -391,7 +391,6 @@ const TrustBar = () => {
 /* ─── SERVICES ───────────────────────────────────────────────────────────── */
 const Services = () => {
   const [modal, setModal] = useState(null);
-  const [featuredIdx, setFeaturedIdx] = useState(0);
   const items = [
     {ico:<Ic.Shield s={26} c="var(--accent)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO',tag:'Pflicht',desc:'Gesetzlich vorgeschriebene Sicherheitsprüfung für alle Kfz.',duration:'ca. 30 Min.',details:['Überprüfung der Bremsanlage','Sicht- und Funktionsprüfung der Beleuchtung','Prüfung von Lenkung, Achsen und Radaufhängung','Kontrolle der Karosserie','Überprüfung von Sichtscheiben und Spiegeln','Prüfung der Abgasanlage','Sicherheitsgurtprüfung','Auslesen der Fahrzeugelektronik / OBD'],img:'Hauptuntersuchung.png',note:'Gesetzlich vorgeschrieben §29 StVZO. Nach 3 Jahren bei Neuwagen, danach alle 2 Jahre.'},
     {ico:<Ic.Leaf s={26} c="var(--accent)"/>,title:'Abgasuntersuchung (AU)',sub:'§29 StVZO · Abgasuntersuchung',tag:'Kombi möglich',desc:'Prüfung der Schadstoffemissionen — schützt Umwelt und vermeidet Bußgelder.',duration:'ca. 15 Min.',details:['Sichtprüfung der Abgasanlage','Messung von CO, HC und Lambda-Werten','Trübungsmessung beim Diesel','Auslesen des OBD-Systems','Prüfung von Katalysator und Partikelfilter','Dokumentation und Bescheinigung'],img:'Abgasuntersuchung.png',note:'Pflichtbestandteil der HU. Kombi empfohlen.'},
@@ -406,42 +405,26 @@ const Services = () => {
     {ico:<Ic.Cert s={26} c="var(--accent)"/>,title:'Abnahmen §19.3 / §15 FZV',sub:'§19.3 StVZO · §15 FZV',tag:'Abnahme',desc:'Amtliche Fahrzeugabnahme nach §19 Abs. 3 StVZO und §15 FZV für geänderte oder neu zuzulassende Fahrzeuge.',duration:'30–60 Min.',details:['Abnahme von Einzelfahrzeugen','Prüfung von Fahrzeugänderungen ohne ABE','Abnahme bei Wiederherstellung nach Unfall','Eintragung in Fahrzeugpapiere','Prüfung nach §15 FZV für Neufahrzeuge','Dokumentation und Prüfprotokoll'],img:'Eintragungen.png',note:'Alle relevanten Fahrzeugdokumente und ggf. Gutachten mitbringen.'},
   ];
 
-  /* mosaic layout: big left card cycles through featuredSlides every 3s */
-  const featuredSlides = [
-    { img:'tuvv.jpg',      title:'TÜV Oberhausen',      sub:'Ihr Prüfpartner vor Ort',    item: items[0] },
-    { img: items[0].img,   title: items[0].title,        sub: items[0].sub,                item: items[0] },
-    { img: items[1].img,   title: items[1].title,        sub: items[1].sub,                item: items[1] },
-    { img: items[4].img,   title: items[4].title,        sub: items[4].sub,                item: items[4] },
-    { img: items[5].img,   title: items[5].title,        sub: items[5].sub,                item: items[5] },
-  ];
-  const smallCards = [
-    { img: items[0].img, title: items[0].title, sub: items[0].sub, item: items[0], slideIdx:1, gridColumn:'2', gridRow:'1' },
-    { img: items[1].img, title: items[1].title, sub: items[1].sub, item: items[1], slideIdx:2, gridColumn:'3', gridRow:'1' },
-    { img: items[4].img, title: items[4].title, sub: items[4].sub, item: items[4], slideIdx:3, gridColumn:'2', gridRow:'2' },
-    { img: items[5].img, title: items[5].title, sub: items[5].sub, item: items[5], slideIdx:4, gridColumn:'3', gridRow:'2' },
-  ];
-  useEffect(() => {
-    const t = setInterval(() => setFeaturedIdx(p => (p + 1) % featuredSlides.length), 3000);
-    return () => clearInterval(t);
-  }, []);
+  // items with own unique photo (index 0–6)
+  const hasPhoto = (idx) => idx <= 6;
 
   return (
     <div id="leistungen" className="section-full" style={{position:'relative',paddingTop:72,paddingBottom:72,overflow:'hidden',background:'var(--dark)'}}>
       <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.1,pointerEvents:'none',zIndex:0}}/>
       <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 30%, rgba(10,12,18,.45) 100%)',pointerEvents:'none',zIndex:1}}/>
       <style>{`
-        .mosaic-grid { display:grid; grid-template-columns:2fr 1fr 1fr; grid-template-rows:340px 240px; gap:10px; }
-        .mosaic-cell { position:relative; overflow:hidden; cursor:pointer; border-radius:12px; }
-        .mosaic-bg { position:absolute; inset:0; background-size:cover; background-position:center; transition:transform .45s cubic-bezier(.22,1,.36,1); }
-        .mosaic-cell:hover .mosaic-bg { transform:scale(1.06); }
-        .mosaic-gradient { position:absolute; inset:0; background:linear-gradient(180deg,rgba(10,12,18,.20) 0%,rgba(10,12,18,.20) 40%,rgba(10,12,18,.88) 100%); pointer-events:none; }
-        .mosaic-label { position:absolute; bottom:0; left:0; right:0; padding:18px 20px; z-index:3; }
-        .mosaic-sub { font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:4px; }
-        .mosaic-title { font-size:15px; font-weight:800; color:#fff; line-height:1.2; letter-spacing:-.01em; }
-        @media(max-width:900px){
-          .mosaic-grid { grid-template-columns:1fr !important; grid-template-rows:auto !important; }
-          .mosaic-cell { grid-column:1 !important; grid-row:auto !important; height:220px !important; }
-        }
+        .svc-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+        .svc-cell { position:relative; overflow:hidden; cursor:pointer; border-radius:14px; height:240px; }
+        .svc-cell-photo .svc-bg { position:absolute; inset:0; background-size:cover; background-position:center; transition:transform .5s cubic-bezier(.22,1,.36,1); }
+        .svc-cell:hover .svc-bg { transform:scale(1.07); }
+        .svc-grad { position:absolute; inset:0; background:linear-gradient(180deg,rgba(10,12,18,.15) 0%,rgba(10,12,18,.85) 100%); pointer-events:none; z-index:1; }
+        .svc-cell-plain { background:linear-gradient(135deg,rgba(27,30,40,.95) 0%,rgba(19,22,30,.98) 100%); border:1px solid rgba(255,255,255,.07); transition:all .28s; }
+        .svc-cell-plain:hover { border-color:rgba(91,145,244,.35); transform:translateY(-3px); box-shadow:0 16px 40px rgba(0,0,0,.35); }
+        .svc-label { position:absolute; bottom:0; left:0; right:0; padding:18px 20px; z-index:2; }
+        .svc-lsub { font-size:10px; font-weight:700; letter-spacing:.13em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:4px; }
+        .svc-ltitle { font-size:15px; font-weight:800; color:#fff; line-height:1.2; letter-spacing:-.01em; }
+        @media(max-width:900px){ .svc-grid { grid-template-columns:1fr 1fr !important; } .svc-cell { height:190px !important; } }
+        @media(max-width:600px){ .svc-grid { grid-template-columns:1fr !important; } .svc-cell { height:180px !important; } }
       `}</style>
 
       <div className="inner" style={{position:'relative',zIndex:2}}>
@@ -461,83 +444,36 @@ const Services = () => {
           </a>
         </motion.div>
 
-        {/* Mosaic grid */}
-        <motion.div className="mosaic-grid" initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:.6}}>
-
-          {/* BIG LEFT CARD — auto-cycles every 3s */}
-          <div className="mosaic-cell" style={{gridColumn:'1',gridRow:'1/3'}} onClick={()=>setModal(featuredSlides[featuredIdx].item)}>
-            <AnimatePresence mode="sync">
-              <motion.div
-                key={featuredIdx}
-                initial={{opacity:0,scale:1.07}}
-                animate={{opacity:1,scale:1}}
-                exit={{opacity:0}}
-                transition={{duration:0.85,ease:[0.22,1,0.36,1]}}
-                style={{position:'absolute',inset:0,backgroundImage:`url('${featuredSlides[featuredIdx].img}')`,backgroundSize:'cover',backgroundPosition:'center'}}
-              />
-            </AnimatePresence>
-            <div className="mosaic-gradient"/>
-            <div className="mosaic-label">
-              <AnimatePresence mode="wait">
-                <motion.div key={featuredIdx} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-6}} transition={{duration:0.35}}>
-                  <div className="mosaic-sub">{featuredSlides[featuredIdx].sub}</div>
-                  <div className="mosaic-title" style={{fontSize:20}}>{featuredSlides[featuredIdx].title}</div>
-                </motion.div>
-              </AnimatePresence>
-              {/* Dot nav */}
-              <div style={{display:'flex',gap:6,marginTop:14}} onClick={e=>e.stopPropagation()}>
-                {featuredSlides.map((_,i)=>(
-                  <button key={i} onClick={()=>setFeaturedIdx(i)}
-                    style={{width:i===featuredIdx?22:7,height:7,borderRadius:4,border:'none',cursor:'pointer',padding:0,
-                      background:i===featuredIdx?'var(--accent)':'rgba(255,255,255,.32)',transition:'all .35s cubic-bezier(.22,1,.36,1)'}}/>
-                ))}
-              </div>
-            </div>
-            {/* Progress bar */}
-            <div style={{position:'absolute',bottom:0,left:0,right:0,height:3,background:'rgba(255,255,255,.08)',zIndex:3}}>
-              <motion.div key={featuredIdx} initial={{width:'0%'}} animate={{width:'100%'}} transition={{duration:3,ease:'linear'}}
-                style={{height:'100%',background:'var(--accent)'}}/>
-            </div>
-          </div>
-
-          {/* SMALL RIGHT CARDS */}
-          {smallCards.map((card,i)=>{
-            const isActive = featuredIdx === card.slideIdx;
+        {/* Unified 3-column service grid */}
+        <motion.div className="svc-grid" initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:.6}}>
+          {items.map((item, idx) => {
+            const withPhoto = hasPhoto(idx);
             return (
-              <div key={i} className="mosaic-cell"
-                style={{gridColumn:card.gridColumn,gridRow:card.gridRow,outline:isActive?'2px solid var(--accent)':'2px solid transparent',transition:'outline .3s'}}
-                onClick={()=>{setFeaturedIdx(card.slideIdx);setModal(card.item);}}>
-                <div className="mosaic-bg" style={{backgroundImage:`url('${card.img}')`}}/>
-                <div className="mosaic-gradient"/>
-                {isActive && <div style={{position:'absolute',inset:0,background:'rgba(91,145,244,.13)',pointerEvents:'none',zIndex:2}}/>}
-                <div className="mosaic-label" style={{zIndex:3}}>
-                  <div className="mosaic-sub">{card.sub}</div>
-                  <div className="mosaic-title">{card.title}</div>
-                </div>
+              <div key={idx} className={`svc-cell${withPhoto?' svc-cell-photo':' svc-cell-plain'}`} onClick={()=>setModal(item)}>
+                {withPhoto ? (
+                  <>
+                    <div className="svc-bg" style={{backgroundImage:`url('${item.img}')`}}/>
+                    <div className="svc-grad"/>
+                    <div className="svc-label">
+                      <div className="svc-lsub">{item.sub}</div>
+                      <div className="svc-ltitle">{item.title}</div>
+                    </div>
+                  </>
+                ) : (
+                  <div style={{position:'absolute',inset:0,display:'flex',flexDirection:'column',justifyContent:'space-between',padding:'22px 20px'}}>
+                    <div style={{position:'absolute',top:0,right:0,width:160,height:160,borderRadius:'50%',background:'radial-gradient(circle,rgba(91,145,244,.12) 0%,transparent 70%)',pointerEvents:'none'}}/>
+                    <div style={{width:46,height:46,borderRadius:12,background:'rgba(91,145,244,.12)',border:'1px solid rgba(91,145,244,.2)',display:'flex',alignItems:'center',justifyContent:'center'}}>{item.ico}</div>
+                    <div>
+                      <div style={{fontSize:9,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:6,opacity:.8}}>{item.sub}</div>
+                      <div style={{fontSize:15,fontWeight:800,color:'var(--white)',lineHeight:1.2,marginBottom:6}}>{item.title}</div>
+                      <div style={{fontSize:11,color:'var(--smoke)',lineHeight:1.5}}>{item.desc}</div>
+                    </div>
+                  </div>
+                )}
               </div>
             );
           })}
         </motion.div>
-
-        {/* Additional specialty services */}
-        <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:.1}}
-          className="spec-grid" style={{marginTop:32,display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12}}>
-          {items.slice(7).map((item,i) => (
-            <div key={i} onClick={()=>setModal(item)}
-              style={{background:'rgba(27,30,40,.85)',backdropFilter:'blur(12px)',borderRadius:12,border:'1px solid rgba(255,255,255,.07)',padding:'20px 18px',cursor:'pointer',transition:'all .25s',display:'flex',flexDirection:'column',gap:10}}
-              onMouseEnter={e=>{e.currentTarget.style.borderColor='rgba(91,145,244,.35)';e.currentTarget.style.transform='translateY(-3px)';}}
-              onMouseLeave={e=>{e.currentTarget.style.borderColor='rgba(255,255,255,.07)';e.currentTarget.style.transform='none';}}>
-              <div style={{width:38,height:38,borderRadius:9,background:'rgba(91,145,244,.1)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>{item.ico}</div>
-              <div>
-                <div style={{fontSize:10,fontWeight:700,color:'var(--accent)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:5}}>{item.sub}</div>
-                <div style={{fontSize:14,fontWeight:800,color:'var(--white)',lineHeight:1.25,marginBottom:6}}>{item.title}</div>
-                <div style={{fontSize:12,color:'var(--smoke)',lineHeight:1.55}}>{item.desc}</div>
-              </div>
-              <div style={{marginTop:'auto',fontSize:11,fontWeight:700,color:'var(--accent)',display:'flex',alignItems:'center',gap:5}}>Details <Ic.ChevR s={11}/></div>
-            </div>
-          ))}
-        </motion.div>
-        <style>{`@media(max-width:900px){.spec-grid{grid-template-columns:1fr 1fr !important}}@media(max-width:600px){.spec-grid{grid-template-columns:1fr !important}}`}</style>
       </div>
 
       {/* Detail modal */}
@@ -628,7 +564,7 @@ const Steps = () => {
 const BookingSection = () => {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({
-    service: '', datum: '', zeit: '',
+    services: [], datum: '', zeit: '',
     vorname: '', nachname: '', telefon: '', email: '',
     anmerkungen: '', kennzeichen: '', abholservice: false, abholadresse: ''
   });
@@ -694,7 +630,7 @@ const BookingSection = () => {
       const result = await insertBooking({
         date: form.datum,
         time_slot: form.zeit,
-        service: form.service,
+        service: form.services.join(' + '),
         vehicle_type: null,
         plate: form.kennzeichen || '—',
         name: `${form.vorname} ${form.nachname}`.trim(),
@@ -833,9 +769,9 @@ const BookingSection = () => {
             <h3 style={{fontWeight:800,fontSize:26,marginBottom:10,color:'var(--white)'}}>Termin bestätigt!</h3>
             <p style={{color:'var(--smoke)',fontSize:14,lineHeight:1.7,marginBottom:6}}>Ihr Termin wurde erfolgreich gebucht.</p>
             <p style={{fontWeight:800,fontSize:18,color:'var(--accent)',marginBottom:4}}>{fmtGermanDate(form.datum)} · {form.zeit} Uhr</p>
-            <p style={{fontSize:14,color:'var(--smoke)',marginBottom:4}}>{form.service}</p>
+            <p style={{fontSize:14,color:'var(--smoke)',marginBottom:4}}>{form.services.join(', ')}</p>
             <p style={{fontSize:13,color:'var(--smoke)',marginBottom:28}}>Bestätigungsmail wurde gesendet.</p>
-            <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px'}} onClick={()=>{setSent(false);setStep(1);setForm({service:'',datum:'',zeit:'',vorname:'',nachname:'',telefon:'',email:'',anmerkungen:'',kennzeichen:'',abholservice:false,abholadresse:''});setTouched({});}}>
+            <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px'}} onClick={()=>{setSent(false);setStep(1);setForm({services:[],datum:'',zeit:'',vorname:'',nachname:'',telefon:'',email:'',anmerkungen:'',kennzeichen:'',abholservice:false,abholadresse:''});setTouched({});}}>
               Neuen Termin buchen
             </button>
           </motion.div>
@@ -851,12 +787,13 @@ const BookingSection = () => {
                   <div style={{marginBottom:24}}>
                     <div style={{fontSize:11,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:8}}>SCHRITT 01</div>
                     <h3 style={{fontWeight:800,fontSize:22,color:'var(--white)',letterSpacing:'-.01em'}}>Was braucht Ihr Auto?</h3>
+                    <p style={{fontSize:12,color:'var(--smoke)',marginTop:6}}>Mehrere Leistungen auswählbar</p>
                   </div>
                   <div className="svc-sel">
                     {serviceItems.map((s,i) => {
-                      const active = form.service === s.title;
+                      const active = form.services.includes(s.title);
                       return (
-                        <div key={i} className={`svc-sel-card${active?' active':''}`} onClick={()=>setField('service', s.title)}>
+                        <div key={i} className={`svc-sel-card${active?' active':''}`} onClick={()=>setField('services', form.services.includes(s.title) ? form.services.filter(x=>x!==s.title) : [...form.services, s.title])}>
                           {/* Icon */}
                           <div style={{width:44,height:44,borderRadius:11,background:active?'rgba(91,145,244,.18)':'rgba(255,255,255,.05)',border:`1.5px solid ${active?'rgba(91,145,244,.4)':'rgba(255,255,255,.07)'}`,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'all .22s'}}>
                             {s.ico}
@@ -882,9 +819,12 @@ const BookingSection = () => {
                       );
                     })}
                   </div>
-                  <div style={{display:'flex',justifyContent:'flex-end',marginTop:28}}>
-                    <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px',gap:8,opacity:form.service?1:.45,cursor:form.service?'pointer':'not-allowed'}}
-                      disabled={!form.service} onClick={()=>setStep(2)}>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:28,gap:12}}>
+                    {form.services.length > 0 && (
+                      <span style={{fontSize:12,color:'var(--accent)',fontWeight:600}}>{form.services.length} ausgewählt</span>
+                    )}
+                    <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px',gap:8,marginLeft:'auto',opacity:form.services.length>0?1:.45,cursor:form.services.length>0?'pointer':'not-allowed'}}
+                      disabled={form.services.length===0} onClick={()=>setStep(2)}>
                       Weiter <Ic.Arrow s={14}/>
                     </button>
                   </div>
@@ -1037,7 +977,7 @@ const BookingSection = () => {
 
                   {/* Summary pill */}
                   <div style={{display:'flex',gap:12,flexWrap:'wrap',marginBottom:24,padding:'12px 16px',background:'rgba(91,145,244,.06)',borderRadius:10,border:'1px solid rgba(91,145,244,.15)'}}>
-                    <span style={{fontSize:12,fontWeight:700,color:'var(--accent)'}}>{form.service}</span>
+                    <span style={{fontSize:12,fontWeight:700,color:'var(--accent)'}}>{form.services.join(' + ')}</span>
                     <span style={{fontSize:12,color:'var(--smoke)'}}>·</span>
                     <span style={{fontSize:12,color:'var(--smoke)'}}>{fmtGermanDate(form.datum)}</span>
                     <span style={{fontSize:12,color:'var(--smoke)'}}>·</span>
