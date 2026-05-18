@@ -436,7 +436,7 @@ const Services = () => {
   /* ── autoplay: pauses when mouse is inside the block ── */
   useEffect(() => {
     if (isAreaHovered) { clearInterval(autoTimer.current); return; }
-    autoTimer.current = setInterval(goNext, 4800);
+    autoTimer.current = setInterval(goNext, 3000);
     return () => clearInterval(autoTimer.current);
   }, [isAreaHovered, goNext]);
 
@@ -476,7 +476,12 @@ const Services = () => {
   const pUp = (e) => {
     if (!drag.current.on) return;
     const d = e.clientX - drag.current.startX;
-    if (Math.abs(d) > 55) d < 0 ? goNext() : goPrev();
+    if (Math.abs(d) > 35) {
+      // Reset autoplay so the next tick starts fresh after manual swipe
+      clearInterval(autoTimer.current);
+      autoTimer.current = setInterval(goNext, 3000);
+      d < 0 ? goNext() : goPrev();
+    }
     drag.current.on = false;
   };
 
@@ -507,7 +512,7 @@ const Services = () => {
       {/* ── scoped styles ── */}
       <style>{`
         /* Stage */
-        .cine-stage{position:relative;height:430px;overflow:visible;cursor:grab;user-select:none;-webkit-user-select:none;}
+        .cine-stage{position:relative;height:430px;overflow:visible;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;}
         .cine-stage:active{cursor:grabbing;}
         /* Perspective wrapper */
         .cine-persp{perspective:1400px;perspective-origin:50% 50%;}
