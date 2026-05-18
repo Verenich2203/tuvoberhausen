@@ -1,5 +1,5 @@
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import AdminPanel from "./AdminPanel";
 
 const PHONE = "+49 1575 5476991";
@@ -390,7 +390,20 @@ const TrustBar = () => {
 
 /* ─── SERVICES ───────────────────────────────────────────────────────────── */
 const Services = () => {
-  const [modal, setModal] = useState(null);
+  /* ── state ── */
+  const [modal,         setModal]         = useState(null);
+  const [activeIdx,     setActiveIdx]     = useState(0);
+  const [cardHovered,   setCardHovered]   = useState(false);
+  const [isAreaHovered, setIsAreaHovered] = useState(false);
+  const [tilt,          setTilt]          = useState({ x: 0, y: 0 });
+
+  /* ── refs ── */
+  const containerRef  = useRef(null);
+  const activeCardRef = useRef(null);
+  const wheelLock     = useRef(false);
+  const autoTimer     = useRef(null);
+  const drag          = useRef({ on: false, startX: 0, moved: false });
+
   const items = [
     {ico:<Ic.Shield s={26} c="var(--accent)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO',tag:'Pflicht',desc:'Gesetzlich vorgeschriebene Sicherheitsprüfung für alle Kfz.',duration:'ca. 30 Min.',details:['Überprüfung der Bremsanlage','Sicht- und Funktionsprüfung der Beleuchtung','Prüfung von Lenkung, Achsen und Radaufhängung','Kontrolle der Karosserie','Überprüfung von Sichtscheiben und Spiegeln','Prüfung der Abgasanlage','Sicherheitsgurtprüfung','Auslesen der Fahrzeugelektronik / OBD'],img:'Hauptuntersuchung.png',note:'Gesetzlich vorgeschrieben §29 StVZO. Nach 3 Jahren bei Neuwagen, danach alle 2 Jahre.'},
     {ico:<Ic.Wrench s={26} c="var(--accent)"/>,title:'Vorab-Check',sub:'Sicherheits-Vorprüfung',tag:'Empfohlen',desc:'Mängel vor der HU erkennen, Nachprüfungen vermeiden.',duration:'ca. 20 Min.',details:['Überprüfung aller HU-relevanten Punkte','Identifikation von Mängeln','Kosten- und Zeiteinschätzung','Beratung durch Prüfingenieur','Dokumentation mit Mängelliste'],img:'VorabCheck.png',note:'Kostenlos bei anschließender HU. Separat ab 29 €.'},
@@ -404,40 +417,294 @@ const Services = () => {
     {ico:<Ic.Cert s={26} c="var(--accent)"/>,title:'Abnahmen §19.3 / §15 FZV',sub:'§19.3 StVZO · §15 FZV',tag:'Abnahme',desc:'Amtliche Fahrzeugabnahme nach §19 Abs. 3 StVZO und §15 FZV für geänderte oder neu zuzulassende Fahrzeuge.',duration:'30–60 Min.',details:['Abnahme von Einzelfahrzeugen','Prüfung von Fahrzeugänderungen ohne ABE','Abnahme bei Wiederherstellung nach Unfall','Eintragung in Fahrzeugpapiere','Prüfung nach §15 FZV für Neufahrzeuge','Dokumentation und Prüfprotokoll'],img:'Eintragungen.png',note:'Alle relevanten Fahrzeugdokumente und ggf. Gutachten mitbringen.'},
   ];
 
-  // items with own unique photo (index 0–5)
+  // photo cards: indices 0–5
   const hasPhoto = (idx) => idx <= 5;
+  const N = items.length; // 10
+
+  /* ── navigation helpers ── */
+  const goNext = useCallback(() => setActiveIdx(p => (p + 1) % N), [N]);
+  const goPrev = useCallback(() => setActiveIdx(p => (p - 1 + N) % N), [N]);
+
+  /* ── circular offset so carousel wraps smoothly ── */
+  const circOff = (i) => {
+    let off = i - activeIdx;
+    if (off >  N / 2) off -= N;
+    if (off < -N / 2) off += N;
+    return off;
+  };
+
+  /* ── autoplay: pauses when mouse is inside the block ── */
+  useEffect(() => {
+    if (isAreaHovered) { clearInterval(autoTimer.current); return; }
+    autoTimer.current = setInterval(goNext, 4800);
+    return () => clearInterval(autoTimer.current);
+  }, [isAreaHovered, goNext]);
+
+  /* ── wheel → next/prev (non-passive so we can preventDefault) ── */
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const handler = (e) => {
+      e.preventDefault();
+      if (wheelLock.current) return;
+      wheelLock.current = true;
+      setTimeout(() => { wheelLock.current = false; }, 680);
+      (e.deltaY > 0 || e.deltaX > 0) ? goNext() : goPrev();
+    };
+    el.addEventListener('wheel', handler, { passive: false });
+    return () => el.removeEventListener('wheel', handler);
+  }, [goNext, goPrev]);
+
+  /* ── magnetic 3-D tilt on the active card ── */
+  const onStageMouseMove = useCallback((e) => {
+    if (!cardHovered || !activeCardRef.current) return;
+    const r  = activeCardRef.current.getBoundingClientRect();
+    const nx = ((e.clientX - r.left)  / r.width  - 0.5) * 2; // −1…+1
+    const ny = ((e.clientY - r.top)   / r.height - 0.5) * 2;
+    setTilt({ x: ny * -11, y: nx * 13 });
+  }, [cardHovered]);
+
+  /* ── pointer drag (covers mouse + touch) ── */
+  const pDown = (e) => {
+    drag.current = { on: true, startX: e.clientX, moved: false };
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+  };
+  const pMove = (e) => {
+    if (!drag.current.on) return;
+    if (Math.abs(e.clientX - drag.current.startX) > 8) drag.current.moved = true;
+  };
+  const pUp = (e) => {
+    if (!drag.current.on) return;
+    const d = e.clientX - drag.current.startX;
+    if (Math.abs(d) > 55) d < 0 ? goNext() : goPrev();
+    drag.current.on = false;
+  };
+
+  /* ── per-card visual transform values ── */
+  const SPACING = 248; // px between card centres
+  const cardProps = (offset) => {
+    const abs = Math.abs(offset);
+    if (abs > 4) return null;
+    return {
+      x         : offset * SPACING,
+      scale     : offset === 0 ? 1.14 : Math.max(0.58, 1 - abs * 0.145),
+      opacity   : offset === 0 ? 1    : Math.max(0.18, 1 - abs * 0.22),
+      rotateY   : offset === 0 ? 0    : offset * -7,
+      blur      : offset === 0 ? 0    : Math.min(abs * 2.5, 9),
+      brightness: offset === 0 ? 1    : Math.max(0.36, 1 - abs * 0.18),
+      zIndex    : 20 - abs * 4,
+    };
+  };
 
   return (
-    <div id="leistungen" className="section-full" style={{position:'relative',paddingTop:72,paddingBottom:72,overflow:'hidden',background:'var(--dark)'}}>
+    <div id="leistungen" className="section-full"
+         style={{position:'relative',paddingTop:72,paddingBottom:80,overflow:'hidden',background:'var(--dark)'}}>
+
+      {/* background texture */}
       <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.1,pointerEvents:'none',zIndex:0}}/>
       <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 30%, rgba(10,12,18,.45) 100%)',pointerEvents:'none',zIndex:1}}/>
+
+      {/* ── scoped styles ── */}
       <style>{`
-        @keyframes marqueeL { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-        @keyframes marqueeR { from{transform:translateX(-50%)} to{transform:translateX(0)} }
-        .svc-row-wrap { overflow:hidden; width:100%; }
-        .svc-row-wrap:hover .svc-track { animation-play-state:paused; }
-        .svc-track { display:flex; gap:14px; width:max-content; padding:6px 0; }
-        .svc-card { position:relative; overflow:hidden; cursor:pointer; border-radius:14px; height:220px; width:290px; flex-shrink:0; transition:transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s; }
-        .svc-card:hover { transform:scale(1.06); z-index:10; box-shadow:0 20px 48px rgba(0,0,0,.55); }
-        .svc-card-photo .svc-bg { position:absolute; inset:0; background-size:cover; background-position:center; }
-        .svc-card-plain { background:linear-gradient(135deg,rgba(27,30,40,.95) 0%,rgba(19,22,30,.98) 100%); border:1px solid rgba(255,255,255,.07); }
-        .svc-grad { position:absolute; inset:0; background:linear-gradient(180deg,rgba(10,12,18,.10) 0%,rgba(10,12,18,.88) 100%); pointer-events:none; z-index:1; }
-        .svc-label { position:absolute; bottom:0; left:0; right:0; padding:18px 20px; z-index:2; }
-        .svc-lsub { font-size:10px; font-weight:700; letter-spacing:.13em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:4px; }
-        .svc-ltitle { font-size:15px; font-weight:800; color:#fff; line-height:1.2; letter-spacing:-.01em; }
+        /* Stage */
+        .cine-stage{position:relative;height:430px;overflow:visible;cursor:grab;user-select:none;-webkit-user-select:none;}
+        .cine-stage:active{cursor:grabbing;}
+        /* Perspective wrapper */
+        .cine-persp{perspective:1400px;perspective-origin:50% 50%;}
+        /* Card shell */
+        .cine-card{
+          position:absolute;top:50%;left:50%;
+          margin-left:-150px;margin-top:-195px;
+          width:300px;height:390px;
+          border-radius:20px;overflow:hidden;
+          transform-style:preserve-3d;
+          will-change:transform,opacity,filter;
+          box-shadow:0 10px 32px rgba(0,0,0,.42);
+          transition:box-shadow .4s;
+        }
+        .cine-card.is-active{
+          box-shadow:0 28px 64px rgba(0,0,0,.7),
+                     0 0 0 1.5px rgba(91,145,244,.22);
+        }
+        .cine-card:not(.is-active){cursor:pointer;}
+        /* Ken-Burns background */
+        .cine-bg{
+          position:absolute;inset:0;
+          background-size:cover;background-position:center;
+          will-change:transform;
+          transform:scale(1) translate3d(0,0,0);
+          transition:transform 1.1s cubic-bezier(.25,.46,.45,.94);
+        }
+        .cine-card.is-active:hover .cine-bg{
+          transform:scale(1.10) translate3d(-0.8%,-0.8%,0);
+        }
+        /* Gradient overlay */
+        .cine-grad{
+          position:absolute;inset:0;
+          background:linear-gradient(180deg,
+            rgba(10,12,18,.04) 0%,
+            rgba(10,12,18,.52) 48%,
+            rgba(10,12,18,.93) 100%);
+          z-index:1;pointer-events:none;
+        }
+        /* Category tag */
+        .cine-tag{
+          position:absolute;top:16px;left:16px;z-index:2;
+          padding:4px 11px;
+          background:rgba(91,145,244,.15);
+          border:1px solid rgba(91,145,244,.28);
+          backdrop-filter:blur(6px);
+          border-radius:20px;
+          font-size:9px;font-weight:800;
+          letter-spacing:.12em;text-transform:uppercase;
+          color:var(--accent);
+        }
+        /* Base label (hides on active+hover) */
+        .cine-base{
+          position:absolute;bottom:0;left:0;right:0;
+          padding:24px 22px 20px;z-index:2;
+          transition:transform .42s cubic-bezier(.25,.46,.45,.94),
+                      opacity  .38s;
+        }
+        .cine-card.is-active:hover .cine-base{
+          transform:translateY(-10px);opacity:0;pointer-events:none;
+        }
+        .cine-sub{
+          font-size:10px;font-weight:700;
+          letter-spacing:.13em;text-transform:uppercase;
+          color:rgba(255,255,255,.5);margin-bottom:5px;
+        }
+        .cine-title{
+          font-size:17px;font-weight:800;
+          color:#fff;line-height:1.2;letter-spacing:-.01em;
+        }
+        .cine-dur{
+          display:flex;align-items:center;gap:5px;
+          margin-top:7px;font-size:10px;color:rgba(255,255,255,.38);
+        }
+        /* Slide-up hover panel */
+        .cine-panel{
+          position:absolute;bottom:0;left:0;right:0;
+          padding:18px 22px 20px;
+          background:rgba(8,10,18,.91);
+          backdrop-filter:blur(16px);
+          -webkit-backdrop-filter:blur(16px);
+          border-top:1px solid rgba(91,145,244,.13);
+          z-index:3;
+          transform:translateY(100%);
+          transition:transform .45s cubic-bezier(.22,1,.36,1);
+        }
+        .cine-card.is-active:hover .cine-panel{transform:translateY(0);}
+        .cine-pdesc{
+          font-size:12px;color:rgba(255,255,255,.66);
+          line-height:1.65;margin:0;
+        }
+        /* Shine CTA button */
+        @keyframes shineSwipe{
+          0%  {transform:translateX(-130%) skewX(-22deg);}
+          100%{transform:translateX(280%)  skewX(-22deg);}
+        }
+        .shine-btn{
+          position:relative;overflow:hidden;
+          display:inline-flex;align-items:center;gap:6px;
+          margin-top:13px;padding:9px 18px;
+          background:linear-gradient(125deg,#5B91F4 0%,#3563e2 100%);
+          border:none;border-radius:8px;
+          color:#fff;font-size:12px;font-weight:700;
+          letter-spacing:.03em;cursor:pointer;
+          box-shadow:0 4px 16px rgba(91,145,244,.32);
+          transition:box-shadow .25s,transform .2s;
+        }
+        .shine-btn:hover{box-shadow:0 7px 26px rgba(91,145,244,.52);transform:translateY(-1px);}
+        .shine-btn::after{
+          content:'';position:absolute;top:-50%;left:-60%;
+          width:38%;height:200%;
+          background:linear-gradient(90deg,transparent,rgba(255,255,255,.38),transparent);
+          animation:shineSwipe 1.5s ease .08s both;
+        }
+        /* Plain (icon) card */
+        .cine-plain{
+          position:absolute;inset:0;
+          display:flex;flex-direction:column;justify-content:space-between;
+          padding:26px 22px;
+          background:linear-gradient(135deg,rgba(22,25,35,.97) 0%,rgba(14,17,26,.99) 100%);
+          border:1px solid rgba(255,255,255,.06);
+          transition:border-color .35s;
+        }
+        .cine-card.is-active .cine-plain{border-color:rgba(91,145,244,.22);}
+        .cine-plain-glow{
+          position:absolute;top:-20px;right:-20px;
+          width:180px;height:180px;border-radius:50%;
+          background:radial-gradient(circle,rgba(91,145,244,.11) 0%,transparent 70%);
+          pointer-events:none;
+        }
+        .cine-plain-ico{
+          width:48px;height:48px;border-radius:13px;
+          background:rgba(91,145,244,.12);
+          border:1px solid rgba(91,145,244,.22);
+          display:flex;align-items:center;justify-content:center;flex-shrink:0;
+        }
+        .cine-plain-info{transition:opacity .35s,transform .4s cubic-bezier(.25,.46,.45,.94);}
+        .cine-card.is-active:hover .cine-plain-info{opacity:0;transform:translateY(-8px);pointer-events:none;}
+        /* Nav arrows */
+        .cine-arrow{
+          position:absolute;top:50%;transform:translateY(-50%);
+          width:44px;height:44px;border-radius:50%;
+          border:1.5px solid rgba(255,255,255,.10);
+          background:rgba(10,12,18,.55);
+          backdrop-filter:blur(10px);
+          cursor:pointer;z-index:30;
+          display:flex;align-items:center;justify-content:center;
+          color:rgba(255,255,255,.55);
+          transition:border-color .25s,background .25s,color .25s;
+        }
+        .cine-arrow:hover{
+          border-color:var(--accent);
+          background:rgba(91,145,244,.14);
+          color:var(--accent);
+        }
+        /* Dots */
+        .cine-dots{
+          display:flex;justify-content:center;
+          align-items:center;gap:7px;margin-top:28px;
+        }
+        .cine-dot{
+          height:5px;border-radius:3px;border:none;padding:0;cursor:pointer;
+          background:rgba(255,255,255,.16);
+          transition:width .42s cubic-bezier(.25,.46,.45,.94),background .3s;
+        }
+        .cine-dot-on{background:var(--accent) !important;}
+        /* Fade-up micro-animations for panel content */
+        @keyframes fadeUpIn{
+          from{opacity:0;transform:translateY(8px);}
+          to  {opacity:1;transform:translateY(0);}
+        }
+        .cine-card.is-active:hover .cine-pdesc{
+          animation:fadeUpIn .38s cubic-bezier(.22,1,.36,1) .06s both;
+        }
+        .cine-card.is-active:hover .shine-btn{
+          animation:fadeUpIn .4s cubic-bezier(.22,1,.36,1) .16s both;
+        }
+        @media(max-width:768px){
+          .cine-stage{height:360px;}
+          .cine-card{width:240px;height:318px;margin-left:-120px;margin-top:-159px;}
+          .cine-title{font-size:15px;}
+          .cine-arrow{display:none;}
+        }
       `}</style>
 
-      {/* Section header */}
+      {/* ── Section header ── */}
       <div className="inner" style={{position:'relative',zIndex:2}}>
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}}
-          style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:40,flexWrap:'wrap',gap:16}}>
+          style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:44,flexWrap:'wrap',gap:16}}>
           <div>
             <div style={{display:'inline-flex',alignItems:'center',gap:10,fontSize:11,fontWeight:700,letterSpacing:'.18em',textTransform:'uppercase',color:'var(--accent)',marginBottom:12}}>
               <span style={{display:'inline-block',width:24,height:2,background:'var(--accent)',borderRadius:1,flexShrink:0}}/>LEISTUNGEN
             </div>
             <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,44px)',color:'var(--white)',letterSpacing:'-.02em',lineHeight:1.1}}>Unsere amtlichen Leistungen</h2>
           </div>
-          <a href="#termin" style={{display:'inline-flex',alignItems:'center',gap:8,fontSize:13,fontWeight:700,color:'var(--accent)',textDecoration:'none',letterSpacing:'.04em',textTransform:'uppercase',border:'1.5px solid rgba(91,145,244,.35)',padding:'10px 22px',borderRadius:8,transition:'all .2s'}}
+          <a href="#termin"
+            style={{display:'inline-flex',alignItems:'center',gap:8,fontSize:13,fontWeight:700,color:'var(--accent)',textDecoration:'none',letterSpacing:'.04em',textTransform:'uppercase',border:'1.5px solid rgba(91,145,244,.35)',padding:'10px 22px',borderRadius:8,transition:'all .2s'}}
             onMouseEnter={e=>{e.currentTarget.style.background='var(--accent)';e.currentTarget.style.color='#fff';}}
             onMouseLeave={e=>{e.currentTarget.style.background='transparent';e.currentTarget.style.color='var(--accent)';}}>
             Alle Leistungen <Ic.Arrow s={13}/>
@@ -445,83 +712,127 @@ const Services = () => {
         </motion.div>
       </div>
 
-      {/* Marquee rows – full width */}
-      <div style={{position:'relative',zIndex:2}}>
+      {/* ── Cinematic carousel ── */}
+      <div style={{position:'relative',zIndex:2,marginTop:4}}
+           onMouseEnter={()=>setIsAreaHovered(true)}
+           onMouseLeave={()=>setIsAreaHovered(false)}>
 
-        {/* Row 1 – slides left · items 0–4 (all photo cards) */}
-        <div className="svc-row-wrap" style={{marginBottom:14}}>
-          <div className="svc-track" style={{animation:'marqueeL 34s linear infinite'}}>
-            {[...items.slice(0,5),...items.slice(0,5)].map((item,idx)=>{
-              const withPhoto = hasPhoto(idx % 5);
+        {/* Prev */}
+        <button className="cine-arrow" style={{left:20}} onClick={goPrev} aria-label="Zurück">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </button>
+        {/* Next */}
+        <button className="cine-arrow" style={{right:20}} onClick={goNext} aria-label="Weiter">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </button>
+
+        {/* Cards stage */}
+        <div className="cine-persp">
+          <div
+            ref={containerRef}
+            className="cine-stage"
+            onMouseMove={onStageMouseMove}
+            onPointerDown={pDown}
+            onPointerMove={pMove}
+            onPointerUp={pUp}
+            onPointerLeave={pUp}
+          >
+            {items.map((item, i) => {
+              const off  = circOff(i);
+              const cp   = cardProps(off);
+              if (!cp) return null;
+              const isActive = off === 0;
+              const withPhoto = hasPhoto(i);
+
               return (
-                <div key={idx} className={`svc-card${withPhoto?' svc-card-photo':' svc-card-plain'}`} onClick={()=>setModal(item)}>
+                <motion.div
+                  key={i}
+                  ref={isActive ? activeCardRef : null}
+                  className={`cine-card${isActive ? ' is-active' : ''}`}
+                  style={{ zIndex: cp.zIndex }}
+                  animate={{
+                    x      : cp.x,
+                    scale  : cp.scale,
+                    opacity: cp.opacity,
+                    rotateY: isActive && cardHovered ? tilt.y * 0.55 : cp.rotateY,
+                    rotateX: isActive && cardHovered ? tilt.x        : 0,
+                    filter : cp.blur > 0
+                      ? `blur(${cp.blur}px) brightness(${cp.brightness})`
+                      : 'blur(0px) brightness(1)',
+                  }}
+                  transition={{ type:'spring', stiffness:260, damping:26, mass:0.85 }}
+                  onClick={() => { if (!drag.current.moved) isActive ? setModal(item) : setActiveIdx(i); }}
+                  onMouseEnter={() => isActive && setCardHovered(true)}
+                  onMouseLeave={() => { if (isActive) { setCardHovered(false); setTilt({ x:0, y:0 }); } }}
+                >
                   {withPhoto ? (
+                    /* ── Photo card ── */
                     <>
-                      <div className="svc-bg" style={{backgroundImage:`url('${item.img}')`}}/>
-                      <div className="svc-grad"/>
-                      <div className="svc-label">
-                        <div className="svc-lsub">{item.sub}</div>
-                        <div className="svc-ltitle">{item.title}</div>
+                      <div className="cine-bg" style={{backgroundImage:`url('${item.img}')`}}/>
+                      <div className="cine-grad"/>
+                      <div className="cine-tag">{item.tag}</div>
+                      <div className="cine-base">
+                        <div className="cine-sub">{item.sub}</div>
+                        <div className="cine-title">{item.title}</div>
+                        <div className="cine-dur"><Ic.Clock s={10} c="rgba(255,255,255,.42)"/>{item.duration}</div>
+                      </div>
+                      <div className="cine-panel">
+                        <p className="cine-pdesc">{item.desc}</p>
+                        <button className="shine-btn" onClick={e=>{ e.stopPropagation(); setModal(item); }}>
+                          Details ansehen <Ic.Arrow s={11}/>
+                        </button>
                       </div>
                     </>
                   ) : (
-                    <div style={{position:'absolute',inset:0,display:'flex',flexDirection:'column',justifyContent:'space-between',padding:'20px'}}>
-                      <div style={{position:'absolute',top:0,right:0,width:120,height:120,borderRadius:'50%',background:'radial-gradient(circle,rgba(91,145,244,.12) 0%,transparent 70%)',pointerEvents:'none'}}/>
-                      <div style={{width:42,height:42,borderRadius:11,background:'rgba(91,145,244,.12)',border:'1px solid rgba(91,145,244,.2)',display:'flex',alignItems:'center',justifyContent:'center'}}>{item.ico}</div>
-                      <div>
-                        <div style={{fontSize:9,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:5,opacity:.8}}>{item.sub}</div>
-                        <div style={{fontSize:14,fontWeight:800,color:'var(--white)',lineHeight:1.2,marginBottom:5}}>{item.title}</div>
-                        <div style={{fontSize:11,color:'var(--smoke)',lineHeight:1.4}}>{item.desc}</div>
+                    /* ── Icon card ── */
+                    <>
+                      <div className="cine-plain">
+                        <div className="cine-plain-glow"/>
+                        <div className="cine-plain-ico">{item.ico}</div>
+                        <div className="cine-plain-info">
+                          <div className="cine-sub">{item.sub}</div>
+                          <div className="cine-title" style={{color:'var(--white)',fontSize:16}}>{item.title}</div>
+                          <div className="cine-dur"><Ic.Clock s={10} c="rgba(255,255,255,.35)"/>{item.duration}</div>
+                        </div>
                       </div>
-                    </div>
+                      <div className="cine-panel">
+                        <p className="cine-pdesc">{item.desc}</p>
+                        <button className="shine-btn" onClick={e=>{ e.stopPropagation(); setModal(item); }}>
+                          Details ansehen <Ic.Arrow s={11}/>
+                        </button>
+                      </div>
+                    </>
                   )}
-                </div>
+                </motion.div>
               );
             })}
           </div>
         </div>
 
-        {/* Row 2 – slides right · items 5–9 */}
-        <div className="svc-row-wrap">
-          <div className="svc-track" style={{animation:'marqueeR 28s linear infinite'}}>
-            {[...items.slice(5),...items.slice(5)].map((item,idx)=>{
-              const withPhoto = hasPhoto((idx % 5) + 5);
-              return (
-                <div key={idx} className={`svc-card${withPhoto?' svc-card-photo':' svc-card-plain'}`} onClick={()=>setModal(item)}>
-                  {withPhoto ? (
-                    <>
-                      <div className="svc-bg" style={{backgroundImage:`url('${item.img}')`}}/>
-                      <div className="svc-grad"/>
-                      <div className="svc-label">
-                        <div className="svc-lsub">{item.sub}</div>
-                        <div className="svc-ltitle">{item.title}</div>
-                      </div>
-                    </>
-                  ) : (
-                    <div style={{position:'absolute',inset:0,display:'flex',flexDirection:'column',justifyContent:'space-between',padding:'20px'}}>
-                      <div style={{position:'absolute',top:0,right:0,width:120,height:120,borderRadius:'50%',background:'radial-gradient(circle,rgba(91,145,244,.12) 0%,transparent 70%)',pointerEvents:'none'}}/>
-                      <div style={{width:42,height:42,borderRadius:11,background:'rgba(91,145,244,.12)',border:'1px solid rgba(91,145,244,.2)',display:'flex',alignItems:'center',justifyContent:'center'}}>{item.ico}</div>
-                      <div>
-                        <div style={{fontSize:9,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:5,opacity:.8}}>{item.sub}</div>
-                        <div style={{fontSize:14,fontWeight:800,color:'var(--white)',lineHeight:1.2,marginBottom:5}}>{item.title}</div>
-                        <div style={{fontSize:11,color:'var(--smoke)',lineHeight:1.4}}>{item.desc}</div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+        {/* Navigation dots */}
+        <div className="cine-dots">
+          {items.map((_,i) => (
+            <button
+              key={i}
+              className={`cine-dot${i===activeIdx?' cine-dot-on':''}`}
+              style={{width: i===activeIdx ? 22 : 5}}
+              onClick={() => setActiveIdx(i)}
+              aria-label={items[i].title}
+            />
+          ))}
         </div>
-
       </div>
 
-      {/* Detail modal */}
+      {/* ── Detail modal ── */}
       <AnimatePresence>
         {modal && (
           <div style={{position:'fixed',inset:0,zIndex:900,display:'flex',alignItems:'center',justifyContent:'center',padding:16}}>
-            <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={()=>setModal(null)} style={{position:'absolute',inset:0,background:'rgba(0,0,0,.75)',backdropFilter:'blur(6px)'}}/>
-            <motion.div initial={{opacity:0,y:24,scale:.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:12,scale:.97}} style={{position:'relative',background:'var(--dark)',width:'100%',maxWidth:520,maxHeight:'88vh',borderRadius:18,display:'flex',flexDirection:'column',boxShadow:'0 24px 52px rgba(0,0,0,.5)',overflow:'hidden',border:'1px solid rgba(255,255,255,.07)'}}>
+            <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
+              onClick={()=>setModal(null)}
+              style={{position:'absolute',inset:0,background:'rgba(0,0,0,.75)',backdropFilter:'blur(6px)'}}/>
+            <motion.div
+              initial={{opacity:0,y:24,scale:.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:12,scale:.97}}
+              style={{position:'relative',background:'var(--dark)',width:'100%',maxWidth:520,maxHeight:'88vh',borderRadius:18,display:'flex',flexDirection:'column',boxShadow:'0 24px 52px rgba(0,0,0,.5)',overflow:'hidden',border:'1px solid rgba(255,255,255,.07)'}}>
               <div style={{padding:'20px 24px',background:'var(--dark2)',borderBottom:'1px solid rgba(255,255,255,.07)',display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
                 <div>
                   <div style={{fontSize:9,color:'var(--smoke)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:3,fontWeight:700}}>{modal.sub}</div>
