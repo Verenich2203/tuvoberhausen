@@ -630,7 +630,7 @@ const BookingSection = () => {
   const [form, setForm] = useState({
     service: '', datum: '', zeit: '',
     vorname: '', nachname: '', telefon: '', email: '',
-    marke: '', modell: '', anmerkungen: '', kennzeichen: ''
+    anmerkungen: '', kennzeichen: '', abholservice: false, abholadresse: ''
   });
   const [touched, setTouched] = useState({});
   const [bookedSlots, setBookedSlots] = useState([]);
@@ -646,13 +646,12 @@ const BookingSection = () => {
   const [calMonth, setCalMonth] = useState(today.getMonth());
 
   const serviceItems = [
-    {ico:<Ic.Shield s={22} c="var(--accent)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO',tag:'Pflicht'},
-    {ico:<Ic.Leaf s={22} c="var(--accent)"/>,title:'Abgasuntersuchung (AU)',sub:'§29 StVZO · Abgasuntersuchung',tag:'Kombi möglich'},
+    {ico:<Ic.Cert s={22} c="var(--accent)"/>,title:'HU + AU Kombi',sub:'§29 StVZO · Kombiangebot',tag:'Kombi'},
+    {ico:<Ic.Shield s={22} c="var(--accent)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO · z.B. E-Fahrzeug',tag:'Pflicht'},
     {ico:<Ic.Wrench s={22} c="var(--accent)"/>,title:'Vorab-Check',sub:'Sicherheits-Vorprüfung',tag:'Empfohlen'},
     {ico:<Ic.Clip s={22} c="var(--accent)"/>,title:'Eintragungen / Abnahmen',sub:'§19 StVZO',tag:'Flexibel'},
     {ico:<Ic.Moto s={22} c="var(--accent)"/>,title:'Motorrad-HU',sub:'Zweiräder · §29 StVZO',tag:'Saisonal'},
     {ico:<Ic.Award s={22} c="var(--accent)"/>,title:'Oldtimer-Gutachten',sub:'§23 StVZO · H-Kennzeichen',tag:'Speziell'},
-    {ico:<Ic.Cert s={22} c="var(--accent)"/>,title:'HU + AU Kombi',sub:'§29 StVZO · Kombiangebot',tag:'Kombi'},
     {ico:<Ic.Clip s={22} c="var(--accent)"/>,title:'Anhänger HU',sub:'Anhänger · §29 StVZO',tag:'Anhänger'},
     {ico:<Ic.Leaf s={22} c="var(--accent)"/>,title:'Gasanlagenprüfung',sub:'LPG · CNG · Gasfahrzeuge',tag:'Gas'},
     {ico:<Ic.Award s={22} c="var(--accent)"/>,title:'BO-Kraft Prüfung',sub:'Taxi · Mietwagen · §57a StVZO',tag:'Gewerblich'},
@@ -667,9 +666,8 @@ const BookingSection = () => {
     if (!form.vorname.trim()) e.vorname = 'Pflichtfeld';
     if (!form.nachname.trim()) e.nachname = 'Pflichtfeld';
     if (form.telefon.replace(/[^\d]/g,'').length < 6) e.telefon = 'Ungültige Telefonnummer';
-    if (!form.marke.trim()) e.marke = 'Pflichtfeld';
-    if (!form.modell.trim()) e.modell = 'Pflichtfeld';
     if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Ungültige E-Mail';
+    if (form.abholservice && !form.abholadresse.trim()) e.abholadresse = 'Bitte Adresse angeben';
     return e;
   };
 
@@ -688,7 +686,7 @@ const BookingSection = () => {
   const handleSubmit = async () => {
     const errs = step3Errors();
     if (Object.keys(errs).length > 0) {
-      setTouched({vorname:true,nachname:true,telefon:true,marke:true,modell:true,email:true});
+      setTouched({vorname:true,nachname:true,telefon:true,email:true,abholadresse:true});
       return;
     }
     setSubmitting(true); setSubmitError('');
@@ -697,12 +695,12 @@ const BookingSection = () => {
         date: form.datum,
         time_slot: form.zeit,
         service: form.service,
-        vehicle_type: `${form.marke} ${form.modell}`.trim(),
+        vehicle_type: null,
         plate: form.kennzeichen || '—',
         name: `${form.vorname} ${form.nachname}`.trim(),
         phone: form.telefon,
         email: form.email,
-        notes: form.anmerkungen || null,
+        notes: [form.anmerkungen, form.abholservice ? `Abhol- & Bringservice: ${form.abholadresse}` : ''].filter(Boolean).join('\n') || null,
       });
       const bookingId = result[0]?.id;
       if (bookingId) {
@@ -837,7 +835,7 @@ const BookingSection = () => {
             <p style={{fontWeight:800,fontSize:18,color:'var(--accent)',marginBottom:4}}>{fmtGermanDate(form.datum)} · {form.zeit} Uhr</p>
             <p style={{fontSize:14,color:'var(--smoke)',marginBottom:4}}>{form.service}</p>
             <p style={{fontSize:13,color:'var(--smoke)',marginBottom:28}}>Bestätigungsmail wurde gesendet.</p>
-            <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px'}} onClick={()=>{setSent(false);setStep(1);setForm({service:'',datum:'',zeit:'',vorname:'',nachname:'',telefon:'',email:'',marke:'',modell:'',anmerkungen:'',kennzeichen:''});setTouched({});}}>
+            <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px'}} onClick={()=>{setSent(false);setStep(1);setForm({service:'',datum:'',zeit:'',vorname:'',nachname:'',telefon:'',email:'',anmerkungen:'',kennzeichen:'',abholservice:false,abholadresse:''});setTouched({});}}>
               Neuen Termin buchen
             </button>
           </motion.div>
@@ -1052,8 +1050,6 @@ const BookingSection = () => {
                       {field:'nachname',label:'Nachname *',placeholder:'Mustermann',type:'text'},
                       {field:'telefon',label:'Telefon *',placeholder:'+49 157...',type:'tel'},
                       {field:'email',label:'E-Mail',placeholder:'max@beispiel.de',type:'email'},
-                      {field:'marke',label:'Fahrzeugmarke *',placeholder:'z.B. VW',type:'text'},
-                      {field:'modell',label:'Modell *',placeholder:'z.B. Golf',type:'text'},
                     ].map(({field,label,placeholder,type}) => {
                       const errs = step3Errors();
                       const err = touched[field] && errs[field];
@@ -1082,6 +1078,32 @@ const BookingSection = () => {
                       onFocus={e=>{ e.target.style.borderColor='var(--accent)'; e.target.style.boxShadow='0 0 0 3px rgba(91,145,244,.12)'; }}
                       onBlur={e=>{ e.target.style.borderColor='rgba(255,255,255,.08)'; e.target.style.boxShadow='none'; }}
                       style={{...inp('kennzeichen'), border:'1.5px solid rgba(255,255,255,.08)'}}/>
+                  </div>
+
+                  {/* Abhol- & Bringservice Toggle */}
+                  <div style={{marginTop:16}}>
+                    <button type="button" onClick={()=>setField('abholservice', !form.abholservice)}
+                      style={{width:'100%',display:'flex',alignItems:'center',gap:14,padding:'14px 16px',borderRadius:10,border:`1.5px solid ${form.abholservice?'var(--accent)':'rgba(255,255,255,.1)'}`,background:form.abholservice?'rgba(91,145,244,.08)':'rgba(255,255,255,.03)',cursor:'pointer',textAlign:'left',transition:'all .2s',fontFamily:'var(--sans)'}}>
+                      <div style={{width:22,height:22,borderRadius:6,border:`2px solid ${form.abholservice?'var(--accent)':'rgba(255,255,255,.25)'}`,background:form.abholservice?'var(--accent)':'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'all .2s'}}>
+                        {form.abholservice && <Ic.Check s={12} c="#fff"/>}
+                      </div>
+                      <div>
+                        <div style={{fontSize:13,fontWeight:700,color:'var(--white)',marginBottom:2}}>Abhol- & Bringservice</div>
+                        <div style={{fontSize:11,color:'var(--smoke)'}}>Wir holen Ihr Fahrzeug ab und bringen es nach der Prüfung zurück.</div>
+                      </div>
+                      <div style={{marginLeft:'auto',fontSize:10,fontWeight:700,color:'var(--accent)',background:'rgba(91,145,244,.12)',padding:'3px 9px',borderRadius:5,whiteSpace:'nowrap',flexShrink:0}}>+Service</div>
+                    </button>
+                    {form.abholservice && (
+                      <div style={{marginTop:10,...fieldWrap}}>
+                        <label style={labelStyle}>Abholadresse *</label>
+                        <input type="text" placeholder="Straße, Hausnr., PLZ, Ort" maxLength={120} value={form.abholadresse}
+                          onChange={e=>setField('abholadresse', e.target.value)}
+                          onFocus={e=>{ e.target.style.borderColor='var(--accent)'; e.target.style.boxShadow='0 0 0 3px rgba(91,145,244,.12)'; }}
+                          onBlur={e=>{ handleBlur('abholadresse'); e.target.style.borderColor=step3Errors()['abholadresse']?'#ef4444':'rgba(255,255,255,.08)'; e.target.style.boxShadow='none'; }}
+                          style={inp('abholadresse')}/>
+                        {touched.abholadresse && step3Errors().abholadresse && <span style={{fontSize:11,color:'#ef4444',fontWeight:600,display:'flex',alignItems:'center',gap:3}}><Ic.Warn s={10}/> {step3Errors().abholadresse}</span>}
+                      </div>
+                    )}
                   </div>
 
                   <div style={{marginTop:16,...fieldWrap}}>
@@ -1198,8 +1220,8 @@ const Contact = () => (
               <Ic.Wrench s={17} c="var(--accent)"/>
             </div>
             <div>
-              <div style={{fontWeight:800,fontSize:14,color:'var(--white)',letterSpacing:'-.01em',lineHeight:1.2}}>AutoService Oberhausen</div>
-              <div style={{fontSize:10,color:'var(--smoke)',marginTop:2,letterSpacing:'.02em'}}>Amtl. anerk. Kfz-Prüfstelle §29 StVZO</div>
+              <div style={{fontWeight:800,fontSize:13,color:'var(--white)',letterSpacing:'-.01em',lineHeight:1.2}}>TÜV Nord Prüfstützpunkt Oberhausen</div>
+              <div style={{fontSize:10,color:'var(--smoke)',marginTop:2,letterSpacing:'.02em'}}>Akkreditierter KFZ-Prüfstützpunkt §29 StVZO</div>
             </div>
           </div>
 
@@ -1253,9 +1275,9 @@ const Footer = ({ openModal }) => (
         <div>
           <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:14}}>
             <div style={{width:30,height:30,background:'var(--accent)',borderRadius:7,display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.Wrench s={14} c="#fff"/></div>
-            <span style={{fontWeight:800,fontSize:16,color:'var(--white)'}}>Auto<span style={{color:'var(--accent)'}}>Service</span> <span style={{fontWeight:400,fontSize:12,color:'rgba(255,255,255,.35)'}}>Oberhausen</span></span>
+            <span style={{fontWeight:800,fontSize:15,color:'var(--white)'}}>TÜV Nord <span style={{color:'var(--accent)'}}>Prüfstützpunkt</span> <span style={{fontWeight:400,fontSize:12,color:'rgba(255,255,255,.35)'}}>Oberhausen</span></span>
           </div>
-          <p style={{color:'var(--smoke)',fontSize:12.5,lineHeight:1.75,maxWidth:260}}>Amtlich anerkannte Kfz-Prüfstelle. HU und AU — professionell und transparent.</p>
+          <p style={{color:'var(--smoke)',fontSize:12.5,lineHeight:1.75,maxWidth:260}}>Akkreditierter KFZ-Prüfstützpunkt. HU, AU und amtliche Fahrzeugprüfungen — zuverlässig und transparent.</p>
         </div>
         {[{title:'Unternehmen',items:['Über uns','Team','Karriere','Kontakt']},{title:'Rechtliches',items:['Impressum','Datenschutz','AGB','Cookie-Einstellungen']}].map(({title,items})=>(
           <div key={title}>
@@ -1267,8 +1289,8 @@ const Footer = ({ openModal }) => (
         ))}
       </div>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:8,padding:'16px 0'}}>
-        <span style={{color:'rgba(255,255,255,.2)',fontSize:11.5}}>© {new Date().getFullYear()} AutoService Oberhausen — Alle Rechte vorbehalten.</span>
-        <span style={{color:'rgba(255,255,255,.2)',fontSize:10,letterSpacing:'.08em',textTransform:'uppercase'}}>Amtlich anerkannte Prüfstelle · §29 StVZO</span>
+        <span style={{color:'rgba(255,255,255,.2)',fontSize:11.5}}>© {new Date().getFullYear()} TÜV Nord Prüfstützpunkt Oberhausen — Alle Rechte vorbehalten.</span>
+        <span style={{color:'rgba(255,255,255,.2)',fontSize:10,letterSpacing:'.08em',textTransform:'uppercase'}}>Akkreditierter KFZ-Prüfstützpunkt · §29 StVZO</span>
       </div>
     </div>
   </footer>
