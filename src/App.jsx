@@ -412,22 +412,23 @@ const Services = () => {
       <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.1,pointerEvents:'none',zIndex:0}}/>
       <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 30%, rgba(10,12,18,.45) 100%)',pointerEvents:'none',zIndex:1}}/>
       <style>{`
-        .svc-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
-        .svc-cell { position:relative; overflow:hidden; cursor:pointer; border-radius:14px; height:240px; }
-        .svc-cell-photo .svc-bg { position:absolute; inset:0; background-size:cover; background-position:center; transition:transform .5s cubic-bezier(.22,1,.36,1); }
-        .svc-cell:hover .svc-bg { transform:scale(1.07); }
-        .svc-grad { position:absolute; inset:0; background:linear-gradient(180deg,rgba(10,12,18,.15) 0%,rgba(10,12,18,.85) 100%); pointer-events:none; z-index:1; }
-        .svc-cell-plain { background:linear-gradient(135deg,rgba(27,30,40,.95) 0%,rgba(19,22,30,.98) 100%); border:1px solid rgba(255,255,255,.07); transition:all .28s; }
-        .svc-cell-plain:hover { border-color:rgba(91,145,244,.35); transform:translateY(-3px); box-shadow:0 16px 40px rgba(0,0,0,.35); }
+        @keyframes marqueeL { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+        @keyframes marqueeR { from{transform:translateX(-50%)} to{transform:translateX(0)} }
+        .svc-row-wrap { overflow:hidden; width:100%; }
+        .svc-row-wrap:hover .svc-track { animation-play-state:paused; }
+        .svc-track { display:flex; gap:14px; width:max-content; padding:6px 0; }
+        .svc-card { position:relative; overflow:hidden; cursor:pointer; border-radius:14px; height:220px; width:290px; flex-shrink:0; transition:transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s; }
+        .svc-card:hover { transform:scale(1.06); z-index:10; box-shadow:0 20px 48px rgba(0,0,0,.55); }
+        .svc-card-photo .svc-bg { position:absolute; inset:0; background-size:cover; background-position:center; }
+        .svc-card-plain { background:linear-gradient(135deg,rgba(27,30,40,.95) 0%,rgba(19,22,30,.98) 100%); border:1px solid rgba(255,255,255,.07); }
+        .svc-grad { position:absolute; inset:0; background:linear-gradient(180deg,rgba(10,12,18,.10) 0%,rgba(10,12,18,.88) 100%); pointer-events:none; z-index:1; }
         .svc-label { position:absolute; bottom:0; left:0; right:0; padding:18px 20px; z-index:2; }
         .svc-lsub { font-size:10px; font-weight:700; letter-spacing:.13em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:4px; }
         .svc-ltitle { font-size:15px; font-weight:800; color:#fff; line-height:1.2; letter-spacing:-.01em; }
-        @media(max-width:900px){ .svc-grid { grid-template-columns:1fr 1fr !important; } .svc-cell { height:190px !important; } }
-        @media(max-width:600px){ .svc-grid { grid-template-columns:1fr !important; } .svc-cell { height:180px !important; } }
       `}</style>
 
+      {/* Section header */}
       <div className="inner" style={{position:'relative',zIndex:2}}>
-        {/* Section header */}
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}}
           style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:40,flexWrap:'wrap',gap:16}}>
           <div>
@@ -442,37 +443,77 @@ const Services = () => {
             Alle Leistungen <Ic.Arrow s={13}/>
           </a>
         </motion.div>
+      </div>
 
-        {/* Unified 3-column service grid */}
-        <motion.div className="svc-grid" initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:.6}}>
-          {items.map((item, idx) => {
-            const withPhoto = hasPhoto(idx);
-            return (
-              <div key={idx} className={`svc-cell${withPhoto?' svc-cell-photo':' svc-cell-plain'}`} onClick={()=>setModal(item)}>
-                {withPhoto ? (
-                  <>
-                    <div className="svc-bg" style={{backgroundImage:`url('${item.img}')`}}/>
-                    <div className="svc-grad"/>
-                    <div className="svc-label">
-                      <div className="svc-lsub">{item.sub}</div>
-                      <div className="svc-ltitle">{item.title}</div>
+      {/* Marquee rows – full width */}
+      <div style={{position:'relative',zIndex:2}}>
+
+        {/* Row 1 – slides left · items 0–4 (all photo cards) */}
+        <div className="svc-row-wrap" style={{marginBottom:14}}>
+          <div className="svc-track" style={{animation:'marqueeL 34s linear infinite'}}>
+            {[...items.slice(0,5),...items.slice(0,5)].map((item,idx)=>{
+              const withPhoto = hasPhoto(idx % 5);
+              return (
+                <div key={idx} className={`svc-card${withPhoto?' svc-card-photo':' svc-card-plain'}`} onClick={()=>setModal(item)}>
+                  {withPhoto ? (
+                    <>
+                      <div className="svc-bg" style={{backgroundImage:`url('${item.img}')`}}/>
+                      <div className="svc-grad"/>
+                      <div className="svc-label">
+                        <div className="svc-lsub">{item.sub}</div>
+                        <div className="svc-ltitle">{item.title}</div>
+                      </div>
+                    </>
+                  ) : (
+                    <div style={{position:'absolute',inset:0,display:'flex',flexDirection:'column',justifyContent:'space-between',padding:'20px'}}>
+                      <div style={{position:'absolute',top:0,right:0,width:120,height:120,borderRadius:'50%',background:'radial-gradient(circle,rgba(91,145,244,.12) 0%,transparent 70%)',pointerEvents:'none'}}/>
+                      <div style={{width:42,height:42,borderRadius:11,background:'rgba(91,145,244,.12)',border:'1px solid rgba(91,145,244,.2)',display:'flex',alignItems:'center',justifyContent:'center'}}>{item.ico}</div>
+                      <div>
+                        <div style={{fontSize:9,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:5,opacity:.8}}>{item.sub}</div>
+                        <div style={{fontSize:14,fontWeight:800,color:'var(--white)',lineHeight:1.2,marginBottom:5}}>{item.title}</div>
+                        <div style={{fontSize:11,color:'var(--smoke)',lineHeight:1.4}}>{item.desc}</div>
+                      </div>
                     </div>
-                  </>
-                ) : (
-                  <div style={{position:'absolute',inset:0,display:'flex',flexDirection:'column',justifyContent:'space-between',padding:'22px 20px'}}>
-                    <div style={{position:'absolute',top:0,right:0,width:160,height:160,borderRadius:'50%',background:'radial-gradient(circle,rgba(91,145,244,.12) 0%,transparent 70%)',pointerEvents:'none'}}/>
-                    <div style={{width:46,height:46,borderRadius:12,background:'rgba(91,145,244,.12)',border:'1px solid rgba(91,145,244,.2)',display:'flex',alignItems:'center',justifyContent:'center'}}>{item.ico}</div>
-                    <div>
-                      <div style={{fontSize:9,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:6,opacity:.8}}>{item.sub}</div>
-                      <div style={{fontSize:15,fontWeight:800,color:'var(--white)',lineHeight:1.2,marginBottom:6}}>{item.title}</div>
-                      <div style={{fontSize:11,color:'var(--smoke)',lineHeight:1.5}}>{item.desc}</div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Row 2 – slides right · items 5–9 */}
+        <div className="svc-row-wrap">
+          <div className="svc-track" style={{animation:'marqueeR 28s linear infinite'}}>
+            {[...items.slice(5),...items.slice(5)].map((item,idx)=>{
+              const withPhoto = hasPhoto((idx % 5) + 5);
+              return (
+                <div key={idx} className={`svc-card${withPhoto?' svc-card-photo':' svc-card-plain'}`} onClick={()=>setModal(item)}>
+                  {withPhoto ? (
+                    <>
+                      <div className="svc-bg" style={{backgroundImage:`url('${item.img}')`}}/>
+                      <div className="svc-grad"/>
+                      <div className="svc-label">
+                        <div className="svc-lsub">{item.sub}</div>
+                        <div className="svc-ltitle">{item.title}</div>
+                      </div>
+                    </>
+                  ) : (
+                    <div style={{position:'absolute',inset:0,display:'flex',flexDirection:'column',justifyContent:'space-between',padding:'20px'}}>
+                      <div style={{position:'absolute',top:0,right:0,width:120,height:120,borderRadius:'50%',background:'radial-gradient(circle,rgba(91,145,244,.12) 0%,transparent 70%)',pointerEvents:'none'}}/>
+                      <div style={{width:42,height:42,borderRadius:11,background:'rgba(91,145,244,.12)',border:'1px solid rgba(91,145,244,.2)',display:'flex',alignItems:'center',justifyContent:'center'}}>{item.ico}</div>
+                      <div>
+                        <div style={{fontSize:9,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:5,opacity:.8}}>{item.sub}</div>
+                        <div style={{fontSize:14,fontWeight:800,color:'var(--white)',lineHeight:1.2,marginBottom:5}}>{item.title}</div>
+                        <div style={{fontSize:11,color:'var(--smoke)',lineHeight:1.4}}>{item.desc}</div>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </motion.div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
       </div>
 
       {/* Detail modal */}
