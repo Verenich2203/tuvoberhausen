@@ -400,7 +400,6 @@ const Services = () => {
   /* ── refs ── */
   const containerRef  = useRef(null);
   const activeCardRef = useRef(null);
-  const wheelLock     = useRef(false);
   const autoTimer     = useRef(null);
   const drag          = useRef({ on: false, startX: 0, moved: false });
 
@@ -440,20 +439,6 @@ const Services = () => {
     return () => clearInterval(autoTimer.current);
   }, [isAreaHovered, goNext]);
 
-  /* ── wheel → next/prev (non-passive so we can preventDefault) ── */
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const handler = (e) => {
-      e.preventDefault();
-      if (wheelLock.current) return;
-      wheelLock.current = true;
-      setTimeout(() => { wheelLock.current = false; }, 680);
-      (e.deltaY > 0 || e.deltaX > 0) ? goNext() : goPrev();
-    };
-    el.addEventListener('wheel', handler, { passive: false });
-    return () => el.removeEventListener('wheel', handler);
-  }, [goNext, goPrev]);
 
   /* ── magnetic 3-D tilt on the active card ── */
   const onStageMouseMove = useCallback((e) => {
