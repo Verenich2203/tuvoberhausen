@@ -730,11 +730,21 @@ function TableView({ bookings, onStatus, onPatch, onDelete, showToast }) {
 
       {/* Status filter chips */}
       <div style={{ display:'flex', gap:6, flexWrap:'wrap', alignItems:'center' }}>
-        {[['all','Alle'],['pending','Ausstehend'],['completed','Abgeschlossen'],['cancelled','Storniert']].map(([k,l]) => (
-          <button key={k} className={`filter-chip${statusF===k?' active':''}`} onClick={() => setStatusF(k)}>
-            {l} <span style={{ opacity:.65, fontSize:11 }}>({statusCounts[k]})</span>
-          </button>
-        ))}
+        {[
+          ['all',       'Alle',          { idle:{ bg:'#F8FAFC', border:'#E2E8F0', color:'#64748B' }, active:{ bg:'#EEF2FF', border:'#6366F1', color:'#4F46E5' } }],
+          ['pending',   'Ausstehend',    { idle:{ bg:'#FFFDF5', border:'#FDE68A', color:'#92400E' }, active:{ bg:'#FFFBEB', border:'#F59E0B', color:'#B45309' } }],
+          ['completed', 'Abgeschlossen', { idle:{ bg:'#F4FDF8', border:'#A7F3D0', color:'#065F46' }, active:{ bg:'#ECFDF5', border:'#10B981', color:'#047857' } }],
+          ['cancelled', 'Storniert',     { idle:{ bg:'#FFF8F8', border:'#FECACA', color:'#991B1B' }, active:{ bg:'#FEF2F2', border:'#EF4444', color:'#B91C1C' } }],
+        ].map(([k, l, c]) => {
+          const isActive = statusF === k;
+          const s = isActive ? c.active : c.idle;
+          return (
+            <button key={k} onClick={() => setStatusF(k)}
+              style={{ padding:'5px 14px', borderRadius:5, border:`1.5px solid ${s.border}`, fontSize:12, fontWeight: isActive ? 700 : 600, cursor:'pointer', fontFamily:'inherit', transition:'all .15s', background:s.bg, color:s.color, boxShadow: isActive ? `0 0 0 3px ${s.border}33` : 'none' }}>
+              {l} <span style={{ opacity:.65, fontSize:11 }}>({statusCounts[k]})</span>
+            </button>
+          );
+        })}
         <span style={{ marginLeft:'auto', fontSize:12, color:'#94A3B8', fontWeight:500 }}>{filtered.length} von {bookings.length} Einträgen</span>
       </div>
 
