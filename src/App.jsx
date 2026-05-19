@@ -999,12 +999,14 @@ const BookingSection = () => {
         date: form.datum,
         time_slot: form.zeit,
         service: form.services.join(' + '),
-        vehicle_type: null,
-        plate: form.kennzeichen || '—',
+        vehicle_type: '',
+        plate: form.kennzeichen || null,
         name: `${form.vorname} ${form.nachname}`.trim(),
         phone: form.telefon,
-        email: form.email,
-        notes: [form.anmerkungen, form.abholservice ? `Abhol- & Bringservice: ${form.abholadresse}` : ''].filter(Boolean).join('\n') || null,
+        email: form.email || null,
+        notes: form.anmerkungen || null,
+        pickup_service: form.abholservice,
+        pickup_address: form.abholservice ? form.abholadresse : null,
       });
       const bookingId = result[0]?.id;
       if (bookingId) {

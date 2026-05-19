@@ -241,7 +241,7 @@ for (let h = 8; h <= 18; h++) {
 
 function exportCSV(bookings) {
   const cols = ['Datum','Uhrzeit','Name','Kennzeichen','Fahrzeugtyp','Service','Telefon','E-Mail','Status','Anmerkungen'];
-  const rows = bookings.map(b => [b.date,b.time_slot,b.name,b.plate,b.vehicle_type,b.service,b.phone,b.email,b.status,b.notes||''].map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(','));
+  const rows = bookings.map(b => [b.date,b.time_slot,b.name,b.plate,b.service,b.phone,b.email,b.status,b.pickup_service?'Ja':'Nein',b.pickup_address||'',b.notes||''].map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(','));
   const blob = new Blob(['﻿' + [cols.join(','),...rows].join('\n')], { type: 'text/csv;charset=utf-8;' });
   const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: `termine_${today()}.csv` });
   a.click();
@@ -609,7 +609,7 @@ function TableView({ bookings, onStatus, onPatch, onDelete, showToast }) {
 
   const filtered = bookings.filter(b => {
     const q = search.toLowerCase();
-    const ms = !q || [b.name, b.phone, b.plate, b.email, b.service].some(v => (v||'').toLowerCase().includes(q));
+    const ms = !q || [b.name, b.phone, b.plate, b.email, b.service, b.pickup_address].some(v => (v||'').toLowerCase().includes(q));
     const mst = statusF === 'all' || validStatus(b.status) === statusF;
     const msv = serviceF === 'all' || b.service === serviceF;
     const md = dateF === 'all' ? true : dateF === 'today' ? b.date === todayStr : dateF === 'tomorrow' ? b.date === tomStr : dateF === 'week' ? b.date >= todayStr && b.date <= weekEnd : true;
@@ -724,7 +724,12 @@ function TableView({ bookings, onStatus, onPatch, onDelete, showToast }) {
                         <span style={{ background:'#EEF2FF', color:'#4F46E5', padding:'2px 8px', borderRadius:4, fontSize:12, fontWeight:700 }}>{b.plate||'—'}</span>
                         {b.plate && <CopyBtn value={b.plate} showToast={showToast}/>}
                       </div>
-                      <div style={{ fontSize:11, color:'#94A3B8' }}>{b.vehicle_type||'—'}</div>
+                      {b.pickup_service && (
+                        <div style={{ display:'flex', alignItems:'flex-start', gap:4, marginTop:2 }}>
+                          <span style={{ background:'#FFF7ED', color:'#C2410C', border:'1px solid #FED7AA', padding:'1px 6px', borderRadius:4, fontSize:10, fontWeight:700, whiteSpace:'nowrap', flexShrink:0 }}>🚗 Abholservice</span>
+                          {b.pickup_address && <span style={{ fontSize:10, color:'#64748B', lineHeight:1.3 }}>{b.pickup_address}</span>}
+                        </div>
+                      )}
                     </td>
                     {/* Leistung */}
                     <td className="tbl-td" style={{ maxWidth:140 }}>
