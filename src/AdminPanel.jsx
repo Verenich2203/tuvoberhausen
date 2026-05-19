@@ -337,9 +337,9 @@ function StatusSelect({ value, onChange }) {
   return (
     <select className="status-sel" value={s} onChange={e => onChange(e.target.value)}
       style={{ color: c.dark, background: c.bg, borderColor: c.border }}>
-      <option value="pending">⏳ Ausstehend</option>
-      <option value="completed">✅ Abgeschlossen</option>
-      <option value="cancelled">❌ Storniert</option>
+      <option value="pending">Ausstehend</option>
+      <option value="completed">Abgeschlossen</option>
+      <option value="cancelled">Storniert</option>
     </select>
   );
 }
@@ -602,6 +602,7 @@ function TableView({ bookings, onStatus, onPatch, onDelete, showToast }) {
   const [editId, setEditId]       = useState(null);
   const [editNotes, setEditNotes] = useState('');
   const [sending, setSending]     = useState(null);
+  const [pickupVals, setPickupVals] = useState({});   // { [id]: { date, time } }
 
   const todayStr = today(); const tomStr = tomorrow();
   const weekEnd  = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
@@ -626,6 +627,19 @@ function TableView({ bookings, onStatus, onPatch, onDelete, showToast }) {
   const saveNotes = async id => {
     try { await onPatch(id, { notes: editNotes || null }); setEditId(null); showToast('Notiz gespeichert'); }
     catch { showToast('Fehler beim Speichern', false); }
+  };
+
+  const setPVal = (id, key, val) =>
+    setPickupVals(p => ({ ...p, [id]: { ...(p[id] || {}), [key]: val } }));
+
+  const savePickup = async (id, b) => {
+    const v = pickupVals[id] || {};
+    const date = v.date !== undefined ? v.date : (b.pickup_date || null);
+    const time = v.time !== undefined ? v.time : (b.pickup_time || null);
+    try {
+      await onPatch(id, { pickup_date: date || null, pickup_time: time || null });
+      showToast('Abholzeit gespeichert');
+    } catch { showToast('Fehler beim Speichern', false); }
   };
 
   const handleEmail = async (b) => {
@@ -694,7 +708,7 @@ function TableView({ bookings, onStatus, onPatch, onDelete, showToast }) {
             </thead>
             <tbody>
               {filtered.length === 0 ? (
-                <tr><td colSpan={7} style={{ padding:'52px', textAlign:'center', color:'#94A3B8', fontSize:14 }}>🔍 Keine Ergebnisse gefunden.</td></tr>
+                <tr><td colSpan={7} style={{ padding:'52px', textAlign:'center', color:'#94A3B8', fontSize:14 }}>Keine Ergebnisse gefunden.</td></tr>
               ) : filtered.map(b => {
                 const st = validStatus(b.status);
                 return (
@@ -718,18 +732,38 @@ function TableView({ bookings, onStatus, onPatch, onDelete, showToast }) {
                         </div>
                       )}
                     </td>
-                    {/* Fahrzeug */}
-                    <td className="tbl-td">
-                      <div style={{ display:'flex', alignItems:'center', gap:5, marginBottom:3 }}>
+                    {/* Fahrzeug + Abholservice */}
+                    <td className="tbl-td" style={{ minWidth: b.pickup_service ? 240 : undefined }}>
+                      <div style={{ display:'flex', alignItems:'center', gap:5, marginBottom: b.pickup_service ? 6 : 0 }}>
                         <span style={{ background:'#EEF2FF', color:'#4F46E5', padding:'2px 8px', borderRadius:4, fontSize:12, fontWeight:700 }}>{b.plate||'—'}</span>
                         {b.plate && <CopyBtn value={b.plate} showToast={showToast}/>}
                       </div>
-                      {b.pickup_service && (
-                        <div style={{ display:'flex', alignItems:'flex-start', gap:4, marginTop:2 }}>
-                          <span style={{ background:'#FFF7ED', color:'#C2410C', border:'1px solid #FED7AA', padding:'1px 6px', borderRadius:4, fontSize:10, fontWeight:700, whiteSpace:'nowrap', flexShrink:0 }}>🚗 Abholservice</span>
-                          {b.pickup_address && <span style={{ fontSize:10, color:'#64748B', lineHeight:1.3 }}>{b.pickup_address}</span>}
-                        </div>
-                      )}
+                      {b.pickup_service && (() => {
+                        const pv = pickupVals[b.id] || {};
+                        const curDate = pv.date !== undefined ? pv.date : (b.pickup_date || '');
+                        const curTime = pv.time !== undefined ? pv.time : (b.pickup_time || '');
+                        const inpStyle = { fontSize:11, padding:'3px 6px', border:'1px solid #E2E8F0', borderRadius:5, color:'#334155', outline:'none', background:'#F8FAFC', fontFamily:'inherit' };
+                        return (
+                          <div style={{ borderTop:'1px solid #F1F5F9', paddingTop:6 }}>
+                            <span style={{ background:'#FFF7ED', color:'#C2410C', border:'1px solid #FED7AA', padding:'2px 8px', borderRadius:4, fontSize:10, fontWeight:700 }}>Abholservice</span>
+                            {b.pickup_address && (
+                              <div style={{ fontSize:11, color:'#64748B', marginTop:4, lineHeight:1.4 }}>{b.pickup_address}</div>
+                            )}
+                            <div style={{ display:'flex', gap:4, marginTop:6, alignItems:'center', flexWrap:'wrap' }}>
+                              <input type="date" value={curDate}
+                                onChange={e => setPVal(b.id, 'date', e.target.value)}
+                                style={{ ...inpStyle, width:130 }}/>
+                              <input type="time" value={curTime}
+                                onChange={e => setPVal(b.id, 'time', e.target.value)}
+                                style={{ ...inpStyle, width:80 }}/>
+                              <button onClick={() => savePickup(b.id, b)}
+                                style={{ background:'#ECFDF5', border:'1px solid #A7F3D0', borderRadius:5, cursor:'pointer', padding:'3px 10px', color:'#047857', fontSize:11, fontWeight:700 }}>
+                                Speichern
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })()}
                     </td>
                     {/* Leistung */}
                     <td className="tbl-td" style={{ maxWidth:140 }}>
