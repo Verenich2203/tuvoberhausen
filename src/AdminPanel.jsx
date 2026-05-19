@@ -172,6 +172,12 @@ const Icon = {
       <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
     </svg>
   ),
+  Gear: ({size=14}) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+  ),
 };
 
 // ─── STATUS CONFIG ─────────────────────────────────────────────────────────────
@@ -599,10 +605,13 @@ function TableView({ bookings, onStatus, onPatch, onDelete, showToast }) {
   const [serviceF, setServiceF]   = useState('all');
   const [sortCol, setSortCol]     = useState('date');
   const [sortDir, setSortDir]     = useState('desc');
-  const [editId, setEditId]       = useState(null);
-  const [editNotes, setEditNotes] = useState('');
-  const [sending, setSending]     = useState(null);
-  const [pickupVals, setPickupVals] = useState({});   // { [id]: { date, time } }
+  const [editId, setEditId]         = useState(null);
+  const [editNotes, setEditNotes]   = useState('');
+  const [sending, setSending]       = useState(null);
+  const [pickupEditId, setPickupEditId] = useState(null);
+  const [pickupForm, setPickupForm]     = useState({ address:'', date:'', time:'' });
+  const [editModalId, setEditModalId]   = useState(null);
+  const [editForm, setEditForm]         = useState({});
 
   const todayStr = today(); const tomStr = tomorrow();
   const weekEnd  = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
@@ -629,16 +638,52 @@ function TableView({ bookings, onStatus, onPatch, onDelete, showToast }) {
     catch { showToast('Fehler beim Speichern', false); }
   };
 
-  const setPVal = (id, key, val) =>
-    setPickupVals(p => ({ ...p, [id]: { ...(p[id] || {}), [key]: val } }));
+  const openPickupEdit = (b) => {
+    if (pickupEditId === b.id) { setPickupEditId(null); return; }
+    setPickupEditId(b.id);
+    setPickupForm({ address: b.pickup_address||'', date: b.pickup_date||'', time: b.pickup_time||'' });
+  };
 
-  const savePickup = async (id, b) => {
-    const v = pickupVals[id] || {};
-    const date = v.date !== undefined ? v.date : (b.pickup_date || null);
-    const time = v.time !== undefined ? v.time : (b.pickup_time || null);
+  const savePickupForm = async (id) => {
     try {
-      await onPatch(id, { pickup_date: date || null, pickup_time: time || null });
-      showToast('Abholzeit gespeichert');
+      await onPatch(id, { pickup_address: pickupForm.address||null, pickup_date: pickupForm.date||null, pickup_time: pickupForm.time||null });
+      setPickupEditId(null);
+      showToast('Abholservice gespeichert');
+    } catch { showToast('Fehler beim Speichern', false); }
+  };
+
+  const openEditModal = (b) => {
+    setEditModalId(b.id);
+    setEditForm({
+      date: b.date||'', time_slot: (b.time_slot||'').slice(0,5),
+      service: b.service||'', name: b.name||'',
+      phone: b.phone||'', email: b.email||'',
+      plate: b.plate||'', notes: b.notes||'',
+      pickup_service: !!b.pickup_service,
+      pickup_address: b.pickup_address||'',
+      pickup_date: b.pickup_date||'', pickup_time: b.pickup_time||'',
+    });
+  };
+
+  const saveEditModal = async () => {
+    try {
+      const fields = {
+        date: editForm.date||null,
+        time_slot: editForm.time_slot ? editForm.time_slot+':00' : null,
+        service: editForm.service||null,
+        name: editForm.name||null,
+        phone: editForm.phone||null,
+        email: editForm.email||null,
+        plate: editForm.plate||null,
+        notes: editForm.notes||null,
+        pickup_service: editForm.pickup_service,
+        pickup_address: editForm.pickup_service ? (editForm.pickup_address||null) : null,
+        pickup_date: editForm.pickup_service ? (editForm.pickup_date||null) : null,
+        pickup_time: editForm.pickup_service ? (editForm.pickup_time||null) : null,
+      };
+      await onPatch(editModalId, fields);
+      setEditModalId(null);
+      showToast('Buchung gespeichert');
     } catch { showToast('Fehler beim Speichern', false); }
   };
 
@@ -733,37 +778,52 @@ function TableView({ bookings, onStatus, onPatch, onDelete, showToast }) {
                       )}
                     </td>
                     {/* Fahrzeug + Abholservice */}
-                    <td className="tbl-td" style={{ minWidth: b.pickup_service ? 240 : undefined }}>
-                      <div style={{ display:'flex', alignItems:'center', gap:5, marginBottom: b.pickup_service ? 6 : 0 }}>
+                    <td className="tbl-td" style={{ minWidth:160 }}>
+                      <div style={{ display:'flex', alignItems:'center', gap:5 }}>
                         <span style={{ background:'#EEF2FF', color:'#4F46E5', padding:'2px 8px', borderRadius:4, fontSize:12, fontWeight:700 }}>{b.plate||'—'}</span>
                         {b.plate && <CopyBtn value={b.plate} showToast={showToast}/>}
                       </div>
-                      {b.pickup_service && (() => {
-                        const pv = pickupVals[b.id] || {};
-                        const curDate = pv.date !== undefined ? pv.date : (b.pickup_date || '');
-                        const curTime = pv.time !== undefined ? pv.time : (b.pickup_time || '');
-                        const inpStyle = { fontSize:11, padding:'3px 6px', border:'1px solid #E2E8F0', borderRadius:5, color:'#334155', outline:'none', background:'#F8FAFC', fontFamily:'inherit' };
-                        return (
-                          <div style={{ borderTop:'1px solid #F1F5F9', paddingTop:6 }}>
-                            <span style={{ background:'#FFF7ED', color:'#C2410C', border:'1px solid #FED7AA', padding:'2px 8px', borderRadius:4, fontSize:10, fontWeight:700 }}>Abholservice</span>
-                            {b.pickup_address && (
-                              <div style={{ fontSize:11, color:'#64748B', marginTop:4, lineHeight:1.4 }}>{b.pickup_address}</div>
-                            )}
-                            <div style={{ display:'flex', gap:4, marginTop:6, alignItems:'center', flexWrap:'wrap' }}>
-                              <input type="date" value={curDate}
-                                onChange={e => setPVal(b.id, 'date', e.target.value)}
-                                style={{ ...inpStyle, width:130 }}/>
-                              <input type="time" value={curTime}
-                                onChange={e => setPVal(b.id, 'time', e.target.value)}
-                                style={{ ...inpStyle, width:80 }}/>
-                              <button onClick={() => savePickup(b.id, b)}
-                                style={{ background:'#ECFDF5', border:'1px solid #A7F3D0', borderRadius:5, cursor:'pointer', padding:'3px 10px', color:'#047857', fontSize:11, fontWeight:700 }}>
-                                Speichern
-                              </button>
-                            </div>
+                      {b.pickup_service && (
+                        <div style={{ marginTop:6, paddingTop:6, borderTop:'1px solid #F1F5F9' }}>
+                          {/* compact read-only row */}
+                          <div style={{ display:'flex', alignItems:'center', gap:5, flexWrap:'wrap' }}>
+                            <span style={{ background:'#FFF7ED', color:'#C2410C', border:'1px solid #FED7AA', padding:'1px 7px', borderRadius:4, fontSize:10, fontWeight:700, flexShrink:0 }}>Abholservice</span>
+                            <span style={{ fontSize:11, color:'#64748B', flex:1, minWidth:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+                              {[b.pickup_address, b.pickup_date && fmtDateShort(b.pickup_date), b.pickup_time ? b.pickup_time.slice(0,5) : ''].filter(Boolean).join(' · ') || '—'}
+                            </span>
+                            <button onClick={() => openPickupEdit(b)} title="Abholservice bearbeiten"
+                              style={{ background: pickupEditId===b.id ? '#EEF2FF':'none', border:'none', cursor:'pointer', color: pickupEditId===b.id ? '#6366F1':'#94A3B8', display:'flex', alignItems:'center', padding:'2px 3px', borderRadius:4, flexShrink:0, transition:'color .15s,background .15s' }}>
+                              <Icon.Gear size={13}/>
+                            </button>
                           </div>
-                        );
-                      })()}
+                          {/* inline edit panel */}
+                          {pickupEditId === b.id && (
+                            <div style={{ marginTop:8, display:'flex', flexDirection:'column', gap:5 }}>
+                              <input type="text" placeholder="Adresse" value={pickupForm.address}
+                                onChange={e => setPickupForm(f => ({...f, address:e.target.value}))}
+                                style={{ fontSize:11, padding:'4px 7px', border:'1.5px solid #C7D2FE', borderRadius:5, color:'#334155', outline:'none', background:'#fff', fontFamily:'inherit', width:'100%' }}/>
+                              <div style={{ display:'flex', gap:4 }}>
+                                <input type="date" value={pickupForm.date}
+                                  onChange={e => setPickupForm(f => ({...f, date:e.target.value}))}
+                                  style={{ fontSize:11, padding:'4px 6px', border:'1.5px solid #C7D2FE', borderRadius:5, color:'#334155', outline:'none', background:'#fff', fontFamily:'inherit', flex:1 }}/>
+                                <input type="time" value={pickupForm.time}
+                                  onChange={e => setPickupForm(f => ({...f, time:e.target.value}))}
+                                  style={{ fontSize:11, padding:'4px 6px', border:'1.5px solid #C7D2FE', borderRadius:5, color:'#334155', outline:'none', background:'#fff', fontFamily:'inherit', width:78 }}/>
+                              </div>
+                              <div style={{ display:'flex', gap:4 }}>
+                                <button onClick={() => savePickupForm(b.id)}
+                                  style={{ flex:1, background:'#6366F1', border:'none', borderRadius:5, cursor:'pointer', padding:'4px 0', color:'#fff', fontSize:11, fontWeight:700, fontFamily:'inherit' }}>
+                                  Speichern
+                                </button>
+                                <button onClick={() => setPickupEditId(null)}
+                                  style={{ background:'#F1F5F9', border:'none', borderRadius:5, cursor:'pointer', padding:'4px 10px', color:'#64748B', fontSize:11, fontFamily:'inherit' }}>
+                                  Abbrechen
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </td>
                     {/* Leistung */}
                     <td className="tbl-td" style={{ maxWidth:140 }}>
@@ -799,6 +859,11 @@ function TableView({ bookings, onStatus, onPatch, onDelete, showToast }) {
                             {sending === b.id ? <Icon.Refresh spin/> : <Icon.Send/>}
                           </button>
                         )}
+                        <button className="adm-btn" onClick={() => openEditModal(b)}
+                          style={{ background:'#EFF6FF', color:'#2563EB', border:'1px solid #BFDBFE', padding:'4px 8px', borderRadius:5, fontSize:11 }}
+                          title="Buchung bearbeiten">
+                          <Icon.Gear size={13}/>
+                        </button>
                         <button className="adm-btn" onClick={() => onDelete(b.id, b.name)}
                           style={{ background:'#FEF2F2', color:'#B91C1C', border:'1px solid #FECACA', padding:'4px 8px', borderRadius:5, fontSize:11 }}
                           title="Buchung löschen">
@@ -813,6 +878,109 @@ function TableView({ bookings, onStatus, onPatch, onDelete, showToast }) {
           </table>
         </div>
       </div>
+
+      {/* ── Full Booking Edit Modal ── */}
+      {editModalId && (() => {
+        const ef = editForm;
+        const inp = (extra={}) => ({ fontSize:13, padding:'7px 10px', border:'1.5px solid #E2E8F0', borderRadius:6, color:'#1E293B', outline:'none', background:'#fff', fontFamily:'inherit', width:'100%', boxSizing:'border-box', ...extra });
+        const lbl = (text) => <label style={{ display:'block', fontSize:11, fontWeight:700, color:'#64748B', textTransform:'uppercase', letterSpacing:'.05em', marginBottom:4 }}>{text}</label>;
+        const field = (label, node) => <div style={{ display:'flex', flexDirection:'column', marginBottom:12 }}>{lbl(label)}{node}</div>;
+        return (
+          <div onClick={() => setEditModalId(null)} style={{ position:'fixed', inset:0, zIndex:9000, background:'rgba(15,23,42,.55)', backdropFilter:'blur(4px)', display:'flex', alignItems:'center', justifyContent:'center', padding:20 }}>
+            <div onClick={e => e.stopPropagation()} style={{ background:'#fff', borderRadius:12, boxShadow:'0 24px 80px rgba(0,0,0,.25)', width:'100%', maxWidth:560, maxHeight:'90vh', overflow:'auto', animation:'fadeUp .2s ease-out' }}>
+              {/* Header */}
+              <div style={{ padding:'18px 22px', borderBottom:'1px solid #F1F5F9', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                <div style={{ display:'flex', alignItems:'center', gap:9 }}>
+                  <div style={{ width:32, height:32, borderRadius:7, background:'#EFF6FF', display:'flex', alignItems:'center', justifyContent:'center', color:'#2563EB' }}><Icon.Gear size={15}/></div>
+                  <div>
+                    <div style={{ fontSize:15, fontWeight:800, color:'#1E293B' }}>Buchung bearbeiten</div>
+                    <div style={{ fontSize:11, color:'#94A3B8' }}>{ef.name || 'Unbekannt'}</div>
+                  </div>
+                </div>
+                <button onClick={() => setEditModalId(null)} style={{ background:'#F1F5F9', border:'none', borderRadius:6, cursor:'pointer', width:30, height:30, display:'flex', alignItems:'center', justifyContent:'center', color:'#64748B' }}><Icon.Close/></button>
+              </div>
+              {/* Body */}
+              <div style={{ padding:'20px 22px' }}>
+                {/* Row: date + time */}
+                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginBottom:12 }}>
+                  <div>
+                    {lbl('Datum')}
+                    <input type="date" style={inp()} value={ef.date} onChange={e => setEditForm(f => ({...f, date:e.target.value}))}/>
+                  </div>
+                  <div>
+                    {lbl('Uhrzeit')}
+                    <select style={inp()} value={ef.time_slot} onChange={e => setEditForm(f => ({...f, time_slot:e.target.value}))}>
+                      <option value="">— Uhrzeit wählen —</option>
+                      {TIME_SLOTS.map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                  </div>
+                </div>
+                {field('Leistung',
+                  <input type="text" style={inp()} value={ef.service} onChange={e => setEditForm(f => ({...f, service:e.target.value}))} placeholder="z.B. HU + AU"/>
+                )}
+                {/* Row: name + plate */}
+                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginBottom:12 }}>
+                  <div>
+                    {lbl('Name')}
+                    <input type="text" style={inp()} value={ef.name} onChange={e => setEditForm(f => ({...f, name:e.target.value}))} placeholder="Vor- und Nachname"/>
+                  </div>
+                  <div>
+                    {lbl('Kennzeichen')}
+                    <input type="text" style={inp()} value={ef.plate} onChange={e => setEditForm(f => ({...f, plate:e.target.value}))} placeholder="z.B. OB-AB 123"/>
+                  </div>
+                </div>
+                {/* Row: phone + email */}
+                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginBottom:12 }}>
+                  <div>
+                    {lbl('Telefon')}
+                    <input type="tel" style={inp()} value={ef.phone} onChange={e => setEditForm(f => ({...f, phone:e.target.value}))} placeholder="+49 …"/>
+                  </div>
+                  <div>
+                    {lbl('E-Mail')}
+                    <input type="email" style={inp()} value={ef.email} onChange={e => setEditForm(f => ({...f, email:e.target.value}))} placeholder="name@example.de"/>
+                  </div>
+                </div>
+                {field('Anmerkungen',
+                  <textarea style={{ ...inp(), resize:'vertical', minHeight:64 }} value={ef.notes} onChange={e => setEditForm(f => ({...f, notes:e.target.value}))} placeholder="Interne Notizen…"/>
+                )}
+                {/* Abholservice section */}
+                <div style={{ background:'#FFFBEB', border:'1px solid #FDE68A', borderRadius:8, padding:'12px 14px', marginTop:4 }}>
+                  <label style={{ display:'flex', alignItems:'center', gap:8, cursor:'pointer', marginBottom: ef.pickup_service ? 12 : 0 }}>
+                    <input type="checkbox" checked={ef.pickup_service} onChange={e => setEditForm(f => ({...f, pickup_service:e.target.checked}))}
+                      style={{ width:15, height:15, accentColor:'#D97706', cursor:'pointer' }}/>
+                    <span style={{ fontSize:13, fontWeight:700, color:'#92400E' }}>Abholservice</span>
+                  </label>
+                  {ef.pickup_service && (
+                    <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+                      {lbl('Abholadresse')}
+                      <input type="text" style={inp()} value={ef.pickup_address} onChange={e => setEditForm(f => ({...f, pickup_address:e.target.value}))} placeholder="Straße, Hausnummer, PLZ Ort"/>
+                      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginTop:4 }}>
+                        <div>
+                          {lbl('Abholdatum')}
+                          <input type="date" style={inp()} value={ef.pickup_date} onChange={e => setEditForm(f => ({...f, pickup_date:e.target.value}))}/>
+                        </div>
+                        <div>
+                          {lbl('Abholzeit')}
+                          <input type="time" style={inp()} value={ef.pickup_time} onChange={e => setEditForm(f => ({...f, pickup_time:e.target.value}))}/>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              {/* Footer */}
+              <div style={{ padding:'14px 22px', borderTop:'1px solid #F1F5F9', display:'flex', gap:8, justifyContent:'flex-end' }}>
+                <button onClick={() => setEditModalId(null)} style={{ padding:'8px 18px', background:'#F1F5F9', color:'#475569', border:'1px solid #E2E8F0', borderRadius:6, fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'inherit' }}>
+                  Abbrechen
+                </button>
+                <button onClick={saveEditModal} style={{ padding:'8px 22px', background:'linear-gradient(135deg,#6366F1,#4F46E5)', color:'#fff', border:'none', borderRadius:6, fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', boxShadow:'0 4px 12px rgba(99,102,241,.35)' }}>
+                  Speichern
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
