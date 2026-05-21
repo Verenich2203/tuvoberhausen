@@ -1368,7 +1368,7 @@ const BookingSection = () => {
             </button>
           </motion.div>
         ) : (
-          <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}}>
+          <motion.div initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{duration:.35,ease:[.22,1,.36,1]}}>
             <StepDots/>
 
             {/* ── STEP 1: Service selection ── */}
