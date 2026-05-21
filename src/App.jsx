@@ -1245,7 +1245,7 @@ const BookingSection = () => {
       <div style={{position:'absolute',bottom:'-15%',right:'-6%',width:600,height:600,borderRadius:'50%',background:'radial-gradient(circle,rgba(91,145,244,.09) 0%,transparent 70%)',pointerEvents:'none',zIndex:1}}/>
       <div style={{position:'absolute',top:'40%',left:'55%',width:320,height:320,borderRadius:'50%',background:'radial-gradient(circle,rgba(120,80,255,.07) 0%,transparent 70%)',pointerEvents:'none',zIndex:1}}/>
       <style>{`
-        .bk-card { background:#fff; border:1px solid rgba(91,145,244,.10); border-top:2.5px solid var(--accent); border-radius:22px; padding:34px; box-shadow:0 24px 72px rgba(0,0,0,.28), 0 4px 20px rgba(0,0,0,.12); }
+        .bk-card { background:#F0F4F8; border:1px solid rgba(91,145,244,.12); border-top:2.5px solid var(--accent); border-radius:22px; padding:34px; box-shadow:0 24px 72px rgba(0,0,0,.28), 0 4px 20px rgba(0,0,0,.12); }
         .bk-inp { width:100%; padding:11px 14px; background:#F7F9FC; border:1.5px solid #E2E8F0; border-radius:10px; font-size:14px; color:#1E293B; font-family:var(--sans); outline:none; transition:all .18s; box-sizing:border-box; }
         .bk-inp:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(91,145,244,.10); background:#fff; }
         .bk-inp::placeholder { color:#94A3B8; }
