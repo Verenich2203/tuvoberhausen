@@ -168,6 +168,7 @@ const G = () => (
     .marquee-inner:hover { animation-play-state:paused; }
     @keyframes spin { to { transform:rotate(360deg); } }
     .spin { animation:spin .7s linear infinite; display:inline-block; }
+    @keyframes softPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.85)} }
     .slot-btn {
       padding:9px 6px; border-radius:8px; cursor:pointer; transition:all .15s;
       font-family:var(--sans); font-weight:700; font-size:13px;
@@ -243,10 +244,9 @@ const G = () => (
     @media (max-width:900px) {
       .bg-img { background-attachment:scroll; }
     }
-    /* ── stats strip ── */
-    .stats-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:0; }
-    @media (max-width:768px) { .stats-strip { grid-template-columns:repeat(2,1fr); } }
-    @media (max-width:400px) { .stats-strip { grid-template-columns:1fr 1fr; } }
+    /* ── hero stats grid responsive ── */
+    .hero-stats { display:grid; grid-template-columns:repeat(4,1fr); }
+    @media (max-width:600px) { .hero-stats { grid-template-columns:repeat(2,1fr); gap:20px 0; } }
   `}</style>
 );
 
@@ -358,31 +358,90 @@ const Navbar = ({ onBook }) => {
   );
 };
 
-/* ─── HERO ───────────────────────────────────────────────────────────────── */
-const Hero = ({ onBook }) => (
-  <div className="section-full" style={{minHeight:'92vh',display:'flex',alignItems:'center',position:'relative',overflow:'hidden',background:'var(--black)'}}>
-    <div className="bg-img" style={{backgroundImage:"url('WhatsApp1.jpeg')",backgroundPosition:'center top',zIndex:0}}/>
-    <div style={{position:'absolute',inset:0,background:'linear-gradient(160deg,rgba(20,22,26,.92) 0%,rgba(20,22,26,.78) 60%,rgba(20,22,26,.65) 100%)',zIndex:1,pointerEvents:'none'}}/>
-    <HeroBg/>
-    <div className="inner" style={{position:'relative',zIndex:2,width:'100%',textAlign:'center',padding:'80px 64px'}}>
-      <motion.div initial={{opacity:0,y:32}} animate={{opacity:1,y:0}} transition={{duration:.9,ease:[.22,1,.36,1]}} style={{maxWidth:760,margin:'0 auto'}}>
-        <div className="tag" style={{marginBottom:28,justifyContent:'center'}}>
-          Akkreditierter KFZ-Prüfstützpunkt
-        </div>
-        <h1 style={{fontWeight:800,fontSize:'clamp(38px,6vw,76px)',color:'var(--white)',lineHeight:1.06,letterSpacing:'-.025em',marginBottom:24}}>
-          Ihr TÜV in<br/><span style={{color:'var(--accent)'}}>Oberhausen</span>
-        </h1>
-        <p style={{fontSize:17,color:'var(--text)',lineHeight:1.8,maxWidth:520,margin:'0 auto 44px'}}>
-          Haupt- und Abgasuntersuchung einfach schnell online buchen. Auch ohne Termin möglich!
-        </p>
-        <div style={{display:'flex',gap:16,flexWrap:'wrap',justifyContent:'center'}}>
-          <button className="btn btn-primary" style={{fontSize:14,gap:9,padding:'15px 36px'}} onClick={onBook}>Termin buchen <Ic.Arrow s={16}/></button>
-          <a href={PHONE_HREF} className="btn btn-ghost" style={{fontSize:14,gap:9,padding:'15px 36px'}}><Ic.Phone s={16}/> {PHONE}</a>
-        </div>
-      </motion.div>
+/* ─── HERO COUNT (mini count-up for inline hero stats) ───────────────────── */
+const HeroCount = ({ end, suffix, active }) => {
+  const [val, setVal] = useState(0);
+  const raf = useRef(null);
+  useEffect(() => {
+    if (!active) return;
+    const start = performance.now();
+    const tick = now => {
+      const t = Math.min((now - start) / 1600, 1);
+      const ease = 1 - Math.pow(1 - t, 4);
+      setVal(Math.round(ease * end));
+      if (t < 1) raf.current = requestAnimationFrame(tick);
+    };
+    raf.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf.current);
+  }, [active, end]);
+  return (
+    <div style={{fontSize:'clamp(26px,3vw,38px)',fontWeight:900,lineHeight:1,letterSpacing:'-.03em',color:'#fff',display:'flex',alignItems:'baseline',justifyContent:'center',gap:1}}>
+      {val.toLocaleString('de-DE')}
+      <span style={{color:'var(--accent)',fontSize:'.72em',fontWeight:900}}>{suffix}</span>
     </div>
-  </div>
-);
+  );
+};
+
+/* ─── HERO ───────────────────────────────────────────────────────────────── */
+const Hero = ({ onBook }) => {
+  const [statsActive, setStatsActive] = useState(false);
+  const statsRef = useRef(null);
+  useEffect(() => {
+    const el = statsRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setStatsActive(true); obs.disconnect(); } }, { threshold: 0.1 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div className="section-full" style={{minHeight:'92vh',display:'flex',alignItems:'center',position:'relative',overflow:'hidden',background:'var(--black)'}}>
+      <div className="bg-img" style={{backgroundImage:"url('WhatsApp1.jpeg')",backgroundPosition:'center top',zIndex:0}}/>
+      <div style={{position:'absolute',inset:0,background:'linear-gradient(160deg,rgba(20,22,26,.93) 0%,rgba(20,22,26,.80) 60%,rgba(20,22,26,.68) 100%)',zIndex:1,pointerEvents:'none'}}/>
+      <HeroBg/>
+      <div className="inner" style={{position:'relative',zIndex:2,width:'100%',textAlign:'center',padding:'72px 64px 64px'}}>
+        <motion.div initial={{opacity:0,y:32}} animate={{opacity:1,y:0}} transition={{duration:.9,ease:[.22,1,.36,1]}} style={{maxWidth:760,margin:'0 auto'}}>
+          <div className="tag" style={{marginBottom:28,justifyContent:'center'}}>
+            Akkreditierter KFZ-Prüfstützpunkt
+          </div>
+          <h1 style={{fontWeight:800,fontSize:'clamp(38px,6vw,76px)',color:'var(--white)',lineHeight:1.06,letterSpacing:'-.025em',marginBottom:24}}>
+            Ihr TÜV in<br/><span style={{color:'var(--accent)'}}>Oberhausen</span>
+          </h1>
+          <p style={{fontSize:17,color:'var(--text)',lineHeight:1.8,maxWidth:520,margin:'0 auto 16px'}}>
+            Haupt- und Abgasuntersuchung einfach schnell online buchen. Auch ohne Termin möglich!
+          </p>
+          {/* NEW badge */}
+          <div style={{marginBottom:36}}>
+            <span style={{display:'inline-flex',alignItems:'center',gap:7,background:'rgba(91,145,244,.10)',border:'1px solid rgba(91,145,244,.22)',borderRadius:20,padding:'6px 16px',fontSize:12,fontWeight:700,color:'var(--accent)',letterSpacing:'.04em'}}>
+              <span style={{width:6,height:6,borderRadius:'50%',background:'var(--accent)',flexShrink:0,animation:'softPulse 2s ease-in-out infinite'}}/>
+              Jetzt Neu: Abhol- und Bring-Service
+            </span>
+          </div>
+          <div style={{display:'flex',gap:16,flexWrap:'wrap',justifyContent:'center'}}>
+            <button className="btn btn-primary" style={{fontSize:14,gap:9,padding:'15px 36px'}} onClick={onBook}>Termin buchen <Ic.Arrow s={16}/></button>
+            <a href={PHONE_HREF} className="btn btn-ghost" style={{fontSize:14,gap:9,padding:'15px 36px'}}><Ic.Phone s={16}/> {PHONE}</a>
+          </div>
+
+          {/* ── Stats strip inside hero ── */}
+          <div ref={statsRef} className="hero-stats" style={{marginTop:52,paddingTop:36,borderTop:'1px solid rgba(255,255,255,.07)'}}>
+            {STATS.map((s, i) => {
+              const count = statsActive ? undefined : 0; // StatCard handles its own count
+              return (
+                <motion.div key={s.label}
+                  initial={{opacity:0,y:16}} animate={statsActive?{opacity:1,y:0}:{}}
+                  transition={{duration:.5,delay:i*.1,ease:[.22,1,.36,1]}}
+                  style={{padding:'0 12px',borderRight:i<STATS.length-1?'1px solid rgba(255,255,255,.06)':'none',textAlign:'center'}}>
+                  <HeroCount end={s.end} suffix={s.suffix} active={statsActive}/>
+                  <div style={{marginTop:5,fontSize:'clamp(9px,1vw,11px)',fontWeight:700,color:'rgba(255,255,255,.35)',textTransform:'uppercase',letterSpacing:'.1em'}}>{s.label}</div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+};
 
 /* ─── TRUST BAR ─────────────────────────────────────────────────────────── */
 const TrustBar = () => {
@@ -2005,7 +2064,6 @@ export default function App() {
       <TrustBar/>
       <Services/>
       <Steps/>
-      <Stats/>
       <BookingSection/>
       <FAQ/>
       <Contact/>
