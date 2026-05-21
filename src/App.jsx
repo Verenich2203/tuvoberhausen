@@ -1321,8 +1321,9 @@ const BookingSection = () => {
                   <div style={{width:52,height:52,borderRadius:14,background:'rgba(91,145,244,.18)',border:'1.5px solid rgba(91,145,244,.35)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 14px',boxShadow:'0 4px 16px rgba(91,145,244,.25)'}}>
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                   </div>
-                  <div style={{fontSize:17,fontWeight:800,color:'#fff',marginBottom:4,letterSpacing:'-.01em',textShadow:'0 2px 8px rgba(0,0,0,.5)'}}>Oberhausen</div>
-                  <div style={{fontSize:11,color:'rgba(255,255,255,.7)',marginBottom:14,letterSpacing:'.04em'}}>Prüfstützpunkt Hauptstandort</div>
+                  <div style={{fontSize:17,fontWeight:800,color:'#fff',marginBottom:3,letterSpacing:'-.01em',textShadow:'0 2px 8px rgba(0,0,0,.5)'}}>Oberhausen</div>
+                  <div style={{fontSize:11,color:'rgba(255,255,255,.7)',marginBottom:4,letterSpacing:'.04em'}}>Prüfstützpunkt Hauptstandort</div>
+                  <div style={{fontSize:10,color:'rgba(255,255,255,.55)',marginBottom:13,letterSpacing:'.02em'}}>Mülheimer Str. 155 · 46045 Oberhausen</div>
                   <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'rgba(16,185,129,.15)',border:'1px solid rgba(16,185,129,.35)',backdropFilter:'blur(6px)',borderRadius:10,padding:'4px 12px',fontSize:10,fontWeight:700,color:'#10B981',letterSpacing:'.06em'}}>
                     <span style={{width:5,height:5,borderRadius:'50%',background:'#10B981',animation:'softPulse 2s ease-in-out infinite'}}/>
                     Jetzt buchen
@@ -1842,7 +1843,66 @@ const Footer = ({ openModal }) => (
 
 /* ─── LEGAL MODALS ───────────────────────────────────────────────────────── */
 const LegalContent = {
-  Impressum: (<div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.85}}><h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:8}}>Angaben gemäß § 5 TMG</h4><p style={{marginBottom:16}}>AutoService Oberhausen<br/>Musterstraße 123<br/>46045 Oberhausen<br/><br/>Telefon: {PHONE}<br/>E-Mail: info@autoservice-ob.de</p><h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:6}}>Verantwortlich §55 Abs. 2 RStV</h4><p>[Vollständiger Name], Musterstraße 123, 46045 Oberhausen</p></div>),
+  Impressum: (
+    <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.9}}>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10,marginTop:0}}>Angaben gemäß § 5 TMG</h4>
+      <p style={{marginBottom:20}}>
+        <strong style={{color:'var(--white)'}}>Ing.-Büro Qureischi</strong><br/>
+        Kooperationspartner des TÜV NORD<br/>
+        Mülheimer Str. 155<br/>
+        46045 Oberhausen<br/>
+        Deutschland
+      </p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Kontakt</h4>
+      <p style={{marginBottom:20}}>
+        Telefon: <a href="tel:+4915755476991" style={{color:'var(--accent)',textDecoration:'none'}}>01575 5476991</a><br/>
+        E-Mail: <a href="mailto:aqureischi@extern.tuev-nord.de" style={{color:'var(--accent)',textDecoration:'none'}}>aqureischi@extern.tuev-nord.de</a>
+      </p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Betriebsstätte</h4>
+      <p style={{marginBottom:20}}>
+        <strong style={{color:'var(--white)'}}>KFZ-Prüfstützpunkt · Malik Car-Service</strong><br/>
+        Mülheimer Str. 155<br/>
+        46045 Oberhausen
+      </p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Verantwortlich für den Inhalt gemäß § 55 Abs. 2 RStV</h4>
+      <p style={{marginBottom:20}}>
+        A. Qureischi<br/>
+        Mülheimer Str. 155<br/>
+        46045 Oberhausen
+      </p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Berufsrechtliche Regelungen</h4>
+      <p style={{marginBottom:20}}>
+        Das Ing.-Büro Qureischi ist als Kooperationspartner des TÜV NORD akkreditiert und führt Hauptuntersuchungen (HU) sowie Abgasuntersuchungen (AU) gemäß § 29 StVZO durch. Die Tätigkeit unterliegt den Vorschriften der StVZO, insbesondere § 29 i.V.m. Anlage VIII StVZO sowie den Richtlinien des Kraftfahrt-Bundesamtes (KBA).
+      </p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Haftungsausschluss</h4>
+      <p style={{marginBottom:12}}>
+        <strong style={{color:'var(--white)'}}>Haftung für Inhalte:</strong> Die Inhalte dieser Website wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich.
+      </p>
+      <p style={{marginBottom:12}}>
+        <strong style={{color:'var(--white)'}}>Haftung für Links:</strong> Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.
+      </p>
+      <p style={{marginBottom:20}}>
+        <strong style={{color:'var(--white)'}}>Urheberrecht:</strong> Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
+      </p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>EU-Streitschlichtung</h4>
+      <p style={{marginBottom:20}}>
+        Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:{' '}
+        <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>https://ec.europa.eu/consumers/odr/</a>.<br/>
+        Unsere E-Mail-Adresse finden Sie oben im Impressum. Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
+      </p>
+
+      <p style={{fontSize:11,color:'rgba(255,255,255,.25)',marginTop:24,borderTop:'1px solid rgba(255,255,255,.07)',paddingTop:14}}>
+        Stand: Mai 2026
+      </p>
+    </div>
+  ),
   Datenschutz: (<div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.85}}><h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:8}}>Datenschutzerklärung</h4><p>Wir verarbeiten personenbezogene Daten ausschließlich gemäß DSGVO, BDSG und TTDSG.</p></div>),
   AGB: (<div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.85}}><h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:8}}>AGB</h4><p><strong style={{color:'var(--ink)'}}>§ 1 Geltungsbereich</strong><br/>Diese AGB gelten für alle Terminbuchungen über autoservice-ob.de.</p></div>),
   'Cookie-Einstellungen': null,
@@ -1853,7 +1913,7 @@ const Modal = ({ title, onClose }) => {
   return (
     <div style={{position:'fixed',inset:0,zIndex:999,display:'flex',alignItems:'center',justifyContent:'center',padding:16}}>
       <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={onClose} style={{position:'absolute',inset:0,background:'rgba(0,0,0,.75)',backdropFilter:'blur(6px)'}}/>
-      <motion.div initial={{opacity:0,y:24,scale:.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:12,scale:.97}} style={{position:'relative',background:'var(--dark)',width:'100%',maxWidth:540,maxHeight:'86vh',borderRadius:16,display:'flex',flexDirection:'column',boxShadow:'0 24px 52px rgba(0,0,0,.5)',overflow:'hidden',border:'1px solid rgba(255,255,255,.07)'}}>
+      <motion.div initial={{opacity:0,y:24,scale:.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:12,scale:.97}} style={{position:'relative',background:'var(--dark)',width:'100%',maxWidth:680,maxHeight:'88vh',borderRadius:16,display:'flex',flexDirection:'column',boxShadow:'0 24px 52px rgba(0,0,0,.5)',overflow:'hidden',border:'1px solid rgba(255,255,255,.07)'}}>
         <div style={{padding:'18px 24px',borderBottom:'1px solid rgba(255,255,255,.07)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
           <h3 style={{fontWeight:700,fontSize:18,color:'var(--white)'}}>{title}</h3>
           <button onClick={onClose} style={{background:'rgba(255,255,255,.07)',border:'none',width:32,height:32,borderRadius:'50%',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.X s={15} c="var(--text)"/></button>
