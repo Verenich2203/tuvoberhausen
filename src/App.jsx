@@ -397,7 +397,7 @@ const Hero = ({ onBook }) => {
   return (
     <div className="section-full" style={{minHeight:'92vh',display:'flex',alignItems:'center',position:'relative',overflow:'hidden',background:'var(--black)'}}>
       <div className="bg-img" style={{backgroundImage:"url('WhatsApp1.jpeg')",backgroundPosition:'center top',zIndex:0}}/>
-      <div style={{position:'absolute',inset:0,background:'linear-gradient(160deg,rgba(20,22,26,.93) 0%,rgba(20,22,26,.80) 60%,rgba(20,22,26,.68) 100%)',zIndex:1,pointerEvents:'none'}}/>
+      <div style={{position:'absolute',inset:0,background:'linear-gradient(160deg,rgba(20,22,26,.82) 0%,rgba(20,22,26,.68) 60%,rgba(20,22,26,.54) 100%)',zIndex:1,pointerEvents:'none'}}/>
       <HeroBg/>
       <div className="inner" style={{position:'relative',zIndex:2,width:'100%',textAlign:'center',padding:'44px 64px 40px'}}>
         <motion.div initial={{opacity:0,y:32}} animate={{opacity:1,y:0}} transition={{duration:.9,ease:[.22,1,.36,1]}} style={{maxWidth:760,margin:'0 auto'}}>
@@ -573,7 +573,7 @@ const Services = () => {
          style={{position:'relative',paddingTop:72,paddingBottom:80,overflow:'hidden',background:'var(--dark)'}}>
 
       {/* background texture */}
-      <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.1,pointerEvents:'none',zIndex:0}}/>
+      <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.18,pointerEvents:'none',zIndex:0}}/>
       <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 30%, rgba(10,12,18,.45) 100%)',pointerEvents:'none',zIndex:1}}/>
 
       {/* ── scoped styles ── */}
@@ -965,7 +965,7 @@ const Steps = () => {
   const steps = [{n:'01',title:'Online buchen',desc:'Leistung, Datum und Zeit wählen — rund um die Uhr.'},{n:'02',title:'Bestätigung',desc:'Bestätigungsmail mit allen Termindaten.'},{n:'03',title:'Fahrzeug bringen',desc:'Unser Team führt die Prüfung durch.'},{n:'04',title:'Plakette erhalten',desc:'Plakette und Prüfdokumente direkt vor Ort.'}];
   return (
     <div id="ablauf" className="section-full sec" style={{background:'var(--black)',position:'relative',overflow:'hidden'}}>
-      <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.04,pointerEvents:'none',zIndex:0}}/>
+      <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.12,pointerEvents:'none',zIndex:0}}/>
       <SectionDeco side="left"/>
       <div className="inner" style={{position:'relative',zIndex:1}}>
         <div className="steps-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0 80px',alignItems:'start'}}>
@@ -1245,7 +1245,7 @@ const BookingSection = () => {
   return (
     <div id="termin" className="section-full" style={{position:'relative',background:'var(--dark)',paddingTop:72,paddingBottom:72,overflow:'hidden'}}>
       {/* Background photo */}
-      <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.1,pointerEvents:'none',zIndex:0}}/>
+      <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.18,pointerEvents:'none',zIndex:0}}/>
       {/* Radial vignette */}
       <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 30%, rgba(10,12,18,.45) 100%)',pointerEvents:'none',zIndex:1}}/>
       {/* Decorative orbs */}
@@ -1375,29 +1375,43 @@ const BookingSection = () => {
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,maxWidth:640,margin:'0 auto'}}>
               {/* Oberhausen — active */}
               <button onClick={()=>setSelectedCenter('oberhausen')}
-                style={{background:'linear-gradient(160deg,rgba(31,35,46,.85) 0%,rgba(19,22,30,.92) 100%)',backdropFilter:'blur(20px)',WebkitBackdropFilter:'blur(20px)',border:'1.5px solid rgba(91,145,244,.30)',borderTop:'2px solid rgba(91,145,244,.5)',borderRadius:18,padding:'28px 22px',cursor:'pointer',textAlign:'center',transition:'all .28s cubic-bezier(.22,1,.36,1)',boxShadow:'0 8px 36px rgba(0,0,0,.4)',fontFamily:'inherit',position:'relative',overflow:'hidden'}}>
-                <div style={{position:'absolute',top:0,left:'50%',transform:'translateX(-50%)',width:80,height:2,background:'linear-gradient(90deg,transparent,rgba(91,145,244,.6),transparent)',borderRadius:2}}/>
-                <div style={{width:52,height:52,borderRadius:14,background:'rgba(91,145,244,.12)',border:'1.5px solid rgba(91,145,244,.25)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 14px',boxShadow:'0 4px 16px rgba(91,145,244,.2)'}}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                </div>
-                <div style={{fontSize:16,fontWeight:800,color:'var(--white)',marginBottom:4,letterSpacing:'-.01em'}}>Oberhausen</div>
-                <div style={{fontSize:11,color:'var(--smoke)',marginBottom:12,letterSpacing:'.04em'}}>Prüfstützpunkt Hauptstandort</div>
-                <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'rgba(16,185,129,.1)',border:'1px solid rgba(16,185,129,.25)',borderRadius:10,padding:'3px 10px',fontSize:10,fontWeight:700,color:'#10B981',letterSpacing:'.06em'}}>
-                  <span style={{width:5,height:5,borderRadius:'50%',background:'#10B981',animation:'softPulse 2s ease-in-out infinite'}}/>
-                  Jetzt buchen
+                style={{border:'1.5px solid rgba(91,145,244,.35)',borderTop:'2px solid rgba(91,145,244,.55)',borderRadius:18,padding:'28px 22px',cursor:'pointer',textAlign:'center',transition:'all .28s cubic-bezier(.22,1,.36,1)',boxShadow:'0 8px 36px rgba(0,0,0,.5)',fontFamily:'inherit',position:'relative',overflow:'hidden',minHeight:200}}>
+                {/* bg photo */}
+                <div style={{position:'absolute',inset:0,backgroundImage:"url('WhatsApp1.jpeg')",backgroundSize:'cover',backgroundPosition:'center',zIndex:0}}/>
+                <div style={{position:'absolute',inset:0,background:'linear-gradient(160deg,rgba(10,14,22,.75) 0%,rgba(10,14,22,.60) 100%)',zIndex:1}}/>
+                {/* top accent line */}
+                <div style={{position:'absolute',top:0,left:'50%',transform:'translateX(-50%)',width:80,height:2,background:'linear-gradient(90deg,transparent,rgba(91,145,244,.7),transparent)',borderRadius:2,zIndex:2}}/>
+                {/* content */}
+                <div style={{position:'relative',zIndex:2}}>
+                  <div style={{width:52,height:52,borderRadius:14,background:'rgba(91,145,244,.18)',border:'1.5px solid rgba(91,145,244,.35)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 14px',boxShadow:'0 4px 16px rgba(91,145,244,.25)'}}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  </div>
+                  <div style={{fontSize:17,fontWeight:800,color:'#fff',marginBottom:4,letterSpacing:'-.01em',textShadow:'0 2px 8px rgba(0,0,0,.5)'}}>Oberhausen</div>
+                  <div style={{fontSize:11,color:'rgba(255,255,255,.7)',marginBottom:14,letterSpacing:'.04em'}}>Prüfstützpunkt Hauptstandort</div>
+                  <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'rgba(16,185,129,.15)',border:'1px solid rgba(16,185,129,.35)',backdropFilter:'blur(6px)',borderRadius:10,padding:'4px 12px',fontSize:10,fontWeight:700,color:'#10B981',letterSpacing:'.06em'}}>
+                    <span style={{width:5,height:5,borderRadius:'50%',background:'#10B981',animation:'softPulse 2s ease-in-out infinite'}}/>
+                    Jetzt buchen
+                  </div>
                 </div>
               </button>
 
               {/* Essen — coming soon */}
-              <div style={{background:'linear-gradient(160deg,rgba(22,24,32,.7) 0%,rgba(14,16,22,.8) 100%)',backdropFilter:'blur(12px)',WebkitBackdropFilter:'blur(12px)',border:'1.5px solid rgba(255,255,255,.06)',borderRadius:18,padding:'28px 22px',textAlign:'center',opacity:.55,position:'relative',overflow:'hidden',cursor:'not-allowed'}}>
-                <div style={{position:'absolute',top:10,right:12,background:'rgba(251,191,36,.12)',border:'1px solid rgba(251,191,36,.25)',borderRadius:8,padding:'3px 9px',fontSize:9,fontWeight:800,color:'#FBBF24',letterSpacing:'.1em',textTransform:'uppercase'}}>Demnächst</div>
-                <div style={{width:52,height:52,borderRadius:14,background:'rgba(255,255,255,.04)',border:'1.5px solid rgba(255,255,255,.08)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 14px'}}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" strokeWidth="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                </div>
-                <div style={{fontSize:16,fontWeight:800,color:'rgba(255,255,255,.4)',marginBottom:4,letterSpacing:'-.01em'}}>Essen</div>
-                <div style={{fontSize:11,color:'rgba(255,255,255,.22)',marginBottom:12,letterSpacing:'.04em'}}>Prüfstützpunkt Essen</div>
-                <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'rgba(255,255,255,.04)',border:'1px solid rgba(255,255,255,.08)',borderRadius:10,padding:'3px 10px',fontSize:10,fontWeight:700,color:'rgba(255,255,255,.25)',letterSpacing:'.06em'}}>
-                  In Kürze verfügbar
+              <div style={{border:'1.5px solid rgba(255,255,255,.08)',borderRadius:18,padding:'28px 22px',textAlign:'center',position:'relative',overflow:'hidden',cursor:'not-allowed',minHeight:200}}>
+                {/* bg photo — extra dark overlay */}
+                <div style={{position:'absolute',inset:0,backgroundImage:"url('WhatsApp2.jpeg')",backgroundSize:'cover',backgroundPosition:'center',zIndex:0}}/>
+                <div style={{position:'absolute',inset:0,background:'rgba(8,10,16,.82)',zIndex:1}}/>
+                {/* demnächst badge */}
+                <div style={{position:'absolute',top:10,right:12,background:'rgba(251,191,36,.12)',border:'1px solid rgba(251,191,36,.25)',borderRadius:8,padding:'3px 9px',fontSize:9,fontWeight:800,color:'#FBBF24',letterSpacing:'.1em',textTransform:'uppercase',zIndex:2}}>Demnächst</div>
+                {/* content */}
+                <div style={{position:'relative',zIndex:2}}>
+                  <div style={{width:52,height:52,borderRadius:14,background:'rgba(255,255,255,.05)',border:'1.5px solid rgba(255,255,255,.09)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 14px'}}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.28)" strokeWidth="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  </div>
+                  <div style={{fontSize:17,fontWeight:800,color:'rgba(255,255,255,.35)',marginBottom:4,letterSpacing:'-.01em'}}>Essen</div>
+                  <div style={{fontSize:11,color:'rgba(255,255,255,.2)',marginBottom:14,letterSpacing:'.04em'}}>Prüfstützpunkt Essen</div>
+                  <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'rgba(255,255,255,.04)',border:'1px solid rgba(255,255,255,.08)',borderRadius:10,padding:'4px 12px',fontSize:10,fontWeight:700,color:'rgba(255,255,255,.22)',letterSpacing:'.06em'}}>
+                    In Kürze verfügbar
+                  </div>
                 </div>
               </div>
             </div>
@@ -1762,7 +1776,7 @@ const FAQ = () => {
   ];
   return (
     <div id="faq" className="section-full sec" style={{background:'var(--dark)',position:'relative',overflow:'hidden'}}>
-      <div className="bg-img" style={{backgroundImage:"url('WhatsApp2.jpeg')",opacity:0.08,pointerEvents:'none',zIndex:0}}/>
+      <div className="bg-img" style={{backgroundImage:"url('WhatsApp2.jpeg')",opacity:0.18,pointerEvents:'none',zIndex:0}}/>
       <SectionDeco side="right" opacity={0.04}/>
       <div className="inner" style={{maxWidth:780,margin:'0 auto',position:'relative',zIndex:1}}>
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:40}}>
