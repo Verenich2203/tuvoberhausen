@@ -234,6 +234,19 @@ const G = () => (
       .contact-map-gradient { background:linear-gradient(180deg,transparent 30%,rgba(20,22,26,.9) 100%); }
       .contact-card { position:static; width:100%; border-radius:0; top:auto; bottom:auto; left:auto; backdrop-filter:none; background:linear-gradient(160deg,#1B1E28 0%,#0D0F15 100%); border:none; border-top:2px solid var(--accent); box-shadow:none; }
     }
+    /* ── background image helpers ── */
+    .bg-img {
+      position:absolute; inset:0;
+      background-size:cover; background-position:center; background-repeat:no-repeat;
+      background-attachment:fixed;
+    }
+    @media (max-width:900px) {
+      .bg-img { background-attachment:scroll; }
+    }
+    /* ── stats strip ── */
+    .stats-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:0; }
+    @media (max-width:768px) { .stats-strip { grid-template-columns:repeat(2,1fr); } }
+    @media (max-width:400px) { .stats-strip { grid-template-columns:1fr 1fr; } }
   `}</style>
 );
 
@@ -348,7 +361,7 @@ const Navbar = ({ onBook }) => {
 /* ─── HERO ───────────────────────────────────────────────────────────────── */
 const Hero = ({ onBook }) => (
   <div className="section-full" style={{minHeight:'92vh',display:'flex',alignItems:'center',position:'relative',overflow:'hidden',background:'var(--black)'}}>
-    <div style={{position:'absolute',inset:0,backgroundImage:"url('second.jpg')",backgroundSize:'cover',backgroundPosition:'center',backgroundAttachment:'fixed',zIndex:0}}/>
+    <div className="bg-img" style={{backgroundImage:"url('WhatsApp1.jpeg')",backgroundPosition:'center top',zIndex:0}}/>
     <div style={{position:'absolute',inset:0,background:'linear-gradient(160deg,rgba(20,22,26,.92) 0%,rgba(20,22,26,.78) 60%,rgba(20,22,26,.65) 100%)',zIndex:1,pointerEvents:'none'}}/>
     <HeroBg/>
     <div className="inner" style={{position:'relative',zIndex:2,width:'100%',textAlign:'center',padding:'80px 64px'}}>
@@ -922,6 +935,90 @@ const Steps = () => {
               </motion.div>
             ))}
           </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ─── STATS ──────────────────────────────────────────────────────────────── */
+const STATS = [
+  { end: 95,   suffix: '%',  label: 'Kundenzufriedenheit', decimals: 0 },
+  { end: 7500, suffix: '+',  label: 'Autos geprüft',       decimals: 0 },
+  { end: 1500, suffix: '+',  label: 'Kfz-Gutachten',       decimals: 0 },
+  { end: 100,  suffix: '%',  label: 'Ohne Termin möglich', decimals: 0 },
+];
+
+function useCountUp(end, duration, active) {
+  const [val, setVal] = useState(0);
+  const raf = useRef(null);
+  useEffect(() => {
+    if (!active) return;
+    const start = performance.now();
+    const tick = (now) => {
+      const t = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - t, 4); // easeOutQuart
+      setVal(Math.round(ease * end));
+      if (t < 1) raf.current = requestAnimationFrame(tick);
+    };
+    raf.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf.current);
+  }, [active, end, duration]);
+  return val;
+}
+
+const StatCard = ({ end, suffix, label, active, idx }) => {
+  const count = useCountUp(end, 1800, active);
+  const isLast = idx === STATS.length - 1;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 28 }}
+      animate={active ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.55, delay: idx * 0.11, ease: [0.22, 1, 0.36, 1] }}
+      style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+        padding: '36px 20px',
+        borderRight: !isLast ? '1px solid rgba(255,255,255,.07)' : 'none',
+        position: 'relative',
+      }}
+    >
+      {/* subtle top glow */}
+      <div style={{ position:'absolute', top:0, left:'50%', transform:'translateX(-50%)', width:60, height:2, background:'linear-gradient(90deg,transparent,rgba(91,145,244,.5),transparent)', borderRadius:2 }}/>
+      <div style={{
+        fontSize: 'clamp(38px,4.5vw,58px)', fontWeight: 900, lineHeight: 1,
+        letterSpacing: '-0.03em', color: '#fff',
+        fontFamily: 'Montserrat, sans-serif',
+        display: 'flex', alignItems: 'baseline', gap: 2,
+      }}>
+        <span>{count.toLocaleString('de-DE')}</span>
+        <span style={{ color: 'var(--accent)', fontSize: '0.75em', fontWeight: 900 }}>{suffix}</span>
+      </div>
+      <div style={{ marginTop: 8, fontSize: 'clamp(10px,1.1vw,12px)', fontWeight: 700, color: 'rgba(255,255,255,.45)', textTransform: 'uppercase', letterSpacing: '.1em', textAlign: 'center' }}>
+        {label}
+      </div>
+    </motion.div>
+  );
+};
+
+const Stats = () => {
+  const [active, setActive] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setActive(true); obs.disconnect(); } }, { threshold: 0.25 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} style={{ background: 'var(--black)', borderTop: '1px solid rgba(255,255,255,.06)', borderBottom: '1px solid rgba(255,255,255,.06)', position: 'relative', overflow: 'hidden' }}>
+      {/* ambient glow blobs */}
+      <div style={{ position:'absolute', left:'-5%', top:'-60%', width:360, height:360, borderRadius:'50%', background:'rgba(91,145,244,.06)', filter:'blur(80px)', pointerEvents:'none' }}/>
+      <div style={{ position:'absolute', right:'-5%', bottom:'-60%', width:300, height:300, borderRadius:'50%', background:'rgba(91,145,244,.05)', filter:'blur(60px)', pointerEvents:'none' }}/>
+      <div className="inner" style={{ padding: 0 }}>
+        <div className="stats-strip">
+          {STATS.map((s, i) => <StatCard key={s.label} {...s} idx={i} active={active}/>)}
         </div>
       </div>
     </div>
@@ -1572,7 +1669,7 @@ const FAQ = () => {
   ];
   return (
     <div id="faq" className="section-full sec" style={{background:'var(--dark)',position:'relative',overflow:'hidden'}}>
-      <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.04,pointerEvents:'none',zIndex:0}}/>
+      <div className="bg-img" style={{backgroundImage:"url('WhatsApp2.jpeg')",opacity:0.08,pointerEvents:'none',zIndex:0}}/>
       <SectionDeco side="right" opacity={0.04}/>
       <div className="inner" style={{maxWidth:780,margin:'0 auto',position:'relative',zIndex:1}}>
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:40}}>
@@ -1908,6 +2005,7 @@ export default function App() {
       <TrustBar/>
       <Services/>
       <Steps/>
+      <Stats/>
       <BookingSection/>
       <FAQ/>
       <Contact/>
