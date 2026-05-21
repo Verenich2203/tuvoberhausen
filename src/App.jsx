@@ -574,7 +574,7 @@ const Services = () => {
          style={{position:'relative',overflow:'hidden',background:'var(--dark)'}}>
 
       {/* background texture */}
-      <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.18,pointerEvents:'none',zIndex:0}}/>
+      <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.23,pointerEvents:'none',zIndex:0}}/>
       <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 30%, rgba(10,12,18,.45) 100%)',pointerEvents:'none',zIndex:1}}/>
 
       {/* ── scoped styles ── */}
@@ -1307,10 +1307,10 @@ const BookingSection = () => {
         {/* ── CENTER PICKER ── */}
         {!selectedCenter && (
           <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{duration:.4,ease:[.22,1,.36,1]}}>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,maxWidth:640,margin:'0 auto'}}>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:20,maxWidth:780,margin:'0 auto'}}>
               {/* Oberhausen — active */}
               <button onClick={()=>setSelectedCenter('oberhausen')}
-                style={{border:'1.5px solid rgba(91,145,244,.35)',borderTop:'2px solid rgba(91,145,244,.55)',borderRadius:18,padding:'28px 22px',cursor:'pointer',textAlign:'center',transition:'all .28s cubic-bezier(.22,1,.36,1)',boxShadow:'0 8px 36px rgba(0,0,0,.5)',fontFamily:'inherit',position:'relative',overflow:'hidden',minHeight:200}}>
+                style={{border:'1.5px solid rgba(91,145,244,.35)',borderTop:'2px solid rgba(91,145,244,.55)',borderRadius:18,padding:'28px 22px',cursor:'pointer',textAlign:'center',transition:'all .28s cubic-bezier(.22,1,.36,1)',boxShadow:'0 8px 36px rgba(0,0,0,.5)',fontFamily:'inherit',position:'relative',overflow:'hidden',minHeight:260}}>
                 {/* bg photo */}
                 <div style={{position:'absolute',inset:0,backgroundImage:"url('WhatsApp1.jpeg')",backgroundSize:'cover',backgroundPosition:'center',zIndex:0}}/>
                 <div style={{position:'absolute',inset:0,background:'linear-gradient(160deg,rgba(10,14,22,.75) 0%,rgba(10,14,22,.60) 100%)',zIndex:1}}/>
@@ -1331,7 +1331,7 @@ const BookingSection = () => {
               </button>
 
               {/* Essen — coming soon */}
-              <div style={{border:'1.5px solid rgba(255,255,255,.08)',borderRadius:18,padding:'28px 22px',textAlign:'center',position:'relative',overflow:'hidden',cursor:'not-allowed',minHeight:200}}>
+              <div style={{border:'1.5px solid rgba(255,255,255,.08)',borderRadius:18,padding:'28px 22px',textAlign:'center',position:'relative',overflow:'hidden',cursor:'not-allowed',minHeight:260}}>
                 {/* bg photo — extra dark overlay */}
                 <div style={{position:'absolute',inset:0,backgroundImage:"url('WhatsApp2.jpeg')",backgroundSize:'cover',backgroundPosition:'center',zIndex:0}}/>
                 <div style={{position:'absolute',inset:0,background:'rgba(8,10,16,.82)',zIndex:1}}/>
