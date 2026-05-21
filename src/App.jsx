@@ -569,8 +569,8 @@ const Services = () => {
   };
 
   return (
-    <div id="leistungen" className="section-full"
-         style={{position:'relative',paddingTop:72,paddingBottom:80,overflow:'hidden',background:'var(--dark)'}}>
+    <div id="leistungen" className="section-full sec"
+         style={{position:'relative',overflow:'hidden',background:'var(--dark)'}}>
 
       {/* background texture */}
       <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.18,pointerEvents:'none',zIndex:0}}/>
@@ -1208,42 +1208,33 @@ const BookingSection = () => {
   const morningSlots = allSlots.filter(s => parseInt(s.split(':')[0]) < 12);
   const afternoonSlots = allSlots.filter(s => parseInt(s.split(':')[0]) >= 12);
 
-  /* input style helpers */
-  const inp = (field) => {
-    const errs = step3Errors();
-    const err = touched[field] && errs[field];
-    return {
-      fontFamily:'var(--sans)', fontSize:14, color:'var(--white)',
-      background:'var(--dark3)', border:`1.5px solid ${err ? '#ef4444' : 'rgba(255,255,255,.08)'}`,
-      borderRadius:8, padding:'10px 13px', width:'100%', outline:'none',
-      transition:'border-color .18s', boxSizing:'border-box',
-    };
-  };
-
-  const labelStyle = { fontSize:11, fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', color:'var(--smoke)', marginBottom:5, display:'block' };
   const fieldWrap = { display:'flex', flexDirection:'column', gap:4 };
 
   /* step indicator */
-  const StepDots = () => (
-    <div style={{display:'flex',alignItems:'center',gap:8,justifyContent:'center',marginBottom:40}}>
-      {[1,2,3].map(n => (
-        <div key={n} style={{display:'flex',alignItems:'center',gap:8}}>
-          <div style={{
-            width:32, height:32, borderRadius:'50%',
-            background: n < step ? 'var(--accent)' : n === step ? 'var(--accent)' : 'rgba(255,255,255,.2)',
-            color: n <= step ? '#fff' : 'var(--smoke)',
-            display:'flex', alignItems:'center', justifyContent:'center',
-            fontWeight:800, fontSize:12, transition:'all .25s',
-            boxShadow: n === step ? '0 4px 14px rgba(91,145,244,.35)' : 'none',
-          }}>{n < step ? <Ic.Check s={13} c="#fff"/> : n}</div>
-          {n < 3 && <div style={{width:40,height:2,background:n < step ? 'var(--accent)' : 'rgba(255,255,255,.2)',borderRadius:1,transition:'background .25s'}}/>}
-        </div>
-      ))}
-    </div>
-  );
+  const StepDots = () => {
+    const labels = ['Leistung','Termin','Kontakt'];
+    return (
+      <div className="bk-stepper">
+        {[1,2,3].map((n,i) => {
+          const state = n < step ? 'done' : n === step ? 'active' : 'todo';
+          return (
+            <React.Fragment key={n}>
+              <div className="bk-step-item">
+                <div className={`bk-step-circle ${state}`}>
+                  {state === 'done' ? <Ic.Check s={13} c="#fff"/> : n}
+                </div>
+                <span className={`bk-step-lbl ${state}`}>{labels[i]}</span>
+              </div>
+              {n < 3 && <div className={`bk-step-line ${step > n ? 'done' : 'todo'}`}/>}
+            </React.Fragment>
+          );
+        })}
+      </div>
+    );
+  };
 
   return (
-    <div id="termin" className="section-full" style={{position:'relative',background:'var(--dark)',paddingTop:72,paddingBottom:72,overflow:'hidden'}}>
+    <div id="termin" className="section-full sec" style={{position:'relative',background:'linear-gradient(170deg,#0D1019 0%,#111520 55%,#0A0E17 100%)',overflow:'hidden'}}>
       {/* Background photo */}
       <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.18,pointerEvents:'none',zIndex:0}}/>
       {/* Radial vignette */}
@@ -1253,111 +1244,54 @@ const BookingSection = () => {
       <div style={{position:'absolute',bottom:'-15%',right:'-6%',width:600,height:600,borderRadius:'50%',background:'radial-gradient(circle,rgba(91,145,244,.09) 0%,transparent 70%)',pointerEvents:'none',zIndex:1}}/>
       <div style={{position:'absolute',top:'40%',left:'55%',width:320,height:320,borderRadius:'50%',background:'radial-gradient(circle,rgba(120,80,255,.07) 0%,transparent 70%)',pointerEvents:'none',zIndex:1}}/>
       <style>{`
-        .bk-card { background: linear-gradient(160deg,rgba(31,35,46,.82) 0%,rgba(19,22,30,.9) 100%); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border: 1px solid rgba(255,255,255,.09); border-top: 1.5px solid rgba(91,145,244,.25); border-radius: 18px; padding: 32px; box-shadow: 0 8px 48px rgba(0,0,0,.45), 0 0 0 1px rgba(91,145,244,.05) inset; }
-
-        /* ── Premium glassmorphism service selector ── */
-        .svc-sel { display:flex; flex-direction:column; gap:9px; }
-        .svc-sel-card {
-          position:relative; display:flex; align-items:center; gap:16px;
-          padding:15px 18px; border-radius:16px; cursor:pointer; overflow:hidden;
-          background:linear-gradient(135deg,rgba(255,255,255,.033) 0%,rgba(255,255,255,.007) 100%);
-          border:1px solid rgba(255,255,255,.07);
-          transition:all .32s cubic-bezier(.22,1,.36,1);
-          backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
-        }
-        /* shimmer top edge */
-        .svc-sel-card::before {
-          content:''; position:absolute; top:0; left:0; right:0; height:1px;
-          background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.16) 50%,transparent 100%);
-          opacity:0; transition:opacity .3s;
-        }
-        .svc-sel-card:hover::before { opacity:1; }
-        .svc-sel-card.active::before { opacity:1; background:linear-gradient(90deg,transparent 0%,rgba(91,145,244,.5) 50%,transparent 100%); }
-        /* left accent bar */
-        .svc-sel-card::after {
-          content:''; position:absolute; left:0; top:12%; bottom:12%;
-          width:3px; border-radius:2px;
-          background:var(--accent);
-          opacity:0; transition:opacity .28s, transform .28s;
-          transform:scaleY(.4);
-        }
-        .svc-sel-card.active::after { opacity:1; transform:scaleY(1); }
-        .svc-sel-card:hover {
-          border-color:rgba(91,145,244,.2);
-          background:linear-gradient(135deg,rgba(91,145,244,.055) 0%,rgba(91,145,244,.018) 100%);
-          box-shadow:0 4px 24px rgba(0,0,0,.28), 0 1px 0 rgba(91,145,244,.08) inset;
-        }
-        .svc-sel-card.active {
-          border-color:rgba(91,145,244,.36);
-          background:linear-gradient(135deg,rgba(91,145,244,.10) 0%,rgba(91,145,244,.035) 100%);
-          box-shadow:0 6px 30px rgba(0,0,0,.32), 0 0 0 1px rgba(91,145,244,.10) inset;
-        }
-        /* 3-D metallic icon */
-        .svc-ico {
-          width:46px; height:46px; border-radius:13px; flex-shrink:0;
-          display:flex; align-items:center; justify-content:center;
-          background:linear-gradient(145deg,rgba(54,64,84,.96) 0%,rgba(24,28,42,.98) 100%);
-          border:1px solid rgba(255,255,255,.10);
-          box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.25),0 5px 14px rgba(0,0,0,.44);
-          transition:all .32s cubic-bezier(.22,1,.36,1);
-        }
-        .svc-sel-card:hover .svc-ico,
-        .svc-sel-card.active .svc-ico {
-          background:linear-gradient(145deg,rgba(68,90,130,.9) 0%,rgba(33,48,80,.95) 100%);
-          border-color:rgba(91,145,244,.24);
-          box-shadow:inset 0 1px 0 rgba(91,145,244,.22),inset 0 -1px 0 rgba(0,0,0,.28),0 6px 18px rgba(0,0,0,.48),0 0 14px rgba(91,145,244,.14);
-        }
-        /* status badge */
-        .svc-badge {
-          display:inline-flex; align-items:center; padding:3px 9px;
-          border-radius:20px; font-size:9px; font-weight:800;
-          letter-spacing:.10em; text-transform:uppercase;
-          transition:all .28s; flex-shrink:0; white-space:nowrap;
-          border:1px solid rgba(255,255,255,.07);
-          color:rgba(255,255,255,.38); background:rgba(255,255,255,.04);
-        }
-        .svc-badge.on {
-          color:var(--accent); background:rgba(91,145,244,.12);
-          border-color:rgba(91,145,244,.3); box-shadow:0 0 8px rgba(91,145,244,.18);
-        }
-        /* glowing radio */
-        .svc-radio {
-          width:23px; height:23px; border-radius:50%; flex-shrink:0;
-          display:flex; align-items:center; justify-content:center;
-          border:1.5px solid rgba(255,255,255,.18);
-          background:rgba(255,255,255,.03);
-          transition:all .32s cubic-bezier(.22,1,.36,1);
-        }
-        .svc-radio.on {
-          border-color:var(--accent);
-          background:rgba(91,145,244,.16);
-          box-shadow:0 0 0 3.5px rgba(91,145,244,.15), 0 0 14px rgba(91,145,244,.4);
-        }
-        .svc-radio-dot {
-          width:8px; height:8px; border-radius:50%;
-          background:var(--accent);
-          box-shadow:0 0 8px rgba(91,145,244,.9);
-          animation:radioPop .22s cubic-bezier(.22,1,.36,1) both;
-        }
-        @keyframes radioPop { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
-        @media(max-width:900px){ .svc-badge{display:none!important;} }
-        @media(max-width:600px){ .svc-sel-card{padding:12px 13px!important;gap:12px!important;} .svc-ico{width:40px;height:40px;border-radius:11px;} }
-        .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
-        .cal-day { width:100%; aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; transition:all .15s; border:none; background:transparent; font-family:var(--sans); }
-        .cal-day:hover:not(:disabled):not(.cal-selected):not(.cal-today) { background: rgba(91,145,244,.12); color: var(--accent); }
-        .cal-day.cal-selected { background: var(--accent); color: #fff; box-shadow: 0 3px 10px rgba(91,145,244,.35); }
-        .cal-day.cal-today { border: 2px solid var(--accent); color: var(--accent); }
-        .cal-day:disabled { color: rgba(255,255,255,.2); cursor: not-allowed; }
-        .bk-nav-btn { background: none; border: 1.5px solid rgba(255,255,255,.1); border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .2s; color: var(--text); }
-        .bk-nav-btn:hover { border-color: var(--accent); color: var(--accent); }
-        @media(max-width:900px){
-          .bk-two-col { grid-template-columns:1fr !important; }
-          .svc-sel-tag { display:none !important; }
-        }
-        @media(max-width:600px){
-          .bk-card { padding:20px 16px !important; }
-          .svc-sel-card { padding:12px 14px !important; gap:12px !important; }
-        }
+        .bk-card { background:#fff; border:1px solid rgba(91,145,244,.10); border-top:2.5px solid var(--accent); border-radius:22px; padding:34px; box-shadow:0 24px 72px rgba(0,0,0,.28), 0 4px 20px rgba(0,0,0,.12); }
+        .bk-inp { width:100%; padding:11px 14px; background:#F7F9FC; border:1.5px solid #E2E8F0; border-radius:10px; font-size:14px; color:#1E293B; font-family:var(--sans); outline:none; transition:all .18s; box-sizing:border-box; }
+        .bk-inp:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(91,145,244,.10); background:#fff; }
+        .bk-inp::placeholder { color:#94A3B8; }
+        .bk-label { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#64748B; margin-bottom:5px; display:block; }
+        /* Step indicator */
+        .bk-stepper { display:flex; align-items:flex-start; justify-content:center; margin-bottom:36px; }
+        .bk-step-item { display:flex; flex-direction:column; align-items:center; gap:6px; flex:1; max-width:120px; }
+        .bk-step-circle { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; transition:all .3s; flex-shrink:0; }
+        .bk-step-circle.done { background:var(--accent); color:#fff; box-shadow:0 4px 12px rgba(91,145,244,.3); }
+        .bk-step-circle.active { background:var(--accent); color:#fff; box-shadow:0 0 0 5px rgba(91,145,244,.18), 0 4px 12px rgba(91,145,244,.3); }
+        .bk-step-circle.todo { background:#F1F5F9; color:#94A3B8; border:2px solid #E2E8F0; }
+        .bk-step-lbl { font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; text-align:center; line-height:1.3; }
+        .bk-step-lbl.active { color:#1E293B; }
+        .bk-step-lbl.done { color:var(--accent); }
+        .bk-step-lbl.todo { color:#CBD5E1; }
+        .bk-step-line { flex:1; height:2px; margin:0 6px; transform:translateY(19px); border-radius:2px; }
+        .bk-step-line.done { background:var(--accent); }
+        .bk-step-line.todo { background:#E2E8F0; }
+        /* Service cards - 2 col light */
+        .svc2-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+        .svc2-card { position:relative; display:flex; align-items:center; gap:11px; padding:12px 14px; border-radius:13px; cursor:pointer; background:#F8FAFC; border:1.5px solid #E8EDF5; transition:all .25s cubic-bezier(.22,1,.36,1); overflow:hidden; }
+        .svc2-card:hover { border-color:rgba(91,145,244,.4); background:#EEF4FF; }
+        .svc2-card.on { background:linear-gradient(135deg,#EEF4FF,#E6EFFE); border-color:var(--accent); box-shadow:0 4px 18px rgba(91,145,244,.14); }
+        .svc2-ico { width:38px; height:38px; border-radius:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#E8F0FF,#D4E3FF); border:1px solid rgba(91,145,244,.18); transition:all .25s; }
+        .svc2-card.on .svc2-ico { background:linear-gradient(135deg,#5B91F4,#3A72E0); border-color:#3A72E0; box-shadow:0 4px 10px rgba(91,145,244,.3); }
+        .svc2-chk { width:18px; height:18px; border-radius:5px; border:1.5px solid #CBD5E1; background:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-left:auto; transition:all .25s; }
+        .svc2-card.on .svc2-chk { background:var(--accent); border-color:var(--accent); }
+        /* Calendar light */
+        .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+        .cal-day { width:100%; aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; transition:all .15s; border:none; background:transparent; font-family:var(--sans); color:#374151; }
+        .cal-day:hover:not(:disabled):not(.cal-selected):not(.cal-today) { background:#EEF4FF; color:var(--accent); }
+        .cal-day.cal-selected { background:var(--accent); color:#fff; box-shadow:0 3px 10px rgba(91,145,244,.35); }
+        .cal-day.cal-today { border:2px solid var(--accent); color:var(--accent); font-weight:800; }
+        .cal-day:disabled { color:#CBD5E1; cursor:not-allowed; }
+        /* Slot buttons light */
+        .bk-slot { padding:9px 4px; border-radius:8px; font-family:var(--sans); font-weight:700; font-size:12px; text-align:center; cursor:pointer; transition:all .15s; border:1.5px solid #E2E8F0; background:#F7F9FC; color:#374151; }
+        .bk-slot:hover:not(:disabled) { border-color:var(--accent); color:var(--accent); background:#EEF4FF; }
+        .bk-slot.sel { background:var(--accent); color:#fff; border-color:var(--accent); box-shadow:0 3px 10px rgba(91,145,244,.3); }
+        .bk-slot:disabled { background:#F8FAFC; color:#CBD5E1; cursor:not-allowed; text-decoration:line-through; border-color:#F1F5F9; }
+        /* Nav btn */
+        .bk-nav-btn { background:none; border:1.5px solid #E2E8F0; border-radius:8px; width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; color:#64748B; }
+        .bk-nav-btn:hover { border-color:var(--accent); color:var(--accent); }
+        /* Pickup btn */
+        .pickup-btn { width:100%; display:flex; align-items:center; gap:12px; padding:14px 16px; border-radius:12px; border:1.5px solid #E2E8F0; background:#F7F9FC; cursor:pointer; text-align:left; transition:all .22s; font-family:var(--sans); }
+        .pickup-btn.on { border-color:var(--accent); background:linear-gradient(135deg,#EEF4FF,#E6EFFE); }
+        @media(max-width:900px){ .bk-two-col { grid-template-columns:1fr !important; } .svc2-grid { grid-template-columns:1fr; } }
+        @media(max-width:600px){ .bk-card { padding:20px 16px !important; border-radius:16px !important; } }
       `}</style>
 
       <div className="inner" style={{maxWidth:860,position:'relative',zIndex:2}}>
@@ -1424,11 +1358,11 @@ const BookingSection = () => {
             <div style={{width:64,height:64,borderRadius:'50%',background:'rgba(16,185,129,.1)',border:'2.5px solid #10B981',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',boxShadow:'0 4px 20px rgba(16,185,129,.2)'}}>
               <Ic.Check s={28} c="#10B981"/>
             </div>
-            <h3 style={{fontWeight:800,fontSize:26,marginBottom:10,color:'var(--white)'}}>Termin bestätigt!</h3>
-            <p style={{color:'var(--smoke)',fontSize:14,lineHeight:1.7,marginBottom:6}}>Ihr Termin wurde erfolgreich gebucht.</p>
+            <h3 style={{fontWeight:800,fontSize:26,marginBottom:10,color:'#1E293B'}}>Termin bestätigt!</h3>
+            <p style={{color:'#64748B',fontSize:14,lineHeight:1.7,marginBottom:6}}>Ihr Termin wurde erfolgreich gebucht.</p>
             <p style={{fontWeight:800,fontSize:18,color:'var(--accent)',marginBottom:4}}>{fmtGermanDate(form.datum)} · {form.zeit} Uhr</p>
-            <p style={{fontSize:14,color:'var(--smoke)',marginBottom:4}}>{form.services.join(', ')}</p>
-            <p style={{fontSize:13,color:'var(--smoke)',marginBottom:28}}>Bestätigungsmail wurde gesendet.</p>
+            <p style={{fontSize:14,color:'#64748B',marginBottom:4}}>{form.services.join(', ')}</p>
+            <p style={{fontSize:13,color:'#64748B',marginBottom:28}}>Bestätigungsmail wurde gesendet.</p>
             <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px'}} onClick={()=>{setSent(false);setStep(1);setSelectedCenter(null);setForm({services:[],datum:'',zeit:'',vorname:'',nachname:'',telefon:'',email:'',anmerkungen:'',kennzeichen:'',abholservice:false,abholadresse:''});setTouched({});}}>
               Neuen Termin buchen
             </button>
@@ -1448,35 +1382,30 @@ const BookingSection = () => {
                     <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:16}}>
                       <div style={{width:34,height:34,borderRadius:'50%',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'var(--accent)',background:'linear-gradient(135deg,rgba(91,145,244,.18),rgba(91,145,244,.06))',border:'1.5px solid rgba(91,145,244,.32)',boxShadow:'0 0 14px rgba(91,145,244,.22)'}}>01</div>
                       <div style={{flex:1,height:1,background:'linear-gradient(90deg,rgba(91,145,244,.28) 0%,transparent 100%)'}}/>
-                      <div style={{fontSize:10,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(255,255,255,.22)'}}>Schritt 1 / 3</div>
+                      <div style={{fontSize:10,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'#94A3B8'}}>Schritt 1 / 3</div>
                     </div>
-                    <h3 style={{fontWeight:800,fontSize:22,color:'var(--white)',letterSpacing:'-.02em',marginBottom:6}}>Was braucht Ihr Fahrzeug?</h3>
-                    <p style={{fontSize:12,color:'rgba(255,255,255,.35)',lineHeight:1.6}}>Mehrere Leistungen kombinierbar</p>
+                    <h3 style={{fontWeight:800,fontSize:22,color:'#1E293B',letterSpacing:'-.02em',marginBottom:6}}>Was braucht Ihr Fahrzeug?</h3>
+                    <p style={{fontSize:12,color:'#64748B',lineHeight:1.6}}>Mehrere Leistungen kombinierbar</p>
                   </div>
 
-                  {/* ── Service cards ── */}
-                  <div className="svc-sel">
+                  {/* ── Service cards 2-col ── */}
+                  <div className="svc2-grid">
                     {serviceItems.map((s,i) => {
                       const active = form.services.includes(s.title);
                       return (
-                        <div key={i} className={`svc-sel-card${active?' active':''}`}
+                        <div key={i} className={`svc2-card${active?' on':''}`}
                           onClick={()=>setField('services', active ? form.services.filter(x=>x!==s.title) : [...form.services, s.title])}>
-
-                          {/* 3-D metallic icon */}
-                          <div className="svc-ico">{s.ico}</div>
-
-                          {/* Title + subtitle */}
-                          <div style={{flex:1,minWidth:0}}>
-                            <div style={{fontWeight:700,fontSize:14,color:'var(--white)',lineHeight:1.25,marginBottom:4,letterSpacing:'-.01em'}}>{s.title}</div>
-                            <div style={{fontSize:11,color:'rgba(255,255,255,.38)',fontWeight:500,letterSpacing:'.03em'}}>{s.sub}</div>
+                          <div className="svc2-ico">
+                            {active
+                              ? React.cloneElement(s.ico, {c:'#fff'})
+                              : React.cloneElement(s.ico, {c:'var(--accent)'})}
                           </div>
-
-                          {/* Badge + glowing radio */}
-                          <div style={{flexShrink:0,display:'flex',alignItems:'center',gap:10}}>
-                            <span className={`svc-badge${active?' on':''}`}>{s.tag}</span>
-                            <div className={`svc-radio${active?' on':''}`}>
-                              {active && <div className="svc-radio-dot"/>}
-                            </div>
+                          <div style={{flex:1,minWidth:0}}>
+                            <div style={{fontWeight:700,fontSize:13,color: active ? '#1E3A6E' : '#1E293B',lineHeight:1.25,marginBottom:2}}>{s.title}</div>
+                            <div style={{fontSize:10,color:'#94A3B8',fontWeight:500}}>{s.sub}</div>
+                          </div>
+                          <div className="svc2-chk">
+                            {active && <Ic.Check s={10} c="#fff"/>}
                           </div>
                         </div>
                       );
@@ -1484,15 +1413,15 @@ const BookingSection = () => {
                   </div>
 
                   {/* ── Footer: counter + CTA ── */}
-                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:26,paddingTop:20,borderTop:'1px solid rgba(255,255,255,.05)',gap:12}}>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:26,paddingTop:20,borderTop:'1px solid #F1F5F9',gap:12}}>
                     <div>
                       {form.services.length > 0 ? (
                         <div>
                           <div style={{fontSize:10,fontWeight:700,letterSpacing:'.10em',textTransform:'uppercase',color:'var(--accent)',marginBottom:2}}>Ausgewählt</div>
-                          <div style={{fontSize:13,fontWeight:700,color:'var(--white)'}}>{form.services.length} {form.services.length===1?'Leistung':'Leistungen'}</div>
+                          <div style={{fontSize:13,fontWeight:700,color:'#1E293B'}}>{form.services.length} {form.services.length===1?'Leistung':'Leistungen'}</div>
                         </div>
                       ) : (
-                        <div style={{fontSize:12,color:'rgba(255,255,255,.22)',fontStyle:'italic'}}>Bitte wählen Sie eine Leistung</div>
+                        <div style={{fontSize:12,color:'#94A3B8',fontStyle:'italic'}}>Bitte wählen Sie eine Leistung</div>
                       )}
                     </div>
                     <button className="btn btn-primary"
@@ -1511,7 +1440,7 @@ const BookingSection = () => {
                 <div className="bk-card">
                   <div style={{marginBottom:24}}>
                     <div style={{fontSize:11,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:8}}>SCHRITT 02</div>
-                    <h3 style={{fontWeight:800,fontSize:22,color:'var(--white)',letterSpacing:'-.01em'}}>Wann soll es sein?</h3>
+                    <h3 style={{fontWeight:800,fontSize:22,color:'#1E293B',letterSpacing:'-.01em'}}>Wann soll es sein?</h3>
                   </div>
                   <div className="bk-two-col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:32,alignItems:'start'}}>
                     {/* Calendar */}
@@ -1520,13 +1449,13 @@ const BookingSection = () => {
                         <button className="bk-nav-btn" onClick={()=>{ if(calMonth===0){setCalMonth(11);setCalYear(y=>y-1);}else setCalMonth(m=>m-1); }}>
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
                         </button>
-                        <span style={{fontWeight:700,fontSize:14,color:'var(--white)'}}>{DE_MONTHS[calMonth]} {calYear}</span>
+                        <span style={{fontWeight:700,fontSize:14,color:'#1E293B'}}>{DE_MONTHS[calMonth]} {calYear}</span>
                         <button className="bk-nav-btn" onClick={()=>{ if(calMonth===11){setCalMonth(0);setCalYear(y=>y+1);}else setCalMonth(m=>m+1); }}>
                           <Ic.ChevR s={14} c="currentColor"/>
                         </button>
                       </div>
                       <div className="cal-grid" style={{marginBottom:8}}>
-                        {DE_DAYS.map(d => <div key={d} style={{textAlign:'center',fontSize:10,fontWeight:700,color:'var(--smoke)',letterSpacing:'.06em',padding:'4px 0'}}>{d}</div>)}
+                        {DE_DAYS.map(d => <div key={d} style={{textAlign:'center',fontSize:10,fontWeight:700,color:'#94A3B8',letterSpacing:'.06em',padding:'4px 0'}}>{d}</div>)}
                       </div>
                       <div className="cal-grid">
                         {(() => {
@@ -1543,8 +1472,7 @@ const BookingSection = () => {
                             cells.push(
                               <button key={d} disabled={disabled}
                                 className={`cal-day${selected?' cal-selected':isToday&&!selected?' cal-today':''}`}
-                                onClick={()=>{ setField('datum', dateStr); setField('zeit',''); }}
-                                style={{color: disabled ? 'rgba(255,255,255,.2)' : selected ? '#fff' : 'var(--text)'}}>
+                                onClick={()=>{ setField('datum', dateStr); setField('zeit',''); }}>
                                 {d}
                               </button>
                             );
@@ -1556,14 +1484,14 @@ const BookingSection = () => {
                     {/* Time slots */}
                     <div>
                       {!form.datum ? (
-                        <div style={{padding:'32px 16px',textAlign:'center',color:'var(--smoke)',fontSize:13,border:'1.5px dashed rgba(255,255,255,.1)',borderRadius:10}}>
+                        <div style={{padding:'32px 16px',textAlign:'center',color:'#94A3B8',fontSize:13,border:'1.5px dashed #E2E8F0',borderRadius:10}}>
                           Bitte wählen Sie zuerst einen Tag aus.
                         </div>
                       ) : (
                         <>
-                          <div style={{fontWeight:700,fontSize:14,color:'var(--white)',marginBottom:16}}>{fmtGermanDate(form.datum)}</div>
+                          <div style={{fontWeight:700,fontSize:14,color:'#1E293B',marginBottom:16}}>{fmtGermanDate(form.datum)}</div>
                           {slotsLoading && (
-                            <div style={{display:'flex',alignItems:'center',gap:8,color:'var(--smoke)',fontSize:13}}>
+                            <div style={{display:'flex',alignItems:'center',gap:8,color:'#64748B',fontSize:13}}>
                               <Ic.Spin s={14} c="var(--accent)"/> Lade freie Termine …
                             </div>
                           )}
@@ -1574,7 +1502,7 @@ const BookingSection = () => {
                             </div>
                           )}
                           {!slotsLoading && !slotsError && allSlots.length === 0 && (
-                            <div style={{padding:'12px',background:'var(--dark3)',border:'1px solid rgba(255,255,255,.07)',borderRadius:8,fontSize:13,color:'var(--smoke)',textAlign:'center'}}>
+                            <div style={{padding:'12px',background:'#F7F9FC',border:'1px solid #E2E8F0',borderRadius:8,fontSize:13,color:'#64748B',textAlign:'center'}}>
                               Keine Termine an diesem Tag verfügbar.
                             </div>
                           )}
@@ -1582,7 +1510,7 @@ const BookingSection = () => {
                             <>
                               {morningSlots.length > 0 && (
                                 <div style={{marginBottom:16}}>
-                                  <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'var(--smoke)',marginBottom:8}}>VORMITTAG</div>
+                                  <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'#64748B',marginBottom:8}}>VORMITTAG</div>
                                   <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(72px,1fr))',gap:6}}>
                                     {morningSlots.map(slot => {
                                       const booked = bookedSlots.includes(slot);
@@ -1592,7 +1520,7 @@ const BookingSection = () => {
                                       return (
                                         <button key={slot} type="button" disabled={disabled}
                                           onClick={()=>!disabled && setField('zeit', slot)}
-                                          style={{padding:'8px 4px',borderRadius:7,fontFamily:'var(--sans)',fontWeight:700,fontSize:12,textAlign:'center',cursor:disabled?'not-allowed':'pointer',transition:'all .15s',border:`1.5px solid ${selected ? 'var(--accent)' : disabled ? 'rgba(255,255,255,.04)' : 'rgba(255,255,255,.1)'}`,background:selected ? 'var(--accent)' : disabled ? 'rgba(255,255,255,.04)' : 'var(--dark3)',color:selected ? '#fff' : disabled ? 'rgba(255,255,255,.2)' : 'var(--text)',textDecoration:disabled?'line-through':'none',opacity:disabled&&!booked?.75:1}}>
+                                          className={`bk-slot${selected?' sel':''}`}>
                                           {slot}
                                         </button>
                                       );
@@ -1602,7 +1530,7 @@ const BookingSection = () => {
                               )}
                               {afternoonSlots.length > 0 && (
                                 <div>
-                                  <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'var(--smoke)',marginBottom:8}}>NACHMITTAG</div>
+                                  <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'#64748B',marginBottom:8}}>NACHMITTAG</div>
                                   <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(72px,1fr))',gap:6}}>
                                     {afternoonSlots.map(slot => {
                                       const booked = bookedSlots.includes(slot);
@@ -1612,7 +1540,7 @@ const BookingSection = () => {
                                       return (
                                         <button key={slot} type="button" disabled={disabled}
                                           onClick={()=>!disabled && setField('zeit', slot)}
-                                          style={{padding:'8px 4px',borderRadius:7,fontFamily:'var(--sans)',fontWeight:700,fontSize:12,textAlign:'center',cursor:disabled?'not-allowed':'pointer',transition:'all .15s',border:`1.5px solid ${selected ? 'var(--accent)' : disabled ? 'rgba(255,255,255,.04)' : 'rgba(255,255,255,.1)'}`,background:selected ? 'var(--accent)' : disabled ? 'rgba(255,255,255,.04)' : 'var(--dark3)',color:selected ? '#fff' : disabled ? 'rgba(255,255,255,.2)' : 'var(--text)',textDecoration:disabled?'line-through':'none'}}>
+                                          className={`bk-slot${selected?' sel':''}`}>
                                           {slot}
                                         </button>
                                       );
@@ -1627,7 +1555,7 @@ const BookingSection = () => {
                     </div>
                   </div>
                   <div style={{display:'flex',justifyContent:'space-between',marginTop:32,gap:12}}>
-                    <button className="btn btn-ghost" style={{fontSize:13,padding:'12px 24px',color:'var(--text)',border:'1.5px solid rgba(255,255,255,.1)',background:'rgba(255,255,255,.06)'}} onClick={()=>setStep(1)}>
+                    <button className="btn" style={{fontSize:13,padding:'12px 24px',color:'#64748B',border:'1.5px solid #E2E8F0',background:'#F7F9FC'}} onClick={()=>setStep(1)}>
                       ← Zurück
                     </button>
                     <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px',gap:8,opacity:(form.datum&&form.zeit)?1:.45,cursor:(form.datum&&form.zeit)?'pointer':'not-allowed'}}
@@ -1645,16 +1573,16 @@ const BookingSection = () => {
                 <div className="bk-card">
                   <div style={{marginBottom:24}}>
                     <div style={{fontSize:11,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:8}}>SCHRITT 03</div>
-                    <h3 style={{fontWeight:800,fontSize:22,color:'var(--white)',letterSpacing:'-.01em'}}>Ihre Kontaktdaten</h3>
+                    <h3 style={{fontWeight:800,fontSize:22,color:'#1E293B',letterSpacing:'-.01em'}}>Ihre Kontaktdaten</h3>
                   </div>
 
                   {/* Summary pill */}
-                  <div style={{display:'flex',gap:12,flexWrap:'wrap',marginBottom:24,padding:'12px 16px',background:'rgba(91,145,244,.06)',borderRadius:10,border:'1px solid rgba(91,145,244,.15)'}}>
+                  <div style={{display:'flex',gap:12,flexWrap:'wrap',marginBottom:24,padding:'12px 16px',background:'#EEF4FF',borderRadius:10,border:'1px solid rgba(91,145,244,.25)'}}>
                     <span style={{fontSize:12,fontWeight:700,color:'var(--accent)'}}>{form.services.join(' + ')}</span>
-                    <span style={{fontSize:12,color:'var(--smoke)'}}>·</span>
-                    <span style={{fontSize:12,color:'var(--smoke)'}}>{fmtGermanDate(form.datum)}</span>
-                    <span style={{fontSize:12,color:'var(--smoke)'}}>·</span>
-                    <span style={{fontSize:12,fontWeight:700,color:'var(--white)'}}>{form.zeit} Uhr</span>
+                    <span style={{fontSize:12,color:'#64748B'}}>·</span>
+                    <span style={{fontSize:12,color:'#64748B'}}>{fmtGermanDate(form.datum)}</span>
+                    <span style={{fontSize:12,color:'#64748B'}}>·</span>
+                    <span style={{fontSize:12,fontWeight:700,color:'#1E293B'}}>{form.zeit} Uhr</span>
                   </div>
 
                   <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}} className="bk-two-col">
@@ -1668,16 +1596,16 @@ const BookingSection = () => {
                       const err = touched[field] && errs[field];
                       return (
                         <div key={field} style={fieldWrap}>
-                          <label style={labelStyle}>{label}</label>
+                          <label className="bk-label">{label}</label>
                           <input type={type} placeholder={placeholder} value={form[field]} maxLength={60}
                             onChange={e=>{
                               let v = e.target.value;
                               if(field==='telefon') v = v.replace(/[^\d\+\s\-\(\)]/g,'');
                               setField(field, v);
                             }}
-                            onFocus={e=>{ e.target.style.borderColor='var(--accent)'; e.target.style.boxShadow='0 0 0 3px rgba(91,145,244,.12)'; }}
-                            onBlur={e=>{ handleBlur(field); e.target.style.borderColor=step3Errors()[field]?'#ef4444':'rgba(255,255,255,.08)'; e.target.style.boxShadow='none'; }}
-                            style={inp(field)}/>
+                            onBlur={()=>handleBlur(field)}
+                            className="bk-inp"
+                            style={err ? {borderColor:'#ef4444'} : undefined}/>
                           {err && <span style={{fontSize:11,color:'#ef4444',fontWeight:600,display:'flex',alignItems:'center',gap:3}}><Ic.Warn s={10}/> {err}</span>}
                         </div>
                       );
@@ -1685,47 +1613,44 @@ const BookingSection = () => {
                   </div>
 
                   <div style={{marginTop:16,...fieldWrap}}>
-                    <label style={labelStyle}>Kennzeichen</label>
+                    <label className="bk-label">Kennzeichen</label>
                     <input type="text" placeholder="OB-AB 1234" maxLength={15} value={form.kennzeichen}
                       onChange={e=>setField('kennzeichen', e.target.value.toUpperCase().replace(/[^A-Z0-9\-\sÄÖÜ]/g,''))}
-                      onFocus={e=>{ e.target.style.borderColor='var(--accent)'; e.target.style.boxShadow='0 0 0 3px rgba(91,145,244,.12)'; }}
-                      onBlur={e=>{ e.target.style.borderColor='rgba(255,255,255,.08)'; e.target.style.boxShadow='none'; }}
-                      style={{...inp('kennzeichen'), border:'1.5px solid rgba(255,255,255,.08)'}}/>
+                      className="bk-inp"/>
                   </div>
 
                   {/* Abhol- & Bringservice Toggle */}
                   <div style={{marginTop:16}}>
                     <button type="button" onClick={()=>setField('abholservice', !form.abholservice)}
-                      style={{width:'100%',display:'flex',alignItems:'center',gap:14,padding:'14px 16px',borderRadius:10,border:`1.5px solid ${form.abholservice?'var(--accent)':'rgba(255,255,255,.1)'}`,background:form.abholservice?'rgba(91,145,244,.08)':'rgba(255,255,255,.03)',cursor:'pointer',textAlign:'left',transition:'all .2s',fontFamily:'var(--sans)'}}>
-                      <div style={{width:22,height:22,borderRadius:6,border:`2px solid ${form.abholservice?'var(--accent)':'rgba(255,255,255,.25)'}`,background:form.abholservice?'var(--accent)':'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'all .2s'}}>
+                      className={`pickup-btn${form.abholservice?' on':''}`}>
+                      <div style={{width:22,height:22,borderRadius:6,border:`2px solid ${form.abholservice?'var(--accent)':'#CBD5E1'}`,background:form.abholservice?'var(--accent)':'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'all .2s'}}>
                         {form.abholservice && <Ic.Check s={12} c="#fff"/>}
                       </div>
                       <div>
-                        <div style={{fontSize:13,fontWeight:700,color:'var(--white)',marginBottom:2}}>Abhol- & Bringservice</div>
-                        <div style={{fontSize:11,color:'var(--smoke)'}}>Wir holen Ihr Fahrzeug ab und bringen es nach der Prüfung zurück.</div>
+                        <div style={{fontSize:13,fontWeight:700,color:'#1E293B',marginBottom:2}}>Abhol- & Bringservice</div>
+                        <div style={{fontSize:11,color:'#64748B'}}>Wir holen Ihr Fahrzeug ab und bringen es nach der Prüfung zurück.</div>
                       </div>
                       <div style={{marginLeft:'auto',fontSize:10,fontWeight:700,color:'var(--accent)',background:'rgba(91,145,244,.12)',padding:'3px 9px',borderRadius:5,whiteSpace:'nowrap',flexShrink:0}}>+Service</div>
                     </button>
                     {form.abholservice && (
                       <div style={{marginTop:10,...fieldWrap}}>
-                        <label style={labelStyle}>Abholadresse *</label>
+                        <label className="bk-label">Abholadresse *</label>
                         <input type="text" placeholder="Straße, Hausnr., PLZ, Ort" maxLength={120} value={form.abholadresse}
                           onChange={e=>setField('abholadresse', e.target.value)}
-                          onFocus={e=>{ e.target.style.borderColor='var(--accent)'; e.target.style.boxShadow='0 0 0 3px rgba(91,145,244,.12)'; }}
-                          onBlur={e=>{ handleBlur('abholadresse'); e.target.style.borderColor=step3Errors()['abholadresse']?'#ef4444':'rgba(255,255,255,.08)'; e.target.style.boxShadow='none'; }}
-                          style={inp('abholadresse')}/>
+                          onBlur={()=>handleBlur('abholadresse')}
+                          className="bk-inp"
+                          style={touched.abholadresse && step3Errors().abholadresse ? {borderColor:'#ef4444'} : undefined}/>
                         {touched.abholadresse && step3Errors().abholadresse && <span style={{fontSize:11,color:'#ef4444',fontWeight:600,display:'flex',alignItems:'center',gap:3}}><Ic.Warn s={10}/> {step3Errors().abholadresse}</span>}
                       </div>
                     )}
                   </div>
 
                   <div style={{marginTop:16,...fieldWrap}}>
-                    <label style={labelStyle}>Anmerkungen</label>
+                    <label className="bk-label">Anmerkungen</label>
                     <textarea placeholder="Besonderheiten oder Fragen …" maxLength={500} value={form.anmerkungen}
                       onChange={e=>setField('anmerkungen', e.target.value)}
-                      onFocus={e=>{ e.target.style.borderColor='var(--accent)'; e.target.style.boxShadow='0 0 0 3px rgba(91,145,244,.12)'; }}
-                      onBlur={e=>{ e.target.style.borderColor='rgba(255,255,255,.08)'; e.target.style.boxShadow='none'; }}
-                      style={{...inp('anmerkungen'), border:'1.5px solid rgba(255,255,255,.08)', resize:'vertical', minHeight:80}}/>
+                      className="bk-inp"
+                      style={{resize:'vertical', minHeight:80}}/>
                   </div>
 
                   <AnimatePresence>
@@ -1738,7 +1663,7 @@ const BookingSection = () => {
                   </AnimatePresence>
 
                   <div style={{display:'flex',justifyContent:'space-between',marginTop:28,gap:12}}>
-                    <button className="btn btn-ghost" style={{fontSize:13,padding:'12px 24px',color:'var(--text)',border:'1.5px solid rgba(255,255,255,.1)',background:'rgba(255,255,255,.06)'}} onClick={()=>setStep(2)}>
+                    <button className="btn" style={{fontSize:13,padding:'12px 24px',color:'#64748B',border:'1.5px solid #E2E8F0',background:'#F7F9FC'}} onClick={()=>setStep(2)}>
                       ← Zurück
                     </button>
                     <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px',gap:8}} disabled={submitting} onClick={handleSubmit}>
