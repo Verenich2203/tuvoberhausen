@@ -399,43 +399,40 @@ const Hero = ({ onBook }) => {
       <div className="bg-img" style={{backgroundImage:"url('WhatsApp1.jpeg')",backgroundPosition:'center top',zIndex:0}}/>
       <div style={{position:'absolute',inset:0,background:'linear-gradient(160deg,rgba(20,22,26,.93) 0%,rgba(20,22,26,.80) 60%,rgba(20,22,26,.68) 100%)',zIndex:1,pointerEvents:'none'}}/>
       <HeroBg/>
-      <div className="inner" style={{position:'relative',zIndex:2,width:'100%',textAlign:'center',padding:'72px 64px 64px'}}>
+      <div className="inner" style={{position:'relative',zIndex:2,width:'100%',textAlign:'center',padding:'44px 64px 40px'}}>
         <motion.div initial={{opacity:0,y:32}} animate={{opacity:1,y:0}} transition={{duration:.9,ease:[.22,1,.36,1]}} style={{maxWidth:760,margin:'0 auto'}}>
-          <div className="tag" style={{marginBottom:28,justifyContent:'center'}}>
+          <div className="tag" style={{marginBottom:18,justifyContent:'center'}}>
             Akkreditierter KFZ-Prüfstützpunkt
           </div>
-          <h1 style={{fontWeight:800,fontSize:'clamp(38px,6vw,76px)',color:'var(--white)',lineHeight:1.06,letterSpacing:'-.025em',marginBottom:24}}>
+          <h1 style={{fontWeight:800,fontSize:'clamp(36px,6vw,72px)',color:'var(--white)',lineHeight:1.06,letterSpacing:'-.025em',marginBottom:16}}>
             Ihr TÜV in<br/><span style={{color:'var(--accent)'}}>Oberhausen</span>
           </h1>
-          <p style={{fontSize:17,color:'var(--text)',lineHeight:1.8,maxWidth:520,margin:'0 auto 16px'}}>
+          <p style={{fontSize:16,color:'var(--text)',lineHeight:1.75,maxWidth:520,margin:'0 auto 10px'}}>
             Haupt- und Abgasuntersuchung einfach schnell online buchen. Auch ohne Termin möglich!
           </p>
           {/* NEW badge */}
-          <div style={{marginBottom:36}}>
-            <span style={{display:'inline-flex',alignItems:'center',gap:7,background:'rgba(91,145,244,.10)',border:'1px solid rgba(91,145,244,.22)',borderRadius:20,padding:'6px 16px',fontSize:12,fontWeight:700,color:'var(--accent)',letterSpacing:'.04em'}}>
+          <div style={{marginBottom:24}}>
+            <span style={{display:'inline-flex',alignItems:'center',gap:7,background:'rgba(91,145,244,.10)',border:'1px solid rgba(91,145,244,.22)',borderRadius:20,padding:'5px 14px',fontSize:12,fontWeight:700,color:'var(--accent)',letterSpacing:'.04em'}}>
               <span style={{width:6,height:6,borderRadius:'50%',background:'var(--accent)',flexShrink:0,animation:'softPulse 2s ease-in-out infinite'}}/>
               Jetzt Neu: Abhol- und Bring-Service
             </span>
           </div>
           <div style={{display:'flex',gap:16,flexWrap:'wrap',justifyContent:'center'}}>
-            <button className="btn btn-primary" style={{fontSize:14,gap:9,padding:'15px 36px'}} onClick={onBook}>Termin buchen <Ic.Arrow s={16}/></button>
-            <a href={PHONE_HREF} className="btn btn-ghost" style={{fontSize:14,gap:9,padding:'15px 36px'}}><Ic.Phone s={16}/> {PHONE}</a>
+            <button className="btn btn-primary" style={{fontSize:14,gap:9,padding:'14px 32px'}} onClick={onBook}>Termin buchen <Ic.Arrow s={16}/></button>
+            <a href={PHONE_HREF} className="btn btn-ghost" style={{fontSize:14,gap:9,padding:'14px 32px'}}><Ic.Phone s={16}/> {PHONE}</a>
           </div>
 
           {/* ── Stats strip inside hero ── */}
-          <div ref={statsRef} className="hero-stats" style={{marginTop:52,paddingTop:36,borderTop:'1px solid rgba(255,255,255,.07)'}}>
-            {STATS.map((s, i) => {
-              const count = statsActive ? undefined : 0; // StatCard handles its own count
-              return (
-                <motion.div key={s.label}
-                  initial={{opacity:0,y:16}} animate={statsActive?{opacity:1,y:0}:{}}
-                  transition={{duration:.5,delay:i*.1,ease:[.22,1,.36,1]}}
-                  style={{padding:'0 12px',borderRight:i<STATS.length-1?'1px solid rgba(255,255,255,.06)':'none',textAlign:'center'}}>
-                  <HeroCount end={s.end} suffix={s.suffix} active={statsActive}/>
-                  <div style={{marginTop:5,fontSize:'clamp(9px,1vw,11px)',fontWeight:700,color:'rgba(255,255,255,.35)',textTransform:'uppercase',letterSpacing:'.1em'}}>{s.label}</div>
-                </motion.div>
-              );
-            })}
+          <div ref={statsRef} className="hero-stats" style={{marginTop:32,paddingTop:24,borderTop:'1px solid rgba(255,255,255,.07)'}}>
+            {STATS.map((s, i) => (
+              <motion.div key={s.label}
+                initial={{opacity:0,y:16}} animate={statsActive?{opacity:1,y:0}:{}}
+                transition={{duration:.5,delay:i*.1,ease:[.22,1,.36,1]}}
+                style={{padding:'0 12px',borderRight:i<STATS.length-1?'1px solid rgba(255,255,255,.06)':'none',textAlign:'center'}}>
+                <HeroCount end={s.end} suffix={s.suffix} active={statsActive}/>
+                <div style={{marginTop:4,fontSize:'clamp(9px,1vw,10px)',fontWeight:700,color:'rgba(255,255,255,.35)',textTransform:'uppercase',letterSpacing:'.1em'}}>{s.label}</div>
+              </motion.div>
+            ))}
           </div>
         </motion.div>
       </div>
@@ -1086,6 +1083,7 @@ const Stats = () => {
 
 /* ─── BOOKING SECTION ────────────────────────────────────────────────────── */
 const BookingSection = () => {
+  const [selectedCenter, setSelectedCenter] = useState(null);
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({
     services: [], datum: '', zeit: '',
@@ -1371,7 +1369,43 @@ const BookingSection = () => {
           <p style={{color:'var(--smoke)',fontSize:14,maxWidth:480,margin:'0 auto'}}>In drei Schritten zum bestätigten Termin.</p>
         </motion.div>
 
-        {sent ? (
+        {/* ── CENTER PICKER ── */}
+        {!selectedCenter && (
+          <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{duration:.4,ease:[.22,1,.36,1]}}>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,maxWidth:640,margin:'0 auto'}}>
+              {/* Oberhausen — active */}
+              <button onClick={()=>setSelectedCenter('oberhausen')}
+                style={{background:'linear-gradient(160deg,rgba(31,35,46,.85) 0%,rgba(19,22,30,.92) 100%)',backdropFilter:'blur(20px)',WebkitBackdropFilter:'blur(20px)',border:'1.5px solid rgba(91,145,244,.30)',borderTop:'2px solid rgba(91,145,244,.5)',borderRadius:18,padding:'28px 22px',cursor:'pointer',textAlign:'center',transition:'all .28s cubic-bezier(.22,1,.36,1)',boxShadow:'0 8px 36px rgba(0,0,0,.4)',fontFamily:'inherit',position:'relative',overflow:'hidden'}}>
+                <div style={{position:'absolute',top:0,left:'50%',transform:'translateX(-50%)',width:80,height:2,background:'linear-gradient(90deg,transparent,rgba(91,145,244,.6),transparent)',borderRadius:2}}/>
+                <div style={{width:52,height:52,borderRadius:14,background:'rgba(91,145,244,.12)',border:'1.5px solid rgba(91,145,244,.25)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 14px',boxShadow:'0 4px 16px rgba(91,145,244,.2)'}}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <div style={{fontSize:16,fontWeight:800,color:'var(--white)',marginBottom:4,letterSpacing:'-.01em'}}>Oberhausen</div>
+                <div style={{fontSize:11,color:'var(--smoke)',marginBottom:12,letterSpacing:'.04em'}}>Prüfstützpunkt Hauptstandort</div>
+                <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'rgba(16,185,129,.1)',border:'1px solid rgba(16,185,129,.25)',borderRadius:10,padding:'3px 10px',fontSize:10,fontWeight:700,color:'#10B981',letterSpacing:'.06em'}}>
+                  <span style={{width:5,height:5,borderRadius:'50%',background:'#10B981',animation:'softPulse 2s ease-in-out infinite'}}/>
+                  Jetzt buchen
+                </div>
+              </button>
+
+              {/* Essen — coming soon */}
+              <div style={{background:'linear-gradient(160deg,rgba(22,24,32,.7) 0%,rgba(14,16,22,.8) 100%)',backdropFilter:'blur(12px)',WebkitBackdropFilter:'blur(12px)',border:'1.5px solid rgba(255,255,255,.06)',borderRadius:18,padding:'28px 22px',textAlign:'center',opacity:.55,position:'relative',overflow:'hidden',cursor:'not-allowed'}}>
+                <div style={{position:'absolute',top:10,right:12,background:'rgba(251,191,36,.12)',border:'1px solid rgba(251,191,36,.25)',borderRadius:8,padding:'3px 9px',fontSize:9,fontWeight:800,color:'#FBBF24',letterSpacing:'.1em',textTransform:'uppercase'}}>Demnächst</div>
+                <div style={{width:52,height:52,borderRadius:14,background:'rgba(255,255,255,.04)',border:'1.5px solid rgba(255,255,255,.08)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 14px'}}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" strokeWidth="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <div style={{fontSize:16,fontWeight:800,color:'rgba(255,255,255,.4)',marginBottom:4,letterSpacing:'-.01em'}}>Essen</div>
+                <div style={{fontSize:11,color:'rgba(255,255,255,.22)',marginBottom:12,letterSpacing:'.04em'}}>Prüfstützpunkt Essen</div>
+                <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'rgba(255,255,255,.04)',border:'1px solid rgba(255,255,255,.08)',borderRadius:10,padding:'3px 10px',fontSize:10,fontWeight:700,color:'rgba(255,255,255,.25)',letterSpacing:'.06em'}}>
+                  In Kürze verfügbar
+                </div>
+              </div>
+            </div>
+            <p style={{textAlign:'center',color:'var(--smoke)',fontSize:12,marginTop:16,opacity:.6}}>Bitte wählen Sie Ihren gewünschten Standort</p>
+          </motion.div>
+        )}
+
+        {selectedCenter && (sent ? (
           <motion.div initial={{opacity:0,scale:.97}} animate={{opacity:1,scale:1}} className="bk-card" style={{textAlign:'center',padding:'56px 32px'}}>
             <div style={{width:64,height:64,borderRadius:'50%',background:'rgba(16,185,129,.1)',border:'2.5px solid #10B981',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',boxShadow:'0 4px 20px rgba(16,185,129,.2)'}}>
               <Ic.Check s={28} c="#10B981"/>
@@ -1381,7 +1415,7 @@ const BookingSection = () => {
             <p style={{fontWeight:800,fontSize:18,color:'var(--accent)',marginBottom:4}}>{fmtGermanDate(form.datum)} · {form.zeit} Uhr</p>
             <p style={{fontSize:14,color:'var(--smoke)',marginBottom:4}}>{form.services.join(', ')}</p>
             <p style={{fontSize:13,color:'var(--smoke)',marginBottom:28}}>Bestätigungsmail wurde gesendet.</p>
-            <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px'}} onClick={()=>{setSent(false);setStep(1);setForm({services:[],datum:'',zeit:'',vorname:'',nachname:'',telefon:'',email:'',anmerkungen:'',kennzeichen:'',abholservice:false,abholadresse:''});setTouched({});}}>
+            <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px'}} onClick={()=>{setSent(false);setStep(1);setSelectedCenter(null);setForm({services:[],datum:'',zeit:'',vorname:'',nachname:'',telefon:'',email:'',anmerkungen:'',kennzeichen:'',abholservice:false,abholadresse:''});setTouched({});}}>
               Neuen Termin buchen
             </button>
           </motion.div>
@@ -1705,7 +1739,7 @@ const BookingSection = () => {
             )}
             </AnimatePresence>
           </motion.div>
-        )}
+        ))}
       </div>
     </div>
   );
