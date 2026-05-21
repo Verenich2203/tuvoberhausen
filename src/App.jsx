@@ -1,3 +1,4 @@
+import React from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useState, useEffect, useCallback, useRef } from "react";
 import AdminPanel from "./AdminPanel";
@@ -94,7 +95,7 @@ const G = () => (
     #root { width:100%; min-width:100%; }
     .section-full { width:100%; display:block; }
     .inner { width:100%; max-width:1280px; margin:0 auto; padding:0 64px; box-sizing:border-box; }
-    .sec { padding:80px 0; }
+    .sec { min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:80px 0; box-sizing:border-box; }
     .tag {
       display:inline-flex; align-items:center; gap:12px;
       font-size:11px; font-weight:700; letter-spacing:.22em; text-transform:uppercase;
@@ -181,7 +182,7 @@ const G = () => (
     ::-webkit-scrollbar-track { background:transparent; }
     ::-webkit-scrollbar-thumb { background:rgba(255,255,255,.12); border-radius:8px; }
     @media (max-width:900px) {
-      .inner { padding:0 24px; } .sec { padding:56px 0; }
+      .inner { padding:0 24px; } .sec { padding:56px 0; min-height:100svh; }
       .g3 { grid-template-columns:1fr 1fr; } .g4 { grid-template-columns:1fr 1fr; }
       .steps-row { grid-template-columns:1fr 1fr; gap:36px; } .steps-row::before { display:none; }
       .hide-mob { display:none !important; } .mob-col { flex-direction:column !important; } .mob-full { width:100% !important; }
