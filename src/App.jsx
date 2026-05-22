@@ -488,8 +488,8 @@ const Services = () => {
     {ico:<Ic.Damage s={26} c="var(--accent)"/>,title:'Schadensgutachten',sub:'Unfallschaden · Wertermittlung',tag:'Gutachten',desc:'Unabhängiges Gutachten nach Unfall — für volle Schadensregulierung durch die Versicherung.',duration:'ca. 45–60 Min.',details:['Vollständige Schadensdokumentation','Ermittlung der Reparaturkosten','Berechnung der Wertminderung (Merkantil)','Ermittlung des Wiederbeschaffungswertes','Feststellung von Vorschäden','Rechtssicheres Gutachten für Versicherung und Gericht'],img:'Schadensgutachten.png',note:'Durch unabhängiges Gutachten erhalten Sie in der Regel höhere Entschädigung als bei Schätzung der Versicherung.'},
   ];
 
-  // photo cards: indices 0–5
-  const hasPhoto = (idx) => idx <= 5;
+  // all cards have photos
+  const hasPhoto = () => true;
   const N = items.length; // 10
 
   /* ── navigation helpers ── */
