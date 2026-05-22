@@ -1635,7 +1635,7 @@ const BookingSection = () => {
                         <div style={{fontSize:13,fontWeight:700,color:'#1E293B',marginBottom:2}}>Abhol- & Bringservice</div>
                         <div style={{fontSize:11,color:'#64748B'}}>Wir holen Ihr Fahrzeug ab und bringen es nach der Prüfung zurück.</div>
                       </div>
-                      <div style={{marginLeft:'auto',fontSize:10,fontWeight:700,color:'var(--accent)',background:'rgba(91,145,244,.12)',padding:'3px 9px',borderRadius:5,whiteSpace:'nowrap',flexShrink:0}}>+Service</div>
+                      <div style={{marginLeft:'auto',fontSize:11,fontWeight:800,color:'var(--accent)',background:'rgba(91,145,244,.12)',padding:'4px 10px',borderRadius:5,whiteSpace:'nowrap',flexShrink:0}}>+ 15 €</div>
                     </button>
                     {form.abholservice && (
                       <div style={{marginTop:10,...fieldWrap}}>
@@ -1749,7 +1749,7 @@ const MapEmbed = () => {
       <button className="btn btn-primary" style={{fontSize:12,padding:'10px 18px'}} onClick={()=>{localStorage.setItem('cookie_consent','all');setAccepted(true);}}>Google Maps aktivieren</button>
     </div>
   );
-  return <iframe src="https://maps.google.com/maps?q=Oberhausen&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style={{border:'none',display:'block',filter:'grayscale(.1)',minHeight:360}} allowFullScreen loading="lazy" title="Standort"/>;
+  return <iframe src="https://maps.google.com/maps?q=M%C3%BClheimer+Str.+155%2C+46045+Oberhausen&t=&z=16&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style={{border:'none',display:'block',filter:'grayscale(.1)',minHeight:360}} allowFullScreen loading="lazy" title="Standort"/>;
 };
 
 /* ─── CONTACT ────────────────────────────────────────────────────────────── */
@@ -1779,14 +1779,14 @@ const Contact = () => (
           {/* Address */}
           <div>
             <div className="contact-section-label">Adresse</div>
-            <div style={{fontSize:13,color:'var(--text)',lineHeight:1.7}}>Musterstraße 123<br/>46045 Oberhausen, Deutschland</div>
+            <div style={{fontSize:13,color:'var(--text)',lineHeight:1.7}}>Mülheimer Str. 155<br/>46045 Oberhausen, Deutschland</div>
           </div>
 
           {/* Contact */}
           <div>
             <div className="contact-section-label">Kontakt</div>
             <a href={PHONE_HREF} style={{display:'block',fontSize:15,color:'var(--white)',textDecoration:'none',fontWeight:700,marginBottom:4,letterSpacing:'-.01em'}}>{PHONE}</a>
-            <a href="mailto:info@autoservice-ob.de" style={{fontSize:12,color:'var(--smoke)',textDecoration:'none'}}>info@autoservice-ob.de</a>
+            <a href="mailto:aqureischi@extern.tuev-nord.de" style={{fontSize:12,color:'var(--smoke)',textDecoration:'none'}}>aqureischi@extern.tuev-nord.de</a>
           </div>
 
           {/* Hours */}
