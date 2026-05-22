@@ -492,9 +492,24 @@ const Services = () => {
   const hasPhoto = () => true;
   const N = items.length; // 10
 
+  /* ── animation lock: prevents chaotic multi-clicks ── */
+  const isAnimating = useRef(false);
+  const ANIM_MS = 520; // must match transition duration below
+
   /* ── navigation helpers ── */
-  const goNext = useCallback(() => setActiveIdx(p => (p + 1) % N), [N]);
-  const goPrev = useCallback(() => setActiveIdx(p => (p - 1 + N) % N), [N]);
+  const goNext = useCallback(() => {
+    if (isAnimating.current) return;
+    isAnimating.current = true;
+    setActiveIdx(p => (p + 1) % N);
+    setTimeout(() => { isAnimating.current = false; }, ANIM_MS);
+  }, [N]);
+
+  const goPrev = useCallback(() => {
+    if (isAnimating.current) return;
+    isAnimating.current = true;
+    setActiveIdx(p => (p - 1 + N) % N);
+    setTimeout(() => { isAnimating.current = false; }, ANIM_MS);
+  }, [N]);
 
   /* ── circular offset so carousel wraps smoothly ── */
   const circOff = (i) => {
@@ -504,16 +519,14 @@ const Services = () => {
     return off;
   };
 
-  // pauseUntil: timestamp after which autoplay is allowed to fire.
-  // Set by manual swipe so the timer never fires right after user input.
+  /* ── autoplay every 5s, pauses after manual interaction ── */
   const pauseUntil = useRef(0);
 
-  /* ── autoplay: ONE interval, checks pauseUntil before advancing ── */
   useEffect(() => {
     if (isAreaHovered) { clearInterval(autoTimer.current); return; }
     autoTimer.current = setInterval(() => {
       if (Date.now() >= pauseUntil.current) goNext();
-    }, 3000);
+    }, 5000);
     return () => clearInterval(autoTimer.current);
   }, [isAreaHovered, goNext]);
 
@@ -540,8 +553,7 @@ const Services = () => {
     if (!drag.current.on) return;
     const d = e.clientX - drag.current.startX;
     if (Math.abs(d) > 35) {
-      // Block autoplay for 3 s after manual swipe — no second interval needed
-      pauseUntil.current = Date.now() + 3000;
+      pauseUntil.current = Date.now() + 5000;
       d < 0 ? goNext() : goPrev();
     }
     drag.current.on = false;
@@ -852,7 +864,7 @@ const Services = () => {
                       ? `blur(${cp.blur}px) brightness(${cp.brightness})`
                       : 'blur(0px) brightness(1)',
                   }}
-                  transition={{ type:'spring', stiffness:260, damping:26, mass:0.85 }}
+                  transition={{ type:'tween', duration:0.50, ease:[0.25,0.46,0.45,0.94] }}
                   onClick={() => { if (!drag.current.moved) isActive ? setModal(item) : setActiveIdx(i); }}
                   onMouseEnter={() => isActive && setCardHovered(true)}
                   onMouseLeave={() => { if (isActive) { setCardHovered(false); setTilt({ x:0, y:0 }); } }}
