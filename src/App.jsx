@@ -547,14 +547,23 @@ const Services = () => {
     drag.current.on = false;
   };
 
+  /* ── responsive breakpoint ── */
+  const [winW, setWinW] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+  useEffect(() => {
+    const h = () => setWinW(window.innerWidth);
+    window.addEventListener('resize', h);
+    return () => window.removeEventListener('resize', h);
+  }, []);
+  const desktop = winW >= 900;
+
   /* ── per-card visual transform — fixed lookup, max 2 cards each side ── */
   // x offsets, scales, opacities, rotations keyed by abs distance from centre
-  const CX = [0, 235, 415];          // horizontal distance from centre (px)
-  const CS = [1.12, 0.86, 0.68];     // scale
-  const CO = [1, 0.70, 0.32];        // opacity
-  const CR = [0, 9, 16];             // rotateY magnitude (°) — right leans left, left leans right
-  const CB = [0, 2.5, 6];            // blur (px)
-  const CBR= [1, 0.82, 0.52];        // brightness
+  const CX  = desktop ? [0, 420, 820] : [0, 235, 415];
+  const CS  = desktop ? [1.0, 0.88, 0.70] : [1.12, 0.86, 0.68];
+  const CO  = desktop ? [1, 1, 0.30]      : [1, 0.70, 0.32];
+  const CR  = desktop ? [0, 4, 10]        : [0, 9, 16];
+  const CB  = desktop ? [0, 0, 4]         : [0, 2.5, 6];
+  const CBR = desktop ? [1, 0.70, 0.35]   : [1, 0.82, 0.52];
 
   const cardProps = (offset) => {
     const abs = Math.abs(offset);
@@ -583,6 +592,10 @@ const Services = () => {
       <style>{`
         /* Stage */
         .cine-stage{position:relative;height:430px;overflow:visible;cursor:default;user-select:none;-webkit-user-select:none;touch-action:none;}
+        @media(min-width:900px){
+          .cine-stage{height:540px;}
+          .cine-card{width:400px !important;height:510px !important;margin-left:-200px !important;margin-top:-255px !important;}
+        }
         /* Mobile nav arrows (shown only on touch screens) */
         .cine-mob-arrows{display:none;justify-content:center;align-items:center;gap:14px;margin-top:20px;}
         .cine-mob-btn{width:48px;height:48px;border-radius:50%;border:1.5px solid rgba(255,255,255,.12);background:rgba(10,12,18,.6);backdrop-filter:blur(10px);cursor:pointer;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.6);transition:border-color .22s,background .22s,color .22s;}
