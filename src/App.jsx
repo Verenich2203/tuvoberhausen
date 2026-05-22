@@ -1456,7 +1456,11 @@ const BookingSection = () => {
                     </div>
                     <button className="btn btn-primary"
                       style={{fontSize:13,padding:'12px 28px',gap:8,opacity:form.services.length>0?1:.32,cursor:form.services.length>0?'pointer':'not-allowed',transition:'opacity .25s'}}
-                      disabled={form.services.length===0} onClick={()=>setStep(2)}>
+                      disabled={form.services.length===0}
+                      onClick={()=>{
+                        const onlySchaden = form.services.length===1 && form.services[0]==='Schadensgutachten';
+                        setStep(onlySchaden ? 4 : 2);
+                      }}>
                       Weiter <Ic.Arrow s={14}/>
                     </button>
                   </div>
@@ -1703,6 +1707,47 @@ const BookingSection = () => {
                   <p style={{fontSize:11,color:'var(--smoke)',textAlign:'center',marginTop:14,lineHeight:1.55}}>
                     Mit dem Absenden stimmen Sie unserer <a href="#" onClick={e=>e.preventDefault()} style={{color:'var(--accent)'}}>Datenschutzerklärung</a> zu.
                   </p>
+                </div>
+              </motion.div>
+            )}
+            {/* ── STEP 4: Schadensgutachten — contact only ── */}
+            {step === 4 && (
+              <motion.div key="step4" initial={{opacity:0,x:30}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-30}} transition={{duration:.25}}>
+                <div className="bk-card" style={{textAlign:'center',padding:'44px 32px'}}>
+                  {/* icon */}
+                  <div style={{width:68,height:68,borderRadius:18,background:'linear-gradient(135deg,#EEF4FF,#D4E3FF)',border:'1.5px solid rgba(91,145,244,.22)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px'}}>
+                    <Ic.Damage s={30} c="var(--accent)"/>
+                  </div>
+                  <h3 style={{fontWeight:800,fontSize:22,color:'#1E293B',marginBottom:10,letterSpacing:'-.01em'}}>Schadensgutachten</h3>
+                  <p style={{fontSize:13,color:'#64748B',lineHeight:1.75,maxWidth:400,margin:'0 auto 10px'}}>
+                    Für ein Schadensgutachten vereinbaren wir den Termin individuell mit Ihnen — bitte kontaktieren Sie uns direkt.
+                  </p>
+                  <div style={{display:'inline-flex',alignItems:'center',gap:6,background:'#EEF4FF',border:'1px solid rgba(91,145,244,.2)',borderRadius:8,padding:'6px 14px',marginBottom:28}}>
+                    <Ic.Clock s={12} c="var(--accent)"/>
+                    <span style={{fontSize:12,fontWeight:600,color:'var(--accent)'}}>ca. 45–60 Min. · Terminvereinbarung erforderlich</span>
+                  </div>
+
+                  {/* contact buttons */}
+                  <div style={{display:'flex',flexDirection:'column',gap:12,maxWidth:340,margin:'0 auto 28px'}}>
+                    <a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer"
+                      style={{display:'flex',alignItems:'center',justifyContent:'center',gap:12,padding:'15px 24px',borderRadius:13,background:'#25D366',color:'#fff',fontWeight:800,fontSize:15,textDecoration:'none',boxShadow:'0 6px 24px rgba(37,211,102,.32)',transition:'transform .18s,box-shadow .18s'}}
+                      onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-2px)';e.currentTarget.style.boxShadow='0 10px 32px rgba(37,211,102,.42)';}}
+                      onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.boxShadow='0 6px 24px rgba(37,211,102,.32)';}}>
+                      <Ic.Wa s={20} c="#fff"/>
+                      WhatsApp schreiben
+                    </a>
+                    <a href={PHONE_HREF}
+                      style={{display:'flex',alignItems:'center',justifyContent:'center',gap:12,padding:'15px 24px',borderRadius:13,background:'linear-gradient(135deg,#5B91F4,#3A72E0)',color:'#fff',fontWeight:800,fontSize:15,textDecoration:'none',boxShadow:'0 6px 24px rgba(91,145,244,.32)',transition:'transform .18s,box-shadow .18s'}}
+                      onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-2px)';e.currentTarget.style.boxShadow='0 10px 32px rgba(91,145,244,.42)';}}
+                      onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.boxShadow='0 6px 24px rgba(91,145,244,.32)';}}>
+                      <Ic.Phone s={18} c="#fff"/>
+                      {PHONE}
+                    </a>
+                  </div>
+
+                  <button onClick={()=>setStep(1)} style={{background:'none',border:'none',color:'#94A3B8',fontSize:13,cursor:'pointer',fontFamily:'var(--sans)',textDecoration:'underline'}}>
+                    ← Zurück zur Auswahl
+                  </button>
                 </div>
               </motion.div>
             )}
