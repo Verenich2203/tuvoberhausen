@@ -1908,7 +1908,7 @@ const MS = {
   divider: { height:1, background:'rgba(255,255,255,.06)', margin:'20px 0' },
   row:     { display:'flex', justifyContent:'space-between', alignItems:'flex-start', padding:'9px 0', borderBottom:'1px solid rgba(255,255,255,.04)', gap:16 },
   rowL:    { fontSize:12.5, color:'var(--white)', fontWeight:600, flexShrink:0, minWidth:130 },
-  rowR:    { fontSize:12.5, color:'var(--smoke)', textAlign:'right' as const },
+  rowR:    { fontSize:12.5, color:'var(--smoke)', textAlign:'right' },
   infoBox: { padding:'14px 18px', background:'rgba(91,145,244,.07)', borderRadius:10, border:'1px solid rgba(91,145,244,.15)' },
   foot:    { fontSize:11, color:'rgba(255,255,255,.22)', marginTop:24, borderTop:'1px solid rgba(255,255,255,.06)', paddingTop:14 },
 };
@@ -2221,7 +2221,7 @@ const LegalContent = {
         <div key={job.title} style={{marginBottom:18,paddingBottom:18,borderBottom:i<a.length-1?'1px solid rgba(255,255,255,.06)':'none'}}>
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:12,gap:8}}>
             <div style={{fontWeight:700,fontSize:13.5,color:'var(--white)',lineHeight:1.3}}>{job.title}</div>
-            <span style={{fontSize:10,padding:'3px 10px',background:'rgba(91,145,244,.1)',border:'1px solid rgba(91,145,244,.2)',borderRadius:20,color:'var(--accent)',fontWeight:700,flexShrink:0,whiteSpace:'nowrap' as const}}>{job.type}</span>
+            <span style={{fontSize:10,padding:'3px 10px',background:'rgba(91,145,244,.1)',border:'1px solid rgba(91,145,244,.2)',borderRadius:20,color:'var(--accent)',fontWeight:700,flexShrink:0,whiteSpace:'nowrap'}}>{job.type}</span>
           </div>
           <div style={{display:'flex',flexDirection:'column'}}>
             {job.reqs.map(([l,r],ri)=>(
@@ -2288,7 +2288,7 @@ const LegalContent = {
         </a>
       </div>
 
-      <div style={{fontSize:12,color:'rgba(255,255,255,.3)',textAlign:'center' as const}}>Termin direkt über das Buchungsformular auf dieser Seite wählen — ohne Wartezeit.</div>
+      <div style={{fontSize:12,color:'rgba(255,255,255,.3)',textAlign:'center'}}>Termin direkt über das Buchungsformular auf dieser Seite wählen — ohne Wartezeit.</div>
     </div>
   ),
 };
