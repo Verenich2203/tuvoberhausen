@@ -1898,328 +1898,397 @@ const Footer = ({ openModal }) => (
   </footer>
 );
 
+/* ─── SHARED MODAL STYLES ────────────────────────────────────────────────── */
+const MS = {
+  wrap:    { fontSize:13, color:'var(--smoke)', lineHeight:1.8 },
+  section: { marginBottom:22 },
+  label:   { fontSize:10, fontWeight:700, letterSpacing:'.14em', textTransform:'uppercase', color:'rgba(255,255,255,.32)', marginBottom:10 },
+  h:       { fontWeight:700, fontSize:14, color:'var(--white)', marginBottom:10, marginTop:0, letterSpacing:'-.01em' },
+  p:       { fontSize:13, color:'var(--smoke)', lineHeight:1.75, marginBottom:0 },
+  divider: { height:1, background:'rgba(255,255,255,.06)', margin:'20px 0' },
+  row:     { display:'flex', justifyContent:'space-between', alignItems:'flex-start', padding:'9px 0', borderBottom:'1px solid rgba(255,255,255,.04)', gap:16 },
+  rowL:    { fontSize:12.5, color:'var(--white)', fontWeight:600, flexShrink:0, minWidth:130 },
+  rowR:    { fontSize:12.5, color:'var(--smoke)', textAlign:'right' as const },
+  infoBox: { padding:'14px 18px', background:'rgba(91,145,244,.07)', borderRadius:10, border:'1px solid rgba(91,145,244,.15)' },
+  foot:    { fontSize:11, color:'rgba(255,255,255,.22)', marginTop:24, borderTop:'1px solid rgba(255,255,255,.06)', paddingTop:14 },
+};
+
 /* ─── LEGAL MODALS ───────────────────────────────────────────────────────── */
 const LegalContent = {
   Impressum: (
-    <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.9}}>
+    <div style={MS.wrap}>
+      <div style={MS.section}>
+        <div style={MS.label}>Angaben gemäß § 5 TMG</div>
+        <div style={{fontWeight:700,fontSize:14,color:'var(--white)',marginBottom:4}}>Ing.-Büro Qureischi</div>
+        <div style={MS.p}>Kooperationspartner des TÜV NORD<br/>Mülheimer Str. 155 · 46045 Oberhausen · Deutschland</div>
+      </div>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10,marginTop:0}}>Angaben gemäß § 5 TMG</h4>
-      <p style={{marginBottom:20}}>
-        <strong style={{color:'var(--white)'}}>Ing.-Büro Qureischi</strong><br/>
-        Kooperationspartner des TÜV NORD<br/>
-        Mülheimer Str. 155<br/>
-        46045 Oberhausen<br/>
-        Deutschland
-      </p>
+      <div style={MS.divider}/>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Kontakt</h4>
-      <p style={{marginBottom:20}}>
-        Telefon: <a href="tel:+4915755476991" style={{color:'var(--accent)',textDecoration:'none'}}>01575 5476991</a><br/>
-        E-Mail: <a href="mailto:aqureischi@extern.tuev-nord.de" style={{color:'var(--accent)',textDecoration:'none'}}>aqureischi@extern.tuev-nord.de</a>
-      </p>
+      <div style={MS.section}>
+        <div style={MS.label}>Kontakt</div>
+        <div style={{display:'flex',flexDirection:'column',gap:6}}>
+          <div style={MS.row}>
+            <span style={MS.rowL}>Telefon</span>
+            <a href="tel:+4915755476991" style={{color:'var(--accent)',textDecoration:'none',fontSize:12.5}}>01575 5476991</a>
+          </div>
+          <div style={{...MS.row,borderBottom:'none'}}>
+            <span style={MS.rowL}>E-Mail</span>
+            <a href="mailto:aqureischi@extern.tuev-nord.de" style={{color:'var(--accent)',textDecoration:'none',fontSize:12.5}}>aqureischi@extern.tuev-nord.de</a>
+          </div>
+        </div>
+      </div>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Betriebsstätte</h4>
-      <p style={{marginBottom:20}}>
-        <strong style={{color:'var(--white)'}}>KFZ-Prüfstützpunkt · Malik Car-Service</strong><br/>
-        Mülheimer Str. 155<br/>
-        46045 Oberhausen
-      </p>
+      <div style={MS.divider}/>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Verantwortlich für den Inhalt gemäß § 18 Abs. 2 MStV</h4>
-      <p style={{marginBottom:20}}>
-        A. Qureischi<br/>
-        Mülheimer Str. 155<br/>
-        46045 Oberhausen
-      </p>
+      <div style={MS.section}>
+        <div style={MS.label}>Verantwortlich gemäß § 18 Abs. 2 MStV</div>
+        <div style={MS.p}>A. Qureischi · Mülheimer Str. 155 · 46045 Oberhausen</div>
+      </div>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Aufsichtsbehörde</h4>
-      <p style={{marginBottom:20}}>
-        Kraftfahrt-Bundesamt (KBA)<br/>
-        Fördestraße 16 · 24944 Flensburg<br/>
-        Die Tätigkeit als anerkannte Überwachungsorganisation (ÜO) unterliegt der Aufsicht gemäß § 29 StVZO i.V.m. Anlage VIII StVZO.
-      </p>
+      <div style={MS.divider}/>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Berufsrechtliche Regelungen</h4>
-      <p style={{marginBottom:20}}>
-        Das Ing.-Büro Qureischi ist als Kooperationspartner des TÜV NORD akkreditiert und führt Hauptuntersuchungen (HU) sowie Abgasuntersuchungen (AU) gemäß § 29 StVZO durch. Die Tätigkeit unterliegt den Vorschriften der StVZO, insbesondere § 29 i.V.m. Anlage VIII StVZO sowie den Richtlinien des Kraftfahrt-Bundesamtes (KBA). Berufsrechtliche Regelungen sind einsehbar unter: <a href="https://www.kba.de" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>www.kba.de</a>
-      </p>
+      <div style={MS.section}>
+        <div style={MS.label}>Aufsichtsbehörde</div>
+        <div style={MS.p}>Kraftfahrt-Bundesamt (KBA) · Fördestraße 16 · 24944 Flensburg<br/>Die Tätigkeit unterliegt der Aufsicht gemäß § 29 StVZO i.V.m. Anlage VIII StVZO. Berufsrechtliche Regelungen: <a href="https://www.kba.de" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>www.kba.de</a></div>
+      </div>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Haftungsausschluss</h4>
-      <p style={{marginBottom:12}}>
-        <strong style={{color:'var(--white)'}}>Haftung für Inhalte:</strong> Die Inhalte dieser Website wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich.
-      </p>
-      <p style={{marginBottom:12}}>
-        <strong style={{color:'var(--white)'}}>Haftung für Links:</strong> Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.
-      </p>
-      <p style={{marginBottom:20}}>
-        <strong style={{color:'var(--white)'}}>Urheberrecht:</strong> Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
-      </p>
+      <div style={MS.divider}/>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>EU-Streitschlichtung</h4>
-      <p style={{marginBottom:20}}>
-        Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:{' '}
-        <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>https://ec.europa.eu/consumers/odr/</a>.<br/>
-        Unsere E-Mail-Adresse finden Sie oben im Impressum. Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
-      </p>
+      <div style={MS.section}>
+        <div style={MS.label}>Haftungsausschluss</div>
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          <div><span style={{fontWeight:700,color:'var(--white)'}}>Inhalte — </span>Die Inhalte wurden sorgfältig erstellt; Gewähr für Richtigkeit und Vollständigkeit kann nicht übernommen werden (§ 7 Abs. 1 TMG).</div>
+          <div><span style={{fontWeight:700,color:'var(--white)'}}>Links — </span>Für Inhalte verlinkter externer Seiten ist deren jeweiliger Betreiber verantwortlich.</div>
+          <div><span style={{fontWeight:700,color:'var(--white)'}}>Urheberrecht — </span>Alle Inhalte unterliegen dem deutschen Urheberrecht. Vervielfältigung nur mit schriftlicher Zustimmung.</div>
+        </div>
+      </div>
 
-      <p style={{fontSize:11,color:'rgba(255,255,255,.25)',marginTop:24,borderTop:'1px solid rgba(255,255,255,.07)',paddingTop:14}}>
-        Stand: Mai 2026
-      </p>
+      <div style={MS.divider}/>
+
+      <div style={MS.section}>
+        <div style={MS.label}>EU-Streitschlichtung</div>
+        <div style={MS.p}>Plattform der EU-Kommission: <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>ec.europa.eu/consumers/odr</a>. Wir nehmen nicht an Verbraucherschlichtungsverfahren teil.</div>
+      </div>
+
+      <div style={MS.foot}>Stand: Mai 2026</div>
     </div>
   ),
+
   Datenschutz: (
-    <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.9}}>
-      <p style={{marginBottom:20,fontSize:12,color:'rgba(255,255,255,.35)'}}>Stand: Mai 2026 · gemäß DSGVO, BDSG n.F., TTDSG</p>
+    <div style={MS.wrap}>
+      <div style={{fontSize:11,color:'rgba(255,255,255,.28)',marginBottom:20,letterSpacing:'.04em'}}>Stand: Mai 2026 · gemäß DSGVO, BDSG n.F., TTDSG</div>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10,marginTop:0}}>§ 1 Verantwortlicher</h4>
-      <p style={{marginBottom:18}}>
-        <strong style={{color:'var(--white)'}}>Ing.-Büro Qureischi</strong> (Kooperationspartner des TÜV NORD)<br/>
-        Mülheimer Str. 155 · 46045 Oberhausen<br/>
-        Tel.: <a href="tel:+4915755476991" style={{color:'var(--accent)',textDecoration:'none'}}>01575 5476991</a><br/>
-        E-Mail: <a href="mailto:aqureischi@extern.tuev-nord.de" style={{color:'var(--accent)',textDecoration:'none'}}>aqureischi@extern.tuev-nord.de</a>
-      </p>
+      <div style={MS.section}>
+        <div style={MS.label}>§ 1 Verantwortlicher</div>
+        <div style={MS.p}><strong style={{color:'var(--white)'}}>Ing.-Büro Qureischi</strong> (Kooperationspartner des TÜV NORD)<br/>Mülheimer Str. 155 · 46045 Oberhausen<br/>
+          <a href="tel:+4915755476991" style={{color:'var(--accent)',textDecoration:'none'}}>01575 5476991</a> · <a href="mailto:aqureischi@extern.tuev-nord.de" style={{color:'var(--accent)',textDecoration:'none'}}>aqureischi@extern.tuev-nord.de</a>
+        </div>
+      </div>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 2 Erhobene Daten & Zweck</h4>
-      <ul style={{paddingLeft:18,marginBottom:18,display:'flex',flexDirection:'column',gap:6}}>
-        <li><strong style={{color:'var(--white)'}}>Terminbuchung:</strong> Name, Telefonnummer, Fahrzeugtyp, gewählter Termin — zur Terminverwaltung und Kontaktaufnahme.</li>
-        <li><strong style={{color:'var(--white)'}}>Abholservice:</strong> Abholadresse, Wunschdatum — zur Koordination des Fahrzeugtransports.</li>
-        <li><strong style={{color:'var(--white)'}}>Kontaktanfragen:</strong> Name, E-Mail oder Telefon, Nachrichteninhalt — zur Bearbeitung Ihrer Anfrage.</li>
-        <li><strong style={{color:'var(--white)'}}>Technische Daten:</strong> IP-Adresse, Browsertyp, Zugriffszeit — Sicherheit und Betrieb (§ 25 Abs. 2 Nr. 2 TTDSG).</li>
-      </ul>
+      <div style={MS.divider}/>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 3 Rechtsgrundlagen</h4>
-      <ul style={{paddingLeft:18,marginBottom:18,display:'flex',flexDirection:'column',gap:6}}>
-        <li><strong style={{color:'var(--white)'}}>Art. 6 Abs. 1 lit. b DSGVO</strong> — Vertragserfüllung (Terminbuchung, Abholservice).</li>
-        <li><strong style={{color:'var(--white)'}}>Art. 6 Abs. 1 lit. f DSGVO</strong> — Berechtigtes Interesse (Sicherheit, Betrieb, Anfragenbearbeitung).</li>
-        <li><strong style={{color:'var(--white)'}}>Art. 6 Abs. 1 lit. a DSGVO</strong> — Einwilligung (Analyse-Cookies, Google Maps).</li>
-      </ul>
+      <div style={MS.section}>
+        <div style={MS.label}>§ 2 Erhobene Daten &amp; Zweck</div>
+        <div style={{border:'1px solid rgba(255,255,255,.07)',borderRadius:10,overflow:'hidden'}}>
+          {[
+            ['Terminbuchung','Name, Telefonnummer, Fahrzeugtyp, Termin'],
+            ['Abholservice','Abholadresse, Wunschdatum'],
+            ['Kontaktanfragen','Name, E-Mail oder Telefon, Nachricht'],
+            ['Technische Daten','IP-Adresse, Browsertyp, Zugriffszeit (§ 25 Abs. 2 Nr. 2 TTDSG)'],
+          ].map(([l,r],i)=>(
+            <div key={l} style={{display:'flex',gap:16,padding:'9px 14px',background:i%2===0?'transparent':'rgba(255,255,255,.02)',borderBottom:i<3?'1px solid rgba(255,255,255,.04)':'none'}}>
+              <span style={{fontWeight:700,color:'var(--white)',fontSize:12,width:120,flexShrink:0}}>{l}</span>
+              <span style={{fontSize:12,color:'var(--smoke)'}}>{r}</span>
+            </div>
+          ))}
+        </div>
+      </div>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 4 Cookies & TTDSG</h4>
-      <ul style={{paddingLeft:18,marginBottom:18,display:'flex',flexDirection:'column',gap:6}}>
-        <li><strong style={{color:'var(--white)'}}>Technisch notwendig (§ 25 Abs. 2 TTDSG):</strong> Session-Cookies, Sicherheits-Tokens. Keine Einwilligung erforderlich.</li>
-        <li><strong style={{color:'var(--white)'}}>Analyse (Art. 6 Abs. 1 lit. a DSGVO):</strong> Anonymisierte Nutzungsauswertung. Nur nach Einwilligung.</li>
-        <li><strong style={{color:'var(--white)'}}>Google Maps (Art. 6 Abs. 1 lit. a DSGVO):</strong> Kartendarstellung. Nur nach Einwilligung aktiv.</li>
-      </ul>
-      <p style={{marginBottom:18}}>Einwilligung jederzeit über „Cookie-Einstellungen" im Footer widerrufbar.</p>
+      <div style={MS.divider}/>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 5 Google Maps</h4>
-      <p style={{marginBottom:18}}>Diese Website bindet Google Maps der Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Irland) ein. Bei Nutzung werden Daten an Google-Server übertragen. Grundlage: Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Datenschutzerklärung: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>policies.google.com/privacy</a></p>
+      <div style={MS.section}>
+        <div style={MS.label}>§ 3 Rechtsgrundlagen</div>
+        <div style={{display:'flex',flexDirection:'column',gap:8}}>
+          {[
+            ['Art. 6 Abs. 1 lit. b','Vertragserfüllung — Terminbuchung, Abholservice'],
+            ['Art. 6 Abs. 1 lit. f','Berechtigtes Interesse — Sicherheit, Betrieb'],
+            ['Art. 6 Abs. 1 lit. a','Einwilligung — Analyse-Cookies, Google Maps'],
+          ].map(([l,r])=>(
+            <div key={l} style={{display:'flex',gap:12,alignItems:'baseline'}}>
+              <span style={{fontWeight:700,color:'var(--accent)',fontSize:11,flexShrink:0,fontFamily:'monospace'}}>{l}</span>
+              <span style={{fontSize:12.5,color:'var(--smoke)'}}>{r}</span>
+            </div>
+          ))}
+        </div>
+      </div>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 6 Speicherdauer</h4>
-      <ul style={{paddingLeft:18,marginBottom:18,display:'flex',flexDirection:'column',gap:6}}>
-        <li>Buchungsdaten: 3 Jahre (§§ 238, 257 HGB).</li>
-        <li>Kontaktanfragen: 6 Monate nach abgeschlossener Bearbeitung.</li>
-        <li>Server-Logs: 7 Tage, danach automatische Löschung.</li>
-      </ul>
+      <div style={MS.divider}/>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 7 Ihre Rechte (Art. 15–22 DSGVO)</h4>
-      <ul style={{paddingLeft:18,marginBottom:18,display:'flex',flexDirection:'column',gap:6}}>
-        <li><strong style={{color:'var(--white)'}}>Auskunft (Art. 15):</strong> Welche Daten wir über Sie speichern.</li>
-        <li><strong style={{color:'var(--white)'}}>Berichtigung (Art. 16):</strong> Korrektur unrichtiger Daten.</li>
-        <li><strong style={{color:'var(--white)'}}>Löschung (Art. 17):</strong> Löschung Ihrer Daten (soweit keine Aufbewahrungspflicht entgegensteht).</li>
-        <li><strong style={{color:'var(--white)'}}>Einschränkung (Art. 18):</strong> Einschränkung der Verarbeitung.</li>
-        <li><strong style={{color:'var(--white)'}}>Datenübertragbarkeit (Art. 20):</strong> Ihre Daten in maschinenlesbarem Format.</li>
-        <li><strong style={{color:'var(--white)'}}>Widerspruch (Art. 21):</strong> Gegen Verarbeitung auf Basis berechtigter Interessen.</li>
-        <li><strong style={{color:'var(--white)'}}>Widerruf (Art. 7 Abs. 3):</strong> Erteilte Einwilligungen jederzeit widerrufbar.</li>
-      </ul>
-      <p style={{marginBottom:18}}>Anfragen an: <a href="mailto:aqureischi@extern.tuev-nord.de" style={{color:'var(--accent)',textDecoration:'none'}}>aqureischi@extern.tuev-nord.de</a></p>
+      <div style={MS.section}>
+        <div style={MS.label}>§ 4 Cookies (TTDSG)</div>
+        <div style={{border:'1px solid rgba(255,255,255,.07)',borderRadius:10,overflow:'hidden'}}>
+          {[
+            ['Notwendig','Session, Sicherheits-Tokens — keine Einwilligung erforderlich'],
+            ['Analyse','Anonyme Auswertung — nur nach Einwilligung'],
+            ['Google Maps','Kartendarstellung — nur nach Einwilligung aktiv'],
+          ].map(([l,r],i)=>(
+            <div key={l} style={{display:'flex',gap:16,padding:'9px 14px',background:i%2===0?'transparent':'rgba(255,255,255,.02)',borderBottom:i<2?'1px solid rgba(255,255,255,.04)':'none'}}>
+              <span style={{fontWeight:700,color:'var(--white)',fontSize:12,width:90,flexShrink:0}}>{l}</span>
+              <span style={{fontSize:12,color:'var(--smoke)'}}>{r}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{marginTop:10,fontSize:12,color:'rgba(255,255,255,.35)'}}>Einwilligung jederzeit über „Cookie-Einstellungen" im Footer widerrufbar.</div>
+      </div>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 8 Beschwerderecht</h4>
-      <p style={{marginBottom:18}}>
-        <strong style={{color:'var(--white)'}}>Landesbeauftragte für Datenschutz und Informationsfreiheit NRW</strong><br/>
-        Kavalleriestr. 2–4 · 40213 Düsseldorf · <a href="https://www.ldi.nrw.de" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>www.ldi.nrw.de</a>
-      </p>
+      <div style={MS.divider}/>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 9 Datensicherheit</h4>
-      <p style={{marginBottom:18}}>Diese Website nutzt HTTPS/TLS-Verschlüsselung. Buchungsdaten werden über Supabase (EU-Region Frankfurt) verarbeitet — als Auftragsverarbeiter gem. Art. 28 DSGVO vertraglich gebunden.</p>
+      <div style={MS.section}>
+        <div style={MS.label}>§ 5 Google Maps</div>
+        <div style={MS.p}>Google Ireland Limited, Gordon House, Dublin 4. Datenübertragung auf Basis Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>policies.google.com/privacy</a></div>
+      </div>
 
-      <p style={{fontSize:11,color:'rgba(255,255,255,.25)',marginTop:24,borderTop:'1px solid rgba(255,255,255,.07)',paddingTop:14}}>Stand: Mai 2026</p>
+      <div style={MS.divider}/>
+
+      <div style={MS.section}>
+        <div style={MS.label}>§ 6 Speicherdauer</div>
+        <div style={{display:'flex',flexDirection:'column'}}>
+          {[['Buchungsdaten','3 Jahre (§§ 238, 257 HGB)'],['Kontaktanfragen','6 Monate nach Bearbeitung'],['Server-Logs','7 Tage, dann automatische Löschung']].map(([l,r],i)=>(
+            <div key={l} style={{...MS.row,borderBottom:i<2?'1px solid rgba(255,255,255,.04)':'none'}}>
+              <span style={{...MS.rowL,minWidth:160}}>{l}</span><span style={MS.rowR}>{r}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={MS.divider}/>
+
+      <div style={MS.section}>
+        <div style={MS.label}>§ 7 Ihre Rechte (Art. 15–22 DSGVO)</div>
+        <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
+          {['Auskunft','Berichtigung','Löschung','Einschränkung','Datenübertragbarkeit','Widerspruch','Widerruf'].map(r=>(
+            <span key={r} style={{fontSize:11.5,padding:'4px 12px',background:'rgba(255,255,255,.05)',borderRadius:20,color:'var(--text)',border:'1px solid rgba(255,255,255,.08)'}}>{r}</span>
+          ))}
+        </div>
+        <div style={{marginTop:12,fontSize:12.5,color:'var(--smoke)'}}>Anfragen: <a href="mailto:aqureischi@extern.tuev-nord.de" style={{color:'var(--accent)',textDecoration:'none'}}>aqureischi@extern.tuev-nord.de</a></div>
+      </div>
+
+      <div style={MS.divider}/>
+
+      <div style={MS.section}>
+        <div style={MS.label}>§ 8 Beschwerderecht · § 9 Datensicherheit</div>
+        <div style={MS.p}>Aufsichtsbehörde: Landesbeauftragte für Datenschutz und Informationsfreiheit NRW · Kavalleriestr. 2–4 · 40213 Düsseldorf · <a href="https://www.ldi.nrw.de" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>www.ldi.nrw.de</a><br/><br/>Diese Website nutzt HTTPS/TLS. Buchungsdaten werden über Supabase (EU-Region Frankfurt) verarbeitet — Auftragsverarbeitung gem. Art. 28 DSGVO.</div>
+      </div>
+
+      <div style={MS.foot}>Stand: Mai 2026</div>
     </div>
   ),
 
   AGB: (
-    <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.9}}>
-      <p style={{marginBottom:20,fontSize:12,color:'rgba(255,255,255,.35)'}}>Stand: Mai 2026 · Ing.-Büro Qureischi, Oberhausen</p>
+    <div style={MS.wrap}>
+      <div style={{fontSize:11,color:'rgba(255,255,255,.28)',marginBottom:20,letterSpacing:'.04em'}}>Stand: Mai 2026 · Ing.-Büro Qureischi, Mülheimer Str. 155, 46045 Oberhausen</div>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10,marginTop:0}}>§ 1 Geltungsbereich</h4>
-      <p style={{marginBottom:18}}>Diese AGB gelten für alle Terminbuchungen und Dienstleistungen des Ing.-Büro Qureischi (Kooperationspartner des TÜV NORD), Mülheimer Str. 155, 46045 Oberhausen, über diese Website sowie telefonisch vereinbarte Termine.</p>
+      {[
+        {p:'§ 1 Geltungsbereich', t:'Diese AGB gelten für alle Terminbuchungen und Dienstleistungen des Ing.-Büro Qureischi (Kooperationspartner des TÜV NORD), Mülheimer Str. 155, 46045 Oberhausen, über diese Website sowie telefonisch vereinbarte Termine.'},
+        {p:'§ 2 Vertragsschluss', t:'Die Online-Terminbuchung ist eine verbindliche Terminanfrage. Der Vertrag kommt mit unserer Bestätigung per E-Mail oder Telefon zustande. Wir behalten uns vor, Buchungen bei Kapazitätsengpässen abzulehnen.'},
+        {p:'§ 4 Preise & Zahlung', t:'Alle Preise sind Endpreise inkl. gesetzlicher MwSt. Zahlung vor Ort nach Leistungserbringung — Bar oder EC-Karte. Abholservice-Aufschlag: 15 €. TÜV-Gebühren sind enthalten, sofern nicht anders angegeben.'},
+        {p:'§ 5 Leistungserbringung', t:'HU und AU werden gemäß § 29 StVZO i.V.m. Anlage VIII StVZO durchgeführt. Bei erheblichen Mängeln ist eine Nachprüfung innerhalb gesetzlicher Fristen erforderlich. Prüfplakette und Prüfbericht werden unmittelbar nach Abschluss ausgehändigt.'},
+        {p:'§ 6 Widerrufsrecht', t:'Für Terminbuchungen besteht gemäß § 312g Abs. 2 Nr. 9 BGB kein Widerrufsrecht, da es sich um Dienstleistungsverträge zu einem festgelegten Termin handelt. Es gelten die Stornierungsbedingungen gemäß § 3.'},
+        {p:'§ 7 Haftung', t:'Unbeschränkte Haftung für Verletzungen von Leben, Körper oder Gesundheit sowie bei Vorsatz und grober Fahrlässigkeit (§ 276 BGB). Die Haftung für leichte Fahrlässigkeit ist ausgeschlossen, soweit keine Kardinalpflichten verletzt werden.'},
+        {p:'§ 8 Datenschutz', t:'Buchungsdaten werden ausschließlich zur Vertragserfüllung verwendet. Details entnehmen Sie unserer Datenschutzerklärung.'},
+        {p:'§ 9 Recht & Gerichtsstand', t:'Es gilt deutsches Recht unter Ausschluss des UN-Kaufrechts (CISG). Gerichtsstand Oberhausen, soweit gesetzlich zulässig. Für Verbraucher gilt ihr allgemeiner Wohnsitz. Keine Teilnahme an Verbraucherschlichtungsverfahren.'},
+        {p:'§ 10 Salvatorische Klausel', t:'Unwirksame Bestimmungen berühren die Gültigkeit der übrigen AGB nicht. Es tritt die gesetzliche Regelung an ihre Stelle.'},
+      ].map(({p,t},i,a)=>(
+        <div key={p}>
+          <div style={{display:'flex',gap:16,padding:'14px 0',borderBottom: i<a.length-1?'1px solid rgba(255,255,255,.05)':'none'}}>
+            <div style={{fontWeight:700,fontSize:12,color:'var(--accent)',width:140,flexShrink:0,paddingTop:1}}>{p}</div>
+            <div style={{fontSize:12.5,color:'var(--smoke)',lineHeight:1.7}}>{t}</div>
+          </div>
+          {p==='§ 2 Vertragsschluss' && (
+            <div style={{padding:'12px 0 0'}}>
+              <div style={MS.label}>§ 3 Stornierung &amp; Umbuchung</div>
+              <div style={{border:'1px solid rgba(255,255,255,.07)',borderRadius:10,overflow:'hidden',marginBottom:14}}>
+                {[
+                  ['Bis 24 Std. vor Termin','Kostenfrei','#10B981'],
+                  ['Innerhalb 24 Stunden','Gebühr bis 15 €','#F59E0B'],
+                  ['Umbuchung','Bis 24 Std. kostenfrei','var(--smoke)'],
+                  ['Nichterscheinen','Ausfallgebühr vorbehalten','var(--smoke)'],
+                ].map(([l,r,c],i)=>(
+                  <div key={l} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'9px 14px',background:i%2===0?'transparent':'rgba(255,255,255,.02)',borderBottom:i<3?'1px solid rgba(255,255,255,.04)':'none'}}>
+                    <span style={{fontSize:12.5,color:'var(--smoke)'}}>{l}</span>
+                    <span style={{fontSize:12.5,fontWeight:700,color:c}}>{r}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 2 Vertragsschluss</h4>
-      <p style={{marginBottom:18}}>Die Online-Terminbuchung ist eine verbindliche Terminanfrage. Der Vertrag kommt mit unserer Bestätigung (per E-Mail oder Telefon) zustande. Wir behalten uns vor, Buchungen bei Kapazitätsengpässen abzulehnen.</p>
-
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 3 Stornierung & Umbuchung</h4>
-      <ul style={{paddingLeft:18,marginBottom:18,display:'flex',flexDirection:'column',gap:6}}>
-        <li>Kostenfreie Stornierung bis <strong style={{color:'var(--white)'}}>24 Stunden</strong> vor dem Termin.</li>
-        <li>Stornierung innerhalb 24 Stunden: Bearbeitungsgebühr bis zu <strong style={{color:'var(--white)'}}>15 €</strong>.</li>
-        <li>Umbuchungen bis 24 Stunden vor dem Termin kostenfrei möglich.</li>
-        <li>Nichterscheinen ohne Stornierung: Ausfallgebühr vorbehalten.</li>
-      </ul>
-
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 4 Preise & Zahlung</h4>
-      <p style={{marginBottom:18}}>Alle Preise sind Endpreise inkl. gesetzlicher MwSt. Zahlung vor Ort nach Leistungserbringung (Bar oder EC-Karte). Abholservice-Aufschlag: <strong style={{color:'var(--white)'}}>15 €</strong>. TÜV-Gebühren in den angezeigten Preisen enthalten, sofern nicht anders angegeben.</p>
-
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 5 Leistungserbringung</h4>
-      <p style={{marginBottom:18}}>HU und AU werden gemäß § 29 StVZO i.V.m. Anlage VIII StVZO durchgeführt. Bei erheblichen Mängeln ist eine Nachprüfung innerhalb gesetzlicher Fristen erforderlich. Prüfplakette und Prüfbericht werden unmittelbar nach Abschluss ausgehändigt.</p>
-
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 6 Widerrufsrecht</h4>
-      <p style={{marginBottom:18}}>Für Terminbuchungen zur Durchführung von Hauptuntersuchungen und sonstigen Fahrzeugprüfungen besteht gemäß <strong style={{color:'var(--white)'}}>§ 312g Abs. 2 Nr. 9 BGB</strong> kein Widerrufsrecht, da es sich um Dienstleistungsverträge handelt, die zu einem festgelegten Termin erbracht werden. Es gelten die Stornierungsbedingungen gemäß § 3.</p>
-
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 7 Haftung</h4>
-      <p style={{marginBottom:18}}>Unbeschränkte Haftung für Verletzungen von Leben, Körper oder Gesundheit sowie bei Vorsatz und grober Fahrlässigkeit (§ 276 BGB). Die Haftung für leichte Fahrlässigkeit ist ausgeschlossen, soweit keine wesentlichen Vertragspflichten (Kardinalpflichten) verletzt werden. Bei Verletzung von Kardinalpflichten ist die Haftung für leichte Fahrlässigkeit auf den vertragstypisch vorhersehbaren Schaden begrenzt. Keine Haftung für Verzögerungen durch höhere Gewalt oder behördliche Auflagen.</p>
-
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 8 Datenschutz</h4>
-      <p style={{marginBottom:18}}>Buchungsdaten werden ausschließlich zur Vertragserfüllung und Terminverwaltung verwendet. Details entnehmen Sie unserer Datenschutzerklärung.</p>
-
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 9 Anwendbares Recht & Gerichtsstand</h4>
-      <p style={{marginBottom:18}}>Es gilt deutsches Recht unter Ausschluss des UN-Kaufrechts (CISG). Gerichtsstand ist Oberhausen, soweit gesetzlich zulässig. Für Verbraucher gilt der Gerichtsstand des allgemeinen Wohnsitzes. Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
-
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 10 Salvatorische Klausel</h4>
-      <p style={{marginBottom:18}}>Sollten einzelne Bestimmungen dieser AGB ganz oder teilweise unwirksam sein oder werden, berührt dies die Wirksamkeit der übrigen Bestimmungen nicht. An die Stelle der unwirksamen Bestimmung tritt die gesetzliche Regelung.</p>
-
-      <p style={{fontSize:11,color:'rgba(255,255,255,.25)',marginTop:24,borderTop:'1px solid rgba(255,255,255,.07)',paddingTop:14}}>Stand: Mai 2026 · Ing.-Büro Qureischi, Mülheimer Str. 155, 46045 Oberhausen</p>
+      <div style={MS.foot}>Stand: Mai 2026 · Ing.-Büro Qureischi, Oberhausen</div>
     </div>
   ),
 
   'Cookie-Einstellungen': null,
 
   'Über uns': (
-    <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.9}}>
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10,marginTop:0}}>Wer wir sind</h4>
-      <p style={{marginBottom:18}}>Das <strong style={{color:'var(--white)'}}>Ing.-Büro Qureischi</strong> ist ein akkreditierter Kooperationspartner des <strong style={{color:'var(--white)'}}>TÜV NORD</strong> mit Sitz in Oberhausen. Als KFZ-Prüfstützpunkt führen wir amtliche Hauptuntersuchungen (HU), Abgasuntersuchungen (AU) und weitere Fahrzeugprüfungen nach § 29 StVZO durch — zuverlässig, transparent und ohne lange Wartezeiten.</p>
+    <div style={MS.wrap}>
+      <div style={MS.section}>
+        <div style={{fontWeight:700,fontSize:15,color:'var(--white)',marginBottom:10,letterSpacing:'-.01em'}}>Ing.-Büro Qureischi</div>
+        <div style={MS.p}>Akkreditierter Kooperationspartner des TÜV NORD mit Sitz in Oberhausen. Als KFZ-Prüfstützpunkt führen wir amtliche Hauptuntersuchungen (HU), Abgasuntersuchungen (AU) und weitere Fahrzeugprüfungen nach § 29 StVZO durch — zuverlässig, transparent und ohne lange Wartezeiten.</div>
+      </div>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Unsere Mission</h4>
-      <p style={{marginBottom:18}}>Wir machen die Fahrzeugprüfung einfach. Statt langer Warteschlangen und undurchsichtiger Preise bieten wir Online-Terminbuchung, feste Preise und einen optionalen Abholservice — damit Ihre HU erledigt ist, ohne Ihren Alltag umzuplanen.</p>
+      <div style={MS.divider}/>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>TÜV NORD Partnerschaft</h4>
-      <p style={{marginBottom:18}}>Als offizieller Kooperationspartner des TÜV NORD sind alle Prüfer nach § 29 StVZO i.V.m. Anlage VIIIa zugelassen. Prüfplaketten und Prüfberichte haben bundesweite Gültigkeit und werden sofort nach der Untersuchung ausgestellt.</p>
-
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:18}}>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,border:'1px solid rgba(255,255,255,.07)',borderRadius:10,overflow:'hidden',marginBottom:22}}>
         {[
-          {icon:'🛡️',label:'Akkreditiert',desc:'TÜV NORD Kooperationspartner'},
-          {icon:'⏱️',label:'Schnell & Flexibel',desc:'Online-Buchung, Abholservice'},
-          {icon:'💰',label:'Faire Preise',desc:'Keine versteckten Kosten'},
-          {icon:'🏆',label:'Erfahren',desc:'PKW, Motorrad, Oldtimer, LPG'},
-        ].map(v=>(
-          <div key={v.label} style={{padding:'14px 16px',background:'var(--dark2)',borderRadius:10,border:'1px solid rgba(255,255,255,.07)'}}>
-            <div style={{fontSize:20,marginBottom:6}}>{v.icon}</div>
-            <div style={{fontWeight:700,fontSize:13,color:'var(--white)',marginBottom:2}}>{v.label}</div>
-            <div style={{fontSize:11.5,color:'var(--smoke)'}}>{v.desc}</div>
+          ['Akkreditierung','TÜV NORD Kooperationspartner'],
+          ['Prüfumfang','PKW, Motorrad, Oldtimer, LPG, BO-Kraft'],
+          ['Terminbuchung','Online · Telefon · Abholservice'],
+          ['Gültigkeit','Prüfplaketten bundesweit anerkannt'],
+        ].map(([l,r],i)=>(
+          <div key={l} style={{padding:'12px 16px',background:i%2===0?'transparent':'rgba(255,255,255,.025)',borderRight:i%2===0?'1px solid rgba(255,255,255,.06)':'none',borderTop:i>=2?'1px solid rgba(255,255,255,.06)':'none'}}>
+            <div style={{fontSize:10,fontWeight:700,color:'rgba(255,255,255,.35)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:5}}>{l}</div>
+            <div style={{fontSize:12.5,color:'var(--text)',lineHeight:1.5}}>{r}</div>
           </div>
         ))}
       </div>
 
-      <div style={{padding:'16px 20px',background:'rgba(91,145,244,.08)',borderRadius:12,border:'1px solid rgba(91,145,244,.2)'}}>
-        <div style={{fontWeight:700,color:'var(--white)',marginBottom:6}}>KFZ-Prüfstützpunkt · Malik Car-Service</div>
+      <div style={MS.section}>
+        <div style={MS.label}>Unser Versprechen</div>
+        <div style={MS.p}>Statt langer Warteschlangen und undurchsichtiger Preise: Online-Terminbuchung, feste Preise und optionaler Abholservice — damit Ihre HU erledigt ist, ohne Ihren Alltag umzuplanen.</div>
+      </div>
+
+      <div style={MS.divider}/>
+
+      <div style={{...MS.infoBox}}>
+        <div style={{fontWeight:700,color:'var(--white)',marginBottom:4,fontSize:13}}>KFZ-Prüfstützpunkt · Malik Car-Service</div>
         <div style={{fontSize:12,color:'var(--smoke)'}}>Mülheimer Str. 155 · 46045 Oberhausen<br/>Mo–Fr 08:00–18:00 · Sa nach Vereinbarung</div>
       </div>
     </div>
   ),
 
   Team: (
-    <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.9}}>
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:6,marginTop:0}}>Unser Team</h4>
-      <p style={{marginBottom:18,fontSize:12.5}}>Hinter jedem erfolgreichen Prüfergebnis stehen qualifizierte Fachleute — zertifiziert nach TÜV NORD-Standards und fortlaufend geschult.</p>
+    <div style={MS.wrap}>
+      <div style={MS.section}>
+        <div style={MS.p}>Qualifizierte Fachleute — zertifiziert nach TÜV NORD-Standards, fortlaufend geschult und mit langjähriger Praxiserfahrung.</div>
+      </div>
+
+      <div style={MS.divider}/>
+
       {[
-        {icon:'👷',name:'A. Qureischi', role:'Leiter & Sachverständiger', desc:'Akkreditierter Ingenieursachverständiger, zugelassen nach § 29 StVZO i.V.m. Anlage VIIIa. Langjährige Erfahrung in der Fahrzeugtechnik, amtlichen Hauptuntersuchung und Fahrzeuggutachten.',tags:['HU · AU','Oldtimer § 23','Gutachten']},
-        {icon:'🔧',name:'Technisches Prüferteam', role:'Geprüfte KFZ-Prüfer', desc:'Alle Prüfer sind nach TÜV NORD-Standards zertifiziert und nehmen regelmäßig an Pflichtschulungen teil. Spezialisierungen abdeckend für alle angebotenen Prüfkategorien.',tags:['PKW · Motorrad','Anhänger · LPG','BO-Kraft · §19.3']},
-        {icon:'📋',name:'Service & Disposition', role:'Terminplanung & Abholservice', desc:'Koordination aller Online- und Telefonbuchungen, Organisation des Abholservices und persönlicher Ansprechpartner für Rückfragen rund um Ihren Prüftermin.',tags:['Buchung','Abholservice','Kundenbetreuung']},
-      ].map(m=>(
-        <div key={m.name} style={{marginBottom:14,padding:'18px 20px',background:'var(--dark2)',borderRadius:12,border:'1px solid rgba(255,255,255,.07)'}}>
-          <div style={{display:'flex',alignItems:'flex-start',gap:14}}>
-            <div style={{fontSize:28,lineHeight:1,flexShrink:0,marginTop:2}}>{m.icon}</div>
-            <div style={{flex:1}}>
-              <div style={{fontWeight:700,fontSize:14,color:'var(--white)',marginBottom:2}}>{m.name}</div>
-              <div style={{fontSize:10,color:'var(--accent)',fontWeight:700,marginBottom:8,textTransform:'uppercase',letterSpacing:'.1em'}}>{m.role}</div>
-              <p style={{fontSize:12.5,margin:'0 0 10px'}}>{m.desc}</p>
-              <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
-                {m.tags.map(t=><span key={t} style={{fontSize:10,padding:'3px 9px',background:'rgba(91,145,244,.1)',border:'1px solid rgba(91,145,244,.2)',borderRadius:20,color:'var(--accent)',fontWeight:700,letterSpacing:'.06em'}}>{t}</span>)}
+        {name:'A. Qureischi', role:'Leiter & Sachverständiger', desc:'Akkreditierter Ingenieursachverständiger, zugelassen nach § 29 StVZO i.V.m. Anlage VIIIa. Langjährige Erfahrung in der Fahrzeugtechnik, amtlichen HU und Fahrzeuggutachten.', specs:[['Zulassung','§ 29 StVZO, Anlage VIIIa'],['Schwerpunkte','HU · AU · Oldtimer · Gutachten']]},
+        {name:'Technisches Prüferteam', role:'Geprüfte KFZ-Prüfer', desc:'Alle Prüfer sind nach TÜV NORD-Standards zertifiziert und nehmen regelmäßig an Pflichtschulungen teil.', specs:[['Zertifizierung','TÜV NORD'],['Prüfkategorien','PKW · Motorrad · Anhänger · LPG · BO-Kraft']]},
+        {name:'Service & Disposition', role:'Terminplanung & Abholservice', desc:'Koordination aller Buchungen, Organisation des Abholservices und persönlicher Ansprechpartner für alle Fragen rund um Ihren Prüftermin.', specs:[['Erreichbarkeit','Mo–Fr 08:00–18:00'],['Kanäle','Telefon · WhatsApp · Online']]},
+      ].map((m,i,a)=>(
+        <div key={m.name} style={{paddingBottom:18,marginBottom:18,borderBottom:i<a.length-1?'1px solid rgba(255,255,255,.06)':'none'}}>
+          <div style={{fontWeight:700,fontSize:14,color:'var(--white)',marginBottom:2}}>{m.name}</div>
+          <div style={{fontSize:10,fontWeight:700,color:'var(--accent)',textTransform:'uppercase',letterSpacing:'.12em',marginBottom:10}}>{m.role}</div>
+          <div style={{fontSize:12.5,color:'var(--smoke)',lineHeight:1.7,marginBottom:12}}>{m.desc}</div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
+            {m.specs.map(([l,r])=>(
+              <div key={l} style={{padding:'8px 12px',background:'rgba(255,255,255,.03)',borderRadius:8,border:'1px solid rgba(255,255,255,.06)'}}>
+                <div style={{fontSize:10,color:'rgba(255,255,255,.3)',fontWeight:700,textTransform:'uppercase',letterSpacing:'.1em',marginBottom:3}}>{l}</div>
+                <div style={{fontSize:12,color:'var(--text)'}}>{r}</div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       ))}
-      <p style={{marginTop:4,fontSize:11.5,color:'rgba(255,255,255,.3)',padding:'10px 0',borderTop:'1px solid rgba(255,255,255,.07)'}}>Alle Prüfer handeln im Auftrag und unter den Qualitätsstandards des TÜV NORD.</p>
+
+      <div style={{fontSize:11.5,color:'rgba(255,255,255,.25)'}}>Alle Prüfer handeln im Auftrag und unter den Qualitätsstandards des TÜV NORD.</div>
     </div>
   ),
 
   Karriere: (
-    <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.9}}>
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10,marginTop:0}}>Karriere beim KFZ-Prüfstützpunkt Oberhausen</h4>
-      <p style={{marginBottom:18}}>Wir sind ein wachsender TÜV NORD-Kooperationspartner und suchen engagierte Fachkräfte für unser Team in Oberhausen. Bei uns erwartet Sie ein kollegiales Arbeitsumfeld, faire Vergütung und die Möglichkeit zur fachlichen Weiterentwicklung.</p>
-
-      <div style={{display:'flex',gap:10,marginBottom:18,flexWrap:'wrap'}}>
-        {['Faire Vergütung','Flexible Arbeitszeiten','TÜV NORD-Schulungen','Sicherer Arbeitsplatz'].map(b=>(
-          <span key={b} style={{fontSize:11,padding:'4px 12px',background:'rgba(91,145,244,.1)',border:'1px solid rgba(91,145,244,.2)',borderRadius:20,color:'var(--accent)',fontWeight:700}}>✓ {b}</span>
-        ))}
+    <div style={MS.wrap}>
+      <div style={{padding:'18px 20px',background:'linear-gradient(135deg,rgba(91,145,244,.1) 0%,rgba(91,145,244,.05) 100%)',borderRadius:12,border:'1px solid rgba(91,145,244,.18)',marginBottom:22}}>
+        <div style={{fontWeight:700,fontSize:14,color:'var(--white)',marginBottom:8,letterSpacing:'-.01em'}}>Werden Sie Teil unseres Teams</div>
+        <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.75}}>Das Ing.-Büro Qureischi ist ein wachsender TÜV NORD-Kooperationspartner in Oberhausen. Wir legen Wert auf ein respektvolles Miteinander, faire Bedingungen und die fachliche Weiterentwicklung jedes Einzelnen. Bei uns arbeiten Sie in einem eingespielten Team mit klaren Strukturen — ohne unnötige Bürokratie.</div>
+        <div style={{display:'flex',gap:8,marginTop:14,flexWrap:'wrap'}}>
+          {['Faire Vergütung','Flexible Zeiten','TÜV NORD-Schulungen','Kollegiales Team'].map(b=>(
+            <span key={b} style={{fontSize:11,padding:'3px 11px',background:'rgba(91,145,244,.15)',border:'1px solid rgba(91,145,244,.25)',borderRadius:20,color:'var(--accent)',fontWeight:700}}>{b}</span>
+          ))}
+        </div>
       </div>
 
       {[
-        {title:'KFZ-Prüfer / Sachverständiger (m/w/d)', type:'Vollzeit', icon:'🔧', req:['Zulassung nach § 29 StVZO oder laufende Qualifizierung','Mehrjährige Erfahrung in der Fahrzeugtechnik','Bereitschaft zur regelmäßigen Fortbildung nach TÜV NORD-Standards','Teamfähigkeit, Zuverlässigkeit und sorgfältige Arbeitsweise']},
-        {title:'Service-Mitarbeiter Terminplanung (m/w/d)', type:'Teilzeit / Vollzeit', icon:'📋', req:['Organisationstalent und ausgeprägte Kommunikationsstärke','Sehr gute Deutschkenntnisse in Wort und Schrift','Weitere Sprachkenntnisse (z. B. Arabisch, Türkisch) willkommen','Sicherer Umgang mit PC und Buchungssystemen']},
-        {title:'Fahrer Abholservice (m/w/d)', type:'Geringfügig / Minijob', icon:'🚗', req:['Gültiger Führerschein Klasse B','Zuverlässigkeit und Pünktlichkeit','Kenntnisse der Region Oberhausen / Ruhrgebiet','Freundliches und kundenorientiertes Auftreten']},
-      ].map(job=>(
-        <div key={job.title} style={{marginBottom:12,padding:'16px 18px',background:'var(--dark2)',borderRadius:12,border:'1px solid rgba(255,255,255,.07)'}}>
-          <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:6}}>
-            <span style={{fontSize:20}}>{job.icon}</span>
-            <div>
-              <div style={{fontWeight:700,fontSize:13.5,color:'var(--white)',lineHeight:1.2}}>{job.title}</div>
-              <div style={{fontSize:10,color:'var(--accent)',fontWeight:700,textTransform:'uppercase',letterSpacing:'.08em',marginTop:2}}>{job.type}</div>
-            </div>
+        {title:'KFZ-Prüfer / Sachverständiger (m/w/d)', type:'Vollzeit', reqs:[['Zulassung','§ 29 StVZO oder laufende Qualifizierung'],['Erfahrung','Mehrjährig in der Fahrzeugtechnik'],['Bereitschaft','Regelmäßige Fortbildung nach TÜV NORD-Standards'],['Persönlichkeit','Sorgfältig, zuverlässig, teamfähig']]},
+        {title:'Service-Mitarbeiter Terminplanung (m/w/d)', type:'Teilzeit / Vollzeit', reqs:[['Kommunikation','Ausgeprägte Stärke in Wort und Schrift'],['Sprache','Sehr gutes Deutsch, Arabisch / Türkisch willkommen'],['EDV','Sicherer Umgang mit PC und Buchungssystemen'],['Arbeitsweise','Organisiert und kundenorientiert']]},
+        {title:'Fahrer Abholservice (m/w/d)', type:'Geringfügig / Minijob', reqs:[['Führerschein','Klasse B erforderlich'],['Region','Kenntnisse Oberhausen / Ruhrgebiet'],['Auftreten','Freundlich und zuverlässig'],['Arbeitszeit','Flexible Einteilung möglich']]},
+      ].map((job,i,a)=>(
+        <div key={job.title} style={{marginBottom:18,paddingBottom:18,borderBottom:i<a.length-1?'1px solid rgba(255,255,255,.06)':'none'}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:12,gap:8}}>
+            <div style={{fontWeight:700,fontSize:13.5,color:'var(--white)',lineHeight:1.3}}>{job.title}</div>
+            <span style={{fontSize:10,padding:'3px 10px',background:'rgba(91,145,244,.1)',border:'1px solid rgba(91,145,244,.2)',borderRadius:20,color:'var(--accent)',fontWeight:700,flexShrink:0,whiteSpace:'nowrap' as const}}>{job.type}</span>
           </div>
-          <ul style={{paddingLeft:18,margin:0,display:'flex',flexDirection:'column',gap:4}}>
-            {job.req.map(r=><li key={r} style={{fontSize:12.5}}>{r}</li>)}
-          </ul>
+          <div style={{display:'flex',flexDirection:'column'}}>
+            {job.reqs.map(([l,r],ri)=>(
+              <div key={l} style={{display:'flex',gap:14,padding:'7px 0',borderBottom:ri<job.reqs.length-1?'1px solid rgba(255,255,255,.04)':'none'}}>
+                <span style={{fontSize:11,fontWeight:700,color:'rgba(255,255,255,.35)',width:100,flexShrink:0,textTransform:'uppercase',letterSpacing:'.08em',paddingTop:1}}>{l}</span>
+                <span style={{fontSize:12.5,color:'var(--smoke)'}}>{r}</span>
+              </div>
+            ))}
+          </div>
         </div>
       ))}
 
-      <div style={{marginTop:16,padding:'16px 20px',background:'rgba(91,145,244,.08)',borderRadius:12,border:'1px solid rgba(91,145,244,.2)'}}>
-        <div style={{fontWeight:700,color:'var(--white)',marginBottom:6}}>Jetzt bewerben</div>
-        <p style={{fontSize:12.5,margin:'0 0 10px'}}>Senden Sie Lebenslauf und kurzes Anschreiben an:<br/>
-          <a href="mailto:aqureischi@extern.tuev-nord.de" style={{color:'var(--accent)',textDecoration:'none',fontWeight:600}}>aqureischi@extern.tuev-nord.de</a>
-        </p>
-        <p style={{fontSize:11.5,margin:0,color:'rgba(255,255,255,.35)'}}>Wir melden uns in der Regel innerhalb von 5 Werktagen. Alle Bewerbungen werden vertraulich behandelt.</p>
+      <div style={{...MS.infoBox,marginTop:4}}>
+        <div style={{fontWeight:700,color:'var(--white)',marginBottom:12,fontSize:13}}>Jetzt bewerben</div>
+        <div style={{fontSize:12.5,color:'var(--smoke)',marginBottom:14}}>Lebenslauf und kurzes Anschreiben genügen. Wir melden uns innerhalb von 5 Werktagen — vertraulich und unverbindlich.</div>
+        <div style={{display:'flex',flexDirection:'column',gap:9}}>
+          <a href="https://wa.me/4915755476991?text=Guten%20Tag%2C%20ich%20m%C3%B6chte%20mich%20gerne%20bewerben." target="_blank" rel="noopener noreferrer" style={{display:'flex',alignItems:'center',gap:12,padding:'12px 16px',background:'rgba(37,211,102,.12)',border:'1px solid rgba(37,211,102,.25)',borderRadius:10,textDecoration:'none',color:'var(--white)',fontWeight:600,fontSize:13.5}}>
+            <Ic.Wa s={18} c="#25D366"/>
+            <div>
+              <div style={{marginBottom:1}}>Bewerbung per WhatsApp</div>
+              <div style={{fontSize:11,color:'rgba(255,255,255,.4)',fontWeight:400}}>+49 1575 5476991</div>
+            </div>
+          </a>
+          <a href="mailto:aqureischi@extern.tuev-nord.de?subject=Bewerbung" style={{display:'flex',alignItems:'center',gap:12,padding:'12px 16px',background:'rgba(255,255,255,.04)',border:'1px solid rgba(255,255,255,.09)',borderRadius:10,textDecoration:'none',color:'var(--smoke)',fontSize:13}}>
+            <span style={{fontSize:16}}>✉</span>
+            <span>aqureischi@extern.tuev-nord.de</span>
+          </a>
+        </div>
       </div>
     </div>
   ),
 
   Kontakt: (
-    <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.9}}>
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:16,marginTop:0}}>Kontakt & Anfahrt</h4>
-
-      <div style={{marginBottom:14,padding:'16px 20px',background:'var(--dark2)',borderRadius:12,border:'1px solid rgba(255,255,255,.07)'}}>
-        <div style={{fontWeight:700,color:'var(--white)',marginBottom:10,fontSize:14}}>📍 Ing.-Büro Qureischi · KFZ-Prüfstützpunkt</div>
-        <div style={{fontSize:13,marginBottom:6}}>Mülheimer Str. 155 · 46045 Oberhausen</div>
-        <div style={{borderTop:'1px solid rgba(255,255,255,.06)',paddingTop:10,marginTop:6}}>
-          <div style={{fontSize:11,fontWeight:700,color:'rgba(255,255,255,.35)',letterSpacing:'.1em',textTransform:'uppercase',marginBottom:8}}>Öffnungszeiten</div>
-          {[
-            {tag:'Mo–Do',time:'08:00 – 18:00 Uhr'},
-            {tag:'Fr',time:'08:00 – 17:00 Uhr'},
-            {tag:'Sa',time:'Nach Vereinbarung'},
-            {tag:'So / Feiertag',time:'Geschlossen'},
-          ].map(r=>(
-            <div key={r.tag} style={{display:'flex',justifyContent:'space-between',padding:'5px 0',borderBottom:'1px solid rgba(255,255,255,.04)',fontSize:12.5}}>
-              <span style={{color:'var(--white)',fontWeight:600}}>{r.tag}</span>
-              <span>{r.time}</span>
+    <div style={MS.wrap}>
+      <div style={{marginBottom:20,border:'1px solid rgba(255,255,255,.07)',borderRadius:10,overflow:'hidden'}}>
+        <div style={{padding:'14px 18px',borderBottom:'1px solid rgba(255,255,255,.06)'}}>
+          <div style={{fontWeight:700,fontSize:13.5,color:'var(--white)',marginBottom:2}}>Ing.-Büro Qureischi · KFZ-Prüfstützpunkt</div>
+          <div style={{fontSize:12.5,color:'var(--smoke)'}}>Mülheimer Str. 155 · 46045 Oberhausen</div>
+        </div>
+        <div style={{padding:'0 18px'}}>
+          <div style={{fontSize:10,fontWeight:700,color:'rgba(255,255,255,.28)',letterSpacing:'.12em',textTransform:'uppercase',padding:'12px 0 8px'}}>Öffnungszeiten</div>
+          {[['Mo–Do','08:00 – 18:00 Uhr'],['Fr','08:00 – 17:00 Uhr'],['Sa','Nach Vereinbarung'],['So / Feiertag','Geschlossen']].map(([d,t],i,a)=>(
+            <div key={d} style={{display:'flex',justifyContent:'space-between',padding:'8px 0',borderBottom:i<a.length-1?'1px solid rgba(255,255,255,.04)':'none'}}>
+              <span style={{fontWeight:600,color:'var(--white)',fontSize:12.5}}>{d}</span>
+              <span style={{fontSize:12.5,color:'var(--smoke)'}}>{t}</span>
             </div>
           ))}
+          <div style={{padding:'12px 0 14px'}}/>
         </div>
       </div>
 
-      <div style={{display:'flex',flexDirection:'column',gap:9,marginBottom:14}}>
-        <a href="tel:+4915755476991" style={{display:'flex',alignItems:'center',gap:12,padding:'13px 18px',background:'rgba(59,130,246,.1)',border:'1px solid rgba(59,130,246,.22)',borderRadius:11,textDecoration:'none',color:'var(--white)',fontWeight:600,fontSize:13.5,transition:'all .2s'}}>
-          <span style={{fontSize:19}}>📞</span><div><div>Jetzt anrufen</div><div style={{fontSize:11,color:'rgba(255,255,255,.45)',fontWeight:400}}>+49 1575 5476991</div></div>
+      <div style={{display:'flex',flexDirection:'column',gap:8,marginBottom:16}}>
+        <a href="tel:+4915755476991" style={{display:'flex',alignItems:'center',gap:14,padding:'13px 16px',background:'rgba(91,145,244,.08)',border:'1px solid rgba(91,145,244,.15)',borderRadius:10,textDecoration:'none',color:'var(--white)',fontWeight:600,fontSize:13.5}}>
+          <Ic.Phone s={17} c="var(--accent)"/>
+          <div><div>Jetzt anrufen</div><div style={{fontSize:11,color:'rgba(255,255,255,.4)',fontWeight:400}}>+49 1575 5476991</div></div>
         </a>
-        <a href="https://wa.me/4915755476991" target="_blank" rel="noopener noreferrer" style={{display:'flex',alignItems:'center',gap:12,padding:'13px 18px',background:'rgba(34,197,94,.1)',border:'1px solid rgba(34,197,94,.22)',borderRadius:11,textDecoration:'none',color:'var(--white)',fontWeight:600,fontSize:13.5}}>
-          <span style={{fontSize:19}}>💬</span><div><div>WhatsApp schreiben</div><div style={{fontSize:11,color:'rgba(255,255,255,.45)',fontWeight:400}}>Antwort meist innerhalb 1 Std.</div></div>
+        <a href="https://wa.me/4915755476991" target="_blank" rel="noopener noreferrer" style={{display:'flex',alignItems:'center',gap:14,padding:'13px 16px',background:'rgba(37,211,102,.08)',border:'1px solid rgba(37,211,102,.18)',borderRadius:10,textDecoration:'none',color:'var(--white)',fontWeight:600,fontSize:13.5}}>
+          <Ic.Wa s={17} c="#25D366"/>
+          <div><div>WhatsApp schreiben</div><div style={{fontSize:11,color:'rgba(255,255,255,.4)',fontWeight:400}}>Antwort meist innerhalb 1 Std.</div></div>
         </a>
-        <a href="mailto:aqureischi@extern.tuev-nord.de" style={{display:'flex',alignItems:'center',gap:12,padding:'13px 18px',background:'rgba(91,145,244,.08)',border:'1px solid rgba(91,145,244,.18)',borderRadius:11,textDecoration:'none',color:'var(--white)',fontWeight:600,fontSize:13.5}}>
-          <span style={{fontSize:19}}>✉️</span><div><div>E-Mail schreiben</div><div style={{fontSize:11,color:'rgba(255,255,255,.45)',fontWeight:400}}>aqureischi@extern.tuev-nord.de</div></div>
+        <a href="mailto:aqureischi@extern.tuev-nord.de" style={{display:'flex',alignItems:'center',gap:14,padding:'13px 16px',background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.07)',borderRadius:10,textDecoration:'none',color:'var(--smoke)',fontSize:13}}>
+          <span style={{fontSize:16,flexShrink:0}}>✉</span>
+          <span>aqureischi@extern.tuev-nord.de</span>
         </a>
       </div>
 
-      <div style={{padding:'13px 18px',background:'rgba(91,145,244,.06)',borderRadius:11,border:'1px solid rgba(91,145,244,.15)',fontSize:12}}>
-        <strong style={{color:'var(--white)'}}>⚡ Schnellste Option:</strong> Nutzen Sie das Online-Buchungsformular auf dieser Seite — Termin wählen und fertig, ohne Wartezeit in der Leitung.
-      </div>
+      <div style={{fontSize:12,color:'rgba(255,255,255,.3)',textAlign:'center' as const}}>Termin direkt über das Buchungsformular auf dieser Seite wählen — ohne Wartezeit.</div>
     </div>
   ),
 };
