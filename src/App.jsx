@@ -910,15 +910,6 @@ const Services = () => {
           ))}
         </div>
 
-        {/* Mobile-only arrow buttons */}
-        <div className="cine-mob-arrows">
-          <button className="cine-mob-btn" onClick={goPrev} aria-label="Zurück">
-            <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-          </button>
-          <button className="cine-mob-btn" onClick={goNext} aria-label="Weiter">
-            <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-          </button>
-        </div>
       </div>
 
       {/* ── Detail modal ── */}
@@ -2166,8 +2157,8 @@ const LegalContent = {
               <div style={MS.label}>§ 3 Stornierung &amp; Umbuchung</div>
               <div style={{border:'1px solid rgba(255,255,255,.07)',borderRadius:10,overflow:'hidden',marginBottom:14}}>
                 {[
-                  ['Bis 24 Std. vor Termin','Kostenfrei','#10B981'],
-                  ['Umbuchung','Bis 24 Std. kostenfrei','var(--smoke)'],
+                  ['Stornierung','Jederzeit kostenfrei','#10B981'],
+                  ['Umbuchung','Jederzeit kostenfrei','#10B981'],
                 ].map(([l,r,c],i)=>(
                   <div key={l} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'9px 14px',background:i%2===0?'transparent':'rgba(255,255,255,.02)',borderBottom:i<1?'1px solid rgba(255,255,255,.04)':'none'}}>
                     <span style={{fontSize:12.5,color:'var(--smoke)'}}>{l}</span>
