@@ -1989,106 +1989,152 @@ const LegalContent = {
     <div style={MS.wrap}>
       <div style={{fontSize:11,color:'rgba(255,255,255,.28)',marginBottom:20,letterSpacing:'.04em'}}>Stand: Mai 2026 · gemäß DSGVO, BDSG n.F., TTDSG</div>
 
+      {/* 1. Datenschutz auf einen Blick */}
       <div style={MS.section}>
-        <div style={MS.label}>§ 1 Verantwortlicher</div>
-        <div style={MS.p}><strong style={{color:'var(--white)'}}>Ing.-Büro Qureischi</strong> (Kooperationspartner des TÜV NORD)<br/>Mülheimer Str. 155 · 46045 Oberhausen<br/>
-          <a href="tel:+4915755476991" style={{color:'var(--accent)',textDecoration:'none'}}>01575 5476991</a> · <a href="mailto:aqureischi@extern.tuev-nord.de" style={{color:'var(--accent)',textDecoration:'none'}}>aqureischi@extern.tuev-nord.de</a>
+        <div style={{fontWeight:700,fontSize:13,color:'var(--white)',marginBottom:12,paddingBottom:8,borderBottom:'1px solid rgba(255,255,255,.08)'}}>1. Datenschutz auf einen Blick</div>
+
+        <div style={{marginBottom:12}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Allgemeine Hinweise</div>
+          <div style={MS.p}>Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persönlich identifiziert werden können.</div>
+        </div>
+
+        <div style={{marginBottom:12}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Wer ist verantwortlich für die Datenerfassung?</div>
+          <div style={MS.p}>Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten finden Sie im Abschnitt „Verantwortliche Stelle" dieser Datenschutzerklärung.</div>
+        </div>
+
+        <div style={{marginBottom:12}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Wie erfassen wir Ihre Daten?</div>
+          <div style={MS.p}>Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen — z. B. über das Terminbuchungsformular. Andere Daten werden automatisch beim Besuch der Website erfasst, insbesondere technische Daten wie IP-Adresse, Browsertyp und Zugriffszeit.</div>
+        </div>
+
+        <div style={{marginBottom:12}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Wofür nutzen wir Ihre Daten?</div>
+          <div style={MS.p}>Ein Teil der Daten wird erhoben, um eine fehlerfreie Bereitstellung der Website zu gewährleisten. Weitere Daten werden zur Bearbeitung von Terminbuchungen und Anfragen sowie zur Darstellung des Standorts (Google Maps) verwendet.</div>
+        </div>
+
+        <div>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Welche Rechte haben Sie?</div>
+          <div style={MS.p}>Sie haben jederzeit das Recht auf unentgeltliche Auskunft über Herkunft, Empfänger und Zweck Ihrer gespeicherten personenbezogenen Daten sowie ein Recht auf Berichtigung, Einschränkung oder Löschung. Außerdem steht Ihnen ein Beschwerderecht bei der zuständigen Aufsichtsbehörde zu.</div>
         </div>
       </div>
 
       <div style={MS.divider}/>
 
+      {/* 2. Hosting */}
       <div style={MS.section}>
-        <div style={MS.label}>§ 2 Erhobene Daten &amp; Zweck</div>
-        <div style={{border:'1px solid rgba(255,255,255,.07)',borderRadius:10,overflow:'hidden'}}>
-          {[
-            ['Terminbuchung','Name, Telefonnummer, Fahrzeugtyp, Termin'],
-            ['Abholservice','Abholadresse, Wunschdatum'],
-            ['Kontaktanfragen','Name, E-Mail oder Telefon, Nachricht'],
-            ['Technische Daten','IP-Adresse, Browsertyp, Zugriffszeit (§ 25 Abs. 2 Nr. 2 TTDSG)'],
-          ].map(([l,r],i)=>(
-            <div key={l} style={{display:'flex',gap:16,padding:'9px 14px',background:i%2===0?'transparent':'rgba(255,255,255,.02)',borderBottom:i<3?'1px solid rgba(255,255,255,.04)':'none'}}>
-              <span style={{fontWeight:700,color:'var(--white)',fontSize:12,width:120,flexShrink:0}}>{l}</span>
-              <span style={{fontSize:12,color:'var(--smoke)'}}>{r}</span>
-            </div>
-          ))}
+        <div style={{fontWeight:700,fontSize:13,color:'var(--white)',marginBottom:12,paddingBottom:8,borderBottom:'1px solid rgba(255,255,255,.08)'}}>2. Hosting</div>
+
+        <div style={{marginBottom:14}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Vercel</div>
+          <div style={MS.p}>Anbieter ist Vercel Inc., 340 Pine Street Suite 900, San Francisco, CA 94104, USA. Wenn Sie unsere Website besuchen, erfasst Vercel verschiedene Logfiles inklusive Ihrer IP-Adressen.<br/><br/>Die Verwendung von Vercel erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO. Wir haben ein berechtigtes Interesse an einer möglichst zuverlässigen Darstellung unserer Website. Die Datenübertragung in die USA erfolgt auf Grundlage der Standardvertragsklauseln der EU-Kommission. Weitere Informationen: <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>vercel.com/legal/privacy-policy</a></div>
+        </div>
+
+        <div>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Auftragsverarbeitung</div>
+          <div style={MS.p}>Wir haben einen Vertrag über Auftragsverarbeitung (AVV) zur Nutzung des oben genannten Dienstes geschlossen. Hierbei handelt es sich um einen datenschutzrechtlich vorgeschriebenen Vertrag, der gewährleistet, dass Vercel die personenbezogenen Daten unserer Websitebesucher nur nach unseren Weisungen und unter Einhaltung der DSGVO verarbeitet.</div>
         </div>
       </div>
 
       <div style={MS.divider}/>
 
+      {/* 3. Allgemeine Hinweise und Pflichtinformationen */}
       <div style={MS.section}>
-        <div style={MS.label}>§ 3 Rechtsgrundlagen</div>
-        <div style={{display:'flex',flexDirection:'column',gap:8}}>
-          {[
-            ['Art. 6 Abs. 1 lit. b','Vertragserfüllung — Terminbuchung, Abholservice'],
-            ['Art. 6 Abs. 1 lit. f','Berechtigtes Interesse — Sicherheit, Betrieb'],
-            ['Art. 6 Abs. 1 lit. a','Einwilligung — Analyse-Cookies, Google Maps'],
-          ].map(([l,r])=>(
-            <div key={l} style={{display:'flex',gap:12,alignItems:'baseline'}}>
-              <span style={{fontWeight:700,color:'var(--accent)',fontSize:11,flexShrink:0,fontFamily:'monospace'}}>{l}</span>
-              <span style={{fontSize:12.5,color:'var(--smoke)'}}>{r}</span>
-            </div>
-          ))}
+        <div style={{fontWeight:700,fontSize:13,color:'var(--white)',marginBottom:12,paddingBottom:8,borderBottom:'1px solid rgba(255,255,255,.08)'}}>3. Allgemeine Hinweise und Pflichtinformationen</div>
+
+        <div style={{marginBottom:14}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Datenschutz</div>
+          <div style={MS.p}>Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend den gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.<br/><br/>Wir weisen darauf hin, dass die Datenübertragung im Internet Sicherheitslücken aufweisen kann. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.</div>
+        </div>
+
+        <div style={{marginBottom:14}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Hinweis zur verantwortlichen Stelle</div>
+          <div style={MS.p}><strong style={{color:'var(--white)'}}>Ing.-Büro Qureischi</strong> (Kooperationspartner des TÜV NORD)<br/>Mülheimer Str. 155 · 46045 Oberhausen<br/><br/>Telefon: <a href="tel:+4915755476991" style={{color:'var(--accent)',textDecoration:'none'}}>+49 1575 5476991</a><br/>E-Mail: <a href="mailto:aqureischi@extern.tuev-nord.de" style={{color:'var(--accent)',textDecoration:'none'}}>aqureischi@extern.tuev-nord.de</a><br/><br/>Verantwortliche Stelle ist die natürliche oder juristische Person, die allein oder gemeinsam mit anderen über die Zwecke und Mittel der Verarbeitung von personenbezogenen Daten entscheidet.</div>
+        </div>
+
+        <div style={{marginBottom:14}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Speicherdauer</div>
+          <div style={MS.p}>Soweit innerhalb dieser Datenschutzerklärung keine speziellere Speicherdauer genannt wurde, verbleiben Ihre personenbezogenen Daten bei uns, bis der Zweck für die Datenverarbeitung entfällt. Buchungsdaten: 3 Jahre (§§ 238, 257 HGB). Kontaktanfragen: 6 Monate nach abgeschlossener Bearbeitung. Server-Logs: 7 Tage.</div>
+        </div>
+
+        <div style={{marginBottom:14}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Allgemeine Hinweise zu den Rechtsgrundlagen</div>
+          <div style={MS.p}>Sofern Sie in die Datenverarbeitung eingewilligt haben, verarbeiten wir Ihre personenbezogenen Daten auf Grundlage von Art. 6 Abs. 1 lit. a DSGVO. Sind Ihre Daten zur Vertragserfüllung oder zur Durchführung vorvertraglicher Maßnahmen erforderlich, verarbeiten wir sie auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO. Zur Erfüllung rechtlicher Verpflichtungen auf Grundlage von Art. 6 Abs. 1 lit. c DSGVO. Im Übrigen auf Grundlage unseres berechtigten Interesses nach Art. 6 Abs. 1 lit. f DSGVO.</div>
+        </div>
+
+        <div style={{marginBottom:14}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Hinweis zur Datenweitergabe in die USA</div>
+          <div style={MS.p}>Wir verwenden Tools von Unternehmen mit Sitz in den USA (Vercel, Google). Wenn diese Tools aktiv sind, können Ihre personenbezogenen Daten in die USA übertragen und dort verarbeitet werden. Wir weisen darauf hin, dass in den USA kein mit der EU vergleichbares Datenschutzniveau garantiert werden kann. Die Übertragung erfolgt auf Basis der Standardvertragsklauseln der EU-Kommission.</div>
+        </div>
+
+        <div style={{marginBottom:14}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Widerruf Ihrer Einwilligung zur Datenverarbeitung</div>
+          <div style={MS.p}>Viele Datenverarbeitungsvorgänge sind nur mit Ihrer ausdrücklichen Einwilligung möglich. Sie können eine bereits erteilte Einwilligung jederzeit widerrufen. Die Rechtmäßigkeit der bis zum Widerruf erfolgten Datenverarbeitung bleibt vom Widerruf unberührt.</div>
+        </div>
+
+        <div style={{marginBottom:14}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Widerspruchsrecht gegen die Datenerhebung (Art. 21 DSGVO)</div>
+          <div style={MS.p}>Wenn die Datenverarbeitung auf Grundlage von Art. 6 Abs. 1 lit. e oder f DSGVO erfolgt, haben Sie jederzeit das Recht, aus Gründen Ihrer besonderen Situation Widerspruch gegen die Verarbeitung Ihrer personenbezogenen Daten einzulegen. Wir verarbeiten die betroffenen Daten dann nicht mehr, es sei denn, wir können zwingende schutzwürdige Gründe nachweisen, die Ihre Interessen, Rechte und Freiheiten überwiegen.</div>
+        </div>
+
+        <div style={{marginBottom:14}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Beschwerderecht bei der zuständigen Aufsichtsbehörde</div>
+          <div style={MS.p}>Im Falle von Verstößen gegen die DSGVO steht Ihnen ein Beschwerderecht bei einer Aufsichtsbehörde zu. Zuständig für NRW:<br/><br/>Landesbeauftragte für Datenschutz und Informationsfreiheit NRW<br/>Kavalleriestr. 2–4 · 40213 Düsseldorf<br/><a href="https://www.ldi.nrw.de" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>www.ldi.nrw.de</a></div>
+        </div>
+
+        <div style={{marginBottom:14}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Auskunft, Berichtigung und Löschung</div>
+          <div style={MS.p}>Sie haben im Rahmen der geltenden gesetzlichen Bestimmungen jederzeit das Recht auf unentgeltliche Auskunft über Ihre gespeicherten personenbezogenen Daten, deren Herkunft und Empfänger sowie den Zweck der Datenverarbeitung und ggf. ein Recht auf Berichtigung oder Löschung. Hierzu sowie zu weiteren Fragen zum Thema personenbezogene Daten können Sie sich jederzeit an uns wenden.</div>
+        </div>
+
+        <div style={{marginBottom:14}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Recht auf Einschränkung der Verarbeitung</div>
+          <div style={MS.p}>Sie haben das Recht, die Einschränkung der Verarbeitung Ihrer personenbezogenen Daten zu verlangen, wenn Sie die Richtigkeit der Daten bestreiten, die Verarbeitung unrechtmäßig ist, die Daten zur Geltendmachung von Rechtsansprüchen benötigt werden oder Sie Widerspruch nach Art. 21 Abs. 1 DSGVO eingelegt haben.</div>
+        </div>
+
+        <div style={{marginBottom:14}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>SSL- bzw. TLS-Verschlüsselung</div>
+          <div style={MS.p}>Diese Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte eine SSL- bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie daran, dass die Adresszeile des Browsers von „http://" auf „https://" wechselt.</div>
+        </div>
+
+        <div>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Widerspruch gegen Werbe-E-Mails</div>
+          <div style={MS.p}>Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten zur Übersendung nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird hiermit widersprochen. Wir behalten uns ausdrücklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen vor.</div>
         </div>
       </div>
 
       <div style={MS.divider}/>
 
+      {/* 4. Datenerfassung auf dieser Website */}
       <div style={MS.section}>
-        <div style={MS.label}>§ 4 Cookies (TTDSG)</div>
-        <div style={{border:'1px solid rgba(255,255,255,.07)',borderRadius:10,overflow:'hidden'}}>
-          {[
-            ['Notwendig','Session, Sicherheits-Tokens — keine Einwilligung erforderlich'],
-            ['Analyse','Anonyme Auswertung — nur nach Einwilligung'],
-            ['Google Maps','Kartendarstellung — nur nach Einwilligung aktiv'],
-          ].map(([l,r],i)=>(
-            <div key={l} style={{display:'flex',gap:16,padding:'9px 14px',background:i%2===0?'transparent':'rgba(255,255,255,.02)',borderBottom:i<2?'1px solid rgba(255,255,255,.04)':'none'}}>
-              <span style={{fontWeight:700,color:'var(--white)',fontSize:12,width:90,flexShrink:0}}>{l}</span>
-              <span style={{fontSize:12,color:'var(--smoke)'}}>{r}</span>
-            </div>
-          ))}
+        <div style={{fontWeight:700,fontSize:13,color:'var(--white)',marginBottom:12,paddingBottom:8,borderBottom:'1px solid rgba(255,255,255,.08)'}}>4. Datenerfassung auf dieser Website</div>
+
+        <div style={{marginBottom:14}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Cookies</div>
+          <div style={MS.p}>Unsere Website verwendet Cookies. Cookies sind kleine Datenpakete und richten auf Ihrem Endgerät keinen Schaden an. Session-Cookies werden nach Ende Ihres Besuchs automatisch gelöscht. Permanente Cookies bleiben auf Ihrem Endgerät gespeichert, bis Sie diese selbst löschen oder eine automatische Löschung durch Ihren Webbrowser erfolgt.<br/><br/>Notwendige Cookies werden auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO gespeichert. Sofern eine Einwilligung abgefragt wurde (z. B. für Google Maps), erfolgt die Verarbeitung auf Grundlage von Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TTDSG; die Einwilligung ist jederzeit widerrufbar. Sie können Ihren Browser so einstellen, dass Cookies nur im Einzelfall erlaubt oder generell abgelehnt werden.</div>
         </div>
-        <div style={{marginTop:10,fontSize:12,color:'rgba(255,255,255,.35)'}}>Einwilligung jederzeit über „Cookie-Einstellungen" im Footer widerrufbar.</div>
-      </div>
 
-      <div style={MS.divider}/>
+        <div style={{marginBottom:14}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Terminbuchung</div>
+          <div style={MS.p}>Wenn Sie über unser Buchungsformular einen Termin vereinbaren, werden folgende Daten erhoben: Name, Telefonnummer, Fahrzeugtyp sowie Wunschdatum und -uhrzeit. Diese Daten werden zur Terminverwaltung in unserer Buchungsdatenbank (Supabase, Auftragsverarbeitung gem. Art. 28 DSGVO) gespeichert und nicht ohne Ihre Einwilligung weitergegeben.<br/><br/>Die Verarbeitung dieser Daten erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung). Die Daten verbleiben bei uns bis zum Ablauf gesetzlicher Aufbewahrungsfristen (3 Jahre gem. §§ 238, 257 HGB).</div>
+        </div>
 
-      <div style={MS.section}>
-        <div style={MS.label}>§ 5 Google Maps</div>
-        <div style={MS.p}>Google Ireland Limited, Gordon House, Dublin 4. Datenübertragung auf Basis Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>policies.google.com/privacy</a></div>
-      </div>
-
-      <div style={MS.divider}/>
-
-      <div style={MS.section}>
-        <div style={MS.label}>§ 6 Speicherdauer</div>
-        <div style={{display:'flex',flexDirection:'column'}}>
-          {[['Buchungsdaten','3 Jahre (§§ 238, 257 HGB)'],['Kontaktanfragen','6 Monate nach Bearbeitung'],['Server-Logs','7 Tage, dann automatische Löschung']].map(([l,r],i)=>(
-            <div key={l} style={{...MS.row,borderBottom:i<2?'1px solid rgba(255,255,255,.04)':'none'}}>
-              <span style={{...MS.rowL,minWidth:160}}>{l}</span><span style={MS.rowR}>{r}</span>
-            </div>
-          ))}
+        <div>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Anfragen per E-Mail oder Telefon</div>
+          <div style={MS.p}>Wenn Sie uns per E-Mail oder Telefon kontaktieren, wird Ihre Anfrage inklusive aller daraus hervorgehenden personenbezogenen Daten (Name, Anfrage) zwecks Bearbeitung Ihres Anliegens bei uns gespeichert und verarbeitet. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter.<br/><br/>Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO, sofern Ihre Anfrage mit der Erfüllung eines Vertrags zusammenhängt, sonst auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO. Die Daten werden nach abgeschlossener Bearbeitung Ihres Anliegens gelöscht.</div>
         </div>
       </div>
 
       <div style={MS.divider}/>
 
+      {/* 5. Plugins und Tools */}
       <div style={MS.section}>
-        <div style={MS.label}>§ 7 Ihre Rechte (Art. 15–22 DSGVO)</div>
-        <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
-          {['Auskunft','Berichtigung','Löschung','Einschränkung','Datenübertragbarkeit','Widerspruch','Widerruf'].map(r=>(
-            <span key={r} style={{fontSize:11.5,padding:'4px 12px',background:'rgba(255,255,255,.05)',borderRadius:20,color:'var(--text)',border:'1px solid rgba(255,255,255,.08)'}}>{r}</span>
-          ))}
+        <div style={{fontWeight:700,fontSize:13,color:'var(--white)',marginBottom:12,paddingBottom:8,borderBottom:'1px solid rgba(255,255,255,.08)'}}>5. Plugins und Tools</div>
+
+        <div>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Google Maps</div>
+          <div style={MS.p}>Diese Website nutzt den Kartendienst Google Maps. Anbieter ist Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland.<br/><br/>Zur Nutzung der Funktionen von Google Maps ist es notwendig, Ihre IP-Adresse zu speichern. Diese Informationen werden in der Regel an einen Server von Google in den USA übertragen und dort gespeichert. Die Nutzung von Google Maps erfolgt im Interesse einer ansprechenden Darstellung unserer Online-Angebote und an einer leichten Auffindbarkeit unseres Standorts. Dies stellt ein berechtigtes Interesse im Sinne von Art. 6 Abs. 1 lit. f DSGVO dar. Sofern eine entsprechende Einwilligung abgefragt wurde, erfolgt die Verarbeitung ausschließlich auf Grundlage von Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TTDSG; die Einwilligung ist jederzeit widerrufbar.<br/><br/>Die Datenübertragung in die USA wird auf die Standardvertragsklauseln der EU-Kommission gestützt. Mehr Informationen: <a href="https://policies.google.com/privacy?hl=de" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>policies.google.com/privacy</a></div>
         </div>
-        <div style={{marginTop:12,fontSize:12.5,color:'var(--smoke)'}}>Anfragen: <a href="mailto:aqureischi@extern.tuev-nord.de" style={{color:'var(--accent)',textDecoration:'none'}}>aqureischi@extern.tuev-nord.de</a></div>
-      </div>
-
-      <div style={MS.divider}/>
-
-      <div style={MS.section}>
-        <div style={MS.label}>§ 8 Beschwerderecht · § 9 Datensicherheit</div>
-        <div style={MS.p}>Aufsichtsbehörde: Landesbeauftragte für Datenschutz und Informationsfreiheit NRW · Kavalleriestr. 2–4 · 40213 Düsseldorf · <a href="https://www.ldi.nrw.de" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>www.ldi.nrw.de</a><br/><br/>Diese Website nutzt HTTPS/TLS. Buchungsdaten werden über Supabase (EU-Region Frankfurt) verarbeitet — Auftragsverarbeitung gem. Art. 28 DSGVO.</div>
       </div>
 
       <div style={MS.foot}>Stand: Mai 2026</div>
@@ -2121,11 +2167,9 @@ const LegalContent = {
               <div style={{border:'1px solid rgba(255,255,255,.07)',borderRadius:10,overflow:'hidden',marginBottom:14}}>
                 {[
                   ['Bis 24 Std. vor Termin','Kostenfrei','#10B981'],
-                  ['Innerhalb 24 Stunden','Gebühr bis 15 €','#F59E0B'],
                   ['Umbuchung','Bis 24 Std. kostenfrei','var(--smoke)'],
-                  ['Nichterscheinen','Ausfallgebühr vorbehalten','var(--smoke)'],
                 ].map(([l,r,c],i)=>(
-                  <div key={l} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'9px 14px',background:i%2===0?'transparent':'rgba(255,255,255,.02)',borderBottom:i<3?'1px solid rgba(255,255,255,.04)':'none'}}>
+                  <div key={l} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'9px 14px',background:i%2===0?'transparent':'rgba(255,255,255,.02)',borderBottom:i<1?'1px solid rgba(255,255,255,.04)':'none'}}>
                     <span style={{fontSize:12.5,color:'var(--smoke)'}}>{l}</span>
                     <span style={{fontSize:12.5,fontWeight:700,color:c}}>{r}</span>
                   </div>
