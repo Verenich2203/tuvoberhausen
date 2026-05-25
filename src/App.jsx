@@ -442,22 +442,6 @@ const Hero = ({ onBook }) => {
   );
 };
 
-/* ─── TRUST BAR ─────────────────────────────────────────────────────────── */
-const TrustBar = () => {
-  const items = [[<Ic.Clock s={15} c="var(--accent)"/>,'Kurze Wartezeiten'],[<Ic.Award s={15} c="var(--accent)"/>,'Amtlich anerkannt'],[<Ic.Phone s={15} c="var(--accent)"/>,'Persönliche Ansprechpartner'],[<Ic.Shield s={15} c="var(--accent)"/>,'Vertrauen und Erfahrung'],[<Ic.Clock s={15} c="var(--accent)"/>,'Kurze Wartezeiten'],[<Ic.Award s={15} c="var(--accent)"/>,'Amtlich anerkannt'],[<Ic.Phone s={15} c="var(--accent)"/>,'Persönliche Ansprechpartner'],[<Ic.Shield s={15} c="var(--accent)"/>,'Vertrauen und Erfahrung']];
-  const all = [...items,...items,...items,...items];
-  return (
-    <div className="marquee-wrap">
-      <div className="marquee-inner">
-        {all.map(([ico,t],i) => (
-          <div key={i} style={{display:'flex',alignItems:'center',gap:7,padding:'0 40px',borderRight:'1px solid rgba(255,255,255,.05)'}}>
-            {ico}<span style={{fontSize:12,fontWeight:700,color:'var(--smoke)',letterSpacing:'.07em',textTransform:'uppercase',whiteSpace:'nowrap'}}>{t}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
 
 /* ─── SERVICES ───────────────────────────────────────────────────────────── */
 const Services = () => {
@@ -2168,7 +2152,6 @@ export default function App() {
       <G/>
       <Navbar onBook={scrollBook}/>
       <Hero onBook={scrollBook}/>
-      <TrustBar/>
       <Services/>
       <Steps/>
       <BookingSection/>
