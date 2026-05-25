@@ -1881,14 +1881,24 @@ const Footer = ({ openModal }) => (
           </div>
           <p style={{color:'var(--smoke)',fontSize:12.5,lineHeight:1.75,maxWidth:260}}>Akkreditierter KFZ-Prüfstützpunkt. HU, AU und amtliche Fahrzeugprüfungen — zuverlässig und transparent.</p>
         </div>
-        {[{title:'Unternehmen',items:['Über uns','Team','Karriere','Kontakt']},{title:'Rechtliches',items:['Impressum','Datenschutz','AGB','Cookie-Einstellungen']}].map(({title,items})=>(
-          <div key={title}>
-            <div style={{fontSize:10,fontWeight:700,letterSpacing:'.16em',textTransform:'uppercase',color:'rgba(255,255,255,.28)',marginBottom:14}}>{title}</div>
-            <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:9}}>
-              {items.map(item=><li key={item}><button onClick={()=>openModal(item)} style={{background:'none',border:'none',color:'var(--smoke)',fontSize:12.5,cursor:'pointer',padding:0,fontFamily:'var(--sans)',transition:'color .16s'}} onMouseOver={e=>e.target.style.color='var(--white)'} onMouseOut={e=>e.target.style.color='var(--smoke)'}>{item}</button></li>)}
-            </ul>
-          </div>
-        ))}
+        {/* Unternehmen — scroll to sections */}
+        <div>
+          <div style={{fontSize:10,fontWeight:700,letterSpacing:'.16em',textTransform:'uppercase',color:'rgba(255,255,255,.28)',marginBottom:14}}>Unternehmen</div>
+          <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:9}}>
+            {[['Leistungen','leistungen'],['Ablauf','ablauf'],['FAQ','faq'],['Standort','standort']].map(([label,id])=>(
+              <li key={id}><button onClick={()=>document.getElementById(id)?.scrollIntoView({behavior:'smooth'})} style={{background:'none',border:'none',color:'var(--smoke)',fontSize:12.5,cursor:'pointer',padding:0,fontFamily:'var(--sans)',transition:'color .16s'}} onMouseOver={e=>e.target.style.color='var(--white)'} onMouseOut={e=>e.target.style.color='var(--smoke)'}>{label}</button></li>
+            ))}
+          </ul>
+        </div>
+        {/* Rechtliches — open modals */}
+        <div>
+          <div style={{fontSize:10,fontWeight:700,letterSpacing:'.16em',textTransform:'uppercase',color:'rgba(255,255,255,.28)',marginBottom:14}}>Rechtliches</div>
+          <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:9}}>
+            {['Impressum','Datenschutz','AGB','Cookie-Einstellungen'].map(item=>(
+              <li key={item}><button onClick={()=>openModal(item)} style={{background:'none',border:'none',color:'var(--smoke)',fontSize:12.5,cursor:'pointer',padding:0,fontFamily:'var(--sans)',transition:'color .16s'}} onMouseOver={e=>e.target.style.color='var(--white)'} onMouseOut={e=>e.target.style.color='var(--smoke)'}>{item}</button></li>
+            ))}
+          </ul>
+        </div>
       </div>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:8,padding:'16px 0'}}>
         <span style={{color:'rgba(255,255,255,.2)',fontSize:11.5}}>© {new Date().getFullYear()} TÜV Nord Prüfstützpunkt Oberhausen — Alle Rechte vorbehalten.</span>
