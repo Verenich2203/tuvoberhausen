@@ -1,5 +1,6 @@
+import React from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import AdminPanel from "./AdminPanel";
 
 const PHONE = "+49 1575 5476991";
@@ -94,7 +95,7 @@ const G = () => (
     #root { width:100%; min-width:100%; }
     .section-full { width:100%; display:block; }
     .inner { width:100%; max-width:1280px; margin:0 auto; padding:0 64px; box-sizing:border-box; }
-    .sec { padding:80px 0; }
+    .sec { min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:80px 0; box-sizing:border-box; }
     .tag {
       display:inline-flex; align-items:center; gap:12px;
       font-size:11px; font-weight:700; letter-spacing:.22em; text-transform:uppercase;
@@ -168,6 +169,7 @@ const G = () => (
     .marquee-inner:hover { animation-play-state:paused; }
     @keyframes spin { to { transform:rotate(360deg); } }
     .spin { animation:spin .7s linear infinite; display:inline-block; }
+    @keyframes softPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.85)} }
     .slot-btn {
       padding:9px 6px; border-radius:8px; cursor:pointer; transition:all .15s;
       font-family:var(--sans); font-weight:700; font-size:13px;
@@ -180,7 +182,7 @@ const G = () => (
     ::-webkit-scrollbar-track { background:transparent; }
     ::-webkit-scrollbar-thumb { background:rgba(255,255,255,.12); border-radius:8px; }
     @media (max-width:900px) {
-      .inner { padding:0 24px; } .sec { padding:56px 0; }
+      .inner { padding:0 24px; } .sec { padding:56px 0; min-height:100svh; }
       .g3 { grid-template-columns:1fr 1fr; } .g4 { grid-template-columns:1fr 1fr; }
       .steps-row { grid-template-columns:1fr 1fr; gap:36px; } .steps-row::before { display:none; }
       .hide-mob { display:none !important; } .mob-col { flex-direction:column !important; } .mob-full { width:100% !important; }
@@ -211,22 +213,41 @@ const G = () => (
     .contact-map-wrap iframe { width:100%; height:100%; border:none; display:block; }
     .contact-map-gradient { position:absolute; inset:0; background:linear-gradient(90deg,rgba(20,22,26,.92) 0%,rgba(20,22,26,.6) 38%,transparent 62%); pointer-events:none; z-index:1; }
     .contact-card {
-      position:absolute; z-index:2; top:36px; bottom:36px;
+      position:absolute; z-index:2; top:32px; bottom:32px;
       left:max(24px, calc((100vw - 1280px) / 2 + 56px));
-      width:316px; background:rgba(20,22,26,.88);
-      backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
-      border-radius:18px; padding:28px 28px 24px;
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow:0 28px 64px rgba(0,0,0,.55);
-      display:flex; flex-direction:column;
+      width:300px;
+      background:linear-gradient(160deg,rgba(27,30,40,.97) 0%,rgba(13,15,21,.98) 100%);
+      backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+      border-radius:20px; padding:0;
+      border:1px solid rgba(255,255,255,.09);
+      border-top:2px solid var(--accent);
+      box-shadow:0 32px 72px rgba(0,0,0,.65), 0 0 0 1px rgba(91,145,244,.08);
+      display:flex; flex-direction:column; overflow:hidden;
     }
-    .contact-hours-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.05); }
-    .contact-hours-row:last-child { border-bottom:none; }
+    .contact-card-inner { flex:1; overflow-y:auto; padding:24px 24px 0; display:flex; flex-direction:column; gap:18px; }
+    .contact-card-inner::-webkit-scrollbar { width:3px; }
+    .contact-card-inner::-webkit-scrollbar-thumb { background:rgba(91,145,244,.25); border-radius:2px; }
+    .contact-section-label { font-size:9px; font-weight:800; color:var(--accent); letter-spacing:.18em; text-transform:uppercase; margin-bottom:6px; }
+    .contact-hours-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; }
+    .contact-hours-row + .contact-hours-row { border-top:1px solid rgba(255,255,255,.05); }
+    .contact-ctas { padding:16px 24px 20px; display:flex; gap:8px; flex-shrink:0; border-top:1px solid rgba(255,255,255,.06); margin-top:auto; }
     @media (max-width:900px) {
-      .contact-map-wrap { height:340px; }
+      .contact-map-wrap { height:300px; }
       .contact-map-gradient { background:linear-gradient(180deg,transparent 30%,rgba(20,22,26,.9) 100%); }
-      .contact-card { position:static; width:100%; border-radius:0 0 0 0; top:auto; bottom:auto; left:auto; backdrop-filter:none; background:#14161A; border:none; border-radius:0; box-shadow:none; }
+      .contact-card { position:static; width:100%; border-radius:0; top:auto; bottom:auto; left:auto; backdrop-filter:none; background:linear-gradient(160deg,#1B1E28 0%,#0D0F15 100%); border:none; border-top:2px solid var(--accent); box-shadow:none; }
     }
+    /* ── background image helpers ── */
+    .bg-img {
+      position:absolute; inset:0;
+      background-size:cover; background-position:center; background-repeat:no-repeat;
+      background-attachment:fixed;
+    }
+    @media (max-width:900px) {
+      .bg-img { background-attachment:scroll; }
+    }
+    /* ── hero stats grid responsive ── */
+    .hero-stats { display:grid; grid-template-columns:repeat(4,1fr); }
+    @media (max-width:600px) { .hero-stats { grid-template-columns:repeat(2,1fr); gap:20px 0; } }
   `}</style>
 );
 
@@ -253,6 +274,7 @@ const Ic = {
   Info:    ({s=16,c="currentColor"}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>,
   Warn:    ({s=16,c="currentColor"}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>,
   Spin:    ({s=16,c="currentColor"}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2.5" className="spin"><path d="M12 2a10 10 0 0 1 10 10" strokeLinecap="round"/></svg>,
+  Damage:  ({s=22,c="currentColor"}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="11" cy="15" r="2.5"/><line x1="16" y1="20" x2="13.5" y2="17.5"/><line x1="9" y1="12" x2="13" y2="12"/></svg>,
 };
 
 /* ─── ANIMATED BG DECO ──────────────────────────────────────────────────── */
@@ -303,7 +325,7 @@ const Navbar = ({ onBook }) => {
         <div onClick={()=>window.scrollTo({top:0,behavior:'smooth'})} style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer'}}>
           <div style={{width:32,height:32,background:'var(--accent)',borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><Ic.Wrench s={15} c="#fff"/></div>
           <div>
-            <div style={{fontWeight:800,fontSize:16,color:'var(--white)',lineHeight:1.1,letterSpacing:'-.02em'}}>Auto<span style={{color:'var(--accent)'}}>Service</span></div>
+            <div style={{fontWeight:800,fontSize:14,color:'var(--white)',lineHeight:1.1,letterSpacing:'-.02em'}}>TÜV Nord <span style={{color:'var(--accent)'}}>Prüfstützpunkt</span></div>
             <div style={{fontSize:9,letterSpacing:'.12em',color:'var(--smoke)',textTransform:'uppercase',fontWeight:600}}>Oberhausen</div>
           </div>
         </div>
@@ -338,127 +360,577 @@ const Navbar = ({ onBook }) => {
   );
 };
 
-/* ─── HERO ───────────────────────────────────────────────────────────────── */
-const Hero = ({ onBook }) => (
-  <div className="section-full" style={{minHeight:'92vh',display:'flex',alignItems:'center',position:'relative',overflow:'hidden',background:'var(--black)'}}>
-    <div style={{position:'absolute',inset:0,backgroundImage:"url('second.jpg')",backgroundSize:'cover',backgroundPosition:'center',backgroundAttachment:'fixed',zIndex:0}}/>
-    <div style={{position:'absolute',inset:0,background:'linear-gradient(160deg,rgba(20,22,26,.92) 0%,rgba(20,22,26,.78) 60%,rgba(20,22,26,.65) 100%)',zIndex:1,pointerEvents:'none'}}/>
-    <HeroBg/>
-    <div className="inner" style={{position:'relative',zIndex:2,width:'100%',textAlign:'center',padding:'80px 64px'}}>
-      <motion.div initial={{opacity:0,y:32}} animate={{opacity:1,y:0}} transition={{duration:.9,ease:[.22,1,.36,1]}} style={{maxWidth:760,margin:'0 auto'}}>
-        <div className="tag" style={{marginBottom:28,justifyContent:'center'}}>
-          Offiziell zertifizierte Kfz-Prüfstelle
-        </div>
-        <h1 style={{fontWeight:800,fontSize:'clamp(38px,6vw,76px)',color:'var(--white)',lineHeight:1.06,letterSpacing:'-.025em',marginBottom:24}}>
-          Ihre HU / AU in<br/><span style={{color:'var(--accent)'}}>Oberhausen</span>
-        </h1>
-        <p style={{fontSize:17,color:'var(--text)',lineHeight:1.8,maxWidth:520,margin:'0 auto 44px'}}>
-          Hauptuntersuchung und Abgasuntersuchung schnell online buchen. Kein Warten, transparente Preise, professionelle Prüfingenieure.
-        </p>
-        <div style={{display:'flex',gap:16,flexWrap:'wrap',justifyContent:'center'}}>
-          <button className="btn btn-primary" style={{fontSize:14,gap:9,padding:'15px 36px'}} onClick={onBook}>Termin buchen <Ic.Arrow s={16}/></button>
-          <a href={PHONE_HREF} className="btn btn-ghost" style={{fontSize:14,gap:9,padding:'15px 36px'}}><Ic.Phone s={16}/> {PHONE}</a>
-        </div>
-      </motion.div>
-    </div>
-  </div>
-);
-
-/* ─── TRUST BAR ─────────────────────────────────────────────────────────── */
-const TrustBar = () => {
-  const items = [[<Ic.Award s={15} c="var(--accent)"/>,'Amtlich anerkannt'],[<Ic.Clock s={15} c="var(--accent)"/>,'Kurze Wartezeiten'],[<Ic.Cert s={15} c="var(--accent)"/>,'Transparente Preise'],[<Ic.Shield s={15} c="var(--accent)"/>,'Online-Buchung 24/7'],[<Ic.Wrench s={15} c="var(--accent)"/>,'Qualifizierte Prüfer'],[<Ic.Leaf s={15} c="var(--accent)"/>,'Umwelt-zertifiziert']];
-  const all = [...items,...items,...items,...items];
+/* ─── HERO COUNT (mini count-up for inline hero stats) ───────────────────── */
+const HeroCount = ({ end, suffix, active }) => {
+  const [val, setVal] = useState(0);
+  const raf = useRef(null);
+  useEffect(() => {
+    if (!active) return;
+    const start = performance.now();
+    const tick = now => {
+      const t = Math.min((now - start) / 1600, 1);
+      const ease = 1 - Math.pow(1 - t, 4);
+      setVal(Math.round(ease * end));
+      if (t < 1) raf.current = requestAnimationFrame(tick);
+    };
+    raf.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf.current);
+  }, [active, end]);
   return (
-    <div className="marquee-wrap">
-      <div className="marquee-inner">
-        {all.map(([ico,t],i) => (
-          <div key={i} style={{display:'flex',alignItems:'center',gap:7,padding:'0 40px',borderRight:'1px solid rgba(255,255,255,.05)'}}>
-            {ico}<span style={{fontSize:12,fontWeight:700,color:'var(--smoke)',letterSpacing:'.07em',textTransform:'uppercase',whiteSpace:'nowrap'}}>{t}</span>
+    <div style={{fontSize:'clamp(26px,3vw,38px)',fontWeight:900,lineHeight:1,letterSpacing:'-.03em',color:'#fff',display:'flex',alignItems:'baseline',justifyContent:'center',gap:1}}>
+      {val.toLocaleString('de-DE')}
+      <span style={{color:'var(--accent)',fontSize:'.72em',fontWeight:900}}>{suffix}</span>
+    </div>
+  );
+};
+
+/* ─── HERO ───────────────────────────────────────────────────────────────── */
+const Hero = ({ onBook }) => {
+  const [statsActive, setStatsActive] = useState(false);
+  const statsRef = useRef(null);
+  useEffect(() => {
+    const el = statsRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setStatsActive(true); obs.disconnect(); } }, { threshold: 0.1 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div className="section-full" style={{minHeight:'92vh',display:'flex',alignItems:'center',position:'relative',overflow:'hidden',background:'var(--black)'}}>
+      <div className="bg-img" style={{backgroundImage:"url('WhatsApp1.jpeg')",backgroundPosition:'center top',zIndex:0}}/>
+      <div style={{position:'absolute',inset:0,background:'linear-gradient(160deg,rgba(20,22,26,.82) 0%,rgba(20,22,26,.68) 60%,rgba(20,22,26,.54) 100%)',zIndex:1,pointerEvents:'none'}}/>
+      <HeroBg/>
+      <div className="inner" style={{position:'relative',zIndex:2,width:'100%',textAlign:'center',padding:'44px 64px 40px'}}>
+        <motion.div initial={{opacity:0,y:32}} animate={{opacity:1,y:0}} transition={{duration:.9,ease:[.22,1,.36,1]}} style={{maxWidth:760,margin:'0 auto'}}>
+          <div className="tag" style={{marginBottom:18,justifyContent:'center'}}>
+            Akkreditierter KFZ-Prüfstützpunkt
           </div>
-        ))}
+          <h1 style={{fontWeight:800,fontSize:'clamp(36px,6vw,72px)',color:'var(--white)',lineHeight:1.06,letterSpacing:'-.025em',marginBottom:16}}>
+            Ihr TÜV in<br/><span style={{color:'var(--accent)'}}>Oberhausen</span>
+          </h1>
+          <p style={{fontSize:16,color:'var(--text)',lineHeight:1.75,maxWidth:520,margin:'0 auto 10px'}}>
+            Haupt- und Abgasuntersuchung einfach schnell online buchen. Auch ohne Termin möglich!
+          </p>
+          {/* NEW badge */}
+          <div style={{marginBottom:24}}>
+            <span style={{display:'inline-flex',alignItems:'center',gap:7,background:'rgba(91,145,244,.10)',border:'1px solid rgba(91,145,244,.22)',borderRadius:20,padding:'5px 14px',fontSize:12,fontWeight:700,color:'var(--accent)',letterSpacing:'.04em'}}>
+              <span style={{width:6,height:6,borderRadius:'50%',background:'var(--accent)',flexShrink:0,animation:'softPulse 2s ease-in-out infinite'}}/>
+              Jetzt Neu: Abhol- und Bring-Service
+            </span>
+          </div>
+          <div style={{display:'flex',gap:16,flexWrap:'wrap',justifyContent:'center'}}>
+            <button className="btn btn-primary" style={{fontSize:14,gap:9,padding:'14px 32px'}} onClick={onBook}>Termin buchen <Ic.Arrow s={16}/></button>
+            <a href={PHONE_HREF} className="btn btn-ghost" style={{fontSize:14,gap:9,padding:'14px 32px'}}><Ic.Phone s={16}/> {PHONE}</a>
+          </div>
+
+          {/* ── Stats strip inside hero ── */}
+          <div ref={statsRef} className="hero-stats" style={{marginTop:32,paddingTop:24,borderTop:'1px solid rgba(255,255,255,.07)'}}>
+            {STATS.map((s, i) => (
+              <motion.div key={s.label}
+                initial={{opacity:0,y:16}} animate={statsActive?{opacity:1,y:0}:{}}
+                transition={{duration:.5,delay:i*.1,ease:[.22,1,.36,1]}}
+                style={{padding:'0 12px',borderRight:i<STATS.length-1?'1px solid rgba(255,255,255,.06)':'none',textAlign:'center'}}>
+                <HeroCount end={s.end} suffix={s.suffix} active={statsActive}/>
+                <div style={{marginTop:4,fontSize:'clamp(9px,1vw,10px)',fontWeight:700,color:'rgba(255,255,255,.35)',textTransform:'uppercase',letterSpacing:'.1em'}}>{s.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </div>
   );
 };
 
+
 /* ─── SERVICES ───────────────────────────────────────────────────────────── */
 const Services = () => {
-  const [modal, setModal] = useState(null);
+  /* ── state ── */
+  const [modal,         setModal]         = useState(null);
+  const [activeIdx,     setActiveIdx]     = useState(0);
+  const [cardHovered,   setCardHovered]   = useState(false);
+  const [isAreaHovered, setIsAreaHovered] = useState(false);
+  const [tilt,          setTilt]          = useState({ x: 0, y: 0 });
+
+  /* ── refs ── */
+  const containerRef  = useRef(null);
+  const activeCardRef = useRef(null);
+  const autoTimer     = useRef(null);
+  const drag          = useRef({ on: false, startX: 0, moved: false });
+
   const items = [
-    {ico:<Ic.Shield s={26} c="var(--accent)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO · Pflichtprüfung',tag:'Pflicht',desc:'Gesetzlich vorgeschriebene Sicherheitsprüfung für alle Kfz.',duration:'ca. 30 Min.',details:['Überprüfung der Bremsanlage','Sicht- und Funktionsprüfung der Beleuchtung','Prüfung von Lenkung, Achsen und Radaufhängung','Kontrolle der Karosserie','Überprüfung von Sichtscheiben und Spiegeln','Prüfung der Abgasanlage','Sicherheitsgurtprüfung','Auslesen der Fahrzeugelektronik / OBD'],img:'Hauptuntersuchung.png',note:'Gesetzlich vorgeschrieben §29 StVZO. Nach 3 Jahren bei Neuwagen, danach alle 2 Jahre.'},
-    {ico:<Ic.Leaf s={26} c="var(--accent)"/>,title:'Abgasuntersuchung (AU)',sub:'AU · Emissionsprüfung',tag:'Kombi möglich',desc:'Prüfung der Schadstoffemissionen — schützt Umwelt und vermeidet Bußgelder.',duration:'ca. 15 Min.',details:['Sichtprüfung der Abgasanlage','Messung von CO, HC und Lambda-Werten','Trübungsmessung beim Diesel','Auslesen des OBD-Systems','Prüfung von Katalysator und Partikelfilter','Dokumentation und Bescheinigung'],img:'Abgasuntersuchung.png',note:'Pflichtbestandteil der HU. Kombi empfohlen.'},
-    {ico:<Ic.Wrench s={26} c="var(--accent)"/>,title:'Vorab-Check',sub:'Sicherheits-Vorprüfung',tag:'Empfohlen',desc:'Mängel vor der HU erkennen, Nachprüfungen vermeiden.',duration:'ca. 20 Min.',details:['Überprüfung aller HU-relevanten Punkte','Identifikation von Mängeln','Kosten- und Zeiteinschätzung','Beratung durch Prüfingenieur','Dokumentation mit Mängelliste'],img:'VorabCheck.png',note:'Kostenlos bei anschließender HU. Separat ab 29 €.'},
-    {ico:<Ic.Clip s={26} c="var(--accent)"/>,title:'Eintragungen / Abnahmen',sub:'§19 StVZO',tag:'Flexibel',desc:'Offizielle Abnahme von Fahrzeugveränderungen.',duration:'30–60 Min.',details:['Abnahme von Fahrwerksveränderungen','Prüfung von Felgen und Bereifung','Abnahme von Karosserieveränderungen','Prüfung auf Übereinstimmung mit ABE','Eintrag in Zulassungsbescheinigung'],img:'Eintragungen.png',note:'Alle ABE-Dokumente oder Gutachten mitbringen.'},
+    {ico:<Ic.Shield s={26} c="var(--accent)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO',tag:'Pflicht',desc:'Gesetzlich vorgeschriebene Sicherheitsprüfung für alle Kfz.',duration:'ca. 30 Min.',details:['Überprüfung der Bremsanlage','Sicht- und Funktionsprüfung der Beleuchtung','Prüfung von Lenkung, Achsen und Radaufhängung','Kontrolle der Karosserie','Überprüfung von Sichtscheiben und Spiegeln','Prüfung der Abgasanlage','Sicherheitsgurtprüfung','Auslesen der Fahrzeugelektronik / OBD'],img:'Hauptuntersuchung.png',note:'Gesetzlich vorgeschrieben §29 StVZO. Nach 3 Jahren bei Neuwagen, danach alle 2 Jahre.'},
+    {ico:<Ic.Wrench s={26} c="var(--accent)"/>,title:'Vorab-Check',sub:'Sicherheits-Vorprüfung',tag:'Empfohlen',desc:'Mängel vor der HU erkennen, Nachprüfungen vermeiden.',duration:'ca. 20 Min.',details:['Überprüfung aller HU-relevanten Punkte','Identifikation von Mängeln','Kosten- und Zeiteinschätzung','Beratung durch Prüfingenieur','Dokumentation mit Mängelliste'],img:'Vorab-Check.png',note:'Kostenlos bei anschließender HU. Separat ab 29 €.'},
+    {ico:<Ic.Clip s={26} c="var(--accent)"/>,title:'Eintragungen / Abnahmen',sub:'§19 StVZO',tag:'Flexibel',desc:'Offizielle Abnahme von Fahrzeugveränderungen.',duration:'30–60 Min.',details:['Abnahme von Fahrwerksveränderungen','Prüfung von Felgen und Bereifung','Abnahme von Karosserieveränderungen','Prüfung auf Übereinstimmung mit ABE','Eintrag in Zulassungsbescheinigung'],img:'Abnahmenmain.jpeg',note:'Alle ABE-Dokumente oder Gutachten mitbringen.'},
     {ico:<Ic.Moto s={26} c="var(--accent)"/>,title:'Motorrad-HU',sub:'Zweiräder · §29 StVZO',tag:'Saisonal',desc:'Spezialisierte HU für Motorräder und Roller.',duration:'ca. 25 Min.',details:['Kontrolle der Bremsen','Überprüfung von Reifen','Prüfung von Rahmen und Gabeln','Sichtprüfung Licht und Blinker','Überprüfung Kettensatz oder Kardan'],img:'motorrad.png',note:'Fahrzeugschein mitbringen.'},
     {ico:<Ic.Award s={26} c="var(--accent)"/>,title:'Oldtimer-Gutachten',sub:'§23 StVZO · H-Kennzeichen',tag:'Speziell',desc:'Offizielles Gutachten für das H-Kennzeichen.',duration:'ca. 60 Min.',details:['Prüfung auf originalen Fahrzeugzustand','Bewertung von Karosserie und Technik','Sicherheitsüberprüfung §29 StVZO','Prüfung der Fahrzeughistorie','Erstellung des Gutachtens §23 StVZO'],img:'oldtiemer.png',note:'Mindestens 30 Jahre altes Fahrzeug erforderlich.'},
-    {ico:<Ic.Cert s={26} c="var(--accent)"/>,title:'HU + AU Kombi',sub:'§29 StVZO · Kombiangebot',tag:'Kombi',desc:'HU und AU in einem Termin — spart Zeit und ist oft günstiger.',duration:'ca. 40 Min.',details:['Vollständige Hauptuntersuchung §29 StVZO','Abgasuntersuchung inklusive','OBD-Diagnose beider Prüfungen','Einmalige Wartezeit für beide Tests','Kombiniertes Prüfprotokoll','Sofortige Bescheinigung vor Ort'],img:'AUKombi.png',note:'Empfehlung: HU und AU immer zusammen buchen — keine Extrakosten für die Kombination.'},
+    {ico:<Ic.Cert s={26} c="var(--accent)"/>,title:'HU + AU Kombi',sub:'§29 StVZO · Kombiangebot',tag:'Kombi',desc:'HU und AU in einem Termin — spart Zeit und ist oft günstiger.',duration:'ca. 40 Min.',details:['Vollständige Hauptuntersuchung §29 StVZO','Abgasuntersuchung inklusive','OBD-Diagnose beider Prüfungen','Einmalige Wartezeit für beide Tests','Kombiniertes Prüfprotokoll','Sofortige Bescheinigung vor Ort'],img:'Abgasuntersuchung.png',note:'Empfehlung: HU und AU immer zusammen buchen — keine Extrakosten für die Kombination.'},
+    {ico:<Ic.Clip s={26} c="var(--accent)"/>,title:'Anhänger HU',sub:'Anhänger · §29 StVZO',tag:'Anhänger',desc:'Hauptuntersuchung für Anhänger und Auflieger aller Art.',duration:'ca. 25 Min.',details:['Prüfung von Bremsen und Bremsanlage','Kontrolle von Beleuchtung und Elektrik','Überprüfung von Achsen und Radaufhängung','Prüfung der Kupplungseinrichtung','Sichtprüfung Rahmen und Aufbau','Kontrolle der Stützeinrichtung'],img:'anhangermain.jpeg',note:'Fahrzeugschein des Anhängers mitbringen. Gilt für PKW-Anhänger, Wohnwagen und Nutzfahrzeuganhänger.'},
+    {ico:<Ic.Leaf s={26} c="var(--accent)"/>,title:'Gasanlagenprüfung',sub:'LPG · CNG · Gasfahrzeuge',tag:'Gas',desc:'Amtliche Prüfung von Flüssiggas- und Erdgasanlagen gemäß ECE-R115.',duration:'ca. 30 Min.',details:['Sichtprüfung der Gasanlage','Dichtheitsprüfung aller Leitungen','Überprüfung der Sicherheitsventile','Prüfung des Druckbehälters','Funktionsprüfung der Gasversorgung','Prüfung gemäß ECE-R115 / ECE-R110'],img:'gasanlagen.jpeg',note:'Prüfbuch der Gasanlage und Einbauattest mitbringen. Prüfintervall alle 2 Jahre.'},
+    {ico:<Ic.Award s={26} c="var(--accent)"/>,title:'BO-Kraft Prüfung',sub:'Taxi · Mietwagen · §57a StVZO',tag:'Gewerblich',desc:'Behördliche Prüfung für Taxi- und Mietwagenfahrzeuge nach BO Kraft.',duration:'ca. 45 Min.',details:['Vollständige Fahrzeugprüfung nach BO Kraft','Überprüfung der Taxameter-Eichung','Kontrolle der Sicherheitsausstattung','Prüfung der Beleuchtungsanlage','Inspektion von Innenraum und Sitzanlage','Ausstellung des Prüfberichts für Behörden'],img:'taxi.jpeg',note:'Gültige Taxigenehmigung und letzten Prüfbericht mitbringen. Pflichtprüfung für konzessionierte Fahrzeuge.'},
+    {ico:<Ic.Cert s={26} c="var(--accent)"/>,title:'Abnahmen §19.3 / §15 FZV',sub:'§19.3 StVZO · §15 FZV',tag:'Abnahme',desc:'Amtliche Fahrzeugabnahme nach §19 Abs. 3 StVZO und §15 FZV für geänderte oder neu zuzulassende Fahrzeuge.',duration:'30–60 Min.',details:['Abnahme von Einzelfahrzeugen','Prüfung von Fahrzeugänderungen ohne ABE','Abnahme bei Wiederherstellung nach Unfall','Eintragung in Fahrzeugpapiere','Prüfung nach §15 FZV für Neufahrzeuge','Dokumentation und Prüfprotokoll'],img:'Abnahmenmain.jpeg',note:'Alle relevanten Fahrzeugdokumente und ggf. Gutachten mitbringen.'},
+    {ico:<Ic.Damage s={26} c="var(--accent)"/>,title:'Schadensgutachten',sub:'Unfallschaden · Wertermittlung',tag:'Gutachten',desc:'Unabhängiges Gutachten nach Unfall — für volle Schadensregulierung durch die Versicherung.',duration:'ca. 45–60 Min.',details:['Vollständige Schadensdokumentation','Ermittlung der Reparaturkosten','Berechnung der Wertminderung (Merkantil)','Ermittlung des Wiederbeschaffungswertes','Feststellung von Vorschäden','Rechtssicheres Gutachten für Versicherung und Gericht'],img:'schaden.jpg',note:'Durch unabhängiges Gutachten erhalten Sie in der Regel höhere Entschädigung als bei Schätzung der Versicherung.'},
   ];
 
-  /* mosaic layout: items[0]=tuvv.jpg tall left, items[0..4] mapped to cells */
-  const mosaicCells = [
-    { img:'tuvv.jpg',       title: items[0].title, sub: items[0].sub, item: items[0], style:{ gridColumn:'1', gridRow:'1/3' } },
-    { img: items[0].img,   title: items[0].title, sub: items[0].sub, item: items[0], style:{ gridColumn:'2', gridRow:'1' } },
-    { img: items[1].img,   title: items[1].title, sub: items[1].sub, item: items[1], style:{ gridColumn:'3', gridRow:'1' } },
-    { img: items[4].img,   title: items[4].title, sub: items[4].sub, item: items[4], style:{ gridColumn:'2', gridRow:'2' } },
-    { img: items[5].img,   title: items[5].title, sub: items[5].sub, item: items[5], style:{ gridColumn:'3', gridRow:'2' } },
-  ];
+  // all cards have photos
+  const hasPhoto = () => true;
+  const N = items.length; // 10
+
+  /* ── animation lock: prevents chaotic multi-clicks ── */
+  const isAnimating = useRef(false);
+  const ANIM_MS = 520; // must match transition duration below
+
+  /* ── navigation helpers ── */
+  const goNext = useCallback(() => {
+    if (isAnimating.current) return;
+    isAnimating.current = true;
+    setActiveIdx(p => (p + 1) % N);
+    setTimeout(() => { isAnimating.current = false; }, ANIM_MS);
+  }, [N]);
+
+  const goPrev = useCallback(() => {
+    if (isAnimating.current) return;
+    isAnimating.current = true;
+    setActiveIdx(p => (p - 1 + N) % N);
+    setTimeout(() => { isAnimating.current = false; }, ANIM_MS);
+  }, [N]);
+
+  /* ── circular offset so carousel wraps smoothly ── */
+  const circOff = (i) => {
+    let off = i - activeIdx;
+    if (off >  N / 2) off -= N;
+    if (off < -N / 2) off += N;
+    return off;
+  };
+
+  /* ── autoplay every 5s, pauses after manual interaction ── */
+  const pauseUntil = useRef(0);
+
+  useEffect(() => {
+    if (isAreaHovered) { clearInterval(autoTimer.current); return; }
+    autoTimer.current = setInterval(() => {
+      if (Date.now() >= pauseUntil.current) goNext();
+    }, 5000);
+    return () => clearInterval(autoTimer.current);
+  }, [isAreaHovered, goNext]);
+
+  /* ── magnetic 3-D tilt on the active card ── */
+  const onStageMouseMove = useCallback((e) => {
+    if (!cardHovered || !activeCardRef.current) return;
+    const r  = activeCardRef.current.getBoundingClientRect();
+    const nx = ((e.clientX - r.left)  / r.width  - 0.5) * 2; // −1…+1
+    const ny = ((e.clientY - r.top)   / r.height - 0.5) * 2;
+    setTilt({ x: ny * -11, y: nx * 13 });
+  }, [cardHovered]);
+
+  /* ── pointer drag — touch only, mouse ignored ── */
+  const pDown = (e) => {
+    if (e.pointerType === 'mouse') return;
+    drag.current = { on: true, startX: e.clientX, moved: false };
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+  };
+  const pMove = (e) => {
+    if (!drag.current.on) return;
+    if (Math.abs(e.clientX - drag.current.startX) > 8) drag.current.moved = true;
+  };
+  const pUp = (e) => {
+    if (!drag.current.on) return;
+    const d = e.clientX - drag.current.startX;
+    if (Math.abs(d) > 35) {
+      pauseUntil.current = Date.now() + 5000;
+      d < 0 ? goNext() : goPrev();
+    }
+    drag.current.on = false;
+  };
+
+  /* ── responsive breakpoint ── */
+  const [winW, setWinW] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+  useEffect(() => {
+    const h = () => setWinW(window.innerWidth);
+    window.addEventListener('resize', h);
+    return () => window.removeEventListener('resize', h);
+  }, []);
+  const desktop = winW >= 900;
+
+  /* ── per-card visual transform — fixed lookup, max 2 cards each side ── */
+  // x offsets, scales, opacities, rotations keyed by abs distance from centre
+  const CX  = desktop ? [0, 420, 820] : [0, 235, 415];
+  const CS  = desktop ? [1.0, 0.88, 0.70] : [1.12, 0.86, 0.68];
+  const CO  = desktop ? [1, 1, 0.30]      : [1, 0.70, 0.32];
+  const CR  = desktop ? [0, 4, 10]        : [0, 9, 16];
+  const CB  = desktop ? [0, 0, 4]         : [0, 2.5, 6];
+  const CBR = desktop ? [1, 0.70, 0.35]   : [1, 0.82, 0.52];
+
+  const cardProps = (offset) => {
+    const abs = Math.abs(offset);
+    if (abs > 2) return null;        // only centre + 2 neighbours visible
+    const sign = offset >= 0 ? 1 : -1;
+    return {
+      x         : sign * CX[abs],
+      scale     : CS[abs],
+      opacity   : CO[abs],
+      rotateY   : -sign * CR[abs],   // left card tilts right (+), right card tilts left (-)
+      blur      : CB[abs],
+      brightness: CBR[abs],
+      zIndex    : 20 - abs * 6,
+    };
+  };
 
   return (
-    <div id="leistungen" className="section-full" style={{position:'relative',paddingTop:72,paddingBottom:72,overflow:'hidden',background:'#F8F9FC'}}>
-      <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.07,pointerEvents:'none',zIndex:0}}/>
+    <div id="leistungen" className="section-full sec"
+         style={{position:'relative',overflow:'hidden',background:'var(--dark)'}}>
+
+      {/* background texture */}
+      <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.23,pointerEvents:'none',zIndex:0}}/>
+      <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 30%, rgba(10,12,18,.45) 100%)',pointerEvents:'none',zIndex:1}}/>
+
+      {/* ── scoped styles ── */}
       <style>{`
-        .mosaic-grid { display:grid; grid-template-columns:2fr 1fr 1fr; grid-template-rows:340px 240px; gap:10px; }
-        .mosaic-cell { position:relative; overflow:hidden; cursor:pointer; border-radius:12px; }
-        .mosaic-bg { position:absolute; inset:0; background-size:cover; background-position:center; transition:transform .45s cubic-bezier(.22,1,.36,1); }
-        .mosaic-cell:hover .mosaic-bg { transform:scale(1.06); }
-        .mosaic-gradient { position:absolute; inset:0; background:linear-gradient(180deg,transparent 40%,rgba(10,12,18,.82) 100%); pointer-events:none; }
-        .mosaic-label { position:absolute; bottom:0; left:0; right:0; padding:18px 20px; }
-        .mosaic-sub { font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:4px; }
-        .mosaic-title { font-size:15px; font-weight:800; color:#fff; line-height:1.2; letter-spacing:-.01em; }
-        @media(max-width:900px){
-          .mosaic-grid { grid-template-columns:1fr !important; grid-template-rows:auto !important; }
-          .mosaic-cell { grid-column:1 !important; grid-row:auto !important; height:220px !important; }
+        /* Stage */
+        .cine-stage{position:relative;height:430px;overflow:visible;cursor:default;user-select:none;-webkit-user-select:none;touch-action:none;}
+        @media(min-width:900px){
+          .cine-stage{height:540px;}
+          .cine-card{width:400px !important;height:510px !important;margin-left:-200px !important;margin-top:-255px !important;}
+        }
+        /* Mobile nav arrows (shown only on touch screens) */
+        .cine-mob-arrows{display:none;justify-content:center;align-items:center;gap:14px;margin-top:20px;}
+        .cine-mob-btn{width:48px;height:48px;border-radius:50%;border:1.5px solid rgba(255,255,255,.12);background:rgba(10,12,18,.6);backdrop-filter:blur(10px);cursor:pointer;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.6);transition:border-color .22s,background .22s,color .22s;}
+        .cine-mob-btn:active{border-color:var(--accent);background:rgba(91,145,244,.18);color:var(--accent);}
+        @media(max-width:768px){.cine-mob-arrows{display:flex;} .cine-arrow{display:none;}}
+        /* Perspective wrapper */
+        .cine-persp{perspective:1400px;perspective-origin:50% 50%;}
+        /* Card shell */
+        .cine-card{
+          position:absolute;top:50%;left:50%;
+          margin-left:-150px;margin-top:-195px;
+          width:300px;height:390px;
+          border-radius:20px;overflow:hidden;
+          transform-style:preserve-3d;
+          will-change:transform,opacity,filter;
+          box-shadow:0 10px 32px rgba(0,0,0,.42);
+          transition:box-shadow .4s;
+        }
+        .cine-card.is-active{
+          box-shadow:0 28px 64px rgba(0,0,0,.7),
+                     0 0 0 1.5px rgba(91,145,244,.22);
+        }
+        .cine-card:not(.is-active){cursor:pointer;}
+        /* Ken-Burns background */
+        .cine-bg{
+          position:absolute;inset:0;
+          background-size:cover;background-position:center;
+          will-change:transform;
+          transform:scale(1) translate3d(0,0,0);
+          transition:transform 1.1s cubic-bezier(.25,.46,.45,.94);
+        }
+        .cine-card.is-active:hover .cine-bg{
+          transform:scale(1.10) translate3d(-0.8%,-0.8%,0);
+        }
+        /* Gradient overlay */
+        .cine-grad{
+          position:absolute;inset:0;
+          background:linear-gradient(180deg,
+            rgba(10,12,18,.04) 0%,
+            rgba(10,12,18,.52) 48%,
+            rgba(10,12,18,.93) 100%);
+          z-index:1;pointer-events:none;
+        }
+        /* Category tag */
+        .cine-tag{
+          position:absolute;top:16px;left:16px;z-index:2;
+          padding:4px 11px;
+          background:rgba(91,145,244,.15);
+          border:1px solid rgba(91,145,244,.28);
+          backdrop-filter:blur(6px);
+          border-radius:20px;
+          font-size:9px;font-weight:800;
+          letter-spacing:.12em;text-transform:uppercase;
+          color:var(--accent);
+        }
+        /* Base label (hides on active+hover) */
+        .cine-base{
+          position:absolute;bottom:0;left:0;right:0;
+          padding:24px 22px 20px;z-index:2;
+          transition:transform .42s cubic-bezier(.25,.46,.45,.94),
+                      opacity  .38s;
+        }
+        .cine-card.is-active:hover .cine-base{
+          transform:translateY(-10px);opacity:0;pointer-events:none;
+        }
+        .cine-sub{
+          font-size:10px;font-weight:700;
+          letter-spacing:.13em;text-transform:uppercase;
+          color:rgba(255,255,255,.5);margin-bottom:5px;
+        }
+        .cine-title{
+          font-size:17px;font-weight:800;
+          color:#fff;line-height:1.2;letter-spacing:-.01em;
+        }
+        .cine-dur{
+          display:flex;align-items:center;gap:5px;
+          margin-top:7px;font-size:10px;color:rgba(255,255,255,.38);
+        }
+        /* Slide-up hover panel */
+        .cine-panel{
+          position:absolute;bottom:0;left:0;right:0;
+          padding:18px 22px 20px;
+          background:rgba(8,10,18,.91);
+          backdrop-filter:blur(16px);
+          -webkit-backdrop-filter:blur(16px);
+          border-top:1px solid rgba(91,145,244,.13);
+          z-index:3;
+          transform:translateY(100%);
+          transition:transform .45s cubic-bezier(.22,1,.36,1);
+        }
+        .cine-card.is-active:hover .cine-panel{transform:translateY(0);}
+        .cine-pdesc{
+          font-size:12px;color:rgba(255,255,255,.66);
+          line-height:1.65;margin:0;
+        }
+        /* Shine CTA button */
+        @keyframes shineSwipe{
+          0%  {transform:translateX(-130%) skewX(-22deg);}
+          100%{transform:translateX(280%)  skewX(-22deg);}
+        }
+        .shine-btn{
+          position:relative;overflow:hidden;
+          display:inline-flex;align-items:center;gap:6px;
+          margin-top:13px;padding:9px 18px;
+          background:linear-gradient(125deg,#5B91F4 0%,#3563e2 100%);
+          border:none;border-radius:8px;
+          color:#fff;font-size:12px;font-weight:700;
+          letter-spacing:.03em;cursor:pointer;
+          box-shadow:0 4px 16px rgba(91,145,244,.32);
+          transition:box-shadow .25s,transform .2s;
+        }
+        .shine-btn:hover{box-shadow:0 7px 26px rgba(91,145,244,.52);transform:translateY(-1px);}
+        .shine-btn::after{
+          content:'';position:absolute;top:-50%;left:-60%;
+          width:38%;height:200%;
+          background:linear-gradient(90deg,transparent,rgba(255,255,255,.38),transparent);
+          animation:shineSwipe 1.5s ease .08s both;
+        }
+        /* Plain (icon) card */
+        .cine-plain{
+          position:absolute;inset:0;
+          display:flex;flex-direction:column;justify-content:space-between;
+          padding:26px 22px;
+          background:linear-gradient(135deg,rgba(22,25,35,.97) 0%,rgba(14,17,26,.99) 100%);
+          border:1px solid rgba(255,255,255,.06);
+          transition:border-color .35s;
+        }
+        .cine-card.is-active .cine-plain{border-color:rgba(91,145,244,.22);}
+        .cine-plain-glow{
+          position:absolute;top:-20px;right:-20px;
+          width:180px;height:180px;border-radius:50%;
+          background:radial-gradient(circle,rgba(91,145,244,.11) 0%,transparent 70%);
+          pointer-events:none;
+        }
+        .cine-plain-ico{
+          width:48px;height:48px;border-radius:13px;
+          background:rgba(91,145,244,.12);
+          border:1px solid rgba(91,145,244,.22);
+          display:flex;align-items:center;justify-content:center;flex-shrink:0;
+        }
+        .cine-plain-info{transition:opacity .35s,transform .4s cubic-bezier(.25,.46,.45,.94);}
+        .cine-card.is-active:hover .cine-plain-info{opacity:0;transform:translateY(-8px);pointer-events:none;}
+        /* Nav arrows */
+        .cine-arrow{
+          position:absolute;top:50%;transform:translateY(-50%);
+          width:44px;height:44px;border-radius:50%;
+          border:1.5px solid rgba(255,255,255,.10);
+          background:rgba(10,12,18,.55);
+          backdrop-filter:blur(10px);
+          cursor:pointer;z-index:30;
+          display:flex;align-items:center;justify-content:center;
+          color:rgba(255,255,255,.55);
+          transition:border-color .25s,background .25s,color .25s;
+        }
+        .cine-arrow:hover{
+          border-color:var(--accent);
+          background:rgba(91,145,244,.14);
+          color:var(--accent);
+        }
+        /* Dots */
+        .cine-dots{
+          display:flex;justify-content:center;
+          align-items:center;gap:7px;margin-top:28px;
+        }
+        .cine-dot{
+          height:5px;border-radius:3px;border:none;padding:0;cursor:pointer;
+          background:rgba(255,255,255,.16);
+          transition:width .42s cubic-bezier(.25,.46,.45,.94),background .3s;
+        }
+        .cine-dot-on{background:var(--accent) !important;}
+        /* Fade-up micro-animations for panel content */
+        @keyframes fadeUpIn{
+          from{opacity:0;transform:translateY(8px);}
+          to  {opacity:1;transform:translateY(0);}
+        }
+        .cine-card.is-active:hover .cine-pdesc{
+          animation:fadeUpIn .38s cubic-bezier(.22,1,.36,1) .06s both;
+        }
+        .cine-card.is-active:hover .shine-btn{
+          animation:fadeUpIn .4s cubic-bezier(.22,1,.36,1) .16s both;
+        }
+        @media(max-width:768px){
+          .cine-stage{height:360px;}
+          .cine-card{width:240px;height:318px;margin-left:-120px;margin-top:-159px;}
+          .cine-title{font-size:15px;}
+          .cine-arrow{display:none;}
         }
       `}</style>
 
-      <div className="inner">
-        {/* Section header */}
+      {/* ── Section header ── */}
+      <div className="inner" style={{position:'relative',zIndex:2}}>
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}}
-          style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:40,flexWrap:'wrap',gap:16}}>
+          style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:44,flexWrap:'wrap',gap:16}}>
           <div>
             <div style={{display:'inline-flex',alignItems:'center',gap:10,fontSize:11,fontWeight:700,letterSpacing:'.18em',textTransform:'uppercase',color:'var(--accent)',marginBottom:12}}>
               <span style={{display:'inline-block',width:24,height:2,background:'var(--accent)',borderRadius:1,flexShrink:0}}/>LEISTUNGEN
             </div>
-            <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,44px)',color:'#0F172A',letterSpacing:'-.02em',lineHeight:1.1}}>Unsere Prüfleistungen</h2>
+            <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,44px)',color:'var(--white)',letterSpacing:'-.02em',lineHeight:1.1}}>Unsere amtlichen Leistungen</h2>
           </div>
-          <a href="#termin" style={{display:'inline-flex',alignItems:'center',gap:8,fontSize:13,fontWeight:700,color:'var(--accent)',textDecoration:'none',letterSpacing:'.04em',textTransform:'uppercase',border:'1.5px solid rgba(91,145,244,.35)',padding:'10px 22px',borderRadius:8,transition:'all .2s'}}
+          <a href="#termin"
+            style={{display:'inline-flex',alignItems:'center',gap:8,fontSize:13,fontWeight:700,color:'var(--accent)',textDecoration:'none',letterSpacing:'.04em',textTransform:'uppercase',border:'1.5px solid rgba(91,145,244,.35)',padding:'10px 22px',borderRadius:8,transition:'all .2s'}}
             onMouseEnter={e=>{e.currentTarget.style.background='var(--accent)';e.currentTarget.style.color='#fff';}}
             onMouseLeave={e=>{e.currentTarget.style.background='transparent';e.currentTarget.style.color='var(--accent)';}}>
             Alle Leistungen <Ic.Arrow s={13}/>
           </a>
         </motion.div>
-
-        {/* Mosaic grid */}
-        <motion.div className="mosaic-grid" initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:.6}}>
-          {mosaicCells.map((cell, i) => (
-            <div key={i} className="mosaic-cell" style={cell.style} onClick={()=>setModal(cell.item)}>
-              <div className="mosaic-bg" style={{backgroundImage:`url('${cell.img}')`}}/>
-              <div className="mosaic-gradient"/>
-              <div className="mosaic-label">
-                <div className="mosaic-sub">{cell.sub}</div>
-                <div className="mosaic-title">{cell.title}</div>
-              </div>
-            </div>
-          ))}
-        </motion.div>
       </div>
 
-      {/* Detail modal */}
+      {/* ── Cinematic carousel ── */}
+      <div style={{position:'relative',zIndex:2,marginTop:4}}
+           onMouseEnter={()=>setIsAreaHovered(true)}
+           onMouseLeave={()=>setIsAreaHovered(false)}>
+
+        {/* Prev */}
+        <button className="cine-arrow" style={{left:20}} onClick={goPrev} aria-label="Zurück">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </button>
+        {/* Next */}
+        <button className="cine-arrow" style={{right:20}} onClick={goNext} aria-label="Weiter">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </button>
+
+        {/* Cards stage */}
+        <div className="cine-persp">
+          <div
+            ref={containerRef}
+            className="cine-stage"
+            onMouseMove={onStageMouseMove}
+            onPointerDown={pDown}
+            onPointerMove={pMove}
+            onPointerUp={pUp}
+            onPointerLeave={pUp}
+          >
+            {items.map((item, i) => {
+              const off  = circOff(i);
+              const cp   = cardProps(off);
+              if (!cp) return null;
+              const isActive = off === 0;
+              const withPhoto = hasPhoto(i);
+
+              return (
+                <motion.div
+                  key={i}
+                  ref={isActive ? activeCardRef : null}
+                  className={`cine-card${isActive ? ' is-active' : ''}`}
+                  style={{ zIndex: cp.zIndex }}
+                  animate={{
+                    x      : cp.x,
+                    scale  : cp.scale,
+                    opacity: cp.opacity,
+                    rotateY: isActive && cardHovered ? tilt.y * 0.55 : cp.rotateY,
+                    rotateX: isActive && cardHovered ? tilt.x        : 0,
+                    filter : cp.blur > 0
+                      ? `blur(${cp.blur}px) brightness(${cp.brightness})`
+                      : 'blur(0px) brightness(1)',
+                  }}
+                  transition={{ type:'tween', duration:0.50, ease:[0.25,0.46,0.45,0.94] }}
+                  onClick={() => { if (!drag.current.moved) isActive ? setModal(item) : setActiveIdx(i); }}
+                  onMouseEnter={() => isActive && setCardHovered(true)}
+                  onMouseLeave={() => { if (isActive) { setCardHovered(false); setTilt({ x:0, y:0 }); } }}
+                >
+                  {withPhoto ? (
+                    /* ── Photo card ── */
+                    <>
+                      <div className="cine-bg" style={{backgroundImage:`url('${item.img}')`}}/>
+                      <div className="cine-grad"/>
+                      <div className="cine-tag">{item.tag}</div>
+                      <div className="cine-base">
+                        <div className="cine-sub">{item.sub}</div>
+                        <div className="cine-title">{item.title}</div>
+                        <div className="cine-dur"><Ic.Clock s={10} c="rgba(255,255,255,.42)"/>{item.duration}</div>
+                      </div>
+                      <div className="cine-panel">
+                        <p className="cine-pdesc">{item.desc}</p>
+                        <button className="shine-btn" onClick={e=>{ e.stopPropagation(); setModal(item); }}>
+                          Details ansehen <Ic.Arrow s={11}/>
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    /* ── Icon card ── */
+                    <>
+                      <div className="cine-plain">
+                        <div className="cine-plain-glow"/>
+                        <div className="cine-plain-ico">{item.ico}</div>
+                        <div className="cine-plain-info">
+                          <div className="cine-sub">{item.sub}</div>
+                          <div className="cine-title" style={{color:'var(--white)',fontSize:16}}>{item.title}</div>
+                          <div className="cine-dur"><Ic.Clock s={10} c="rgba(255,255,255,.35)"/>{item.duration}</div>
+                        </div>
+                      </div>
+                      <div className="cine-panel">
+                        <p className="cine-pdesc">{item.desc}</p>
+                        <button className="shine-btn" onClick={e=>{ e.stopPropagation(); setModal(item); }}>
+                          Details ansehen <Ic.Arrow s={11}/>
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Navigation dots */}
+        <div className="cine-dots">
+          {items.map((_,i) => (
+            <button
+              key={i}
+              className={`cine-dot${i===activeIdx?' cine-dot-on':''}`}
+              style={{width: i===activeIdx ? 22 : 5}}
+              onClick={() => setActiveIdx(i)}
+              aria-label={items[i].title}
+            />
+          ))}
+        </div>
+
+        {/* Mobile-only arrow buttons */}
+        <div className="cine-mob-arrows">
+          <button className="cine-mob-btn" onClick={goPrev} aria-label="Zurück">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </button>
+          <button className="cine-mob-btn" onClick={goNext} aria-label="Weiter">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      {/* ── Detail modal ── */}
       <AnimatePresence>
         {modal && (
           <div style={{position:'fixed',inset:0,zIndex:900,display:'flex',alignItems:'center',justifyContent:'center',padding:16}}>
-            <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={()=>setModal(null)} style={{position:'absolute',inset:0,background:'rgba(0,0,0,.75)',backdropFilter:'blur(6px)'}}/>
-            <motion.div initial={{opacity:0,y:24,scale:.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:12,scale:.97}} style={{position:'relative',background:'var(--dark)',width:'100%',maxWidth:520,maxHeight:'88vh',borderRadius:18,display:'flex',flexDirection:'column',boxShadow:'0 24px 52px rgba(0,0,0,.5)',overflow:'hidden',border:'1px solid rgba(255,255,255,.07)'}}>
+            <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
+              onClick={()=>setModal(null)}
+              style={{position:'absolute',inset:0,background:'rgba(0,0,0,.75)',backdropFilter:'blur(6px)'}}/>
+            <motion.div
+              initial={{opacity:0,y:24,scale:.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:12,scale:.97}}
+              style={{position:'relative',background:'var(--dark)',width:'100%',maxWidth:520,maxHeight:'88vh',borderRadius:18,display:'flex',flexDirection:'column',boxShadow:'0 24px 52px rgba(0,0,0,.5)',overflow:'hidden',border:'1px solid rgba(255,255,255,.07)'}}>
               <div style={{padding:'20px 24px',background:'var(--dark2)',borderBottom:'1px solid rgba(255,255,255,.07)',display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
                 <div>
                   <div style={{fontSize:9,color:'var(--smoke)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:3,fontWeight:700}}>{modal.sub}</div>
@@ -505,7 +977,7 @@ const Steps = () => {
   const steps = [{n:'01',title:'Online buchen',desc:'Leistung, Datum und Zeit wählen — rund um die Uhr.'},{n:'02',title:'Bestätigung',desc:'Bestätigungsmail mit allen Termindaten.'},{n:'03',title:'Fahrzeug bringen',desc:'Unser Team führt die Prüfung durch.'},{n:'04',title:'Plakette erhalten',desc:'Plakette und Prüfdokumente direkt vor Ort.'}];
   return (
     <div id="ablauf" className="section-full sec" style={{background:'var(--black)',position:'relative',overflow:'hidden'}}>
-      <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.04,pointerEvents:'none',zIndex:0}}/>
+      <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.12,pointerEvents:'none',zIndex:0}}/>
       <SectionDeco side="left"/>
       <div className="inner" style={{position:'relative',zIndex:1}}>
         <div className="steps-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0 80px',alignItems:'start'}}>
@@ -513,7 +985,7 @@ const Steps = () => {
             <div className="tag" style={{marginBottom:14}}>Ablauf</div>
             <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,42px)',color:'var(--white)',letterSpacing:'-.02em',lineHeight:1.1,marginBottom:16}}>In 4 Schritten zur Plakette</h2>
             <div className="accent"/>
-            <p style={{color:'var(--smoke)',fontSize:14,lineHeight:1.75,marginBottom:32}}>Buchen Sie bequem online — wir erledigen den Rest schnell und transparent.</p>
+            <p style={{color:'var(--smoke)',fontSize:14,lineHeight:1.75,marginBottom:32}}>Buchen Sie bequem online — wir erledigen den Rest.</p>
             <a href="#termin" className="btn btn-primary" style={{fontSize:13,padding:'13px 28px',gap:9,textDecoration:'none'}}>Jetzt Termin buchen <Ic.Arrow s={14}/></a>
           </motion.div>
           <div style={{position:'relative'}}>
@@ -537,13 +1009,98 @@ const Steps = () => {
   );
 };
 
+/* ─── STATS ──────────────────────────────────────────────────────────────── */
+const STATS = [
+  { end: 95,   suffix: '%',  label: 'Kundenzufriedenheit', decimals: 0 },
+  { end: 7500, suffix: '+',  label: 'Autos geprüft',       decimals: 0 },
+  { end: 1500, suffix: '+',  label: 'Kfz-Gutachten',       decimals: 0 },
+  { end: 100,  suffix: '%',  label: 'Ohne Termin möglich', decimals: 0 },
+];
+
+function useCountUp(end, duration, active) {
+  const [val, setVal] = useState(0);
+  const raf = useRef(null);
+  useEffect(() => {
+    if (!active) return;
+    const start = performance.now();
+    const tick = (now) => {
+      const t = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - t, 4); // easeOutQuart
+      setVal(Math.round(ease * end));
+      if (t < 1) raf.current = requestAnimationFrame(tick);
+    };
+    raf.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf.current);
+  }, [active, end, duration]);
+  return val;
+}
+
+const StatCard = ({ end, suffix, label, active, idx }) => {
+  const count = useCountUp(end, 1800, active);
+  const isLast = idx === STATS.length - 1;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 28 }}
+      animate={active ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.55, delay: idx * 0.11, ease: [0.22, 1, 0.36, 1] }}
+      style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+        padding: '36px 20px',
+        borderRight: !isLast ? '1px solid rgba(255,255,255,.07)' : 'none',
+        position: 'relative',
+      }}
+    >
+      {/* subtle top glow */}
+      <div style={{ position:'absolute', top:0, left:'50%', transform:'translateX(-50%)', width:60, height:2, background:'linear-gradient(90deg,transparent,rgba(91,145,244,.5),transparent)', borderRadius:2 }}/>
+      <div style={{
+        fontSize: 'clamp(38px,4.5vw,58px)', fontWeight: 900, lineHeight: 1,
+        letterSpacing: '-0.03em', color: '#fff',
+        fontFamily: 'Montserrat, sans-serif',
+        display: 'flex', alignItems: 'baseline', gap: 2,
+      }}>
+        <span>{count.toLocaleString('de-DE')}</span>
+        <span style={{ color: 'var(--accent)', fontSize: '0.75em', fontWeight: 900 }}>{suffix}</span>
+      </div>
+      <div style={{ marginTop: 8, fontSize: 'clamp(10px,1.1vw,12px)', fontWeight: 700, color: 'rgba(255,255,255,.45)', textTransform: 'uppercase', letterSpacing: '.1em', textAlign: 'center' }}>
+        {label}
+      </div>
+    </motion.div>
+  );
+};
+
+const Stats = () => {
+  const [active, setActive] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setActive(true); obs.disconnect(); } }, { threshold: 0.25 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} style={{ background: 'var(--black)', borderTop: '1px solid rgba(255,255,255,.06)', borderBottom: '1px solid rgba(255,255,255,.06)', position: 'relative', overflow: 'hidden' }}>
+      {/* ambient glow blobs */}
+      <div style={{ position:'absolute', left:'-5%', top:'-60%', width:360, height:360, borderRadius:'50%', background:'rgba(91,145,244,.06)', filter:'blur(80px)', pointerEvents:'none' }}/>
+      <div style={{ position:'absolute', right:'-5%', bottom:'-60%', width:300, height:300, borderRadius:'50%', background:'rgba(91,145,244,.05)', filter:'blur(60px)', pointerEvents:'none' }}/>
+      <div className="inner" style={{ padding: 0 }}>
+        <div className="stats-strip">
+          {STATS.map((s, i) => <StatCard key={s.label} {...s} idx={i} active={active}/>)}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 /* ─── BOOKING SECTION ────────────────────────────────────────────────────── */
 const BookingSection = () => {
+  const [selectedCenter, setSelectedCenter] = useState(null);
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({
-    service: '', datum: '', zeit: '',
+    services: [], datum: '', zeit: '',
     vorname: '', nachname: '', telefon: '', email: '',
-    marke: '', modell: '', anmerkungen: '', kennzeichen: ''
+    anmerkungen: '', kennzeichen: '', abholservice: false, abholadresse: ''
   });
   const [touched, setTouched] = useState({});
   const [bookedSlots, setBookedSlots] = useState([]);
@@ -559,13 +1116,17 @@ const BookingSection = () => {
   const [calMonth, setCalMonth] = useState(today.getMonth());
 
   const serviceItems = [
-    {ico:<Ic.Shield s={22} c="var(--accent)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO · Pflichtprüfung',tag:'Pflicht'},
-    {ico:<Ic.Leaf s={22} c="var(--accent)"/>,title:'Abgasuntersuchung (AU)',sub:'AU · Emissionsprüfung',tag:'Kombi möglich'},
+    {ico:<Ic.Cert s={22} c="var(--accent)"/>,title:'HU + AU Kombi',sub:'§29 StVZO · Kombiangebot',tag:'Kombi'},
+    {ico:<Ic.Shield s={22} c="var(--accent)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO · z.B. E-Fahrzeug',tag:'Pflicht'},
     {ico:<Ic.Wrench s={22} c="var(--accent)"/>,title:'Vorab-Check',sub:'Sicherheits-Vorprüfung',tag:'Empfohlen'},
     {ico:<Ic.Clip s={22} c="var(--accent)"/>,title:'Eintragungen / Abnahmen',sub:'§19 StVZO',tag:'Flexibel'},
     {ico:<Ic.Moto s={22} c="var(--accent)"/>,title:'Motorrad-HU',sub:'Zweiräder · §29 StVZO',tag:'Saisonal'},
     {ico:<Ic.Award s={22} c="var(--accent)"/>,title:'Oldtimer-Gutachten',sub:'§23 StVZO · H-Kennzeichen',tag:'Speziell'},
-    {ico:<Ic.Cert s={22} c="var(--accent)"/>,title:'HU + AU Kombi',sub:'§29 StVZO · Kombiangebot',tag:'Kombi'},
+    {ico:<Ic.Clip s={22} c="var(--accent)"/>,title:'Anhänger HU',sub:'Anhänger · §29 StVZO',tag:'Anhänger'},
+    {ico:<Ic.Leaf s={22} c="var(--accent)"/>,title:'Gasanlagenprüfung',sub:'LPG · CNG · Gasfahrzeuge',tag:'Gas'},
+    {ico:<Ic.Award s={22} c="var(--accent)"/>,title:'BO-Kraft Prüfung',sub:'Taxi · Mietwagen · §57a StVZO',tag:'Gewerblich'},
+    {ico:<Ic.Cert s={22} c="var(--accent)"/>,title:'Abnahmen §19.3 / §15 FZV',sub:'§19.3 StVZO · §15 FZV',tag:'Abnahme'},
+    {ico:<Ic.Damage s={22} c="var(--accent)"/>,title:'Schadensgutachten',sub:'Unfallschaden · Wertermittlung',tag:'Gutachten'},
   ];
 
   const setField = (field, value) => setForm(prev => ({...prev, [field]: value}));
@@ -576,9 +1137,8 @@ const BookingSection = () => {
     if (!form.vorname.trim()) e.vorname = 'Pflichtfeld';
     if (!form.nachname.trim()) e.nachname = 'Pflichtfeld';
     if (form.telefon.replace(/[^\d]/g,'').length < 6) e.telefon = 'Ungültige Telefonnummer';
-    if (!form.marke.trim()) e.marke = 'Pflichtfeld';
-    if (!form.modell.trim()) e.modell = 'Pflichtfeld';
     if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Ungültige E-Mail';
+    if (form.abholservice && !form.abholadresse.trim()) e.abholadresse = 'Bitte Adresse angeben';
     return e;
   };
 
@@ -597,7 +1157,7 @@ const BookingSection = () => {
   const handleSubmit = async () => {
     const errs = step3Errors();
     if (Object.keys(errs).length > 0) {
-      setTouched({vorname:true,nachname:true,telefon:true,marke:true,modell:true,email:true});
+      setTouched({vorname:true,nachname:true,telefon:true,email:true,abholadresse:true});
       return;
     }
     setSubmitting(true); setSubmitError('');
@@ -605,13 +1165,15 @@ const BookingSection = () => {
       const result = await insertBooking({
         date: form.datum,
         time_slot: form.zeit,
-        service: form.service,
-        vehicle_type: `${form.marke} ${form.modell}`.trim(),
-        plate: form.kennzeichen || '—',
+        service: form.services.join(' + '),
+        vehicle_type: '',
+        plate: form.kennzeichen || null,
         name: `${form.vorname} ${form.nachname}`.trim(),
         phone: form.telefon,
-        email: form.email,
+        email: form.email || null,
         notes: form.anmerkungen || null,
+        pickup_service: form.abholservice,
+        pickup_address: form.abholservice ? form.abholadresse : null,
       });
       const bookingId = result[0]?.id;
       if (bookingId) {
@@ -659,91 +1221,168 @@ const BookingSection = () => {
   const morningSlots = allSlots.filter(s => parseInt(s.split(':')[0]) < 12);
   const afternoonSlots = allSlots.filter(s => parseInt(s.split(':')[0]) >= 12);
 
-  /* input style helpers */
-  const inp = (field) => {
-    const errs = step3Errors();
-    const err = touched[field] && errs[field];
-    return {
-      fontFamily:'var(--sans)', fontSize:14, color:'#0F172A',
-      background:'#fff', border:`1.5px solid ${err ? '#ef4444' : '#E2E8F0'}`,
-      borderRadius:8, padding:'10px 13px', width:'100%', outline:'none',
-      transition:'border-color .18s', boxSizing:'border-box',
-    };
-  };
-
-  const labelStyle = { fontSize:11, fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', color:'#64748B', marginBottom:5, display:'block' };
   const fieldWrap = { display:'flex', flexDirection:'column', gap:4 };
 
   /* step indicator */
-  const StepDots = () => (
-    <div style={{display:'flex',alignItems:'center',gap:8,justifyContent:'center',marginBottom:40}}>
-      {[1,2,3].map(n => (
-        <div key={n} style={{display:'flex',alignItems:'center',gap:8}}>
-          <div style={{
-            width:32, height:32, borderRadius:'50%',
-            background: n < step ? 'var(--accent)' : n === step ? 'var(--accent)' : '#E2E8F0',
-            color: n <= step ? '#fff' : '#94A3B8',
-            display:'flex', alignItems:'center', justifyContent:'center',
-            fontWeight:800, fontSize:12, transition:'all .25s',
-            boxShadow: n === step ? '0 4px 14px rgba(91,145,244,.35)' : 'none',
-          }}>{n < step ? <Ic.Check s={13} c="#fff"/> : n}</div>
-          {n < 3 && <div style={{width:40,height:2,background:n < step ? 'var(--accent)' : '#E2E8F0',borderRadius:1,transition:'background .25s'}}/>}
-        </div>
-      ))}
-    </div>
-  );
+  const StepDots = () => {
+    const labels = ['Leistung','Termin','Kontakt'];
+    return (
+      <div className="bk-stepper">
+        {[1,2,3].map((n,i) => {
+          const state = n < step ? 'done' : n === step ? 'active' : 'todo';
+          return (
+            <React.Fragment key={n}>
+              <div className="bk-step-item">
+                <div className={`bk-step-circle ${state}`}>
+                  {state === 'done' ? <Ic.Check s={13} c="#fff"/> : n}
+                </div>
+                <span className={`bk-step-lbl ${state}`}>{labels[i]}</span>
+              </div>
+              {n < 3 && <div className={`bk-step-line ${step > n ? 'done' : 'todo'}`}/>}
+            </React.Fragment>
+          );
+        })}
+      </div>
+    );
+  };
 
   return (
-    <div id="termin" className="section-full" style={{background:'#F8F9FC',paddingTop:72,paddingBottom:72}}>
+    <div id="termin" className="section-full sec" style={{position:'relative',background:'linear-gradient(170deg,#0D1019 0%,#111520 55%,#0A0E17 100%)',overflow:'hidden'}}>
+      {/* Background photo */}
+      <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.18,pointerEvents:'none',zIndex:0}}/>
+      {/* Radial vignette */}
+      <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 30%, rgba(10,12,18,.45) 100%)',pointerEvents:'none',zIndex:1}}/>
+      {/* Decorative orbs */}
+      <div style={{position:'absolute',top:'-10%',left:'-8%',width:520,height:520,borderRadius:'50%',background:'radial-gradient(circle,rgba(91,145,244,.13) 0%,transparent 70%)',pointerEvents:'none',zIndex:1}}/>
+      <div style={{position:'absolute',bottom:'-15%',right:'-6%',width:600,height:600,borderRadius:'50%',background:'radial-gradient(circle,rgba(91,145,244,.09) 0%,transparent 70%)',pointerEvents:'none',zIndex:1}}/>
+      <div style={{position:'absolute',top:'40%',left:'55%',width:320,height:320,borderRadius:'50%',background:'radial-gradient(circle,rgba(120,80,255,.07) 0%,transparent 70%)',pointerEvents:'none',zIndex:1}}/>
       <style>{`
-        .bk-card { background:#fff; border:1px solid #E2E8F0; border-radius:14px; padding:32px; box-shadow:0 2px 16px rgba(0,0,0,.06); }
-        .svc-sel { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
-        .svc-sel-card { background:#fff; border:1.5px solid #E2E8F0; border-radius:12px; padding:18px 16px; cursor:pointer; transition:all .2s; position:relative; }
-        .svc-sel-card:hover { border-color:var(--accent); box-shadow:0 4px 16px rgba(91,145,244,.12); }
-        .svc-sel-card.active { border-color:var(--accent); background:rgba(91,145,244,.04); box-shadow:0 4px 16px rgba(91,145,244,.18); }
-        .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
-        .cal-day { width:100%; aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; transition:all .15s; border:none; background:transparent; font-family:var(--sans); }
-        .cal-day:hover:not(:disabled):not(.cal-selected):not(.cal-today) { background:#EFF6FF; color:var(--accent); }
-        .cal-day.cal-selected { background:var(--accent); color:#fff; box-shadow:0 3px 10px rgba(91,145,244,.3); }
-        .cal-day.cal-today { border:2px solid var(--accent); color:var(--accent); }
+        .bk-card { background:#F0F4F8; border:1px solid rgba(91,145,244,.12); border-top:2.5px solid var(--accent); border-radius:22px; padding:34px; box-shadow:0 24px 72px rgba(0,0,0,.28), 0 4px 20px rgba(0,0,0,.12); }
+        .bk-inp { width:100%; padding:11px 14px; background:#F7F9FC; border:1.5px solid #E2E8F0; border-radius:10px; font-size:14px; color:#1E293B; font-family:var(--sans); outline:none; transition:all .18s; box-sizing:border-box; }
+        .bk-inp:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(91,145,244,.10); background:#fff; }
+        .bk-inp::placeholder { color:#94A3B8; }
+        .bk-label { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#64748B; margin-bottom:5px; display:block; }
+        /* Step indicator */
+        .bk-stepper { display:flex; align-items:flex-start; justify-content:center; margin-bottom:36px; }
+        .bk-step-item { display:flex; flex-direction:column; align-items:center; gap:6px; flex:1; max-width:120px; }
+        .bk-step-circle { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; transition:all .3s; flex-shrink:0; }
+        .bk-step-circle.done { background:var(--accent); color:#fff; box-shadow:0 4px 12px rgba(91,145,244,.3); }
+        .bk-step-circle.active { background:var(--accent); color:#fff; box-shadow:0 0 0 5px rgba(91,145,244,.18), 0 4px 12px rgba(91,145,244,.3); }
+        .bk-step-circle.todo { background:#F1F5F9; color:#94A3B8; border:2px solid #E2E8F0; }
+        .bk-step-lbl { font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; text-align:center; line-height:1.3; }
+        .bk-step-lbl.active { color:#1E293B; }
+        .bk-step-lbl.done { color:var(--accent); }
+        .bk-step-lbl.todo { color:#CBD5E1; }
+        .bk-step-line { flex:1; height:2px; margin:0 6px; transform:translateY(19px); border-radius:2px; }
+        .bk-step-line.done { background:var(--accent); }
+        .bk-step-line.todo { background:#E2E8F0; }
+        /* Service cards - 2 col light */
+        .svc2-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+        .svc2-card { position:relative; display:flex; align-items:center; gap:11px; padding:12px 14px; border-radius:13px; cursor:pointer; background:#F8FAFC; border:1.5px solid #E8EDF5; transition:all .25s cubic-bezier(.22,1,.36,1); overflow:hidden; }
+        .svc2-card:hover { border-color:rgba(91,145,244,.4); background:#EEF4FF; }
+        .svc2-card.on { background:linear-gradient(135deg,#EEF4FF,#E6EFFE); border-color:var(--accent); box-shadow:0 4px 18px rgba(91,145,244,.14); }
+        .svc2-ico { width:38px; height:38px; border-radius:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#E8F0FF,#D4E3FF); border:1px solid rgba(91,145,244,.18); transition:all .25s; }
+        .svc2-card.on .svc2-ico { background:linear-gradient(135deg,#5B91F4,#3A72E0); border-color:#3A72E0; box-shadow:0 4px 10px rgba(91,145,244,.3); }
+        .svc2-chk { width:18px; height:18px; border-radius:5px; border:1.5px solid #CBD5E1; background:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-left:auto; transition:all .25s; }
+        .svc2-card.on .svc2-chk { background:var(--accent); border-color:var(--accent); }
+        /* Calendar light */
+        .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+        .cal-day { width:100%; aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; transition:all .15s; border:none; background:transparent; font-family:var(--sans); color:#374151; }
+        .cal-day:hover:not(:disabled):not(.cal-selected):not(.cal-today) { background:#EEF4FF; color:var(--accent); }
+        .cal-day.cal-selected { background:var(--accent); color:#fff; box-shadow:0 3px 10px rgba(91,145,244,.35); }
+        .cal-day.cal-today { border:2px solid var(--accent); color:var(--accent); font-weight:800; }
         .cal-day:disabled { color:#CBD5E1; cursor:not-allowed; }
-        .bk-nav-btn { background:none; border:1.5px solid #E2E8F0; border-radius:8px; width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; }
+        /* Slot buttons light */
+        .bk-slot { padding:9px 4px; border-radius:8px; font-family:var(--sans); font-weight:700; font-size:12px; text-align:center; cursor:pointer; transition:all .15s; border:1.5px solid #E2E8F0; background:#F7F9FC; color:#374151; }
+        .bk-slot:hover:not(:disabled) { border-color:var(--accent); color:var(--accent); background:#EEF4FF; }
+        .bk-slot.sel { background:var(--accent); color:#fff; border-color:var(--accent); box-shadow:0 3px 10px rgba(91,145,244,.3); }
+        .bk-slot:disabled { background:#F8FAFC; color:#CBD5E1; cursor:not-allowed; text-decoration:line-through; border-color:#F1F5F9; }
+        /* Nav btn */
+        .bk-nav-btn { background:none; border:1.5px solid #E2E8F0; border-radius:8px; width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; color:#64748B; }
         .bk-nav-btn:hover { border-color:var(--accent); color:var(--accent); }
-        @media(max-width:900px){
-          .svc-sel { grid-template-columns:1fr 1fr !important; }
-          .bk-two-col { grid-template-columns:1fr !important; }
-        }
-        @media(max-width:600px){
-          .svc-sel { grid-template-columns:1fr !important; }
-          .bk-card { padding:20px 16px !important; }
-        }
+        /* Pickup btn */
+        .pickup-btn { width:100%; display:flex; align-items:center; gap:12px; padding:14px 16px; border-radius:12px; border:1.5px solid #E2E8F0; background:#F7F9FC; cursor:pointer; text-align:left; transition:all .22s; font-family:var(--sans); }
+        .pickup-btn.on { border-color:var(--accent); background:linear-gradient(135deg,#EEF4FF,#E6EFFE); }
+        @media(max-width:900px){ .bk-two-col { grid-template-columns:1fr !important; } .svc2-grid { grid-template-columns:1fr; } }
+        @media(max-width:600px){ .bk-card { padding:20px 16px !important; border-radius:16px !important; } }
       `}</style>
 
-      <div className="inner" style={{maxWidth:860}}>
+      <div className="inner" style={{maxWidth:860,position:'relative',zIndex:2}}>
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:40}}>
           <div style={{display:'inline-flex',alignItems:'center',gap:10,fontSize:11,fontWeight:700,letterSpacing:'.18em',textTransform:'uppercase',color:'var(--accent)',marginBottom:12}}>
             <span style={{display:'inline-block',width:24,height:2,background:'var(--accent)',borderRadius:1}}/>ONLINE BUCHUNG
           </div>
-          <h2 style={{fontWeight:800,fontSize:'clamp(24px,3.2vw,38px)',color:'#0F172A',letterSpacing:'-.02em',marginBottom:10}}>Termin sichern — einfach online.</h2>
-          <p style={{color:'#64748B',fontSize:14,maxWidth:480,margin:'0 auto'}}>In drei Schritten zum bestätigten Termin.</p>
+          <h2 style={{fontWeight:800,fontSize:'clamp(24px,3.2vw,38px)',color:'var(--white)',letterSpacing:'-.02em',marginBottom:10}}>Termin sichern — einfach online.</h2>
+          <p style={{color:'var(--smoke)',fontSize:14,maxWidth:480,margin:'0 auto'}}>In drei Schritten zum bestätigten Termin.</p>
         </motion.div>
 
-        {sent ? (
+        {/* ── CENTER PICKER ── */}
+        {!selectedCenter && (
+          <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{duration:.4,ease:[.22,1,.36,1]}}>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:20,maxWidth:780,margin:'0 auto'}}>
+              {/* Oberhausen — active */}
+              <button onClick={()=>setSelectedCenter('oberhausen')}
+                style={{border:'1.5px solid rgba(91,145,244,.35)',borderTop:'2px solid rgba(91,145,244,.55)',borderRadius:18,padding:'28px 22px',cursor:'pointer',textAlign:'center',transition:'all .28s cubic-bezier(.22,1,.36,1)',boxShadow:'0 8px 36px rgba(0,0,0,.5)',fontFamily:'inherit',position:'relative',overflow:'hidden',minHeight:260}}>
+                {/* bg photo */}
+                <div style={{position:'absolute',inset:0,backgroundImage:"url('WhatsApp1.jpeg')",backgroundSize:'cover',backgroundPosition:'center',zIndex:0}}/>
+                <div style={{position:'absolute',inset:0,background:'linear-gradient(160deg,rgba(10,14,22,.75) 0%,rgba(10,14,22,.60) 100%)',zIndex:1}}/>
+                {/* top accent line */}
+                <div style={{position:'absolute',top:0,left:'50%',transform:'translateX(-50%)',width:80,height:2,background:'linear-gradient(90deg,transparent,rgba(91,145,244,.7),transparent)',borderRadius:2,zIndex:2}}/>
+                {/* content */}
+                <div style={{position:'relative',zIndex:2}}>
+                  <div style={{width:52,height:52,borderRadius:14,background:'rgba(91,145,244,.18)',border:'1.5px solid rgba(91,145,244,.35)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 14px',boxShadow:'0 4px 16px rgba(91,145,244,.25)'}}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  </div>
+                  <div style={{fontSize:17,fontWeight:800,color:'#fff',marginBottom:3,letterSpacing:'-.01em',textShadow:'0 2px 8px rgba(0,0,0,.5)'}}>Oberhausen</div>
+                  <div style={{fontSize:11,color:'rgba(255,255,255,.7)',marginBottom:4,letterSpacing:'.04em'}}>Prüfstützpunkt Hauptstandort</div>
+                  <div style={{fontSize:10,color:'rgba(255,255,255,.55)',marginBottom:13,letterSpacing:'.02em'}}>Mülheimer Str. 155 · 46045 Oberhausen</div>
+                  <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'rgba(16,185,129,.15)',border:'1px solid rgba(16,185,129,.35)',backdropFilter:'blur(6px)',borderRadius:10,padding:'4px 12px',fontSize:10,fontWeight:700,color:'#10B981',letterSpacing:'.06em'}}>
+                    <span style={{width:5,height:5,borderRadius:'50%',background:'#10B981',animation:'softPulse 2s ease-in-out infinite'}}/>
+                    Jetzt buchen
+                  </div>
+                </div>
+              </button>
+
+              {/* Essen — coming soon */}
+              <div style={{border:'1.5px solid rgba(255,255,255,.08)',borderRadius:18,padding:'28px 22px',textAlign:'center',position:'relative',overflow:'hidden',cursor:'not-allowed',minHeight:260}}>
+                {/* bg photo — extra dark overlay */}
+                <div style={{position:'absolute',inset:0,backgroundImage:"url('WhatsApp2.jpeg')",backgroundSize:'cover',backgroundPosition:'center',zIndex:0}}/>
+                <div style={{position:'absolute',inset:0,background:'rgba(8,10,16,.82)',zIndex:1}}/>
+                {/* demnächst badge */}
+                <div style={{position:'absolute',top:10,right:12,background:'rgba(251,191,36,.12)',border:'1px solid rgba(251,191,36,.25)',borderRadius:8,padding:'3px 9px',fontSize:9,fontWeight:800,color:'#FBBF24',letterSpacing:'.1em',textTransform:'uppercase',zIndex:2}}>Demnächst</div>
+                {/* content */}
+                <div style={{position:'relative',zIndex:2}}>
+                  <div style={{width:52,height:52,borderRadius:14,background:'rgba(255,255,255,.05)',border:'1.5px solid rgba(255,255,255,.09)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 14px'}}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.28)" strokeWidth="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  </div>
+                  <div style={{fontSize:17,fontWeight:800,color:'rgba(255,255,255,.35)',marginBottom:4,letterSpacing:'-.01em'}}>Essen</div>
+                  <div style={{fontSize:11,color:'rgba(255,255,255,.2)',marginBottom:14,letterSpacing:'.04em'}}>Prüfstützpunkt Essen</div>
+                  <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'rgba(255,255,255,.04)',border:'1px solid rgba(255,255,255,.08)',borderRadius:10,padding:'4px 12px',fontSize:10,fontWeight:700,color:'rgba(255,255,255,.22)',letterSpacing:'.06em'}}>
+                    In Kürze verfügbar
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p style={{textAlign:'center',color:'var(--smoke)',fontSize:12,marginTop:16,opacity:.6}}>Bitte wählen Sie Ihren gewünschten Standort</p>
+          </motion.div>
+        )}
+
+        {selectedCenter && (sent ? (
           <motion.div initial={{opacity:0,scale:.97}} animate={{opacity:1,scale:1}} className="bk-card" style={{textAlign:'center',padding:'56px 32px'}}>
             <div style={{width:64,height:64,borderRadius:'50%',background:'rgba(16,185,129,.1)',border:'2.5px solid #10B981',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',boxShadow:'0 4px 20px rgba(16,185,129,.2)'}}>
               <Ic.Check s={28} c="#10B981"/>
             </div>
-            <h3 style={{fontWeight:800,fontSize:26,marginBottom:10,color:'#0F172A'}}>Termin bestätigt!</h3>
+            <h3 style={{fontWeight:800,fontSize:26,marginBottom:10,color:'#1E293B'}}>Termin bestätigt!</h3>
             <p style={{color:'#64748B',fontSize:14,lineHeight:1.7,marginBottom:6}}>Ihr Termin wurde erfolgreich gebucht.</p>
             <p style={{fontWeight:800,fontSize:18,color:'var(--accent)',marginBottom:4}}>{fmtGermanDate(form.datum)} · {form.zeit} Uhr</p>
-            <p style={{fontSize:14,color:'#64748B',marginBottom:4}}>{form.service}</p>
-            <p style={{fontSize:13,color:'#94A3B8',marginBottom:28}}>Bestätigungsmail wurde gesendet.</p>
-            <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px'}} onClick={()=>{setSent(false);setStep(1);setForm({service:'',datum:'',zeit:'',vorname:'',nachname:'',telefon:'',email:'',marke:'',modell:'',anmerkungen:'',kennzeichen:''});setTouched({});}}>
+            <p style={{fontSize:14,color:'#64748B',marginBottom:4}}>{form.services.join(', ')}</p>
+            <p style={{fontSize:13,color:'#64748B',marginBottom:28}}>Bestätigungsmail wurde gesendet.</p>
+            <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px'}} onClick={()=>{setSent(false);setStep(1);setSelectedCenter(null);setForm({services:[],datum:'',zeit:'',vorname:'',nachname:'',telefon:'',email:'',anmerkungen:'',kennzeichen:'',abholservice:false,abholadresse:''});setTouched({});}}>
               Neuen Termin buchen
             </button>
           </motion.div>
         ) : (
-          <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}}>
+          <motion.div initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{duration:.35,ease:[.22,1,.36,1]}}>
             <StepDots/>
 
             {/* ── STEP 1: Service selection ── */}
@@ -751,25 +1390,61 @@ const BookingSection = () => {
             {step === 1 && (
               <motion.div key="step1" initial={{opacity:0,x:30}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-30}} transition={{duration:.25}}>
                 <div className="bk-card">
-                  <div style={{marginBottom:24}}>
-                    <div style={{fontSize:11,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:8}}>SCHRITT 01</div>
-                    <h3 style={{fontWeight:800,fontSize:22,color:'#0F172A',letterSpacing:'-.01em'}}>Was braucht Ihr Auto?</h3>
+
+                  {/* ── Header ── */}
+                  <div style={{marginBottom:26}}>
+                    <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:16}}>
+                      <div style={{width:34,height:34,borderRadius:'50%',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'var(--accent)',background:'linear-gradient(135deg,rgba(91,145,244,.18),rgba(91,145,244,.06))',border:'1.5px solid rgba(91,145,244,.32)',boxShadow:'0 0 14px rgba(91,145,244,.22)'}}>01</div>
+                      <div style={{flex:1,height:1,background:'linear-gradient(90deg,rgba(91,145,244,.28) 0%,transparent 100%)'}}/>
+                      <div style={{fontSize:10,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'#94A3B8'}}>Schritt 1 / 3</div>
+                    </div>
+                    <h3 style={{fontWeight:800,fontSize:22,color:'#1E293B',letterSpacing:'-.02em',marginBottom:6}}>Was braucht Ihr Fahrzeug?</h3>
+                    <p style={{fontSize:12,color:'#64748B',lineHeight:1.6}}>Mehrere Leistungen kombinierbar</p>
                   </div>
-                  <div className="svc-sel">
-                    {serviceItems.map((s,i) => (
-                      <div key={i} className={`svc-sel-card${form.service === s.title ? ' active' : ''}`} onClick={()=>setField('service', s.title)}>
-                        <div style={{position:'absolute',top:14,right:14,width:18,height:18,borderRadius:'50%',border:`2px solid ${form.service===s.title ? 'var(--accent)' : '#CBD5E1'}`,background:form.service===s.title ? 'var(--accent)' : 'transparent',display:'flex',alignItems:'center',justifyContent:'center',transition:'all .18s'}}>
-                          {form.service===s.title && <Ic.Check s={9} c="#fff"/>}
+
+                  {/* ── Service cards 2-col ── */}
+                  <div className="svc2-grid">
+                    {serviceItems.map((s,i) => {
+                      const active = form.services.includes(s.title);
+                      return (
+                        <div key={i} className={`svc2-card${active?' on':''}`}
+                          onClick={()=>setField('services', active ? form.services.filter(x=>x!==s.title) : [...form.services, s.title])}>
+                          <div className="svc2-ico">
+                            {active
+                              ? React.cloneElement(s.ico, {c:'#fff'})
+                              : React.cloneElement(s.ico, {c:'var(--accent)'})}
+                          </div>
+                          <div style={{flex:1,minWidth:0}}>
+                            <div style={{fontWeight:700,fontSize:13,color: active ? '#1E3A6E' : '#1E293B',lineHeight:1.25,marginBottom:2}}>{s.title}</div>
+                            <div style={{fontSize:10,color:'#94A3B8',fontWeight:500}}>{s.sub}</div>
+                          </div>
+                          <div className="svc2-chk">
+                            {active && <Ic.Check s={10} c="#fff"/>}
+                          </div>
                         </div>
-                        <div style={{marginBottom:10}}>{s.ico}</div>
-                        <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'#94A3B8',marginBottom:5}}>{s.sub}</div>
-                        <div style={{fontWeight:700,fontSize:13,color:'#0F172A',lineHeight:1.3}}>{s.title}</div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
-                  <div style={{display:'flex',justifyContent:'flex-end',marginTop:28}}>
-                    <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px',gap:8,opacity:form.service?1:.45,cursor:form.service?'pointer':'not-allowed'}}
-                      disabled={!form.service} onClick={()=>setStep(2)}>
+
+                  {/* ── Footer: counter + CTA ── */}
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:26,paddingTop:20,borderTop:'1px solid #F1F5F9',gap:12}}>
+                    <div>
+                      {form.services.length > 0 ? (
+                        <div>
+                          <div style={{fontSize:10,fontWeight:700,letterSpacing:'.10em',textTransform:'uppercase',color:'var(--accent)',marginBottom:2}}>Ausgewählt</div>
+                          <div style={{fontSize:13,fontWeight:700,color:'#1E293B'}}>{form.services.length} {form.services.length===1?'Leistung':'Leistungen'}</div>
+                        </div>
+                      ) : (
+                        <div style={{fontSize:12,color:'#94A3B8',fontStyle:'italic'}}>Bitte wählen Sie eine Leistung</div>
+                      )}
+                    </div>
+                    <button className="btn btn-primary"
+                      style={{fontSize:13,padding:'12px 28px',gap:8,opacity:form.services.length>0?1:.32,cursor:form.services.length>0?'pointer':'not-allowed',transition:'opacity .25s'}}
+                      disabled={form.services.length===0}
+                      onClick={()=>{
+                        const onlySchaden = form.services.length===1 && form.services[0]==='Schadensgutachten';
+                        setStep(onlySchaden ? 4 : 2);
+                      }}>
                       Weiter <Ic.Arrow s={14}/>
                     </button>
                   </div>
@@ -783,7 +1458,7 @@ const BookingSection = () => {
                 <div className="bk-card">
                   <div style={{marginBottom:24}}>
                     <div style={{fontSize:11,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:8}}>SCHRITT 02</div>
-                    <h3 style={{fontWeight:800,fontSize:22,color:'#0F172A',letterSpacing:'-.01em'}}>Wann soll es sein?</h3>
+                    <h3 style={{fontWeight:800,fontSize:22,color:'#1E293B',letterSpacing:'-.01em'}}>Wann soll es sein?</h3>
                   </div>
                   <div className="bk-two-col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:32,alignItems:'start'}}>
                     {/* Calendar */}
@@ -792,7 +1467,7 @@ const BookingSection = () => {
                         <button className="bk-nav-btn" onClick={()=>{ if(calMonth===0){setCalMonth(11);setCalYear(y=>y-1);}else setCalMonth(m=>m-1); }}>
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
                         </button>
-                        <span style={{fontWeight:700,fontSize:14,color:'#0F172A'}}>{DE_MONTHS[calMonth]} {calYear}</span>
+                        <span style={{fontWeight:700,fontSize:14,color:'#1E293B'}}>{DE_MONTHS[calMonth]} {calYear}</span>
                         <button className="bk-nav-btn" onClick={()=>{ if(calMonth===11){setCalMonth(0);setCalYear(y=>y+1);}else setCalMonth(m=>m+1); }}>
                           <Ic.ChevR s={14} c="currentColor"/>
                         </button>
@@ -815,8 +1490,7 @@ const BookingSection = () => {
                             cells.push(
                               <button key={d} disabled={disabled}
                                 className={`cal-day${selected?' cal-selected':isToday&&!selected?' cal-today':''}`}
-                                onClick={()=>{ setField('datum', dateStr); setField('zeit',''); }}
-                                style={{color: disabled ? '#CBD5E1' : selected ? '#fff' : '#0F172A'}}>
+                                onClick={()=>{ setField('datum', dateStr); setField('zeit',''); }}>
                                 {d}
                               </button>
                             );
@@ -833,7 +1507,7 @@ const BookingSection = () => {
                         </div>
                       ) : (
                         <>
-                          <div style={{fontWeight:700,fontSize:14,color:'#0F172A',marginBottom:16}}>{fmtGermanDate(form.datum)}</div>
+                          <div style={{fontWeight:700,fontSize:14,color:'#1E293B',marginBottom:16}}>{fmtGermanDate(form.datum)}</div>
                           {slotsLoading && (
                             <div style={{display:'flex',alignItems:'center',gap:8,color:'#64748B',fontSize:13}}>
                               <Ic.Spin s={14} c="var(--accent)"/> Lade freie Termine …
@@ -846,7 +1520,7 @@ const BookingSection = () => {
                             </div>
                           )}
                           {!slotsLoading && !slotsError && allSlots.length === 0 && (
-                            <div style={{padding:'12px',background:'#F8FAFC',border:'1px solid #E2E8F0',borderRadius:8,fontSize:13,color:'#64748B',textAlign:'center'}}>
+                            <div style={{padding:'12px',background:'#F7F9FC',border:'1px solid #E2E8F0',borderRadius:8,fontSize:13,color:'#64748B',textAlign:'center'}}>
                               Keine Termine an diesem Tag verfügbar.
                             </div>
                           )}
@@ -854,7 +1528,7 @@ const BookingSection = () => {
                             <>
                               {morningSlots.length > 0 && (
                                 <div style={{marginBottom:16}}>
-                                  <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'#94A3B8',marginBottom:8}}>VORMITTAG</div>
+                                  <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'#64748B',marginBottom:8}}>VORMITTAG</div>
                                   <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(72px,1fr))',gap:6}}>
                                     {morningSlots.map(slot => {
                                       const booked = bookedSlots.includes(slot);
@@ -864,7 +1538,7 @@ const BookingSection = () => {
                                       return (
                                         <button key={slot} type="button" disabled={disabled}
                                           onClick={()=>!disabled && setField('zeit', slot)}
-                                          style={{padding:'8px 4px',borderRadius:7,fontFamily:'var(--sans)',fontWeight:700,fontSize:12,textAlign:'center',cursor:disabled?'not-allowed':'pointer',transition:'all .15s',border:`1.5px solid ${selected ? 'var(--accent)' : disabled ? '#F1F5F9' : '#E2E8F0'}`,background:selected ? 'var(--accent)' : disabled ? '#F8FAFC' : '#fff',color:selected ? '#fff' : disabled ? '#CBD5E1' : '#0F172A',textDecoration:disabled?'line-through':'none',opacity:disabled&&!booked?.75:1}}>
+                                          className={`bk-slot${selected?' sel':''}`}>
                                           {slot}
                                         </button>
                                       );
@@ -874,7 +1548,7 @@ const BookingSection = () => {
                               )}
                               {afternoonSlots.length > 0 && (
                                 <div>
-                                  <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'#94A3B8',marginBottom:8}}>NACHMITTAG</div>
+                                  <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'#64748B',marginBottom:8}}>NACHMITTAG</div>
                                   <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(72px,1fr))',gap:6}}>
                                     {afternoonSlots.map(slot => {
                                       const booked = bookedSlots.includes(slot);
@@ -884,7 +1558,7 @@ const BookingSection = () => {
                                       return (
                                         <button key={slot} type="button" disabled={disabled}
                                           onClick={()=>!disabled && setField('zeit', slot)}
-                                          style={{padding:'8px 4px',borderRadius:7,fontFamily:'var(--sans)',fontWeight:700,fontSize:12,textAlign:'center',cursor:disabled?'not-allowed':'pointer',transition:'all .15s',border:`1.5px solid ${selected ? 'var(--accent)' : disabled ? '#F1F5F9' : '#E2E8F0'}`,background:selected ? 'var(--accent)' : disabled ? '#F8FAFC' : '#fff',color:selected ? '#fff' : disabled ? '#CBD5E1' : '#0F172A',textDecoration:disabled?'line-through':'none'}}>
+                                          className={`bk-slot${selected?' sel':''}`}>
                                           {slot}
                                         </button>
                                       );
@@ -899,7 +1573,7 @@ const BookingSection = () => {
                     </div>
                   </div>
                   <div style={{display:'flex',justifyContent:'space-between',marginTop:32,gap:12}}>
-                    <button className="btn btn-ghost" style={{fontSize:13,padding:'12px 24px',color:'#64748B',border:'1.5px solid #E2E8F0'}} onClick={()=>setStep(1)}>
+                    <button className="btn" style={{fontSize:13,padding:'12px 24px',color:'#64748B',border:'1.5px solid #E2E8F0',background:'#F7F9FC'}} onClick={()=>setStep(1)}>
                       ← Zurück
                     </button>
                     <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px',gap:8,opacity:(form.datum&&form.zeit)?1:.45,cursor:(form.datum&&form.zeit)?'pointer':'not-allowed'}}
@@ -917,16 +1591,16 @@ const BookingSection = () => {
                 <div className="bk-card">
                   <div style={{marginBottom:24}}>
                     <div style={{fontSize:11,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:8}}>SCHRITT 03</div>
-                    <h3 style={{fontWeight:800,fontSize:22,color:'#0F172A',letterSpacing:'-.01em'}}>Ihre Kontaktdaten</h3>
+                    <h3 style={{fontWeight:800,fontSize:22,color:'#1E293B',letterSpacing:'-.01em'}}>Ihre Kontaktdaten</h3>
                   </div>
 
                   {/* Summary pill */}
-                  <div style={{display:'flex',gap:12,flexWrap:'wrap',marginBottom:24,padding:'12px 16px',background:'rgba(91,145,244,.06)',borderRadius:10,border:'1px solid rgba(91,145,244,.15)'}}>
-                    <span style={{fontSize:12,fontWeight:700,color:'var(--accent)'}}>{form.service}</span>
+                  <div style={{display:'flex',gap:12,flexWrap:'wrap',marginBottom:24,padding:'12px 16px',background:'#EEF4FF',borderRadius:10,border:'1px solid rgba(91,145,244,.25)'}}>
+                    <span style={{fontSize:12,fontWeight:700,color:'var(--accent)'}}>{form.services.join(' + ')}</span>
                     <span style={{fontSize:12,color:'#64748B'}}>·</span>
                     <span style={{fontSize:12,color:'#64748B'}}>{fmtGermanDate(form.datum)}</span>
                     <span style={{fontSize:12,color:'#64748B'}}>·</span>
-                    <span style={{fontSize:12,fontWeight:700,color:'#0F172A'}}>{form.zeit} Uhr</span>
+                    <span style={{fontSize:12,fontWeight:700,color:'#1E293B'}}>{form.zeit} Uhr</span>
                   </div>
 
                   <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}} className="bk-two-col">
@@ -935,23 +1609,21 @@ const BookingSection = () => {
                       {field:'nachname',label:'Nachname *',placeholder:'Mustermann',type:'text'},
                       {field:'telefon',label:'Telefon *',placeholder:'+49 157...',type:'tel'},
                       {field:'email',label:'E-Mail',placeholder:'max@beispiel.de',type:'email'},
-                      {field:'marke',label:'Fahrzeugmarke *',placeholder:'z.B. VW',type:'text'},
-                      {field:'modell',label:'Modell *',placeholder:'z.B. Golf',type:'text'},
                     ].map(({field,label,placeholder,type}) => {
                       const errs = step3Errors();
                       const err = touched[field] && errs[field];
                       return (
                         <div key={field} style={fieldWrap}>
-                          <label style={labelStyle}>{label}</label>
+                          <label className="bk-label">{label}</label>
                           <input type={type} placeholder={placeholder} value={form[field]} maxLength={60}
                             onChange={e=>{
                               let v = e.target.value;
                               if(field==='telefon') v = v.replace(/[^\d\+\s\-\(\)]/g,'');
                               setField(field, v);
                             }}
-                            onFocus={e=>{ e.target.style.borderColor='var(--accent)'; e.target.style.boxShadow='0 0 0 3px rgba(91,145,244,.12)'; }}
-                            onBlur={e=>{ handleBlur(field); e.target.style.borderColor=step3Errors()[field]?'#ef4444':'#E2E8F0'; e.target.style.boxShadow='none'; }}
-                            style={inp(field)}/>
+                            onBlur={()=>handleBlur(field)}
+                            className="bk-inp"
+                            style={err ? {borderColor:'#ef4444'} : undefined}/>
                           {err && <span style={{fontSize:11,color:'#ef4444',fontWeight:600,display:'flex',alignItems:'center',gap:3}}><Ic.Warn s={10}/> {err}</span>}
                         </div>
                       );
@@ -959,21 +1631,44 @@ const BookingSection = () => {
                   </div>
 
                   <div style={{marginTop:16,...fieldWrap}}>
-                    <label style={labelStyle}>Kennzeichen</label>
+                    <label className="bk-label">Kennzeichen</label>
                     <input type="text" placeholder="OB-AB 1234" maxLength={15} value={form.kennzeichen}
                       onChange={e=>setField('kennzeichen', e.target.value.toUpperCase().replace(/[^A-Z0-9\-\sÄÖÜ]/g,''))}
-                      onFocus={e=>{ e.target.style.borderColor='var(--accent)'; e.target.style.boxShadow='0 0 0 3px rgba(91,145,244,.12)'; }}
-                      onBlur={e=>{ e.target.style.borderColor='#E2E8F0'; e.target.style.boxShadow='none'; }}
-                      style={{...inp('kennzeichen'), border:'1.5px solid #E2E8F0'}}/>
+                      className="bk-inp"/>
+                  </div>
+
+                  {/* Abhol- & Bringservice Toggle */}
+                  <div style={{marginTop:16}}>
+                    <button type="button" onClick={()=>setField('abholservice', !form.abholservice)}
+                      className={`pickup-btn${form.abholservice?' on':''}`}>
+                      <div style={{width:22,height:22,borderRadius:6,border:`2px solid ${form.abholservice?'var(--accent)':'#CBD5E1'}`,background:form.abholservice?'var(--accent)':'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'all .2s'}}>
+                        {form.abholservice && <Ic.Check s={12} c="#fff"/>}
+                      </div>
+                      <div>
+                        <div style={{fontSize:13,fontWeight:700,color:'#1E293B',marginBottom:2}}>Abhol- & Bringservice</div>
+                        <div style={{fontSize:11,color:'#64748B'}}>Wir holen Ihr Fahrzeug ab und bringen es nach der Prüfung zurück.</div>
+                      </div>
+                      <div style={{marginLeft:'auto',fontSize:11,fontWeight:800,color:'var(--accent)',background:'rgba(91,145,244,.12)',padding:'4px 10px',borderRadius:5,whiteSpace:'nowrap',flexShrink:0}}>+ 15 €</div>
+                    </button>
+                    {form.abholservice && (
+                      <div style={{marginTop:10,...fieldWrap}}>
+                        <label className="bk-label">Abholadresse *</label>
+                        <input type="text" placeholder="Straße, Hausnr., PLZ, Ort" maxLength={120} value={form.abholadresse}
+                          onChange={e=>setField('abholadresse', e.target.value)}
+                          onBlur={()=>handleBlur('abholadresse')}
+                          className="bk-inp"
+                          style={touched.abholadresse && step3Errors().abholadresse ? {borderColor:'#ef4444'} : undefined}/>
+                        {touched.abholadresse && step3Errors().abholadresse && <span style={{fontSize:11,color:'#ef4444',fontWeight:600,display:'flex',alignItems:'center',gap:3}}><Ic.Warn s={10}/> {step3Errors().abholadresse}</span>}
+                      </div>
+                    )}
                   </div>
 
                   <div style={{marginTop:16,...fieldWrap}}>
-                    <label style={labelStyle}>Anmerkungen</label>
+                    <label className="bk-label">Anmerkungen</label>
                     <textarea placeholder="Besonderheiten oder Fragen …" maxLength={500} value={form.anmerkungen}
                       onChange={e=>setField('anmerkungen', e.target.value)}
-                      onFocus={e=>{ e.target.style.borderColor='var(--accent)'; e.target.style.boxShadow='0 0 0 3px rgba(91,145,244,.12)'; }}
-                      onBlur={e=>{ e.target.style.borderColor='#E2E8F0'; e.target.style.boxShadow='none'; }}
-                      style={{...inp('anmerkungen'), border:'1.5px solid #E2E8F0', resize:'vertical', minHeight:80}}/>
+                      className="bk-inp"
+                      style={{resize:'vertical', minHeight:80}}/>
                   </div>
 
                   <AnimatePresence>
@@ -986,22 +1681,63 @@ const BookingSection = () => {
                   </AnimatePresence>
 
                   <div style={{display:'flex',justifyContent:'space-between',marginTop:28,gap:12}}>
-                    <button className="btn btn-ghost" style={{fontSize:13,padding:'12px 24px',color:'#64748B',border:'1.5px solid #E2E8F0'}} onClick={()=>setStep(2)}>
+                    <button className="btn" style={{fontSize:13,padding:'12px 24px',color:'#64748B',border:'1.5px solid #E2E8F0',background:'#F7F9FC'}} onClick={()=>setStep(2)}>
                       ← Zurück
                     </button>
                     <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px',gap:8}} disabled={submitting} onClick={handleSubmit}>
                       {submitting ? <><Ic.Spin s={14} c="#fff"/> Wird gespeichert …</> : <>Termin buchen <Ic.Arrow s={14}/></>}
                     </button>
                   </div>
-                  <p style={{fontSize:11,color:'#94A3B8',textAlign:'center',marginTop:14,lineHeight:1.55}}>
+                  <p style={{fontSize:11,color:'var(--smoke)',textAlign:'center',marginTop:14,lineHeight:1.55}}>
                     Mit dem Absenden stimmen Sie unserer <a href="#" onClick={e=>e.preventDefault()} style={{color:'var(--accent)'}}>Datenschutzerklärung</a> zu.
                   </p>
                 </div>
               </motion.div>
             )}
+            {/* ── STEP 4: Schadensgutachten — contact only ── */}
+            {step === 4 && (
+              <motion.div key="step4" initial={{opacity:0,x:30}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-30}} transition={{duration:.25}}>
+                <div className="bk-card" style={{textAlign:'center',padding:'44px 32px'}}>
+                  {/* icon */}
+                  <div style={{width:68,height:68,borderRadius:18,background:'linear-gradient(135deg,#EEF4FF,#D4E3FF)',border:'1.5px solid rgba(91,145,244,.22)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px'}}>
+                    <Ic.Damage s={30} c="var(--accent)"/>
+                  </div>
+                  <h3 style={{fontWeight:800,fontSize:22,color:'#1E293B',marginBottom:10,letterSpacing:'-.01em'}}>Schadensgutachten</h3>
+                  <p style={{fontSize:13,color:'#64748B',lineHeight:1.75,maxWidth:400,margin:'0 auto 10px'}}>
+                    Für ein Schadensgutachten vereinbaren wir den Termin individuell mit Ihnen — bitte kontaktieren Sie uns direkt.
+                  </p>
+                  <div style={{display:'inline-flex',alignItems:'center',gap:6,background:'#EEF4FF',border:'1px solid rgba(91,145,244,.2)',borderRadius:8,padding:'6px 14px',marginBottom:28}}>
+                    <Ic.Clock s={12} c="var(--accent)"/>
+                    <span style={{fontSize:12,fontWeight:600,color:'var(--accent)'}}>ca. 45–60 Min. · Terminvereinbarung erforderlich</span>
+                  </div>
+
+                  {/* contact buttons */}
+                  <div style={{display:'flex',flexDirection:'column',gap:12,maxWidth:340,margin:'0 auto 28px'}}>
+                    <a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer"
+                      style={{display:'flex',alignItems:'center',justifyContent:'center',gap:12,padding:'15px 24px',borderRadius:13,background:'#25D366',color:'#fff',fontWeight:800,fontSize:15,textDecoration:'none',boxShadow:'0 6px 24px rgba(37,211,102,.32)',transition:'transform .18s,box-shadow .18s'}}
+                      onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-2px)';e.currentTarget.style.boxShadow='0 10px 32px rgba(37,211,102,.42)';}}
+                      onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.boxShadow='0 6px 24px rgba(37,211,102,.32)';}}>
+                      <Ic.Wa s={20} c="#fff"/>
+                      WhatsApp schreiben
+                    </a>
+                    <a href={PHONE_HREF}
+                      style={{display:'flex',alignItems:'center',justifyContent:'center',gap:12,padding:'15px 24px',borderRadius:13,background:'linear-gradient(135deg,#5B91F4,#3A72E0)',color:'#fff',fontWeight:800,fontSize:15,textDecoration:'none',boxShadow:'0 6px 24px rgba(91,145,244,.32)',transition:'transform .18s,box-shadow .18s'}}
+                      onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-2px)';e.currentTarget.style.boxShadow='0 10px 32px rgba(91,145,244,.42)';}}
+                      onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.boxShadow='0 6px 24px rgba(91,145,244,.32)';}}>
+                      <Ic.Phone s={18} c="#fff"/>
+                      {PHONE}
+                    </a>
+                  </div>
+
+                  <button onClick={()=>setStep(1)} style={{background:'none',border:'none',color:'#94A3B8',fontSize:13,cursor:'pointer',fontFamily:'var(--sans)',textDecoration:'underline'}}>
+                    ← Zurück zur Auswahl
+                  </button>
+                </div>
+              </motion.div>
+            )}
             </AnimatePresence>
           </motion.div>
-        )}
+        ))}
       </div>
     </div>
   );
@@ -1013,15 +1749,18 @@ const FAQ = () => {
   const faqs = [
     ['Wie lange dauert eine Hauptuntersuchung?','Eine Standard-HU dauert ca. 30 Minuten, mit AU-Kombi ca. 45–60 Minuten.'],
     ['Was muss ich zur HU mitbringen?','Den Fahrzeugschein (Zulassungsbescheinigung Teil I). Bei Eintragungen alle ABE-Dokumente.'],
-    ['Was passiert, wenn mein Fahrzeug nicht besteht?','Sie erhalten ein Mängelprotokoll. Geringe Mängel können innerhalb eines Monats kostenlos nachgeprüft werden.'],
-    ['Kann ich einen Termin kostenlos stornieren?','Ja — bis 24 Stunden vor dem Termin per Telefon oder E-Mail.'],
-    ['Welche Fahrzeuge prüfen Sie?','PKW, Motorräder, Transporter sowie Oldtimer (§23 StVZO).'],
-    ['Gibt es einen Wartebereich?','Ja — oder Fahrzeug abgeben und später abholen.'],
-    ['Kann ich per WhatsApp buchen?','Ja — schreiben Sie uns, wir bestätigen schnellstmöglich.'],
+    ['Was passiert, wenn mein Fahrzeug nicht besteht?','Sollten bei der Hauptuntersuchung Mängel festgestellt werden, erhalten Sie selbstverständlich ein ausführliches Mängelprotokoll. Der Prüfer erläutert Ihnen die festgestellten Punkte transparent und verständlich direkt am Fahrzeug oder im persönlichen Gespräch.\n\nSie haben anschließend in der Regel einen Monat Zeit, die beanstandeten Mängel beheben zu lassen und das Fahrzeug zur Nachprüfung erneut vorzuführen.\n\nUnser Ziel ist nicht nur die Prüfung Ihres Fahrzeugs, sondern auch eine nachvollziehbare und faire Beratung, damit Sie genau wissen, welche Arbeiten erforderlich sind und wie es weitergeht.'],
+    ['Welche Fahrzeuge prüfen Sie?','Wir prüfen PKW, Motorräder, Transporter und Anhänger. Darüber hinaus bieten wir Oldtimer-Gutachten (§23 StVZO), Gasanlagenprüfungen für LPG- und CNG-Fahrzeuge, BO-Kraft Prüfungen für Taxi und Mietwagen sowie Abnahmen nach §19 Abs. 3 StVZO und §15 FZV an.'],
+    ['Kann ich auch per WhatsApp buchen?','Ja — Sie können uns direkt über WhatsApp kontaktieren und einen Termin anfragen. Wir bestätigen schnellstmöglich.\n\nAuch weitere Anfragen und Anliegen können sie uns gerne über WhatsApp zukommen lassen.'],
+    ['Muss ich bei der Prüfung persönlich anwesend sein?','Nein. Sie können Ihren Alltag ganz normal fortsetzen, während wir uns um Ihr Fahrzeug kümmern.'],
+    ['Bekomme ich eine Erinnerung an die nächste HU?','Auf Wunsch erinnern wir Sie rechtzeitig an Ihren nächsten Prüftermin.'],
+    ['Können Firmenkunden mehrere Fahrzeuge gleichzeitig anmelden?','Ja, insbesondere für Firmen, Fuhrparks und Gewerbekunden bieten wir individuelle Lösungen und Sammeltermine an.'],
+    ['Kann mein Fahrzeug auch direkt zur Werkstatt gebracht werden, wenn Mängel festgestellt werden?','Auf Wunsch kann eine Abstimmung mit Ihrer Werkstatt erfolgen, damit notwendige Reparaturen schnell organisiert werden können.'],
+    ['Was passiert bei abgelaufener HU?','Auch bei abgelaufener HU kann Ihr Fahrzeug selbstverständlich geprüft werden. Bitte beachten Sie, dass bei einer Überziehung von mehr als zwei Monaten eine erweiterte HU mit zusätzlichen Kosten erforderlich ist. Voraussetzung ist außerdem, dass das Fahrzeug verkehrssicher ist.'],
   ];
   return (
     <div id="faq" className="section-full sec" style={{background:'var(--dark)',position:'relative',overflow:'hidden'}}>
-      <div style={{position:'absolute',inset:0,backgroundImage:"url('first.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.04,pointerEvents:'none',zIndex:0}}/>
+      <div className="bg-img" style={{backgroundImage:"url('WhatsApp2.jpeg')",opacity:0.18,pointerEvents:'none',zIndex:0}}/>
       <SectionDeco side="right" opacity={0.04}/>
       <div className="inner" style={{maxWidth:780,margin:'0 auto',position:'relative',zIndex:1}}>
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:40}}>
@@ -1038,7 +1777,7 @@ const FAQ = () => {
               <AnimatePresence>
                 {open===i && (
                   <motion.div initial={{height:0,opacity:0}} animate={{height:'auto',opacity:1}} exit={{height:0,opacity:0}} transition={{duration:.2}} style={{overflow:'hidden'}}>
-                    <p className="faq-a">{a}</p>
+                    <div className="faq-a" style={{display:'flex',flexDirection:'column',gap:10}}>{a.split('\n\n').map((p,j)=><p key={j}>{p}</p>)}</div>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -1064,7 +1803,7 @@ const MapEmbed = () => {
       <button className="btn btn-primary" style={{fontSize:12,padding:'10px 18px'}} onClick={()=>{localStorage.setItem('cookie_consent','all');setAccepted(true);}}>Google Maps aktivieren</button>
     </div>
   );
-  return <iframe src="https://maps.google.com/maps?q=Oberhausen&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style={{border:'none',display:'block',filter:'grayscale(.1)',minHeight:360}} allowFullScreen loading="lazy" title="Standort"/>;
+  return <iframe src="https://maps.google.com/maps?q=M%C3%BClheimer+Str.+155%2C+46045+Oberhausen&t=&z=16&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style={{border:'none',display:'block',filter:'grayscale(.1)',minHeight:360}} allowFullScreen loading="lazy" title="Standort"/>;
 };
 
 /* ─── CONTACT ────────────────────────────────────────────────────────────── */
@@ -1076,43 +1815,48 @@ const Contact = () => (
 
       {/* ── INFO CARD ── */}
       <div className="contact-card">
-        {/* Brand */}
-        <div style={{display:'flex',alignItems:'center',gap:11,paddingBottom:20,borderBottom:'1px solid rgba(255,255,255,.07)',marginBottom:20,flexShrink:0}}>
-          <div style={{width:38,height:38,background:'rgba(91,145,244,.15)',borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-            <Ic.Wrench s={17} c="var(--accent)"/>
-          </div>
-          <div>
-            <div style={{fontWeight:800,fontSize:14,color:'var(--white)',letterSpacing:'-.01em',lineHeight:1.25}}>AutoService Oberhausen</div>
-            <div style={{fontSize:11,color:'var(--smoke)',marginTop:2}}>Amtl. anerk. Kfz-Prüfstelle §29 StVZO</div>
-          </div>
-        </div>
-
-        {/* Address */}
-        <div style={{marginBottom:18,flexShrink:0}}>
-          <div style={{fontSize:10,fontWeight:700,color:'var(--accent)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:7}}>Adresse</div>
-          <div style={{fontSize:14,color:'var(--text)',lineHeight:1.65}}>Musterstraße 123<br/>46045 Oberhausen, Deutschland</div>
-        </div>
-
-        {/* Contact */}
-        <div style={{marginBottom:18,flexShrink:0}}>
-          <div style={{fontSize:10,fontWeight:700,color:'var(--accent)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:7}}>Kontakt</div>
-          <a href={PHONE_HREF} style={{display:'block',fontSize:14,color:'var(--white)',textDecoration:'none',fontWeight:600,marginBottom:3}}>{PHONE}</a>
-          <a href="mailto:info@autoservice-ob.de" style={{fontSize:13,color:'var(--smoke)',textDecoration:'none'}}>info@autoservice-ob.de</a>
-        </div>
-
-        {/* Hours */}
-        <div style={{flexShrink:0}}>
-          <div style={{fontSize:10,fontWeight:700,color:'var(--accent)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:10}}>Öffnungszeiten</div>
-          {[['Mo – Mi','09:00 – 18:00'],['Do & Fr','15:00 – 18:00'],['Sa & So','Geschlossen']].map(([d,t])=>(
-            <div key={d} className="contact-hours-row">
-              <span style={{fontSize:13,color:'var(--smoke)'}}>{d}</span>
-              <span style={{fontSize:13,fontWeight:600,color:t==='Geschlossen'?'var(--mid)':'var(--white)'}}>{t}</span>
+        <div className="contact-card-inner">
+          {/* Brand */}
+          <div style={{display:'flex',alignItems:'center',gap:12}}>
+            <div style={{width:40,height:40,background:'linear-gradient(135deg,rgba(91,145,244,.25) 0%,rgba(91,145,244,.1) 100%)',borderRadius:12,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,border:'1px solid rgba(91,145,244,.2)'}}>
+              <Ic.Wrench s={17} c="var(--accent)"/>
             </div>
-          ))}
+            <div>
+              <div style={{fontWeight:800,fontSize:13,color:'var(--white)',letterSpacing:'-.01em',lineHeight:1.2}}>TÜV Nord Prüfstützpunkt Oberhausen</div>
+              <div style={{fontSize:10,color:'var(--smoke)',marginTop:2,letterSpacing:'.02em'}}>Akkreditierter KFZ-Prüfstützpunkt §29 StVZO</div>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div style={{height:1,background:'linear-gradient(90deg,var(--accent),transparent)',opacity:.2}}/>
+
+          {/* Address */}
+          <div>
+            <div className="contact-section-label">Adresse</div>
+            <div style={{fontSize:13,color:'var(--text)',lineHeight:1.7}}>Mülheimer Str. 155<br/>46045 Oberhausen, Deutschland</div>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <div className="contact-section-label">Kontakt</div>
+            <a href={PHONE_HREF} style={{display:'block',fontSize:15,color:'var(--white)',textDecoration:'none',fontWeight:700,marginBottom:4,letterSpacing:'-.01em'}}>{PHONE}</a>
+            <a href="mailto:aqureischi@extern.tuev-nord.de" style={{fontSize:12,color:'var(--smoke)',textDecoration:'none'}}>aqureischi@extern.tuev-nord.de</a>
+          </div>
+
+          {/* Hours */}
+          <div>
+            <div className="contact-section-label">Öffnungszeiten</div>
+            {[['Mo – Mi','09:00 – 18:00'],['Do & Fr','15:00 – 18:00'],['Sa & So','Geschlossen']].map(([d,t])=>(
+              <div key={d} className="contact-hours-row">
+                <span style={{fontSize:12,color:'var(--smoke)'}}>{d}</span>
+                <span style={{fontSize:12,fontWeight:700,color:t==='Geschlossen'?'rgba(255,255,255,.28)':'var(--white)'}}>{t}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* CTAs */}
-        <div style={{display:'flex',gap:9,marginTop:'auto',paddingTop:22,flexShrink:0}}>
+        {/* CTAs — always visible at bottom */}
+        <div className="contact-ctas">
           <a href={PHONE_HREF} className="btn btn-call" style={{flex:1,padding:'10px 0',fontSize:12,justifyContent:'center',gap:6}}>
             <Ic.Phone s={13}/> Anrufen
           </a>
@@ -1133,9 +1877,9 @@ const Footer = ({ openModal }) => (
         <div>
           <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:14}}>
             <div style={{width:30,height:30,background:'var(--accent)',borderRadius:7,display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.Wrench s={14} c="#fff"/></div>
-            <span style={{fontWeight:800,fontSize:16,color:'var(--white)'}}>Auto<span style={{color:'var(--accent)'}}>Service</span> <span style={{fontWeight:400,fontSize:12,color:'rgba(255,255,255,.35)'}}>Oberhausen</span></span>
+            <span style={{fontWeight:800,fontSize:15,color:'var(--white)'}}>TÜV Nord <span style={{color:'var(--accent)'}}>Prüfstützpunkt</span> <span style={{fontWeight:400,fontSize:12,color:'rgba(255,255,255,.35)'}}>Oberhausen</span></span>
           </div>
-          <p style={{color:'var(--smoke)',fontSize:12.5,lineHeight:1.75,maxWidth:260}}>Amtlich anerkannte Kfz-Prüfstelle. HU und AU — professionell und transparent.</p>
+          <p style={{color:'var(--smoke)',fontSize:12.5,lineHeight:1.75,maxWidth:260}}>Akkreditierter KFZ-Prüfstützpunkt. HU, AU und amtliche Fahrzeugprüfungen — zuverlässig und transparent.</p>
         </div>
         {[{title:'Unternehmen',items:['Über uns','Team','Karriere','Kontakt']},{title:'Rechtliches',items:['Impressum','Datenschutz','AGB','Cookie-Einstellungen']}].map(({title,items})=>(
           <div key={title}>
@@ -1147,8 +1891,8 @@ const Footer = ({ openModal }) => (
         ))}
       </div>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:8,padding:'16px 0'}}>
-        <span style={{color:'rgba(255,255,255,.2)',fontSize:11.5}}>© {new Date().getFullYear()} AutoService Oberhausen — Alle Rechte vorbehalten.</span>
-        <span style={{color:'rgba(255,255,255,.2)',fontSize:10,letterSpacing:'.08em',textTransform:'uppercase'}}>Amtlich anerkannte Prüfstelle · §29 StVZO</span>
+        <span style={{color:'rgba(255,255,255,.2)',fontSize:11.5}}>© {new Date().getFullYear()} TÜV Nord Prüfstützpunkt Oberhausen — Alle Rechte vorbehalten.</span>
+        <span style={{color:'rgba(255,255,255,.2)',fontSize:10,letterSpacing:'.08em',textTransform:'uppercase'}}>Akkreditierter KFZ-Prüfstützpunkt · §29 StVZO</span>
       </div>
     </div>
   </footer>
@@ -1156,10 +1900,273 @@ const Footer = ({ openModal }) => (
 
 /* ─── LEGAL MODALS ───────────────────────────────────────────────────────── */
 const LegalContent = {
-  Impressum: (<div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.85}}><h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:8}}>Angaben gemäß § 5 TMG</h4><p style={{marginBottom:16}}>AutoService Oberhausen<br/>Musterstraße 123<br/>46045 Oberhausen<br/><br/>Telefon: {PHONE}<br/>E-Mail: info@autoservice-ob.de</p><h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:6}}>Verantwortlich §55 Abs. 2 RStV</h4><p>[Vollständiger Name], Musterstraße 123, 46045 Oberhausen</p></div>),
-  Datenschutz: (<div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.85}}><h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:8}}>Datenschutzerklärung</h4><p>Wir verarbeiten personenbezogene Daten ausschließlich gemäß DSGVO, BDSG und TTDSG.</p></div>),
-  AGB: (<div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.85}}><h4 style={{color:'var(--ink)',fontWeight:700,marginBottom:8}}>AGB</h4><p><strong style={{color:'var(--ink)'}}>§ 1 Geltungsbereich</strong><br/>Diese AGB gelten für alle Terminbuchungen über autoservice-ob.de.</p></div>),
+  Impressum: (
+    <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.9}}>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10,marginTop:0}}>Angaben gemäß § 5 TMG</h4>
+      <p style={{marginBottom:20}}>
+        <strong style={{color:'var(--white)'}}>Ing.-Büro Qureischi</strong><br/>
+        Kooperationspartner des TÜV NORD<br/>
+        Mülheimer Str. 155<br/>
+        46045 Oberhausen<br/>
+        Deutschland
+      </p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Kontakt</h4>
+      <p style={{marginBottom:20}}>
+        Telefon: <a href="tel:+4915755476991" style={{color:'var(--accent)',textDecoration:'none'}}>01575 5476991</a><br/>
+        E-Mail: <a href="mailto:aqureischi@extern.tuev-nord.de" style={{color:'var(--accent)',textDecoration:'none'}}>aqureischi@extern.tuev-nord.de</a>
+      </p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Betriebsstätte</h4>
+      <p style={{marginBottom:20}}>
+        <strong style={{color:'var(--white)'}}>KFZ-Prüfstützpunkt · Malik Car-Service</strong><br/>
+        Mülheimer Str. 155<br/>
+        46045 Oberhausen
+      </p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Verantwortlich für den Inhalt gemäß § 55 Abs. 2 RStV</h4>
+      <p style={{marginBottom:20}}>
+        A. Qureischi<br/>
+        Mülheimer Str. 155<br/>
+        46045 Oberhausen
+      </p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Berufsrechtliche Regelungen</h4>
+      <p style={{marginBottom:20}}>
+        Das Ing.-Büro Qureischi ist als Kooperationspartner des TÜV NORD akkreditiert und führt Hauptuntersuchungen (HU) sowie Abgasuntersuchungen (AU) gemäß § 29 StVZO durch. Die Tätigkeit unterliegt den Vorschriften der StVZO, insbesondere § 29 i.V.m. Anlage VIII StVZO sowie den Richtlinien des Kraftfahrt-Bundesamtes (KBA).
+      </p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Haftungsausschluss</h4>
+      <p style={{marginBottom:12}}>
+        <strong style={{color:'var(--white)'}}>Haftung für Inhalte:</strong> Die Inhalte dieser Website wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich.
+      </p>
+      <p style={{marginBottom:12}}>
+        <strong style={{color:'var(--white)'}}>Haftung für Links:</strong> Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.
+      </p>
+      <p style={{marginBottom:20}}>
+        <strong style={{color:'var(--white)'}}>Urheberrecht:</strong> Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
+      </p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>EU-Streitschlichtung</h4>
+      <p style={{marginBottom:20}}>
+        Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:{' '}
+        <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>https://ec.europa.eu/consumers/odr/</a>.<br/>
+        Unsere E-Mail-Adresse finden Sie oben im Impressum. Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
+      </p>
+
+      <p style={{fontSize:11,color:'rgba(255,255,255,.25)',marginTop:24,borderTop:'1px solid rgba(255,255,255,.07)',paddingTop:14}}>
+        Stand: Mai 2026
+      </p>
+    </div>
+  ),
+  Datenschutz: (
+    <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.9}}>
+      <p style={{marginBottom:20,fontSize:12,color:'rgba(255,255,255,.35)'}}>Stand: Mai 2026 · gemäß DSGVO, BDSG n.F., TTDSG</p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10,marginTop:0}}>§ 1 Verantwortlicher</h4>
+      <p style={{marginBottom:18}}>
+        <strong style={{color:'var(--white)'}}>Ing.-Büro Qureischi</strong> (Kooperationspartner des TÜV NORD)<br/>
+        Mülheimer Str. 155 · 46045 Oberhausen<br/>
+        Tel.: <a href="tel:+4915755476991" style={{color:'var(--accent)',textDecoration:'none'}}>01575 5476991</a><br/>
+        E-Mail: <a href="mailto:aqureischi@extern.tuev-nord.de" style={{color:'var(--accent)',textDecoration:'none'}}>aqureischi@extern.tuev-nord.de</a>
+      </p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 2 Erhobene Daten & Zweck</h4>
+      <ul style={{paddingLeft:18,marginBottom:18,display:'flex',flexDirection:'column',gap:6}}>
+        <li><strong style={{color:'var(--white)'}}>Terminbuchung:</strong> Name, Telefonnummer, Fahrzeugtyp, gewählter Termin — zur Terminverwaltung und Kontaktaufnahme.</li>
+        <li><strong style={{color:'var(--white)'}}>Abholservice:</strong> Abholadresse, Wunschdatum — zur Koordination des Fahrzeugtransports.</li>
+        <li><strong style={{color:'var(--white)'}}>Kontaktanfragen:</strong> Name, E-Mail oder Telefon, Nachrichteninhalt — zur Bearbeitung Ihrer Anfrage.</li>
+        <li><strong style={{color:'var(--white)'}}>Technische Daten:</strong> IP-Adresse, Browsertyp, Zugriffszeit — Sicherheit und Betrieb (§ 25 Abs. 2 Nr. 2 TTDSG).</li>
+      </ul>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 3 Rechtsgrundlagen</h4>
+      <ul style={{paddingLeft:18,marginBottom:18,display:'flex',flexDirection:'column',gap:6}}>
+        <li><strong style={{color:'var(--white)'}}>Art. 6 Abs. 1 lit. b DSGVO</strong> — Vertragserfüllung (Terminbuchung, Abholservice).</li>
+        <li><strong style={{color:'var(--white)'}}>Art. 6 Abs. 1 lit. f DSGVO</strong> — Berechtigtes Interesse (Sicherheit, Betrieb, Anfragenbearbeitung).</li>
+        <li><strong style={{color:'var(--white)'}}>Art. 6 Abs. 1 lit. a DSGVO</strong> — Einwilligung (Analyse-Cookies, Google Maps).</li>
+      </ul>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 4 Cookies & TTDSG</h4>
+      <ul style={{paddingLeft:18,marginBottom:18,display:'flex',flexDirection:'column',gap:6}}>
+        <li><strong style={{color:'var(--white)'}}>Technisch notwendig (§ 25 Abs. 2 TTDSG):</strong> Session-Cookies, Sicherheits-Tokens. Keine Einwilligung erforderlich.</li>
+        <li><strong style={{color:'var(--white)'}}>Analyse (Art. 6 Abs. 1 lit. a DSGVO):</strong> Anonymisierte Nutzungsauswertung. Nur nach Einwilligung.</li>
+        <li><strong style={{color:'var(--white)'}}>Google Maps (Art. 6 Abs. 1 lit. a DSGVO):</strong> Kartendarstellung. Nur nach Einwilligung aktiv.</li>
+      </ul>
+      <p style={{marginBottom:18}}>Einwilligung jederzeit über „Cookie-Einstellungen" im Footer widerrufbar.</p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 5 Google Maps</h4>
+      <p style={{marginBottom:18}}>Diese Website bindet Google Maps der Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Irland) ein. Bei Nutzung werden Daten an Google-Server übertragen. Grundlage: Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Datenschutzerklärung: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>policies.google.com/privacy</a></p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 6 Speicherdauer</h4>
+      <ul style={{paddingLeft:18,marginBottom:18,display:'flex',flexDirection:'column',gap:6}}>
+        <li>Buchungsdaten: 3 Jahre (§§ 238, 257 HGB).</li>
+        <li>Kontaktanfragen: 6 Monate nach abgeschlossener Bearbeitung.</li>
+        <li>Server-Logs: 7 Tage, danach automatische Löschung.</li>
+      </ul>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 7 Ihre Rechte (Art. 15–22 DSGVO)</h4>
+      <ul style={{paddingLeft:18,marginBottom:18,display:'flex',flexDirection:'column',gap:6}}>
+        <li><strong style={{color:'var(--white)'}}>Auskunft (Art. 15):</strong> Welche Daten wir über Sie speichern.</li>
+        <li><strong style={{color:'var(--white)'}}>Berichtigung (Art. 16):</strong> Korrektur unrichtiger Daten.</li>
+        <li><strong style={{color:'var(--white)'}}>Löschung (Art. 17):</strong> Löschung Ihrer Daten (soweit keine Aufbewahrungspflicht entgegensteht).</li>
+        <li><strong style={{color:'var(--white)'}}>Einschränkung (Art. 18):</strong> Einschränkung der Verarbeitung.</li>
+        <li><strong style={{color:'var(--white)'}}>Datenübertragbarkeit (Art. 20):</strong> Ihre Daten in maschinenlesbarem Format.</li>
+        <li><strong style={{color:'var(--white)'}}>Widerspruch (Art. 21):</strong> Gegen Verarbeitung auf Basis berechtigter Interessen.</li>
+        <li><strong style={{color:'var(--white)'}}>Widerruf (Art. 7 Abs. 3):</strong> Erteilte Einwilligungen jederzeit widerrufbar.</li>
+      </ul>
+      <p style={{marginBottom:18}}>Anfragen an: <a href="mailto:aqureischi@extern.tuev-nord.de" style={{color:'var(--accent)',textDecoration:'none'}}>aqureischi@extern.tuev-nord.de</a></p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 8 Beschwerderecht</h4>
+      <p style={{marginBottom:18}}>
+        <strong style={{color:'var(--white)'}}>Landesbeauftragte für Datenschutz und Informationsfreiheit NRW</strong><br/>
+        Kavalleriestr. 2–4 · 40213 Düsseldorf · <a href="https://www.ldi.nrw.de" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>www.ldi.nrw.de</a>
+      </p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 9 Datensicherheit</h4>
+      <p style={{marginBottom:18}}>Diese Website nutzt HTTPS/TLS-Verschlüsselung. Buchungsdaten werden über Supabase (EU-Region Frankfurt) verarbeitet — als Auftragsverarbeiter gem. Art. 28 DSGVO vertraglich gebunden.</p>
+
+      <p style={{fontSize:11,color:'rgba(255,255,255,.25)',marginTop:24,borderTop:'1px solid rgba(255,255,255,.07)',paddingTop:14}}>Stand: Mai 2026</p>
+    </div>
+  ),
+
+  AGB: (
+    <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.9}}>
+      <p style={{marginBottom:20,fontSize:12,color:'rgba(255,255,255,.35)'}}>Stand: Mai 2026 · Ing.-Büro Qureischi, Oberhausen</p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10,marginTop:0}}>§ 1 Geltungsbereich</h4>
+      <p style={{marginBottom:18}}>Diese AGB gelten für alle Terminbuchungen und Dienstleistungen des Ing.-Büro Qureischi (Kooperationspartner des TÜV NORD), Mülheimer Str. 155, 46045 Oberhausen, über autoservice-ob.de sowie telefonisch vereinbarte Termine.</p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 2 Vertragsschluss</h4>
+      <p style={{marginBottom:18}}>Die Online-Terminbuchung ist eine verbindliche Terminanfrage. Der Vertrag kommt mit unserer Bestätigung (per E-Mail oder Telefon) zustande. Wir behalten uns vor, Buchungen bei Kapazitätsengpässen abzulehnen.</p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 3 Stornierung & Umbuchung</h4>
+      <ul style={{paddingLeft:18,marginBottom:18,display:'flex',flexDirection:'column',gap:6}}>
+        <li>Kostenfreie Stornierung bis <strong style={{color:'var(--white)'}}>24 Stunden</strong> vor dem Termin.</li>
+        <li>Stornierung innerhalb 24 Stunden: Bearbeitungsgebühr bis zu <strong style={{color:'var(--white)'}}>15 €</strong>.</li>
+        <li>Umbuchungen bis 24 Stunden vor dem Termin kostenfrei möglich.</li>
+        <li>Nichterscheinen ohne Stornierung: Ausfallgebühr vorbehalten.</li>
+      </ul>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 4 Preise & Zahlung</h4>
+      <p style={{marginBottom:18}}>Alle Preise sind Endpreise inkl. gesetzlicher MwSt. Zahlung vor Ort nach Leistungserbringung (Bar oder EC-Karte). Abholservice-Aufschlag: <strong style={{color:'var(--white)'}}>15 €</strong>. TÜV-Gebühren in den angezeigten Preisen enthalten, sofern nicht anders angegeben.</p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 5 Leistungserbringung</h4>
+      <p style={{marginBottom:18}}>HU und AU werden gemäß § 29 StVZO i.V.m. Anlage VIII StVZO durchgeführt. Bei erheblichen Mängeln ist eine Nachprüfung innerhalb gesetzlicher Fristen erforderlich. Prüfplakette und Prüfbericht werden unmittelbar nach Abschluss ausgehändigt.</p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 6 Haftung</h4>
+      <p style={{marginBottom:18}}>Unbeschränkte Haftung für Verletzungen von Leben, Körper oder Gesundheit. Im Übrigen nur Haftung bei Vorsatz und grober Fahrlässigkeit. Weitergehende Haftung für einfache Fahrlässigkeit ausgeschlossen (§ 521 BGB analog). Keine Haftung für Verzögerungen durch höhere Gewalt oder behördliche Auflagen.</p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 7 Datenschutz</h4>
+      <p style={{marginBottom:18}}>Buchungsdaten werden ausschließlich zur Vertragserfüllung und Terminverwaltung verwendet. Details entnehmen Sie unserer Datenschutzerklärung.</p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 8 Anwendbares Recht & Gerichtsstand</h4>
+      <p style={{marginBottom:18}}>Es gilt deutsches Recht unter Ausschluss des UN-Kaufrechts. Gerichtsstand Oberhausen, soweit gesetzlich zulässig. Keine Teilnahme an Verbraucherschlichtungsverfahren.</p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 9 Salvatorische Klausel</h4>
+      <p style={{marginBottom:18}}>Unwirksame Einzelbestimmungen berühren die Wirksamkeit der übrigen AGB nicht. Es gilt die gesetzliche Regelung.</p>
+
+      <p style={{fontSize:11,color:'rgba(255,255,255,.25)',marginTop:24,borderTop:'1px solid rgba(255,255,255,.07)',paddingTop:14}}>Stand: Mai 2026 · Ing.-Büro Qureischi, Oberhausen</p>
+    </div>
+  ),
+
   'Cookie-Einstellungen': null,
+
+  'Über uns': (
+    <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.9}}>
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10,marginTop:0}}>Wer wir sind</h4>
+      <p style={{marginBottom:18}}>Das <strong style={{color:'var(--white)'}}>Ing.-Büro Qureischi</strong> ist ein akkreditierter Kooperationspartner des <strong style={{color:'var(--white)'}}>TÜV NORD</strong> mit Sitz in Oberhausen. Als KFZ-Prüfstützpunkt führen wir amtliche Hauptuntersuchungen (HU), Abgasuntersuchungen (AU) und weitere Fahrzeugprüfungen nach § 29 StVZO durch — zuverlässig, transparent und ohne lange Wartezeiten.</p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Unsere Mission</h4>
+      <p style={{marginBottom:18}}>Wir machen die Fahrzeugprüfung einfach. Statt langer Warteschlangen und undurchsichtiger Preise bieten wir Online-Terminbuchung, feste Preise und einen optionalen Abholservice — damit Ihre HU erledigt ist, ohne Ihren Alltag umzuplanen.</p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>TÜV NORD Partnerschaft</h4>
+      <p style={{marginBottom:18}}>Als offizieller Kooperationspartner des TÜV NORD sind alle Prüfer nach § 29 StVZO i.V.m. Anlage VIIIa zugelassen. Prüfplaketten und Prüfberichte haben bundesweite Gültigkeit und werden sofort nach der Untersuchung ausgestellt.</p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Unsere Werte</h4>
+      <ul style={{paddingLeft:18,marginBottom:18,display:'flex',flexDirection:'column',gap:8}}>
+        <li><strong style={{color:'var(--white)'}}>Transparenz:</strong> Feste Preise, keine versteckten Kosten.</li>
+        <li><strong style={{color:'var(--white)'}}>Zuverlässigkeit:</strong> Pünktliche Termine nach TÜV-Standards.</li>
+        <li><strong style={{color:'var(--white)'}}>Kundennähe:</strong> Persönliche Beratung, kurze Wege.</li>
+        <li><strong style={{color:'var(--white)'}}>Kompetenz:</strong> PKW, Motorrad, Oldtimer, Anhänger, Taxi, Gasanlagen.</li>
+      </ul>
+
+      <div style={{marginTop:20,padding:'16px 20px',background:'rgba(91,145,244,.08)',borderRadius:12,border:'1px solid rgba(91,145,244,.2)'}}>
+        <div style={{fontWeight:700,color:'var(--white)',marginBottom:6}}>KFZ-Prüfstützpunkt · Malik Car-Service</div>
+        <div style={{fontSize:12,color:'var(--smoke)'}}>Mülheimer Str. 155 · 46045 Oberhausen<br/>Mo–Fr 08:00–18:00 · Sa nach Vereinbarung</div>
+      </div>
+    </div>
+  ),
+
+  Team: (
+    <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.9}}>
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:16,marginTop:0}}>Unser Team</h4>
+      {[
+        {name:'A. Qureischi', role:'Leiter & Sachverständiger', desc:'Akkreditierter Ingenieursachverständiger, zugelassen nach § 29 StVZO. Langjährige Erfahrung in der Fahrzeugtechnik und amtlichen Hauptuntersuchung.'},
+        {name:'Technisches Prüferteam', role:'Geprüfte KFZ-Prüfer', desc:'Alle Prüfer sind nach TÜV NORD-Standards zertifiziert und regelmäßig geschult. Spezialisierungen: PKW, Motorrad, Anhänger, Oldtimer, Gasanlagen, BO-Kraft.'},
+        {name:'Service & Disposition', role:'Terminplanung & Abholservice', desc:'Koordination Ihrer Terminbuchung, des Abholservices und Ansprechpartner für alle Fragen rund um Ihre Fahrzeugprüfung.'},
+      ].map(m=>(
+        <div key={m.name} style={{marginBottom:14,padding:'16px 18px',background:'var(--dark2)',borderRadius:12,border:'1px solid rgba(255,255,255,.07)'}}>
+          <div style={{fontWeight:700,fontSize:14,color:'var(--white)',marginBottom:2}}>{m.name}</div>
+          <div style={{fontSize:11,color:'var(--accent)',fontWeight:600,marginBottom:8,textTransform:'uppercase',letterSpacing:'.08em'}}>{m.role}</div>
+          <p style={{fontSize:12.5,margin:0}}>{m.desc}</p>
+        </div>
+      ))}
+      <p style={{marginTop:12,fontSize:12,color:'rgba(255,255,255,.35)'}}>Alle Prüfer handeln im Auftrag und unter den Standards des TÜV NORD.</p>
+    </div>
+  ),
+
+  Karriere: (
+    <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.9}}>
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10,marginTop:0}}>Karriere bei uns</h4>
+      <p style={{marginBottom:20}}>Wir wachsen und suchen engagierte Fachkräfte, die gemeinsam mit uns die Fahrzeugprüfung in Oberhausen und Umgebung gestalten möchten.</p>
+      {[
+        {title:'KFZ-Prüfer / Sachverständiger (m/w/d)', type:'Vollzeit', req:['Zulassung nach § 29 StVZO oder laufende Qualifizierung','Erfahrung in der Fahrzeugtechnik','Teamfähigkeit und Zuverlässigkeit']},
+        {title:'Service-Mitarbeiter Terminplanung (m/w/d)', type:'Teilzeit / Vollzeit', req:['Organisationstalent und Kommunikationsstärke','Gute Deutschkenntnisse, weitere Sprachen von Vorteil','PC-Kenntnisse']},
+      ].map(job=>(
+        <div key={job.title} style={{marginBottom:14,padding:'18px 20px',background:'var(--dark2)',borderRadius:12,border:'1px solid rgba(255,255,255,.07)'}}>
+          <div style={{fontWeight:700,fontSize:14,color:'var(--white)',marginBottom:4}}>{job.title}</div>
+          <div style={{fontSize:11,color:'var(--accent)',fontWeight:600,marginBottom:10,textTransform:'uppercase',letterSpacing:'.08em'}}>{job.type}</div>
+          <ul style={{paddingLeft:16,margin:0,display:'flex',flexDirection:'column',gap:4}}>
+            {job.req.map(r=><li key={r} style={{fontSize:12.5}}>{r}</li>)}
+          </ul>
+        </div>
+      ))}
+      <div style={{marginTop:18,padding:'16px 20px',background:'rgba(91,145,244,.08)',borderRadius:12,border:'1px solid rgba(91,145,244,.2)'}}>
+        <div style={{fontWeight:700,color:'var(--white)',marginBottom:6}}>Jetzt bewerben</div>
+        <p style={{fontSize:12.5,margin:0}}>Lebenslauf + kurzes Anschreiben an:<br/>
+          <a href="mailto:aqureischi@extern.tuev-nord.de" style={{color:'var(--accent)',textDecoration:'none',fontWeight:600}}>aqureischi@extern.tuev-nord.de</a>
+        </p>
+      </div>
+    </div>
+  ),
+
+  Kontakt: (
+    <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.9}}>
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:16,marginTop:0}}>Kontakt & Anfahrt</h4>
+      <div style={{marginBottom:18,padding:'16px 20px',background:'var(--dark2)',borderRadius:12,border:'1px solid rgba(255,255,255,.07)'}}>
+        <div style={{fontWeight:700,color:'var(--white)',marginBottom:8}}>Ing.-Büro Qureischi · KFZ-Prüfstützpunkt</div>
+        <div style={{display:'flex',flexDirection:'column',gap:4,fontSize:13}}>
+          <span>📍 Mülheimer Str. 155 · 46045 Oberhausen</span>
+          <span>🕐 Mo–Fr 08:00–18:00 Uhr · Sa nach Vereinbarung</span>
+        </div>
+      </div>
+      <div style={{display:'flex',flexDirection:'column',gap:10,marginBottom:18}}>
+        <a href="tel:+4915755476991" style={{display:'flex',alignItems:'center',gap:12,padding:'14px 18px',background:'rgba(59,130,246,.12)',border:'1px solid rgba(59,130,246,.25)',borderRadius:12,textDecoration:'none',color:'var(--white)',fontWeight:600,fontSize:14}}>
+          <span style={{fontSize:20}}>📞</span><span>01575 5476991 — Anrufen</span>
+        </a>
+        <a href="https://wa.me/4915755476991" target="_blank" rel="noopener noreferrer" style={{display:'flex',alignItems:'center',gap:12,padding:'14px 18px',background:'rgba(34,197,94,.12)',border:'1px solid rgba(34,197,94,.25)',borderRadius:12,textDecoration:'none',color:'var(--white)',fontWeight:600,fontSize:14}}>
+          <span style={{fontSize:20}}>💬</span><span>WhatsApp schreiben</span>
+        </a>
+        <a href="mailto:aqureischi@extern.tuev-nord.de" style={{display:'flex',alignItems:'center',gap:12,padding:'14px 18px',background:'rgba(91,145,244,.08)',border:'1px solid rgba(91,145,244,.2)',borderRadius:12,textDecoration:'none',color:'var(--white)',fontWeight:600,fontSize:14}}>
+          <span style={{fontSize:20}}>✉️</span><span>aqureischi@extern.tuev-nord.de</span>
+        </a>
+      </div>
+      <div style={{padding:'14px 18px',background:'var(--dark2)',borderRadius:12,border:'1px solid rgba(255,255,255,.07)',fontSize:12}}>
+        <strong style={{color:'var(--white)'}}>Terminbuchung:</strong> Nutzen Sie das Online-Buchungsformular auf dieser Seite — schnell, einfach, ohne Wartezeit.
+      </div>
+    </div>
+  ),
 };
 
 const Modal = ({ title, onClose }) => {
@@ -1167,7 +2174,7 @@ const Modal = ({ title, onClose }) => {
   return (
     <div style={{position:'fixed',inset:0,zIndex:999,display:'flex',alignItems:'center',justifyContent:'center',padding:16}}>
       <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={onClose} style={{position:'absolute',inset:0,background:'rgba(0,0,0,.75)',backdropFilter:'blur(6px)'}}/>
-      <motion.div initial={{opacity:0,y:24,scale:.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:12,scale:.97}} style={{position:'relative',background:'var(--dark)',width:'100%',maxWidth:540,maxHeight:'86vh',borderRadius:16,display:'flex',flexDirection:'column',boxShadow:'0 24px 52px rgba(0,0,0,.5)',overflow:'hidden',border:'1px solid rgba(255,255,255,.07)'}}>
+      <motion.div initial={{opacity:0,y:24,scale:.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:12,scale:.97}} style={{position:'relative',background:'var(--dark)',width:'100%',maxWidth:680,maxHeight:'88vh',borderRadius:16,display:'flex',flexDirection:'column',boxShadow:'0 24px 52px rgba(0,0,0,.5)',overflow:'hidden',border:'1px solid rgba(255,255,255,.07)'}}>
         <div style={{padding:'18px 24px',borderBottom:'1px solid rgba(255,255,255,.07)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
           <h3 style={{fontWeight:700,fontSize:18,color:'var(--white)'}}>{title}</h3>
           <button onClick={onClose} style={{background:'rgba(255,255,255,.07)',border:'none',width:32,height:32,borderRadius:'50%',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.X s={15} c="var(--text)"/></button>
@@ -1349,7 +2356,6 @@ export default function App() {
       <G/>
       <Navbar onBook={scrollBook}/>
       <Hero onBook={scrollBook}/>
-      <TrustBar/>
       <Services/>
       <Steps/>
       <BookingSection/>
