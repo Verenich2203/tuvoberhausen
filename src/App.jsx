@@ -444,7 +444,7 @@ const Hero = ({ onBook }) => {
 
 
 /* ─── SERVICES ───────────────────────────────────────────────────────────── */
-const Services = () => {
+const Services = ({ onShowLeistungen }) => {
   /* ── state ── */
   const [modal,         setModal]         = useState(null);
   const [activeIdx,     setActiveIdx]     = useState(0);
@@ -789,12 +789,12 @@ const Services = () => {
             </div>
             <h2 style={{fontWeight:800,fontSize:'clamp(26px,3.6vw,44px)',color:'var(--white)',letterSpacing:'-.02em',lineHeight:1.1}}>Unsere amtlichen Leistungen</h2>
           </div>
-          <a href="#termin"
-            style={{display:'inline-flex',alignItems:'center',gap:8,fontSize:13,fontWeight:700,color:'var(--accent)',textDecoration:'none',letterSpacing:'.04em',textTransform:'uppercase',border:'1.5px solid rgba(91,145,244,.35)',padding:'10px 22px',borderRadius:8,transition:'all .2s'}}
+          <button onClick={onShowLeistungen}
+            style={{display:'inline-flex',alignItems:'center',gap:8,fontSize:13,fontWeight:700,color:'var(--accent)',background:'transparent',letterSpacing:'.04em',textTransform:'uppercase',border:'1.5px solid rgba(91,145,244,.35)',padding:'10px 22px',borderRadius:8,transition:'all .2s',cursor:'pointer',fontFamily:'var(--sans)'}}
             onMouseEnter={e=>{e.currentTarget.style.background='var(--accent)';e.currentTarget.style.color='#fff';}}
             onMouseLeave={e=>{e.currentTarget.style.background='transparent';e.currentTarget.style.color='var(--accent)';}}>
             Alle Leistungen <Ic.Arrow s={13}/>
-          </a>
+          </button>
         </motion.div>
       </div>
 
@@ -2478,10 +2478,143 @@ const CancelModal = ({ data, onClose }) => {
 };
 
 
+/* ─── ALLE LEISTUNGEN PAGE ───────────────────────────────────────────────── */
+const LeistungenPage = ({ onClose, onBook }) => {
+  const SVCS = [
+    { title:'Hauptuntersuchung (HU)', sub:'§29 StVZO', tag:'Pflicht', desc:'Gesetzlich vorgeschriebene Sicherheitsprüfung für alle zugelassenen Kraftfahrzeuge.', duration:'ca. 30 Min.', details:['Bremsanlage und Bremswirkung','Beleuchtung — Funktion und Einstellung','Lenkung, Achsen, Radaufhängung','Karosserie und Rahmen','Sichtscheiben und Spiegel','Abgasanlage','Sicherheitsgurte','Fahrzeugelektronik / OBD-Diagnose'], note:'Gesetzlich vorgeschrieben. Nach 3 Jahren bei Neuwagen, danach alle 2 Jahre.' },
+    { title:'Vorab-Check', sub:'Sicherheits-Vorprüfung', tag:'Empfohlen', desc:'Mängel vor der HU erkennen und Nachprüfungen vermeiden.', duration:'ca. 20 Min.', details:['Alle HU-relevanten Prüfpunkte','Identifikation von Mängeln','Kosten- und Zeiteinschätzung','Beratung durch Prüfingenieur','Dokumentation mit Mängelliste'], note:'Kostenlos bei anschließender HU. Separat ab 29 €.' },
+    { title:'HU + AU Kombi', sub:'§29 StVZO · Kombiangebot', tag:'Kombi', desc:'Haupt- und Abgasuntersuchung in einem Termin — spart Zeit und ist günstiger.', duration:'ca. 40 Min.', details:['Vollständige Hauptuntersuchung §29 StVZO','Abgasuntersuchung inklusive','OBD-Diagnose beider Prüfungen','Einmalige Wartezeit für beide Tests','Kombiniertes Prüfprotokoll','Sofortige Bescheinigung vor Ort'], note:'Empfehlung: HU und AU immer zusammen buchen — keine Extrakosten für die Kombination.' },
+    { title:'Eintragungen / Abnahmen', sub:'§19 StVZO', tag:'Flexibel', desc:'Offizielle Abnahme und Eintragung von Fahrzeugveränderungen.', duration:'30–60 Min.', details:['Fahrwerksveränderungen','Felgen und Bereifung','Karosserieveränderungen','Übereinstimmung mit ABE prüfen','Eintrag in Zulassungsbescheinigung'], note:'Alle ABE-Dokumente oder Gutachten mitbringen.' },
+    { title:'Abnahmen §19.3 / §15 FZV', sub:'§19.3 StVZO · §15 FZV', tag:'Abnahme', desc:'Amtliche Fahrzeugabnahme für geänderte oder neu zuzulassende Fahrzeuge.', duration:'30–60 Min.', details:['Einzelfahrzeugabnahmen','Fahrzeugänderungen ohne ABE','Wiederherstellung nach Unfall','Eintragung in Fahrzeugpapiere','Neufahrzeuge nach §15 FZV','Dokumentation und Prüfprotokoll'], note:'Alle relevanten Fahrzeugdokumente und ggf. Gutachten mitbringen.' },
+    { title:'Motorrad-HU', sub:'Zweiräder · §29 StVZO', tag:'Saisonal', desc:'Spezialisierte Hauptuntersuchung für Motorräder, Roller und Quads.', duration:'ca. 25 Min.', details:['Bremsen und Bremswirkung','Reifen und Felgen','Rahmen und Gabeln','Licht und Blinker','Kettensatz oder Kardan'], note:'Fahrzeugschein mitbringen.' },
+    { title:'Anhänger HU', sub:'Anhänger · §29 StVZO', tag:'Anhänger', desc:'Hauptuntersuchung für Anhänger und Auflieger aller Art.', duration:'ca. 25 Min.', details:['Bremsen und Bremsanlage','Beleuchtung und Elektrik','Achsen und Radaufhängung','Kupplungseinrichtung','Rahmen und Aufbau','Stützeinrichtung'], note:'Fahrzeugschein des Anhängers mitbringen. Gilt für PKW-Anhänger, Wohnwagen und Nutzfahrzeuganhänger.' },
+    { title:'Oldtimer-Gutachten', sub:'§23 StVZO · H-Kennzeichen', tag:'Speziell', desc:'Offizielles Gutachten für das H-Kennzeichen und die Oldtimerzulassung.', duration:'ca. 60 Min.', details:['Originaler Fahrzeugzustand','Bewertung von Karosserie und Technik','Sicherheitsüberprüfung §29 StVZO','Fahrzeughistorie und Dokumentation','Erstellung Gutachten §23 StVZO'], note:'Mindestens 30 Jahre altes Fahrzeug erforderlich.' },
+    { title:'Gasanlagenprüfung', sub:'LPG · CNG · Gasfahrzeuge', tag:'Gas', desc:'Amtliche Prüfung von Flüssiggas- und Erdgasanlagen gemäß ECE-R115.', duration:'ca. 30 Min.', details:['Sichtprüfung der Gasanlage','Dichtheitsprüfung aller Leitungen','Sicherheitsventile','Druckbehälter','Gasversorgung und Schaltlogik','Prüfung gem. ECE-R115 / ECE-R110'], note:'Prüfbuch der Gasanlage und Einbauattest mitbringen. Prüfintervall alle 2 Jahre.' },
+    { title:'BO-Kraft Prüfung', sub:'Taxi · Mietwagen · §57a StVZO', tag:'Gewerblich', desc:'Behördliche Pflichtprüfung für Taxi- und Mietwagenfahrzeuge nach BO Kraft.', duration:'ca. 45 Min.', details:['Vollständige Fahrzeugprüfung nach BO Kraft','Taxameter-Eichung','Sicherheitsausstattung','Beleuchtungsanlage','Innenraum und Sitzanlage','Prüfbericht für Behörden'], note:'Gültige Taxigenehmigung und letzten Prüfbericht mitbringen.' },
+    { title:'Schadensgutachten', sub:'Unfallschaden · Wertermittlung', tag:'Gutachten', desc:'Unabhängiges Gutachten nach Unfall — für vollständige Schadensregulierung.', duration:'ca. 45–60 Min.', details:['Vollständige Schadensdokumentation','Ermittlung der Reparaturkosten','Berechnung der Wertminderung (Merkantil)','Wiederbeschaffungswert','Feststellung von Vorschäden','Rechtssicheres Gutachten für Versicherung und Gericht'], note:'Durch ein unabhängiges Gutachten erhalten Sie in der Regel eine höhere Entschädigung als bei direkter Schätzung der Versicherung.' },
+  ];
+
+  const TAG = {
+    'Pflicht':   { bg:'rgba(239,68,68,.13)',  bd:'rgba(239,68,68,.28)',  c:'#EF4444' },
+    'Empfohlen': { bg:'rgba(16,185,129,.13)', bd:'rgba(16,185,129,.28)', c:'#10B981' },
+    'Flexibel':  { bg:'rgba(91,145,244,.13)', bd:'rgba(91,145,244,.28)', c:'#5B91F4' },
+    'Saisonal':  { bg:'rgba(245,158,11,.13)', bd:'rgba(245,158,11,.28)', c:'#F59E0B' },
+    'Speziell':  { bg:'rgba(139,92,246,.13)', bd:'rgba(139,92,246,.28)', c:'#8B5CF6' },
+    'Kombi':     { bg:'rgba(91,145,244,.13)', bd:'rgba(91,145,244,.28)', c:'#5B91F4' },
+    'Anhänger':  { bg:'rgba(91,145,244,.13)', bd:'rgba(91,145,244,.28)', c:'#5B91F4' },
+    'Gas':       { bg:'rgba(16,185,129,.13)', bd:'rgba(16,185,129,.28)', c:'#10B981' },
+    'Gewerblich':{ bg:'rgba(245,158,11,.13)', bd:'rgba(245,158,11,.28)', c:'#F59E0B' },
+    'Abnahme':   { bg:'rgba(91,145,244,.13)', bd:'rgba(91,145,244,.28)', c:'#5B91F4' },
+    'Gutachten': { bg:'rgba(239,68,68,.13)',  bd:'rgba(239,68,68,.28)',  c:'#EF4444' },
+  };
+
+  return (
+    <motion.div
+      initial={{opacity:0,y:30}} animate={{opacity:1,y:0}} exit={{opacity:0,y:20}}
+      transition={{duration:.32,ease:[.22,1,.36,1]}}
+      style={{position:'fixed',inset:0,zIndex:9000,background:'var(--dark)',overflowY:'auto'}}
+    >
+      {/* Sticky header */}
+      <div style={{position:'sticky',top:0,zIndex:10,background:'rgba(27,30,36,.97)',backdropFilter:'blur(18px)',WebkitBackdropFilter:'blur(18px)',borderBottom:'1px solid rgba(255,255,255,.07)'}}>
+        <div style={{maxWidth:1200,margin:'0 auto',padding:'0 24px',height:62,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <div style={{display:'flex',alignItems:'center',gap:14}}>
+            <button onClick={onClose} style={{background:'none',border:'none',color:'var(--smoke)',cursor:'pointer',display:'flex',alignItems:'center',gap:7,fontSize:13,fontWeight:600,padding:0,fontFamily:'var(--sans)'}}>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M19 12H5M5 12L12 19M5 12L12 5"/></svg>
+              Zurück
+            </button>
+            <span style={{width:1,height:18,background:'rgba(255,255,255,.12)'}}/>
+            <span style={{fontSize:14,fontWeight:700,color:'var(--white)'}}>Alle Leistungen</span>
+          </div>
+          <button className="btn btn-primary" style={{fontSize:12,padding:'9px 20px'}} onClick={()=>{onClose();setTimeout(onBook,300);}}>
+            Termin buchen
+          </button>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div style={{maxWidth:1200,margin:'0 auto',padding:'44px 24px 80px'}}>
+
+        {/* Intro */}
+        <div style={{marginBottom:44,maxWidth:620}}>
+          <div style={{display:'inline-flex',alignItems:'center',gap:7,background:'rgba(91,145,244,.1)',border:'1px solid rgba(91,145,244,.2)',borderRadius:20,padding:'4px 14px',fontSize:11,fontWeight:700,color:'#5B91F4',letterSpacing:'.1em',textTransform:'uppercase',marginBottom:16}}>
+            Akkreditierter TÜV NORD-Partner
+          </div>
+          <h2 style={{fontWeight:800,fontSize:'clamp(24px,3vw,38px)',color:'var(--white)',lineHeight:1.1,letterSpacing:'-.02em',marginBottom:14}}>
+            Unsere amtlichen Leistungen
+          </h2>
+          <p style={{fontSize:15,color:'var(--smoke)',lineHeight:1.8}}>
+            Als akkreditierter Kooperationspartner des TÜV NORD führen wir alle amtlichen Fahrzeugprüfungen nach § 29 StVZO durch. Alle ausgestellten Prüfplaketten sind bundesweit anerkannt.
+          </p>
+        </div>
+
+        {/* Cards grid */}
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(310px,1fr))',gap:18,marginBottom:56}}>
+          {SVCS.map((s)=>{
+            const t = TAG[s.tag] || TAG['Flexibel'];
+            return (
+              <div key={s.title} style={{background:'rgba(35,39,47,.65)',border:'1px solid rgba(255,255,255,.07)',borderRadius:16,padding:'22px 20px 18px',display:'flex',flexDirection:'column'}}>
+
+                {/* Tag + duration */}
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:14}}>
+                  <span style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',padding:'3px 10px',borderRadius:20,background:t.bg,border:`1px solid ${t.bd}`,color:t.c}}>
+                    {s.tag}
+                  </span>
+                  <span style={{fontSize:11,color:'rgba(255,255,255,.3)',display:'flex',alignItems:'center',gap:5}}>
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    {s.duration}
+                  </span>
+                </div>
+
+                {/* Title */}
+                <div style={{marginBottom:10}}>
+                  <div style={{fontSize:10,fontWeight:700,color:'rgba(255,255,255,.28)',letterSpacing:'.1em',textTransform:'uppercase',marginBottom:4}}>{s.sub}</div>
+                  <div style={{fontSize:16,fontWeight:800,color:'var(--white)',lineHeight:1.2,letterSpacing:'-.01em'}}>{s.title}</div>
+                </div>
+
+                {/* Desc */}
+                <div style={{fontSize:12.5,color:'var(--smoke)',lineHeight:1.65,marginBottom:14}}>{s.desc}</div>
+
+                {/* Details rows */}
+                <div style={{border:'1px solid rgba(255,255,255,.06)',borderRadius:10,overflow:'hidden',marginBottom:14}}>
+                  {s.details.map((d,i)=>(
+                    <div key={d} style={{padding:'7px 12px',fontSize:12,color:'var(--smoke)',background:i%2===0?'transparent':'rgba(255,255,255,.02)',borderBottom:i<s.details.length-1?'1px solid rgba(255,255,255,.04)':'none'}}>
+                      {d}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Note */}
+                <div style={{marginTop:'auto',fontSize:11.5,color:'rgba(255,255,255,.32)',lineHeight:1.6,padding:'9px 12px',background:'rgba(255,255,255,.03)',borderRadius:8,border:'1px solid rgba(255,255,255,.05)'}}>
+                  {s.note}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Bottom CTA */}
+        <div style={{textAlign:'center',padding:'44px 24px',background:'rgba(91,145,244,.05)',border:'1px solid rgba(91,145,244,.12)',borderRadius:20}}>
+          <div style={{fontSize:22,fontWeight:800,color:'var(--white)',marginBottom:10,letterSpacing:'-.01em'}}>Jetzt Termin buchen</div>
+          <div style={{fontSize:14,color:'var(--smoke)',marginBottom:26,lineHeight:1.7}}>Wählen Sie Ihren Wunschtermin — schnell, einfach und ohne Wartezeit.<br/>Optional mit Abhol- und Bring-Service.</div>
+          <div style={{display:'flex',gap:14,justifyContent:'center',flexWrap:'wrap'}}>
+            <button className="btn btn-primary" style={{fontSize:14,padding:'14px 32px'}} onClick={()=>{onClose();setTimeout(onBook,300);}}>
+              Termin buchen <Ic.Arrow s={16}/>
+            </button>
+            <a href={PHONE_HREF} className="btn btn-ghost" style={{fontSize:14,padding:'14px 32px'}}>
+              <Ic.Phone s={16}/> {PHONE}
+            </a>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 /* ─── APP ────────────────────────────────────────────────────────────────── */
 export default function App() {
   const [modal, setModal] = useState(null);
   const [cancelData, setCancelData] = useState(null);
+  const [showLeistungen, setShowLeistungen] = useState(false);
 
   // --- ПУЛЕНЕПРОБИВАЕМАЯ ПРОВЕРКА АДМИНКИ ---
   const [isAdmin, setIsAdmin] = useState(window.location.hash === '#admin');
@@ -2522,7 +2655,7 @@ export default function App() {
       <G/>
       <Navbar onBook={scrollBook}/>
       <Hero onBook={scrollBook}/>
-      <Services/>
+      <Services onShowLeistungen={()=>setShowLeistungen(true)}/>
       <Steps/>
       <BookingSection/>
       <FAQ/>
@@ -2532,6 +2665,10 @@ export default function App() {
       
       <AnimatePresence>
         {modal && <Modal title={modal} onClose={()=>setModal(null)}/>}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showLeistungen && <LeistungenPage onClose={()=>setShowLeistungen(false)} onBook={scrollBook}/>}
       </AnimatePresence>
 
       <AnimatePresence>
