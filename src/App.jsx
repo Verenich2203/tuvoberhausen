@@ -1885,7 +1885,7 @@ const Footer = ({ openModal }) => (
           <div key={title}>
             <div style={{fontSize:10,fontWeight:700,letterSpacing:'.16em',textTransform:'uppercase',color:'rgba(255,255,255,.28)',marginBottom:14}}>{title}</div>
             <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:9}}>
-              {items.map(item=><li key={item}><button onClick={()=>['Impressum','Datenschutz','AGB','Cookie-Einstellungen'].includes(item)&&openModal(item)} style={{background:'none',border:'none',color:'var(--smoke)',fontSize:12.5,cursor:'pointer',padding:0,fontFamily:'var(--sans)',transition:'color .16s'}} onMouseOver={e=>e.target.style.color='var(--white)'} onMouseOut={e=>e.target.style.color='var(--smoke)'}>{item}</button></li>)}
+              {items.map(item=><li key={item}><button onClick={()=>openModal(item)} style={{background:'none',border:'none',color:'var(--smoke)',fontSize:12.5,cursor:'pointer',padding:0,fontFamily:'var(--sans)',transition:'color .16s'}} onMouseOver={e=>e.target.style.color='var(--white)'} onMouseOut={e=>e.target.style.color='var(--smoke)'}>{item}</button></li>)}
             </ul>
           </div>
         ))}
@@ -1925,16 +1925,23 @@ const LegalContent = {
         46045 Oberhausen
       </p>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Verantwortlich für den Inhalt gemäß § 55 Abs. 2 RStV</h4>
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Verantwortlich für den Inhalt gemäß § 18 Abs. 2 MStV</h4>
       <p style={{marginBottom:20}}>
         A. Qureischi<br/>
         Mülheimer Str. 155<br/>
         46045 Oberhausen
       </p>
 
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Aufsichtsbehörde</h4>
+      <p style={{marginBottom:20}}>
+        Kraftfahrt-Bundesamt (KBA)<br/>
+        Fördestraße 16 · 24944 Flensburg<br/>
+        Die Tätigkeit als anerkannte Überwachungsorganisation (ÜO) unterliegt der Aufsicht gemäß § 29 StVZO i.V.m. Anlage VIII StVZO.
+      </p>
+
       <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Berufsrechtliche Regelungen</h4>
       <p style={{marginBottom:20}}>
-        Das Ing.-Büro Qureischi ist als Kooperationspartner des TÜV NORD akkreditiert und führt Hauptuntersuchungen (HU) sowie Abgasuntersuchungen (AU) gemäß § 29 StVZO durch. Die Tätigkeit unterliegt den Vorschriften der StVZO, insbesondere § 29 i.V.m. Anlage VIII StVZO sowie den Richtlinien des Kraftfahrt-Bundesamtes (KBA).
+        Das Ing.-Büro Qureischi ist als Kooperationspartner des TÜV NORD akkreditiert und führt Hauptuntersuchungen (HU) sowie Abgasuntersuchungen (AU) gemäß § 29 StVZO durch. Die Tätigkeit unterliegt den Vorschriften der StVZO, insbesondere § 29 i.V.m. Anlage VIII StVZO sowie den Richtlinien des Kraftfahrt-Bundesamtes (KBA). Berufsrechtliche Regelungen sind einsehbar unter: <a href="https://www.kba.de" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>www.kba.de</a>
       </p>
 
       <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Haftungsausschluss</h4>
@@ -2035,7 +2042,7 @@ const LegalContent = {
       <p style={{marginBottom:20,fontSize:12,color:'rgba(255,255,255,.35)'}}>Stand: Mai 2026 · Ing.-Büro Qureischi, Oberhausen</p>
 
       <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10,marginTop:0}}>§ 1 Geltungsbereich</h4>
-      <p style={{marginBottom:18}}>Diese AGB gelten für alle Terminbuchungen und Dienstleistungen des Ing.-Büro Qureischi (Kooperationspartner des TÜV NORD), Mülheimer Str. 155, 46045 Oberhausen, über autoservice-ob.de sowie telefonisch vereinbarte Termine.</p>
+      <p style={{marginBottom:18}}>Diese AGB gelten für alle Terminbuchungen und Dienstleistungen des Ing.-Büro Qureischi (Kooperationspartner des TÜV NORD), Mülheimer Str. 155, 46045 Oberhausen, über diese Website sowie telefonisch vereinbarte Termine.</p>
 
       <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 2 Vertragsschluss</h4>
       <p style={{marginBottom:18}}>Die Online-Terminbuchung ist eine verbindliche Terminanfrage. Der Vertrag kommt mit unserer Bestätigung (per E-Mail oder Telefon) zustande. Wir behalten uns vor, Buchungen bei Kapazitätsengpässen abzulehnen.</p>
@@ -2054,19 +2061,22 @@ const LegalContent = {
       <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 5 Leistungserbringung</h4>
       <p style={{marginBottom:18}}>HU und AU werden gemäß § 29 StVZO i.V.m. Anlage VIII StVZO durchgeführt. Bei erheblichen Mängeln ist eine Nachprüfung innerhalb gesetzlicher Fristen erforderlich. Prüfplakette und Prüfbericht werden unmittelbar nach Abschluss ausgehändigt.</p>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 6 Haftung</h4>
-      <p style={{marginBottom:18}}>Unbeschränkte Haftung für Verletzungen von Leben, Körper oder Gesundheit. Im Übrigen nur Haftung bei Vorsatz und grober Fahrlässigkeit. Weitergehende Haftung für einfache Fahrlässigkeit ausgeschlossen (§ 521 BGB analog). Keine Haftung für Verzögerungen durch höhere Gewalt oder behördliche Auflagen.</p>
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 6 Widerrufsrecht</h4>
+      <p style={{marginBottom:18}}>Für Terminbuchungen zur Durchführung von Hauptuntersuchungen und sonstigen Fahrzeugprüfungen besteht gemäß <strong style={{color:'var(--white)'}}>§ 312g Abs. 2 Nr. 9 BGB</strong> kein Widerrufsrecht, da es sich um Dienstleistungsverträge handelt, die zu einem festgelegten Termin erbracht werden. Es gelten die Stornierungsbedingungen gemäß § 3.</p>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 7 Datenschutz</h4>
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 7 Haftung</h4>
+      <p style={{marginBottom:18}}>Unbeschränkte Haftung für Verletzungen von Leben, Körper oder Gesundheit sowie bei Vorsatz und grober Fahrlässigkeit (§ 276 BGB). Die Haftung für leichte Fahrlässigkeit ist ausgeschlossen, soweit keine wesentlichen Vertragspflichten (Kardinalpflichten) verletzt werden. Bei Verletzung von Kardinalpflichten ist die Haftung für leichte Fahrlässigkeit auf den vertragstypisch vorhersehbaren Schaden begrenzt. Keine Haftung für Verzögerungen durch höhere Gewalt oder behördliche Auflagen.</p>
+
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 8 Datenschutz</h4>
       <p style={{marginBottom:18}}>Buchungsdaten werden ausschließlich zur Vertragserfüllung und Terminverwaltung verwendet. Details entnehmen Sie unserer Datenschutzerklärung.</p>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 8 Anwendbares Recht & Gerichtsstand</h4>
-      <p style={{marginBottom:18}}>Es gilt deutsches Recht unter Ausschluss des UN-Kaufrechts. Gerichtsstand Oberhausen, soweit gesetzlich zulässig. Keine Teilnahme an Verbraucherschlichtungsverfahren.</p>
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 9 Anwendbares Recht & Gerichtsstand</h4>
+      <p style={{marginBottom:18}}>Es gilt deutsches Recht unter Ausschluss des UN-Kaufrechts (CISG). Gerichtsstand ist Oberhausen, soweit gesetzlich zulässig. Für Verbraucher gilt der Gerichtsstand des allgemeinen Wohnsitzes. Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 9 Salvatorische Klausel</h4>
-      <p style={{marginBottom:18}}>Unwirksame Einzelbestimmungen berühren die Wirksamkeit der übrigen AGB nicht. Es gilt die gesetzliche Regelung.</p>
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>§ 10 Salvatorische Klausel</h4>
+      <p style={{marginBottom:18}}>Sollten einzelne Bestimmungen dieser AGB ganz oder teilweise unwirksam sein oder werden, berührt dies die Wirksamkeit der übrigen Bestimmungen nicht. An die Stelle der unwirksamen Bestimmung tritt die gesetzliche Regelung.</p>
 
-      <p style={{fontSize:11,color:'rgba(255,255,255,.25)',marginTop:24,borderTop:'1px solid rgba(255,255,255,.07)',paddingTop:14}}>Stand: Mai 2026 · Ing.-Büro Qureischi, Oberhausen</p>
+      <p style={{fontSize:11,color:'rgba(255,255,255,.25)',marginTop:24,borderTop:'1px solid rgba(255,255,255,.07)',paddingTop:14}}>Stand: Mai 2026 · Ing.-Büro Qureischi, Mülheimer Str. 155, 46045 Oberhausen</p>
     </div>
   ),
 
@@ -2083,15 +2093,22 @@ const LegalContent = {
       <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>TÜV NORD Partnerschaft</h4>
       <p style={{marginBottom:18}}>Als offizieller Kooperationspartner des TÜV NORD sind alle Prüfer nach § 29 StVZO i.V.m. Anlage VIIIa zugelassen. Prüfplaketten und Prüfberichte haben bundesweite Gültigkeit und werden sofort nach der Untersuchung ausgestellt.</p>
 
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10}}>Unsere Werte</h4>
-      <ul style={{paddingLeft:18,marginBottom:18,display:'flex',flexDirection:'column',gap:8}}>
-        <li><strong style={{color:'var(--white)'}}>Transparenz:</strong> Feste Preise, keine versteckten Kosten.</li>
-        <li><strong style={{color:'var(--white)'}}>Zuverlässigkeit:</strong> Pünktliche Termine nach TÜV-Standards.</li>
-        <li><strong style={{color:'var(--white)'}}>Kundennähe:</strong> Persönliche Beratung, kurze Wege.</li>
-        <li><strong style={{color:'var(--white)'}}>Kompetenz:</strong> PKW, Motorrad, Oldtimer, Anhänger, Taxi, Gasanlagen.</li>
-      </ul>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:18}}>
+        {[
+          {icon:'🛡️',label:'Akkreditiert',desc:'TÜV NORD Kooperationspartner'},
+          {icon:'⏱️',label:'Schnell & Flexibel',desc:'Online-Buchung, Abholservice'},
+          {icon:'💰',label:'Faire Preise',desc:'Keine versteckten Kosten'},
+          {icon:'🏆',label:'Erfahren',desc:'PKW, Motorrad, Oldtimer, LPG'},
+        ].map(v=>(
+          <div key={v.label} style={{padding:'14px 16px',background:'var(--dark2)',borderRadius:10,border:'1px solid rgba(255,255,255,.07)'}}>
+            <div style={{fontSize:20,marginBottom:6}}>{v.icon}</div>
+            <div style={{fontWeight:700,fontSize:13,color:'var(--white)',marginBottom:2}}>{v.label}</div>
+            <div style={{fontSize:11.5,color:'var(--smoke)'}}>{v.desc}</div>
+          </div>
+        ))}
+      </div>
 
-      <div style={{marginTop:20,padding:'16px 20px',background:'rgba(91,145,244,.08)',borderRadius:12,border:'1px solid rgba(91,145,244,.2)'}}>
+      <div style={{padding:'16px 20px',background:'rgba(91,145,244,.08)',borderRadius:12,border:'1px solid rgba(91,145,244,.2)'}}>
         <div style={{fontWeight:700,color:'var(--white)',marginBottom:6}}>KFZ-Prüfstützpunkt · Malik Car-Service</div>
         <div style={{fontSize:12,color:'var(--smoke)'}}>Mülheimer Str. 155 · 46045 Oberhausen<br/>Mo–Fr 08:00–18:00 · Sa nach Vereinbarung</div>
       </div>
@@ -2100,43 +2117,67 @@ const LegalContent = {
 
   Team: (
     <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.9}}>
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:16,marginTop:0}}>Unser Team</h4>
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:6,marginTop:0}}>Unser Team</h4>
+      <p style={{marginBottom:18,fontSize:12.5}}>Hinter jedem erfolgreichen Prüfergebnis stehen qualifizierte Fachleute — zertifiziert nach TÜV NORD-Standards und fortlaufend geschult.</p>
       {[
-        {name:'A. Qureischi', role:'Leiter & Sachverständiger', desc:'Akkreditierter Ingenieursachverständiger, zugelassen nach § 29 StVZO. Langjährige Erfahrung in der Fahrzeugtechnik und amtlichen Hauptuntersuchung.'},
-        {name:'Technisches Prüferteam', role:'Geprüfte KFZ-Prüfer', desc:'Alle Prüfer sind nach TÜV NORD-Standards zertifiziert und regelmäßig geschult. Spezialisierungen: PKW, Motorrad, Anhänger, Oldtimer, Gasanlagen, BO-Kraft.'},
-        {name:'Service & Disposition', role:'Terminplanung & Abholservice', desc:'Koordination Ihrer Terminbuchung, des Abholservices und Ansprechpartner für alle Fragen rund um Ihre Fahrzeugprüfung.'},
+        {icon:'👷',name:'A. Qureischi', role:'Leiter & Sachverständiger', desc:'Akkreditierter Ingenieursachverständiger, zugelassen nach § 29 StVZO i.V.m. Anlage VIIIa. Langjährige Erfahrung in der Fahrzeugtechnik, amtlichen Hauptuntersuchung und Fahrzeuggutachten.',tags:['HU · AU','Oldtimer § 23','Gutachten']},
+        {icon:'🔧',name:'Technisches Prüferteam', role:'Geprüfte KFZ-Prüfer', desc:'Alle Prüfer sind nach TÜV NORD-Standards zertifiziert und nehmen regelmäßig an Pflichtschulungen teil. Spezialisierungen abdeckend für alle angebotenen Prüfkategorien.',tags:['PKW · Motorrad','Anhänger · LPG','BO-Kraft · §19.3']},
+        {icon:'📋',name:'Service & Disposition', role:'Terminplanung & Abholservice', desc:'Koordination aller Online- und Telefonbuchungen, Organisation des Abholservices und persönlicher Ansprechpartner für Rückfragen rund um Ihren Prüftermin.',tags:['Buchung','Abholservice','Kundenbetreuung']},
       ].map(m=>(
-        <div key={m.name} style={{marginBottom:14,padding:'16px 18px',background:'var(--dark2)',borderRadius:12,border:'1px solid rgba(255,255,255,.07)'}}>
-          <div style={{fontWeight:700,fontSize:14,color:'var(--white)',marginBottom:2}}>{m.name}</div>
-          <div style={{fontSize:11,color:'var(--accent)',fontWeight:600,marginBottom:8,textTransform:'uppercase',letterSpacing:'.08em'}}>{m.role}</div>
-          <p style={{fontSize:12.5,margin:0}}>{m.desc}</p>
+        <div key={m.name} style={{marginBottom:14,padding:'18px 20px',background:'var(--dark2)',borderRadius:12,border:'1px solid rgba(255,255,255,.07)'}}>
+          <div style={{display:'flex',alignItems:'flex-start',gap:14}}>
+            <div style={{fontSize:28,lineHeight:1,flexShrink:0,marginTop:2}}>{m.icon}</div>
+            <div style={{flex:1}}>
+              <div style={{fontWeight:700,fontSize:14,color:'var(--white)',marginBottom:2}}>{m.name}</div>
+              <div style={{fontSize:10,color:'var(--accent)',fontWeight:700,marginBottom:8,textTransform:'uppercase',letterSpacing:'.1em'}}>{m.role}</div>
+              <p style={{fontSize:12.5,margin:'0 0 10px'}}>{m.desc}</p>
+              <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
+                {m.tags.map(t=><span key={t} style={{fontSize:10,padding:'3px 9px',background:'rgba(91,145,244,.1)',border:'1px solid rgba(91,145,244,.2)',borderRadius:20,color:'var(--accent)',fontWeight:700,letterSpacing:'.06em'}}>{t}</span>)}
+              </div>
+            </div>
+          </div>
         </div>
       ))}
-      <p style={{marginTop:12,fontSize:12,color:'rgba(255,255,255,.35)'}}>Alle Prüfer handeln im Auftrag und unter den Standards des TÜV NORD.</p>
+      <p style={{marginTop:4,fontSize:11.5,color:'rgba(255,255,255,.3)',padding:'10px 0',borderTop:'1px solid rgba(255,255,255,.07)'}}>Alle Prüfer handeln im Auftrag und unter den Qualitätsstandards des TÜV NORD.</p>
     </div>
   ),
 
   Karriere: (
     <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.9}}>
-      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10,marginTop:0}}>Karriere bei uns</h4>
-      <p style={{marginBottom:20}}>Wir wachsen und suchen engagierte Fachkräfte, die gemeinsam mit uns die Fahrzeugprüfung in Oberhausen und Umgebung gestalten möchten.</p>
+      <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:10,marginTop:0}}>Karriere beim KFZ-Prüfstützpunkt Oberhausen</h4>
+      <p style={{marginBottom:18}}>Wir sind ein wachsender TÜV NORD-Kooperationspartner und suchen engagierte Fachkräfte für unser Team in Oberhausen. Bei uns erwartet Sie ein kollegiales Arbeitsumfeld, faire Vergütung und die Möglichkeit zur fachlichen Weiterentwicklung.</p>
+
+      <div style={{display:'flex',gap:10,marginBottom:18,flexWrap:'wrap'}}>
+        {['Faire Vergütung','Flexible Arbeitszeiten','TÜV NORD-Schulungen','Sicherer Arbeitsplatz'].map(b=>(
+          <span key={b} style={{fontSize:11,padding:'4px 12px',background:'rgba(91,145,244,.1)',border:'1px solid rgba(91,145,244,.2)',borderRadius:20,color:'var(--accent)',fontWeight:700}}>✓ {b}</span>
+        ))}
+      </div>
+
       {[
-        {title:'KFZ-Prüfer / Sachverständiger (m/w/d)', type:'Vollzeit', req:['Zulassung nach § 29 StVZO oder laufende Qualifizierung','Erfahrung in der Fahrzeugtechnik','Teamfähigkeit und Zuverlässigkeit']},
-        {title:'Service-Mitarbeiter Terminplanung (m/w/d)', type:'Teilzeit / Vollzeit', req:['Organisationstalent und Kommunikationsstärke','Gute Deutschkenntnisse, weitere Sprachen von Vorteil','PC-Kenntnisse']},
+        {title:'KFZ-Prüfer / Sachverständiger (m/w/d)', type:'Vollzeit', icon:'🔧', req:['Zulassung nach § 29 StVZO oder laufende Qualifizierung','Mehrjährige Erfahrung in der Fahrzeugtechnik','Bereitschaft zur regelmäßigen Fortbildung nach TÜV NORD-Standards','Teamfähigkeit, Zuverlässigkeit und sorgfältige Arbeitsweise']},
+        {title:'Service-Mitarbeiter Terminplanung (m/w/d)', type:'Teilzeit / Vollzeit', icon:'📋', req:['Organisationstalent und ausgeprägte Kommunikationsstärke','Sehr gute Deutschkenntnisse in Wort und Schrift','Weitere Sprachkenntnisse (z. B. Arabisch, Türkisch) willkommen','Sicherer Umgang mit PC und Buchungssystemen']},
+        {title:'Fahrer Abholservice (m/w/d)', type:'Geringfügig / Minijob', icon:'🚗', req:['Gültiger Führerschein Klasse B','Zuverlässigkeit und Pünktlichkeit','Kenntnisse der Region Oberhausen / Ruhrgebiet','Freundliches und kundenorientiertes Auftreten']},
       ].map(job=>(
-        <div key={job.title} style={{marginBottom:14,padding:'18px 20px',background:'var(--dark2)',borderRadius:12,border:'1px solid rgba(255,255,255,.07)'}}>
-          <div style={{fontWeight:700,fontSize:14,color:'var(--white)',marginBottom:4}}>{job.title}</div>
-          <div style={{fontSize:11,color:'var(--accent)',fontWeight:600,marginBottom:10,textTransform:'uppercase',letterSpacing:'.08em'}}>{job.type}</div>
-          <ul style={{paddingLeft:16,margin:0,display:'flex',flexDirection:'column',gap:4}}>
+        <div key={job.title} style={{marginBottom:12,padding:'16px 18px',background:'var(--dark2)',borderRadius:12,border:'1px solid rgba(255,255,255,.07)'}}>
+          <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:6}}>
+            <span style={{fontSize:20}}>{job.icon}</span>
+            <div>
+              <div style={{fontWeight:700,fontSize:13.5,color:'var(--white)',lineHeight:1.2}}>{job.title}</div>
+              <div style={{fontSize:10,color:'var(--accent)',fontWeight:700,textTransform:'uppercase',letterSpacing:'.08em',marginTop:2}}>{job.type}</div>
+            </div>
+          </div>
+          <ul style={{paddingLeft:18,margin:0,display:'flex',flexDirection:'column',gap:4}}>
             {job.req.map(r=><li key={r} style={{fontSize:12.5}}>{r}</li>)}
           </ul>
         </div>
       ))}
-      <div style={{marginTop:18,padding:'16px 20px',background:'rgba(91,145,244,.08)',borderRadius:12,border:'1px solid rgba(91,145,244,.2)'}}>
+
+      <div style={{marginTop:16,padding:'16px 20px',background:'rgba(91,145,244,.08)',borderRadius:12,border:'1px solid rgba(91,145,244,.2)'}}>
         <div style={{fontWeight:700,color:'var(--white)',marginBottom:6}}>Jetzt bewerben</div>
-        <p style={{fontSize:12.5,margin:0}}>Lebenslauf + kurzes Anschreiben an:<br/>
+        <p style={{fontSize:12.5,margin:'0 0 10px'}}>Senden Sie Lebenslauf und kurzes Anschreiben an:<br/>
           <a href="mailto:aqureischi@extern.tuev-nord.de" style={{color:'var(--accent)',textDecoration:'none',fontWeight:600}}>aqureischi@extern.tuev-nord.de</a>
         </p>
+        <p style={{fontSize:11.5,margin:0,color:'rgba(255,255,255,.35)'}}>Wir melden uns in der Regel innerhalb von 5 Werktagen. Alle Bewerbungen werden vertraulich behandelt.</p>
       </div>
     </div>
   ),
@@ -2144,26 +2185,40 @@ const LegalContent = {
   Kontakt: (
     <div style={{fontSize:13,color:'var(--smoke)',lineHeight:1.9}}>
       <h4 style={{color:'var(--white)',fontWeight:800,fontSize:15,marginBottom:16,marginTop:0}}>Kontakt & Anfahrt</h4>
-      <div style={{marginBottom:18,padding:'16px 20px',background:'var(--dark2)',borderRadius:12,border:'1px solid rgba(255,255,255,.07)'}}>
-        <div style={{fontWeight:700,color:'var(--white)',marginBottom:8}}>Ing.-Büro Qureischi · KFZ-Prüfstützpunkt</div>
-        <div style={{display:'flex',flexDirection:'column',gap:4,fontSize:13}}>
-          <span>📍 Mülheimer Str. 155 · 46045 Oberhausen</span>
-          <span>🕐 Mo–Fr 08:00–18:00 Uhr · Sa nach Vereinbarung</span>
+
+      <div style={{marginBottom:14,padding:'16px 20px',background:'var(--dark2)',borderRadius:12,border:'1px solid rgba(255,255,255,.07)'}}>
+        <div style={{fontWeight:700,color:'var(--white)',marginBottom:10,fontSize:14}}>📍 Ing.-Büro Qureischi · KFZ-Prüfstützpunkt</div>
+        <div style={{fontSize:13,marginBottom:6}}>Mülheimer Str. 155 · 46045 Oberhausen</div>
+        <div style={{borderTop:'1px solid rgba(255,255,255,.06)',paddingTop:10,marginTop:6}}>
+          <div style={{fontSize:11,fontWeight:700,color:'rgba(255,255,255,.35)',letterSpacing:'.1em',textTransform:'uppercase',marginBottom:8}}>Öffnungszeiten</div>
+          {[
+            {tag:'Mo–Do',time:'08:00 – 18:00 Uhr'},
+            {tag:'Fr',time:'08:00 – 17:00 Uhr'},
+            {tag:'Sa',time:'Nach Vereinbarung'},
+            {tag:'So / Feiertag',time:'Geschlossen'},
+          ].map(r=>(
+            <div key={r.tag} style={{display:'flex',justifyContent:'space-between',padding:'5px 0',borderBottom:'1px solid rgba(255,255,255,.04)',fontSize:12.5}}>
+              <span style={{color:'var(--white)',fontWeight:600}}>{r.tag}</span>
+              <span>{r.time}</span>
+            </div>
+          ))}
         </div>
       </div>
-      <div style={{display:'flex',flexDirection:'column',gap:10,marginBottom:18}}>
-        <a href="tel:+4915755476991" style={{display:'flex',alignItems:'center',gap:12,padding:'14px 18px',background:'rgba(59,130,246,.12)',border:'1px solid rgba(59,130,246,.25)',borderRadius:12,textDecoration:'none',color:'var(--white)',fontWeight:600,fontSize:14}}>
-          <span style={{fontSize:20}}>📞</span><span>01575 5476991 — Anrufen</span>
+
+      <div style={{display:'flex',flexDirection:'column',gap:9,marginBottom:14}}>
+        <a href="tel:+4915755476991" style={{display:'flex',alignItems:'center',gap:12,padding:'13px 18px',background:'rgba(59,130,246,.1)',border:'1px solid rgba(59,130,246,.22)',borderRadius:11,textDecoration:'none',color:'var(--white)',fontWeight:600,fontSize:13.5,transition:'all .2s'}}>
+          <span style={{fontSize:19}}>📞</span><div><div>Jetzt anrufen</div><div style={{fontSize:11,color:'rgba(255,255,255,.45)',fontWeight:400}}>+49 1575 5476991</div></div>
         </a>
-        <a href="https://wa.me/4915755476991" target="_blank" rel="noopener noreferrer" style={{display:'flex',alignItems:'center',gap:12,padding:'14px 18px',background:'rgba(34,197,94,.12)',border:'1px solid rgba(34,197,94,.25)',borderRadius:12,textDecoration:'none',color:'var(--white)',fontWeight:600,fontSize:14}}>
-          <span style={{fontSize:20}}>💬</span><span>WhatsApp schreiben</span>
+        <a href="https://wa.me/4915755476991" target="_blank" rel="noopener noreferrer" style={{display:'flex',alignItems:'center',gap:12,padding:'13px 18px',background:'rgba(34,197,94,.1)',border:'1px solid rgba(34,197,94,.22)',borderRadius:11,textDecoration:'none',color:'var(--white)',fontWeight:600,fontSize:13.5}}>
+          <span style={{fontSize:19}}>💬</span><div><div>WhatsApp schreiben</div><div style={{fontSize:11,color:'rgba(255,255,255,.45)',fontWeight:400}}>Antwort meist innerhalb 1 Std.</div></div>
         </a>
-        <a href="mailto:aqureischi@extern.tuev-nord.de" style={{display:'flex',alignItems:'center',gap:12,padding:'14px 18px',background:'rgba(91,145,244,.08)',border:'1px solid rgba(91,145,244,.2)',borderRadius:12,textDecoration:'none',color:'var(--white)',fontWeight:600,fontSize:14}}>
-          <span style={{fontSize:20}}>✉️</span><span>aqureischi@extern.tuev-nord.de</span>
+        <a href="mailto:aqureischi@extern.tuev-nord.de" style={{display:'flex',alignItems:'center',gap:12,padding:'13px 18px',background:'rgba(91,145,244,.08)',border:'1px solid rgba(91,145,244,.18)',borderRadius:11,textDecoration:'none',color:'var(--white)',fontWeight:600,fontSize:13.5}}>
+          <span style={{fontSize:19}}>✉️</span><div><div>E-Mail schreiben</div><div style={{fontSize:11,color:'rgba(255,255,255,.45)',fontWeight:400}}>aqureischi@extern.tuev-nord.de</div></div>
         </a>
       </div>
-      <div style={{padding:'14px 18px',background:'var(--dark2)',borderRadius:12,border:'1px solid rgba(255,255,255,.07)',fontSize:12}}>
-        <strong style={{color:'var(--white)'}}>Terminbuchung:</strong> Nutzen Sie das Online-Buchungsformular auf dieser Seite — schnell, einfach, ohne Wartezeit.
+
+      <div style={{padding:'13px 18px',background:'rgba(91,145,244,.06)',borderRadius:11,border:'1px solid rgba(91,145,244,.15)',fontSize:12}}>
+        <strong style={{color:'var(--white)'}}>⚡ Schnellste Option:</strong> Nutzen Sie das Online-Buchungsformular auf dieser Seite — Termin wählen und fertig, ohne Wartezeit in der Leitung.
       </div>
     </div>
   ),
