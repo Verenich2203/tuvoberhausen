@@ -403,18 +403,18 @@ const Hero = ({ onBook }) => {
       <HeroBg/>
       <div className="inner" style={{position:'relative',zIndex:2,width:'100%',textAlign:'center',padding:'44px 64px 40px'}}>
         <motion.div initial={{opacity:0,y:32}} animate={{opacity:1,y:0}} transition={{duration:.9,ease:[.22,1,.36,1]}} style={{maxWidth:760,margin:'0 auto'}}>
-          <div className="tag" style={{marginBottom:18,justifyContent:'center'}}>
+          <div className="tag" style={{marginBottom:22,justifyContent:'center'}}>
             Akkreditierter KFZ-Prüfstützpunkt
           </div>
-          <h1 style={{fontWeight:800,fontSize:'clamp(36px,6vw,72px)',color:'var(--white)',lineHeight:1.06,letterSpacing:'-.025em',marginBottom:16}}>
+          <h1 style={{fontWeight:800,fontSize:'clamp(36px,6vw,72px)',color:'var(--white)',lineHeight:1.08,letterSpacing:'-.025em',marginBottom:24}}>
             Ihr TÜV in<br/><span style={{color:'var(--accent)'}}>Oberhausen</span>
           </h1>
-          <p style={{fontSize:16,color:'var(--text)',lineHeight:1.75,maxWidth:520,margin:'0 auto 10px'}}>
+          <p style={{fontSize:16,color:'var(--text)',lineHeight:1.8,maxWidth:520,margin:'0 auto 24px'}}>
             Haupt- und Abgasuntersuchung einfach schnell online buchen. Auch ohne Termin möglich!
           </p>
           {/* NEW badge */}
-          <div style={{marginBottom:24}}>
-            <span style={{display:'inline-flex',alignItems:'center',gap:7,background:'rgba(91,145,244,.10)',border:'1px solid rgba(91,145,244,.22)',borderRadius:20,padding:'5px 14px',fontSize:12,fontWeight:700,color:'var(--accent)',letterSpacing:'.04em'}}>
+          <div style={{marginBottom:32}}>
+            <span style={{display:'inline-flex',alignItems:'center',gap:7,background:'rgba(91,145,244,.10)',border:'1px solid rgba(91,145,244,.22)',borderRadius:20,padding:'6px 16px',fontSize:12,fontWeight:700,color:'var(--accent)',letterSpacing:'.04em'}}>
               <span style={{width:6,height:6,borderRadius:'50%',background:'var(--accent)',flexShrink:0,animation:'softPulse 2s ease-in-out infinite'}}/>
               Jetzt Neu: Abhol- und Bring-Service
             </span>
@@ -425,7 +425,7 @@ const Hero = ({ onBook }) => {
           </div>
 
           {/* ── Stats strip inside hero ── */}
-          <div ref={statsRef} className="hero-stats" style={{marginTop:32,paddingTop:24,borderTop:'1px solid rgba(255,255,255,.07)'}}>
+          <div ref={statsRef} className="hero-stats" style={{marginTop:40,paddingTop:28,borderTop:'1px solid rgba(255,255,255,.07)'}}>
             {STATS.map((s, i) => (
               <motion.div key={s.label}
                 initial={{opacity:0,y:16}} animate={statsActive?{opacity:1,y:0}:{}}
@@ -523,19 +523,17 @@ const Services = () => {
     setTilt({ x: ny * -11, y: nx * 13 });
   }, [cardHovered]);
 
-  /* ── pointer drag — touch only, mouse ignored ── */
-  const pDown = (e) => {
-    if (e.pointerType === 'mouse') return;
-    drag.current = { on: true, startX: e.clientX, moved: false };
-    e.currentTarget.setPointerCapture?.(e.pointerId);
+  /* ── touch swipe (mobile) ── */
+  const tStart = (e) => {
+    drag.current = { on: true, startX: e.touches[0].clientX, moved: false };
   };
-  const pMove = (e) => {
+  const tMove = (e) => {
     if (!drag.current.on) return;
-    if (Math.abs(e.clientX - drag.current.startX) > 8) drag.current.moved = true;
+    if (Math.abs(e.touches[0].clientX - drag.current.startX) > 8) drag.current.moved = true;
   };
-  const pUp = (e) => {
+  const tEnd = (e) => {
     if (!drag.current.on) return;
-    const d = e.clientX - drag.current.startX;
+    const d = e.changedTouches[0].clientX - drag.current.startX;
     if (Math.abs(d) > 35) {
       pauseUntil.current = Date.now() + 5000;
       d < 0 ? goNext() : goPrev();
@@ -820,10 +818,9 @@ const Services = () => {
             ref={containerRef}
             className="cine-stage"
             onMouseMove={onStageMouseMove}
-            onPointerDown={pDown}
-            onPointerMove={pMove}
-            onPointerUp={pUp}
-            onPointerLeave={pUp}
+            onTouchStart={tStart}
+            onTouchMove={tMove}
+            onTouchEnd={tEnd}
           >
             {items.map((item, i) => {
               const off  = circOff(i);
