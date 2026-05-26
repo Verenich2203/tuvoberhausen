@@ -1283,6 +1283,7 @@ const BookingSection = ({ openModal }) => {
         .bk-step-line.todo { background:#E2E8F0; }
         /* Service cards - 2 col light */
         .svc2-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+        .svc2-grid > :last-child:nth-child(odd) { grid-column:1 / -1; max-width:calc(50% - 4.5px); margin:0 auto; width:100%; }
         .svc2-card { position:relative; display:flex; align-items:center; gap:11px; padding:12px 14px; border-radius:13px; cursor:pointer; background:#F8FAFC; border:1.5px solid #E8EDF5; transition:all .25s cubic-bezier(.22,1,.36,1); overflow:hidden; }
         .svc2-card:hover { border-color:rgba(91,145,244,.4); background:#EEF4FF; }
         .svc2-card.on { background:linear-gradient(135deg,#EEF4FF,#E6EFFE); border-color:var(--accent); box-shadow:0 4px 18px rgba(91,145,244,.14); }
