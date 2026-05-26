@@ -1350,7 +1350,7 @@ const BookingSection = ({ openModal }) => {
         )}
 
         {selectedCenter && (sent ? (
-          <motion.div initial={{opacity:0,scale:.97}} animate={{opacity:1,scale:1}} className="bk-card" style={{padding:'36px 28px'}}>
+          <motion.div initial={{opacity:0,scale:.97}} animate={{opacity:1,scale:1}} className="bk-card" style={{padding:'36px 28px',background:'var(--dark2)',border:'1px solid rgba(255,255,255,.08)',borderTop:'2.5px solid var(--accent)'}}>
 
             {/* Header */}
             <div style={{marginBottom:28}}>
