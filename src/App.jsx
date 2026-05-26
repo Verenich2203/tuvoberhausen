@@ -1742,7 +1742,10 @@ const FAQ = () => {
   ];
   return (
     <div id="faq" className="section-full sec" style={{background:'var(--dark)',position:'relative',overflow:'hidden'}}>
-      <div className="bg-img" style={{backgroundImage:"url('WhatsApp2.jpeg')",opacity:0.18,pointerEvents:'none',zIndex:0}}/>
+      <div className="bg-img" style={{backgroundImage:"url('WhatsApp2.jpeg')",opacity:0.09,pointerEvents:'none',zIndex:0}}/>
+      {/* vignette */}
+      <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,.72) 100%)',pointerEvents:'none',zIndex:0}}/>
+      <div style={{position:'absolute',inset:0,background:'linear-gradient(180deg,rgba(0,0,0,.38) 0%,transparent 30%,transparent 70%,rgba(0,0,0,.45) 100%)',pointerEvents:'none',zIndex:0}}/>
       <SectionDeco side="right" opacity={0.04}/>
       <div className="inner" style={{maxWidth:780,margin:'0 auto',position:'relative',zIndex:1}}>
         <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:40}}>
@@ -1777,6 +1780,7 @@ const dispatchCookieEvent = () => window.dispatchEvent(new CustomEvent(COOKIE_EV
 
 const MapEmbed = () => {
   const [accepted, setAccepted] = useState(false);
+  const [mapActive, setMapActive] = useState(false);
   useEffect(()=>{
     const check = () => setAccepted(localStorage.getItem('cookie_consent')==='all');
     check();
@@ -1793,7 +1797,27 @@ const MapEmbed = () => {
       <button className="btn btn-primary" style={{fontSize:12,padding:'10px 18px'}} onClick={()=>{localStorage.setItem('cookie_consent','all');dispatchCookieEvent();}}>Google Maps aktivieren</button>
     </div>
   );
-  return <iframe src="https://maps.google.com/maps?q=M%C3%BClheimer+Str.+155%2C+46045+Oberhausen&t=&z=16&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style={{border:'none',display:'block',filter:'grayscale(.1)',minHeight:360}} allowFullScreen loading="lazy" title="Standort"/>;
+  return (
+    <div style={{position:'relative',width:'100%',height:'100%',minHeight:360}}>
+      <iframe
+        src="https://maps.google.com/maps?q=M%C3%BClheimer+Str.+155%2C+46045+Oberhausen&t=&z=16&ie=UTF8&iwloc=&output=embed"
+        width="100%" height="100%"
+        style={{border:'none',display:'block',minHeight:360,filter:mapActive?'grayscale(.08) brightness(1)':'grayscale(.6) brightness(.42)',transition:'filter .45s ease'}}
+        allowFullScreen loading="lazy" title="Standort"
+      />
+      {!mapActive && (
+        <div
+          onClick={()=>setMapActive(true)}
+          style={{position:'absolute',inset:0,zIndex:2,cursor:'pointer',background:'rgba(6,8,14,.22)',display:'flex',alignItems:'center',justifyContent:'center'}}
+        >
+          <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:10,padding:'16px 22px',background:'rgba(10,12,20,.72)',borderRadius:14,border:'1px solid rgba(255,255,255,.1)',backdropFilter:'blur(10px)'}}>
+            <Ic.Pin s={22} c="var(--accent)"/>
+            <span style={{fontSize:13,fontWeight:700,color:'var(--white)',letterSpacing:'.02em'}}>Karte aktivieren</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 /* ─── CONTACT ────────────────────────────────────────────────────────────── */
