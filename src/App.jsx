@@ -325,8 +325,8 @@ const Navbar = ({ onBook }) => {
         <div onClick={()=>window.scrollTo({top:0,behavior:'smooth'})} style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer'}}>
           <div style={{width:32,height:32,background:'var(--accent)',borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><Ic.Wrench s={15} c="#fff"/></div>
           <div>
-            <div style={{fontWeight:800,fontSize:14,color:'var(--white)',lineHeight:1.1,letterSpacing:'-.02em'}}>TÜV Nord <span style={{color:'var(--accent)'}}>Prüfstützpunkt</span></div>
-            <div style={{fontSize:9,letterSpacing:'.12em',color:'var(--smoke)',textTransform:'uppercase',fontWeight:600}}>Oberhausen</div>
+            <div style={{fontWeight:800,fontSize:14,color:'var(--white)',lineHeight:1.1,letterSpacing:'-.02em'}}>Ing.-Büro <span style={{color:'var(--accent)'}}>Qureischi</span></div>
+            <div style={{fontSize:9,letterSpacing:'.12em',color:'var(--smoke)',textTransform:'uppercase',fontWeight:600}}>KFZ-Prüfstützpunkt · Oberhausen</div>
           </div>
         </div>
         <nav className="hide-mob" style={{display:'flex',gap:28,alignItems:'center'}}>
@@ -404,13 +404,13 @@ const Hero = ({ onBook }) => {
       <div className="inner" style={{position:'relative',zIndex:2,width:'100%',textAlign:'center',padding:'44px 64px 40px'}}>
         <motion.div initial={{opacity:0,y:32}} animate={{opacity:1,y:0}} transition={{duration:.9,ease:[.22,1,.36,1]}} style={{maxWidth:760,margin:'0 auto'}}>
           <div className="tag" style={{marginBottom:22,justifyContent:'center'}}>
-            Akkreditierter KFZ-Prüfstützpunkt
+            Autorisierter KFZ-Prüfstützpunkt
           </div>
           <h1 style={{fontWeight:800,fontSize:'clamp(36px,6vw,72px)',color:'var(--white)',lineHeight:1.08,letterSpacing:'-.025em',marginBottom:24}}>
-            Ihr TÜV in<br/><span style={{color:'var(--accent)'}}>Oberhausen</span>
+            Ihr Prüfstützpunkt in<br/><span style={{color:'var(--accent)'}}>Oberhausen</span>
           </h1>
           <p style={{fontSize:16,color:'var(--text)',lineHeight:1.8,maxWidth:520,margin:'0 auto 24px'}}>
-            Haupt- und Abgasuntersuchung einfach schnell online buchen. Auch ohne Termin möglich!
+            Haupt- und Abgasuntersuchung einfach schnell online buchen. Terminstorno jederzeit kostenfrei.
           </p>
           {/* NEW badge */}
           <div style={{marginBottom:32}}>
@@ -467,7 +467,7 @@ const Services = () => {
     {ico:<Ic.Cert s={26} c="var(--accent)"/>,title:'HU + AU Kombi',sub:'§29 StVZO · Kombiangebot',tag:'Kombi',desc:'HU und AU in einem Termin — spart Zeit und ist oft günstiger.',duration:'ca. 40 Min.',details:['Vollständige Hauptuntersuchung §29 StVZO','Abgasuntersuchung inklusive','OBD-Diagnose beider Prüfungen','Einmalige Wartezeit für beide Tests','Kombiniertes Prüfprotokoll','Sofortige Bescheinigung vor Ort'],img:'Abgasuntersuchung.png',note:'Empfehlung: HU und AU immer zusammen buchen — keine Extrakosten für die Kombination.'},
     {ico:<Ic.Clip s={26} c="var(--accent)"/>,title:'Anhänger HU',sub:'Anhänger · §29 StVZO',tag:'Anhänger',desc:'Hauptuntersuchung für Anhänger und Auflieger aller Art.',duration:'ca. 25 Min.',details:['Prüfung von Bremsen und Bremsanlage','Kontrolle von Beleuchtung und Elektrik','Überprüfung von Achsen und Radaufhängung','Prüfung der Kupplungseinrichtung','Sichtprüfung Rahmen und Aufbau','Kontrolle der Stützeinrichtung'],img:'anhangermain.jpeg',note:'Fahrzeugschein des Anhängers mitbringen. Gilt für PKW-Anhänger, Wohnwagen und Nutzfahrzeuganhänger.'},
     {ico:<Ic.Leaf s={26} c="var(--accent)"/>,title:'Gasanlagenprüfung',sub:'LPG · CNG · Gasfahrzeuge',tag:'Gas',desc:'Amtliche Prüfung von Flüssiggas- und Erdgasanlagen gemäß ECE-R115.',duration:'ca. 30 Min.',details:['Sichtprüfung der Gasanlage','Dichtheitsprüfung aller Leitungen','Überprüfung der Sicherheitsventile','Prüfung des Druckbehälters','Funktionsprüfung der Gasversorgung','Prüfung gemäß ECE-R115 / ECE-R110'],img:'gasanlagen.jpeg',note:'Prüfbuch der Gasanlage und Einbauattest mitbringen. Prüfintervall alle 2 Jahre.'},
-    {ico:<Ic.Award s={26} c="var(--accent)"/>,title:'BO-Kraft Prüfung',sub:'Taxi · Mietwagen · §57a StVZO',tag:'Gewerblich',desc:'Behördliche Prüfung für Taxi- und Mietwagenfahrzeuge nach BO Kraft.',duration:'ca. 45 Min.',details:['Vollständige Fahrzeugprüfung nach BO Kraft','Überprüfung der Taxameter-Eichung','Kontrolle der Sicherheitsausstattung','Prüfung der Beleuchtungsanlage','Inspektion von Innenraum und Sitzanlage','Ausstellung des Prüfberichts für Behörden'],img:'taxi.jpeg',note:'Gültige Taxigenehmigung und letzten Prüfbericht mitbringen. Pflichtprüfung für konzessionierte Fahrzeuge.'},
+    {ico:<Ic.Award s={26} c="var(--accent)"/>,title:'BO-Kraft Prüfung',sub:'Taxi · Mietwagen · BO Kraft / PBefG',tag:'Gewerblich',desc:'Behördliche Prüfung für Taxi- und Mietwagenfahrzeuge nach BO Kraft.',duration:'ca. 45 Min.',details:['Vollständige Fahrzeugprüfung nach BO Kraft','Überprüfung der Taxameter-Eichung','Kontrolle der Sicherheitsausstattung','Prüfung der Beleuchtungsanlage','Inspektion von Innenraum und Sitzanlage','Ausstellung des Prüfberichts für Behörden'],img:'taxi.jpeg',note:'Gültige Taxigenehmigung und letzten Prüfbericht mitbringen. Pflichtprüfung für konzessionierte Fahrzeuge.'},
     {ico:<Ic.Cert s={26} c="var(--accent)"/>,title:'Abnahmen §19.3 / §15 FZV',sub:'§19.3 StVZO · §15 FZV',tag:'Abnahme',desc:'Amtliche Fahrzeugabnahme nach §19 Abs. 3 StVZO und §15 FZV für geänderte oder neu zuzulassende Fahrzeuge.',duration:'30–60 Min.',details:['Abnahme von Einzelfahrzeugen','Prüfung von Fahrzeugänderungen ohne ABE','Abnahme bei Wiederherstellung nach Unfall','Eintragung in Fahrzeugpapiere','Prüfung nach §15 FZV für Neufahrzeuge','Dokumentation und Prüfprotokoll'],img:'Abnahmenmain.jpeg',note:'Alle relevanten Fahrzeugdokumente und ggf. Gutachten mitbringen.'},
     {ico:<Ic.Damage s={26} c="var(--accent)"/>,title:'Schadensgutachten',sub:'Unfallschaden · Wertermittlung',tag:'Gutachten',desc:'Unabhängiges Gutachten nach Unfall — für volle Schadensregulierung durch die Versicherung.',duration:'ca. 45–60 Min.',details:['Vollständige Schadensdokumentation','Ermittlung der Reparaturkosten','Berechnung der Wertminderung (Merkantil)','Ermittlung des Wiederbeschaffungswertes','Feststellung von Vorschäden','Rechtssicheres Gutachten für Versicherung und Gericht'],img:'schaden.jpg',note:'Durch unabhängiges Gutachten erhalten Sie in der Regel höhere Entschädigung als bei Schätzung der Versicherung.'},
   ];
@@ -993,10 +993,10 @@ const Steps = () => {
 
 /* ─── STATS ──────────────────────────────────────────────────────────────── */
 const STATS = [
-  { end: 95,   suffix: '%',  label: 'Kundenzufriedenheit', decimals: 0 },
-  { end: 7500, suffix: '+',  label: 'Autos geprüft',       decimals: 0 },
-  { end: 1500, suffix: '+',  label: 'Kfz-Gutachten',       decimals: 0 },
-  { end: 100,  suffix: '%',  label: 'Ohne Termin möglich', decimals: 0 },
+  { end: 95,   suffix: '%',  label: 'Kundenzufriedenheit *', decimals: 0 },
+  { end: 7500, suffix: '+',  label: 'Autos geprüft *',      decimals: 0 },
+  { end: 1500, suffix: '+',  label: 'Kfz-Gutachten *',      decimals: 0 },
+  { end: 5,    suffix: '',   label: 'Tage pro Woche geöffnet', decimals: 0 },
 ];
 
 function useCountUp(end, duration, active) {
@@ -1070,6 +1070,9 @@ const Stats = () => {
         <div className="stats-strip">
           {STATS.map((s, i) => <StatCard key={s.label} {...s} idx={i} active={active}/>)}
         </div>
+        <div style={{textAlign:'center',padding:'8px 16px 14px',fontSize:10,color:'rgba(255,255,255,.22)'}}>
+          * Interne Schätzwerte auf Basis unserer Betriebsdaten — ohne Gewähr auf Vollständigkeit.
+        </div>
       </div>
     </div>
   );
@@ -1106,7 +1109,7 @@ const BookingSection = ({ openModal }) => {
     {ico:<Ic.Award s={22} c="var(--accent)"/>,title:'Oldtimer-Gutachten',sub:'§23 StVZO · H-Kennzeichen',tag:'Speziell'},
     {ico:<Ic.Clip s={22} c="var(--accent)"/>,title:'Anhänger HU',sub:'Anhänger · §29 StVZO',tag:'Anhänger'},
     {ico:<Ic.Leaf s={22} c="var(--accent)"/>,title:'Gasanlagenprüfung',sub:'LPG · CNG · Gasfahrzeuge',tag:'Gas'},
-    {ico:<Ic.Award s={22} c="var(--accent)"/>,title:'BO-Kraft Prüfung',sub:'Taxi · Mietwagen · §57a StVZO',tag:'Gewerblich'},
+    {ico:<Ic.Award s={22} c="var(--accent)"/>,title:'BO-Kraft Prüfung',sub:'Taxi · Mietwagen · BO Kraft / PBefG',tag:'Gewerblich'},
     {ico:<Ic.Cert s={22} c="var(--accent)"/>,title:'Abnahmen §19.3 / §15 FZV',sub:'§19.3 StVZO · §15 FZV',tag:'Abnahme'},
     {ico:<Ic.Damage s={22} c="var(--accent)"/>,title:'Schadensgutachten',sub:'Unfallschaden · Wertermittlung',tag:'Gutachten'},
   ];
@@ -1825,8 +1828,8 @@ const Contact = () => (
               <Ic.Wrench s={17} c="var(--accent)"/>
             </div>
             <div>
-              <div style={{fontWeight:800,fontSize:13,color:'var(--white)',letterSpacing:'-.01em',lineHeight:1.2}}>TÜV Nord Prüfstützpunkt Oberhausen</div>
-              <div style={{fontSize:10,color:'var(--smoke)',marginTop:2,letterSpacing:'.02em'}}>Akkreditierter KFZ-Prüfstützpunkt §29 StVZO</div>
+              <div style={{fontWeight:800,fontSize:13,color:'var(--white)',letterSpacing:'-.01em',lineHeight:1.2}}>Ing.-Büro Qureischi · KFZ-Prüfstützpunkt</div>
+              <div style={{fontSize:10,color:'var(--smoke)',marginTop:2,letterSpacing:'.02em'}}>Autorisierter Kooperationspartner TÜV NORD · §29 StVZO</div>
             </div>
           </div>
 
@@ -1880,9 +1883,9 @@ const Footer = ({ openModal }) => (
         <div>
           <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:14}}>
             <div style={{width:30,height:30,background:'var(--accent)',borderRadius:7,display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.Wrench s={14} c="#fff"/></div>
-            <span style={{fontWeight:800,fontSize:15,color:'var(--white)'}}>TÜV Nord <span style={{color:'var(--accent)'}}>Prüfstützpunkt</span> <span style={{fontWeight:400,fontSize:12,color:'rgba(255,255,255,.35)'}}>Oberhausen</span></span>
+            <span style={{fontWeight:800,fontSize:15,color:'var(--white)'}}>Ing.-Büro <span style={{color:'var(--accent)'}}>Qureischi</span> <span style={{fontWeight:400,fontSize:12,color:'rgba(255,255,255,.35)'}}>Oberhausen</span></span>
           </div>
-          <p style={{color:'var(--smoke)',fontSize:12.5,lineHeight:1.75,maxWidth:260}}>Akkreditierter KFZ-Prüfstützpunkt. HU, AU und amtliche Fahrzeugprüfungen — zuverlässig und transparent.</p>
+          <p style={{color:'var(--smoke)',fontSize:12.5,lineHeight:1.75,maxWidth:260}}>Autorisierter KFZ-Prüfstützpunkt — Kooperationspartner TÜV NORD. HU, AU und amtliche Fahrzeugprüfungen — zuverlässig und transparent.</p>
         </div>
         {/* Unternehmen — scroll to sections */}
         <div>
@@ -1904,8 +1907,8 @@ const Footer = ({ openModal }) => (
         </div>
       </div>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:8,padding:'16px 0'}}>
-        <span style={{color:'rgba(255,255,255,.2)',fontSize:11.5}}>© {new Date().getFullYear()} TÜV Nord Prüfstützpunkt Oberhausen — Alle Rechte vorbehalten.</span>
-        <span style={{color:'rgba(255,255,255,.2)',fontSize:10,letterSpacing:'.08em',textTransform:'uppercase'}}>Akkreditierter KFZ-Prüfstützpunkt · §29 StVZO</span>
+        <span style={{color:'rgba(255,255,255,.2)',fontSize:11.5}}>© {new Date().getFullYear()} Ing.-Büro Qureischi — Alle Rechte vorbehalten.</span>
+        <span style={{color:'rgba(255,255,255,.2)',fontSize:10,letterSpacing:'.08em',textTransform:'uppercase'}}>Autorisierter KFZ-Prüfstützpunkt · §29 StVZO</span>
       </div>
     </div>
   </footer>
@@ -1982,6 +1985,17 @@ const LegalContent = {
       <div style={MS.section}>
         <div style={MS.label}>EU-Streitschlichtung</div>
         <div style={MS.p}>Plattform der EU-Kommission: <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>ec.europa.eu/consumers/odr</a>. Wir nehmen nicht an Verbraucherschlichtungsverfahren teil.</div>
+      </div>
+
+      <div style={MS.divider}/>
+
+      <div style={MS.section}>
+        <div style={MS.label}>Hinweis zur Verwendung der Marke TÜV NORD</div>
+        <div style={{...MS.infoBox}}>
+          <div style={{fontSize:12.5,color:'var(--smoke)',lineHeight:1.75}}>
+            Diese Website wird betrieben von <span style={{color:'var(--white)',fontWeight:600}}>Ing.-Büro Qureischi</span> als autorisiertem Kooperationspartner der <span style={{color:'var(--white)',fontWeight:600}}>TÜV NORD Mobilität GmbH &amp; Co. KG</span>. Die Verwendung des Namens und der Marke „TÜV NORD" erfolgt ausschließlich auf Basis eines bestehenden Kooperationsvertrages und mit ausdrücklicher Genehmigung der TÜV NORD Mobilität GmbH &amp; Co. KG. Diese Website ist <span style={{color:'var(--white)',fontWeight:600}}>kein offizielles Angebot der TÜV NORD Gruppe</span> und wird von TÜV NORD weder betrieben noch verantwortet. Für den Inhalt dieser Website ist allein Ing.-Büro Qureischi verantwortlich. TÜV NORD® ist eine eingetragene Marke der TÜV NORD AG.
+          </div>
+        </div>
       </div>
 
       <div style={MS.foot}>Stand: Mai 2026</div>
@@ -2193,14 +2207,14 @@ const LegalContent = {
     <div style={MS.wrap}>
       <div style={MS.section}>
         <div style={{fontWeight:700,fontSize:15,color:'var(--white)',marginBottom:10,letterSpacing:'-.01em'}}>Ing.-Büro Qureischi</div>
-        <div style={MS.p}>Akkreditierter Kooperationspartner des TÜV NORD mit Sitz in Oberhausen. Als KFZ-Prüfstützpunkt führen wir amtliche Hauptuntersuchungen (HU), Abgasuntersuchungen (AU) und weitere Fahrzeugprüfungen nach § 29 StVZO durch — zuverlässig, transparent und ohne lange Wartezeiten.</div>
+        <div style={MS.p}>Autorisierter Kooperationspartner des TÜV NORD mit Sitz in Oberhausen. Als KFZ-Prüfstützpunkt führen wir amtliche Hauptuntersuchungen (HU), Abgasuntersuchungen (AU) und weitere Fahrzeugprüfungen nach § 29 StVZO durch — zuverlässig, transparent und ohne lange Wartezeiten.</div>
       </div>
 
       <div style={MS.divider}/>
 
       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,border:'1px solid rgba(255,255,255,.07)',borderRadius:10,overflow:'hidden',marginBottom:22}}>
         {[
-          ['Akkreditierung','TÜV NORD Kooperationspartner'],
+          ['Kooperation','TÜV NORD Kooperationspartner'],
           ['Prüfumfang','PKW, Motorrad, Oldtimer, LPG, BO-Kraft'],
           ['Terminbuchung','Online · Telefon · Abholservice'],
           ['Gültigkeit','Prüfplaketten bundesweit anerkannt'],
@@ -2221,7 +2235,7 @@ const LegalContent = {
 
       <div style={{...MS.infoBox}}>
         <div style={{fontWeight:700,color:'var(--white)',marginBottom:4,fontSize:13}}>KFZ-Prüfstützpunkt · Malik Car-Service</div>
-        <div style={{fontSize:12,color:'var(--smoke)'}}>Mülheimer Str. 155 · 46045 Oberhausen<br/>Mo–Fr 08:00–18:00 · Sa nach Vereinbarung</div>
+        <div style={{fontSize:12,color:'var(--smoke)'}}>Mülheimer Str. 155 · 46045 Oberhausen<br/>Mo–Mi 09:00–18:00 · Do &amp; Fr 15:00–18:00</div>
       </div>
     </div>
   ),
@@ -2235,9 +2249,9 @@ const LegalContent = {
       <div style={MS.divider}/>
 
       {[
-        {name:'A. Qureischi', role:'Leiter & Sachverständiger', desc:'Akkreditierter Ingenieursachverständiger, zugelassen nach § 29 StVZO i.V.m. Anlage VIIIa. Langjährige Erfahrung in der Fahrzeugtechnik, amtlichen HU und Fahrzeuggutachten.', specs:[['Zulassung','§ 29 StVZO, Anlage VIIIa'],['Schwerpunkte','HU · AU · Oldtimer · Gutachten']]},
+        {name:'A. Qureischi', role:'Leiter & Sachverständiger', desc:'Zugelassener Ingenieursachverständiger nach § 29 StVZO i.V.m. Anlage VIIIa. Langjährige Erfahrung in der Fahrzeugtechnik, amtlichen HU und Fahrzeuggutachten.', specs:[['Zulassung','§ 29 StVZO, Anlage VIIIa'],['Schwerpunkte','HU · AU · Oldtimer · Gutachten']]},
         {name:'Technisches Prüferteam', role:'Geprüfte KFZ-Prüfer', desc:'Alle Prüfer sind nach TÜV NORD-Standards zertifiziert und nehmen regelmäßig an Pflichtschulungen teil.', specs:[['Zertifizierung','TÜV NORD'],['Prüfkategorien','PKW · Motorrad · Anhänger · LPG · BO-Kraft']]},
-        {name:'Service & Disposition', role:'Terminplanung & Abholservice', desc:'Koordination aller Buchungen, Organisation des Abholservices und persönlicher Ansprechpartner für alle Fragen rund um Ihren Prüftermin.', specs:[['Erreichbarkeit','Mo–Fr 08:00–18:00'],['Kanäle','Telefon · WhatsApp · Online']]},
+        {name:'Service & Disposition', role:'Terminplanung & Abholservice', desc:'Koordination aller Buchungen, Organisation des Abholservices und persönlicher Ansprechpartner für alle Fragen rund um Ihren Prüftermin.', specs:[['Erreichbarkeit','Mo–Mi 09–18 · Do/Fr 15–18'],['Kanäle','Telefon · WhatsApp · Online']]},
       ].map((m,i,a)=>(
         <div key={m.name} style={{paddingBottom:18,marginBottom:18,borderBottom:i<a.length-1?'1px solid rgba(255,255,255,.06)':'none'}}>
           <div style={{fontWeight:700,fontSize:14,color:'var(--white)',marginBottom:2}}>{m.name}</div>
@@ -2254,7 +2268,7 @@ const LegalContent = {
         </div>
       ))}
 
-      <div style={{fontSize:11.5,color:'rgba(255,255,255,.25)'}}>Alle Prüfer handeln im Auftrag und unter den Qualitätsstandards des TÜV NORD.</div>
+      <div style={{fontSize:11.5,color:'rgba(255,255,255,.25)'}}>Alle Prüfer sind nach TÜV NORD-Standards ausgebildet und regelmäßig geschult.</div>
     </div>
   ),
 
@@ -2320,7 +2334,7 @@ const LegalContent = {
         </div>
         <div style={{padding:'0 18px'}}>
           <div style={{fontSize:10,fontWeight:700,color:'rgba(255,255,255,.28)',letterSpacing:'.12em',textTransform:'uppercase',padding:'12px 0 8px'}}>Öffnungszeiten</div>
-          {[['Mo–Do','08:00 – 18:00 Uhr'],['Fr','08:00 – 17:00 Uhr'],['Sa','Nach Vereinbarung'],['So / Feiertag','Geschlossen']].map(([d,t],i,a)=>(
+          {[['Mo – Mi','09:00 – 18:00 Uhr'],['Do & Fr','15:00 – 18:00 Uhr'],['Sa & So','Geschlossen']].map(([d,t],i,a)=>(
             <div key={d} style={{display:'flex',justifyContent:'space-between',padding:'8px 0',borderBottom:i<a.length-1?'1px solid rgba(255,255,255,.04)':'none'}}>
               <span style={{fontWeight:600,color:'var(--white)',fontSize:12.5}}>{d}</span>
               <span style={{fontSize:12.5,color:'var(--smoke)'}}>{t}</span>
