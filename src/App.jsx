@@ -1249,7 +1249,7 @@ const BookingSection = ({ openModal }) => {
   };
 
   return (
-    <div id="termin" className="section-full sec" style={{position:'relative',background:'linear-gradient(170deg,#0D1019 0%,#111520 55%,#0A0E17 100%)',overflow:'hidden'}}>
+    <div id="termin" className="section-full sec" style={{position:'relative',background:'linear-gradient(170deg,#0D1019 0%,#111520 55%,#0A0E17 100%)',overflow:'hidden',minHeight:'auto',padding:'60px 0'}}>
       {/* Background photo */}
       <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.18,pointerEvents:'none',zIndex:0}}/>
       {/* Radial vignette */}
@@ -1259,13 +1259,13 @@ const BookingSection = ({ openModal }) => {
       <div style={{position:'absolute',bottom:'-15%',right:'-6%',width:600,height:600,borderRadius:'50%',background:'radial-gradient(circle,rgba(91,145,244,.09) 0%,transparent 70%)',pointerEvents:'none',zIndex:1}}/>
       <div style={{position:'absolute',top:'40%',left:'55%',width:320,height:320,borderRadius:'50%',background:'radial-gradient(circle,rgba(120,80,255,.07) 0%,transparent 70%)',pointerEvents:'none',zIndex:1}}/>
       <style>{`
-        .bk-card { background:#F0F4F8; border:1px solid rgba(91,145,244,.12); border-top:2.5px solid var(--accent); border-radius:22px; padding:34px; box-shadow:0 24px 72px rgba(0,0,0,.28), 0 4px 20px rgba(0,0,0,.12); }
+        .bk-card { background:#F0F4F8; border:1px solid rgba(91,145,244,.12); border-top:2.5px solid var(--accent); border-radius:22px; padding:26px; box-shadow:0 24px 72px rgba(0,0,0,.28), 0 4px 20px rgba(0,0,0,.12); }
         .bk-inp { width:100%; padding:11px 14px; background:#F7F9FC; border:1.5px solid #E2E8F0; border-radius:10px; font-size:14px; color:#1E293B; font-family:var(--sans); outline:none; transition:all .18s; box-sizing:border-box; }
         .bk-inp:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(91,145,244,.10); background:#fff; }
         .bk-inp::placeholder { color:#94A3B8; }
         .bk-label { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#64748B; margin-bottom:5px; display:block; }
         /* Step indicator */
-        .bk-stepper { display:flex; align-items:flex-start; justify-content:center; margin-bottom:36px; }
+        .bk-stepper { display:flex; align-items:flex-start; justify-content:center; margin-bottom:22px; }
         .bk-step-item { display:flex; flex-direction:column; align-items:center; gap:6px; flex:1; max-width:120px; }
         .bk-step-circle { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; transition:all .3s; flex-shrink:0; }
         .bk-step-circle.done { background:var(--accent); color:#fff; box-shadow:0 4px 12px rgba(91,145,244,.3); }
@@ -1310,12 +1310,12 @@ const BookingSection = ({ openModal }) => {
       `}</style>
 
       <div className="inner" style={{maxWidth:860,position:'relative',zIndex:2}}>
-        <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:40}}>
-          <div style={{display:'inline-flex',alignItems:'center',gap:10,fontSize:11,fontWeight:700,letterSpacing:'.18em',textTransform:'uppercase',color:'var(--accent)',marginBottom:12}}>
+        <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} style={{textAlign:'center',marginBottom:28}}>
+          <div style={{display:'inline-flex',alignItems:'center',gap:10,fontSize:11,fontWeight:700,letterSpacing:'.18em',textTransform:'uppercase',color:'var(--accent)',marginBottom:10}}>
             <span style={{display:'inline-block',width:24,height:2,background:'var(--accent)',borderRadius:1}}/>ONLINE BUCHUNG
           </div>
-          <h2 style={{fontWeight:800,fontSize:'clamp(24px,3.2vw,38px)',color:'var(--white)',letterSpacing:'-.02em',marginBottom:10}}>Termin sichern — einfach online.</h2>
-          <p style={{color:'var(--smoke)',fontSize:14,maxWidth:480,margin:'0 auto'}}>In drei Schritten zum bestätigten Termin.</p>
+          <h2 style={{fontWeight:800,fontSize:'clamp(22px,3vw,34px)',color:'var(--white)',letterSpacing:'-.02em',marginBottom:6}}>Termin sichern — einfach online.</h2>
+          <p style={{color:'var(--smoke)',fontSize:13.5,maxWidth:480,margin:'0 auto'}}>In drei Schritten zum bestätigten Termin.</p>
         </motion.div>
 
         {/* ── CENTER PICKER ── */}
@@ -1370,11 +1370,11 @@ const BookingSection = ({ openModal }) => {
         )}
 
         {selectedCenter && (sent ? (
-          <motion.div initial={{opacity:0,scale:.97}} animate={{opacity:1,scale:1}} className="bk-card" style={{padding:'36px 28px',background:'var(--dark2)',border:'1px solid rgba(255,255,255,.08)',borderTop:'2.5px solid #10B981'}}>
+          <motion.div initial={{opacity:0,scale:.97}} animate={{opacity:1,scale:1}} className="bk-card" style={{padding:'26px 24px',background:'var(--dark2)',border:'1px solid rgba(255,255,255,.08)',borderTop:'2.5px solid #10B981'}}>
 
             {/* ── Status header ── */}
-            <div style={{textAlign:'center',marginBottom:30}}>
-              <div style={{width:58,height:58,borderRadius:16,background:'rgba(16,185,129,.1)',border:'1.5px solid rgba(16,185,129,.22)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px'}}>
+            <div style={{textAlign:'center',marginBottom:22}}>
+              <div style={{width:50,height:50,borderRadius:14,background:'rgba(16,185,129,.1)',border:'1.5px solid rgba(16,185,129,.22)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 14px'}}>
                 <Ic.Check s={26} c="#10B981"/>
               </div>
               <h3 style={{fontWeight:800,fontSize:22,color:'var(--white)',letterSpacing:'-.025em',margin:'0 0 8px',lineHeight:1.1}}>Termin bestätigt.</h3>
@@ -1386,7 +1386,7 @@ const BookingSection = ({ openModal }) => {
             </div>
 
             {/* ── Hero: Datum + Uhrzeit ── */}
-            <div style={{textAlign:'center',padding:'22px 16px',background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.06)',borderRadius:12,marginBottom:20}}>
+            <div style={{textAlign:'center',padding:'16px',background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.06)',borderRadius:12,marginBottom:14}}>
               <div style={{fontWeight:800,fontSize:'clamp(20px,4.5vw,26px)',color:'var(--white)',letterSpacing:'-.025em',lineHeight:1.1}}>
                 {fmtGermanDate(form.datum)}
               </div>
@@ -1414,7 +1414,7 @@ const BookingSection = ({ openModal }) => {
             </div>
 
             {/* ── Callout: Bitte mitbringen ── */}
-            <div style={{display:'flex',gap:12,padding:'13px 15px',background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.07)',borderRadius:10,marginBottom:22}}>
+            <div style={{display:'flex',gap:12,padding:'11px 14px',background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.07)',borderRadius:10,marginBottom:16}}>
               <div style={{flexShrink:0,marginTop:2,opacity:.55}}><Ic.Clip s={14} c="var(--white)"/></div>
               <div>
                 <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'rgba(255,255,255,.32)',marginBottom:4}}>Bitte mitbringen</div>
@@ -1448,14 +1448,14 @@ const BookingSection = ({ openModal }) => {
                 <div className="bk-card">
 
                   {/* ── Header ── */}
-                  <div style={{marginBottom:26}}>
-                    <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:16}}>
-                      <div style={{width:34,height:34,borderRadius:'50%',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'var(--accent)',background:'linear-gradient(135deg,rgba(91,145,244,.18),rgba(91,145,244,.06))',border:'1.5px solid rgba(91,145,244,.32)',boxShadow:'0 0 14px rgba(91,145,244,.22)'}}>01</div>
+                  <div style={{marginBottom:16}}>
+                    <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:12}}>
+                      <div style={{width:30,height:30,borderRadius:'50%',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'var(--accent)',background:'linear-gradient(135deg,rgba(91,145,244,.18),rgba(91,145,244,.06))',border:'1.5px solid rgba(91,145,244,.32)'}}>01</div>
                       <div style={{flex:1,height:1,background:'linear-gradient(90deg,rgba(91,145,244,.28) 0%,transparent 100%)'}}/>
                       <div style={{fontSize:10,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'#94A3B8'}}>Schritt 1 / 3</div>
                     </div>
-                    <h3 style={{fontWeight:800,fontSize:22,color:'#1E293B',letterSpacing:'-.02em',marginBottom:6}}>Was braucht Ihr Fahrzeug?</h3>
-                    <p style={{fontSize:12,color:'#64748B',lineHeight:1.6}}>Mehrere Leistungen kombinierbar</p>
+                    <h3 style={{fontWeight:800,fontSize:19,color:'#1E293B',letterSpacing:'-.02em',marginBottom:3}}>Was braucht Ihr Fahrzeug?</h3>
+                    <p style={{fontSize:12,color:'#64748B',lineHeight:1.5,margin:0}}>Mehrere Leistungen kombinierbar</p>
                   </div>
 
                   {/* ── Service cards 2-col ── */}
@@ -1483,7 +1483,7 @@ const BookingSection = ({ openModal }) => {
                   </div>
 
                   {/* ── Footer: counter + CTA ── */}
-                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:26,paddingTop:20,borderTop:'1px solid #F1F5F9',gap:12}}>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:16,paddingTop:14,borderTop:'1px solid #F1F5F9',gap:12}}>
                     <div>
                       {form.services.length > 0 ? (
                         <div>
@@ -1512,11 +1512,11 @@ const BookingSection = ({ openModal }) => {
             {step === 2 && (
               <motion.div key="step2" initial={{opacity:0,x:30}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-30}} transition={{duration:.25}}>
                 <div className="bk-card">
-                  <div style={{marginBottom:24}}>
-                    <div style={{fontSize:11,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:8}}>SCHRITT 02</div>
-                    <h3 style={{fontWeight:800,fontSize:22,color:'#1E293B',letterSpacing:'-.01em'}}>Wann soll es sein?</h3>
+                  <div style={{marginBottom:16}}>
+                    <div style={{fontSize:11,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:5}}>SCHRITT 02</div>
+                    <h3 style={{fontWeight:800,fontSize:19,color:'#1E293B',letterSpacing:'-.01em',margin:0}}>Wann soll es sein?</h3>
                   </div>
-                  <div className="bk-two-col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:32,alignItems:'start'}}>
+                  <div className="bk-two-col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:22,alignItems:'start'}}>
                     {/* Calendar */}
                     <div>
                       <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
@@ -1645,13 +1645,13 @@ const BookingSection = ({ openModal }) => {
             {step === 3 && (
               <motion.div key="step3" initial={{opacity:0,x:30}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-30}} transition={{duration:.25}}>
                 <div className="bk-card">
-                  <div style={{marginBottom:24}}>
-                    <div style={{fontSize:11,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:8}}>SCHRITT 03</div>
-                    <h3 style={{fontWeight:800,fontSize:22,color:'#1E293B',letterSpacing:'-.01em'}}>Ihre Kontaktdaten</h3>
+                  <div style={{marginBottom:14}}>
+                    <div style={{fontSize:11,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'var(--accent)',marginBottom:5}}>SCHRITT 03</div>
+                    <h3 style={{fontWeight:800,fontSize:19,color:'#1E293B',letterSpacing:'-.01em',margin:0}}>Ihre Kontaktdaten</h3>
                   </div>
 
                   {/* Summary pill */}
-                  <div style={{display:'flex',gap:12,flexWrap:'wrap',marginBottom:24,padding:'12px 16px',background:'#EEF4FF',borderRadius:10,border:'1px solid rgba(91,145,244,.25)'}}>
+                  <div style={{display:'flex',gap:12,flexWrap:'wrap',marginBottom:16,padding:'10px 14px',background:'#EEF4FF',borderRadius:10,border:'1px solid rgba(91,145,244,.25)'}}>
                     <span style={{fontSize:12,fontWeight:700,color:'var(--accent)'}}>{form.services.join(' + ')}</span>
                     <span style={{fontSize:12,color:'#64748B'}}>·</span>
                     <span style={{fontSize:12,color:'#64748B'}}>{fmtGermanDate(form.datum)}</span>
@@ -1719,12 +1719,12 @@ const BookingSection = ({ openModal }) => {
                     )}
                   </div>
 
-                  <div style={{marginTop:16,...fieldWrap}}>
+                  <div style={{marginTop:12,...fieldWrap}}>
                     <label className="bk-label">Anmerkungen</label>
                     <textarea placeholder="Besonderheiten oder Fragen …" maxLength={500} value={form.anmerkungen}
                       onChange={e=>setField('anmerkungen', e.target.value)}
                       className="bk-inp"
-                      style={{resize:'vertical', minHeight:80}}/>
+                      style={{resize:'vertical', minHeight:64}}/>
                   </div>
 
                   <AnimatePresence>
@@ -1736,7 +1736,7 @@ const BookingSection = ({ openModal }) => {
                     )}
                   </AnimatePresence>
 
-                  <div style={{display:'flex',justifyContent:'space-between',marginTop:28,gap:12}}>
+                  <div style={{display:'flex',justifyContent:'space-between',marginTop:18,gap:12}}>
                     <button className="btn" style={{fontSize:13,padding:'12px 24px',color:'#64748B',border:'1.5px solid #E2E8F0',background:'#F7F9FC'}} onClick={()=>setStep(2)}>
                       ← Zurück
                     </button>
