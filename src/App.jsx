@@ -1076,7 +1076,7 @@ const Stats = () => {
 };
 
 /* ─── BOOKING SECTION ────────────────────────────────────────────────────── */
-const BookingSection = () => {
+const BookingSection = ({ openModal }) => {
   const [selectedCenter, setSelectedCenter] = useState(null);
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({
@@ -1671,7 +1671,7 @@ const BookingSection = () => {
                     </button>
                   </div>
                   <p style={{fontSize:11,color:'var(--smoke)',textAlign:'center',marginTop:14,lineHeight:1.55}}>
-                    Mit dem Absenden stimmen Sie unserer <a href="#" onClick={e=>e.preventDefault()} style={{color:'var(--accent)'}}>Datenschutzerklärung</a> zu.
+                    Mit dem Absenden stimmen Sie unserer <a href="#" onClick={e=>{e.preventDefault();openModal('Datenschutz');}} style={{color:'var(--accent)'}}>Datenschutzerklärung</a> zu.
                   </p>
                 </div>
               </motion.div>
@@ -2541,7 +2541,7 @@ export default function App() {
       <Hero onBook={scrollBook}/>
       <Services/>
       <Steps/>
-      <BookingSection/>
+      <BookingSection openModal={setModal}/>
       <FAQ/>
       <Contact/>
       <Footer openModal={setModal}/>
