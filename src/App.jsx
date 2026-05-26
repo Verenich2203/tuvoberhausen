@@ -1118,7 +1118,10 @@ const BookingSection = ({ openModal }) => {
     const e = {};
     if (!form.vorname.trim()) e.vorname = 'Pflichtfeld';
     if (!form.nachname.trim()) e.nachname = 'Pflichtfeld';
-    if (form.telefon.replace(/[^\d]/g,'').length < 6) e.telefon = 'Ungültige Telefonnummer';
+    const tel = form.telefon.trim();
+    const telDigits = tel.replace(/[^\d]/g,'');
+    if (!tel.startsWith('+49') || telDigits.length < 11)
+      e.telefon = 'Bitte Format +49 1xx xxxxxxx eingeben';
     if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Ungültige E-Mail';
     if (form.abholservice && !form.abholadresse.trim()) e.abholadresse = 'Bitte Adresse angeben';
     return e;
@@ -1674,8 +1677,20 @@ const BookingSection = ({ openModal }) => {
                           <input type={type} placeholder={placeholder} value={form[field]} maxLength={60}
                             onChange={e=>{
                               let v = e.target.value;
-                              if(field==='telefon') v = v.replace(/[^\d\+\s\-\(\)]/g,'');
+                              if(field==='telefon'){
+                                // keep only +, digits, spaces, dashes
+                                v = v.replace(/[^\d\+\s\-]/g,'');
+                                // if user typed digits without +49, auto-prepend
+                                if(v && !v.startsWith('+')){
+                                  // leading 0 → +49
+                                  if(v.startsWith('0')) v = '+49 ' + v.slice(1);
+                                  else v = '+49 ' + v;
+                                }
+                              }
                               setField(field, v);
+                            }}
+                            onFocus={e=>{
+                              if(field==='telefon' && !form.telefon) setField('telefon','+49 ');
                             }}
                             onBlur={()=>handleBlur(field)}
                             className="bk-inp"
