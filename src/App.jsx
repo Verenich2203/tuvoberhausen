@@ -1674,7 +1674,7 @@ const BookingSection = ({ openModal }) => {
                       return (
                         <div key={field} style={fieldWrap}>
                           <label className="bk-label">{label}</label>
-                          <input type={type} placeholder={placeholder} value={form[field]} maxLength={60}
+                          <input type={type} placeholder={placeholder} value={form[field]} maxLength={field==='telefon'?16:60}
                             onChange={e=>{
                               let v = e.target.value;
                               if(field==='telefon'){
@@ -1686,6 +1686,7 @@ const BookingSection = ({ openModal }) => {
                                   if(v.startsWith('0')) v = '+49 ' + v.slice(1);
                                   else v = '+49 ' + v;
                                 }
+                                v = v.slice(0,16);
                               }
                               setField(field, v);
                             }}
