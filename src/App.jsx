@@ -73,7 +73,7 @@ function isPast(dateStr, timeSlot) {
 /* ─── GLOBAL STYLES ─────────────────────────────────────────────────────── */
 const G = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
     :root {
       --accent:   #5B91F4;
@@ -88,7 +88,7 @@ const G = () => (
       --white:  #F0F2F5;
       --smoke:  #8B949E;
       --border: rgba(255,255,255,.07);
-      --sans:   'Montserrat', sans-serif;
+      --sans:   'Inter', sans-serif;
     }
     html, body { width:100%; margin:0; padding:0; scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
     body { font-family:var(--sans); background:var(--black); color:var(--text); overflow-x:hidden; line-height:1.6; }
@@ -1772,9 +1772,17 @@ const FAQ = () => {
 };
 
 /* ─── MAP ────────────────────────────────────────────────────────────────── */
+const COOKIE_EVENT = 'cookieConsentChanged';
+const dispatchCookieEvent = () => window.dispatchEvent(new CustomEvent(COOKIE_EVENT));
+
 const MapEmbed = () => {
   const [accepted, setAccepted] = useState(false);
-  useEffect(()=>{ if(localStorage.getItem('cookie_consent')==='all') setAccepted(true); },[]);
+  useEffect(()=>{
+    const check = () => setAccepted(localStorage.getItem('cookie_consent')==='all');
+    check();
+    window.addEventListener(COOKIE_EVENT, check);
+    return () => window.removeEventListener(COOKIE_EVENT, check);
+  },[]);
   if (!accepted) return (
     <div style={{width:'100%',height:'100%',minHeight:360,background:'var(--dark)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:12}}>
       <div style={{width:44,height:44,background:'rgba(91,145,244,.12)',borderRadius:12,display:'flex',alignItems:'center',justifyContent:'center'}}><Ic.Pin s={20} c="var(--accent)"/></div>
@@ -1782,7 +1790,7 @@ const MapEmbed = () => {
         <div style={{fontWeight:700,fontSize:14,color:'var(--white)',marginBottom:6}}>Google Maps ist deaktiviert</div>
         <p style={{fontSize:12.5,color:'var(--smoke)',lineHeight:1.65}}>Stimmen Sie zu, um die Karte anzuzeigen.</p>
       </div>
-      <button className="btn btn-primary" style={{fontSize:12,padding:'10px 18px'}} onClick={()=>{localStorage.setItem('cookie_consent','all');setAccepted(true);}}>Google Maps aktivieren</button>
+      <button className="btn btn-primary" style={{fontSize:12,padding:'10px 18px'}} onClick={()=>{localStorage.setItem('cookie_consent','all');dispatchCookieEvent();}}>Google Maps aktivieren</button>
     </div>
   );
   return <iframe src="https://maps.google.com/maps?q=M%C3%BClheimer+Str.+155%2C+46045+Oberhausen&t=&z=16&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style={{border:'none',display:'block',filter:'grayscale(.1)',minHeight:360}} allowFullScreen loading="lazy" title="Standort"/>;
@@ -2349,9 +2357,9 @@ const Modal = ({ title, onClose }) => {
                 </div>
               ))}
               <div style={{display:'flex',gap:9,flexWrap:'wrap',marginTop:16}}>
-                <button className="btn btn-ghost" style={{fontSize:12,padding:'9px 16px'}} onClick={()=>{localStorage.setItem('cookie_consent','essential');onClose();}}>Nur notwendige</button>
-                <button className="btn btn-primary" style={{fontSize:12,padding:'9px 16px'}} onClick={()=>{localStorage.setItem('cookie_consent','all');onClose();}}>Alle akzeptieren</button>
-                <button style={{background:'none',border:'none',color:'var(--smoke)',fontSize:12,cursor:'pointer',textDecoration:'underline',fontFamily:'var(--sans)'}} onClick={()=>{localStorage.removeItem('cookie_consent');onClose();}}>Einwilligung zurückziehen</button>
+                <button className="btn btn-ghost" style={{fontSize:12,padding:'9px 16px'}} onClick={()=>{localStorage.setItem('cookie_consent','essential');dispatchCookieEvent();onClose();}}>Nur notwendige</button>
+                <button className="btn btn-primary" style={{fontSize:12,padding:'9px 16px'}} onClick={()=>{localStorage.setItem('cookie_consent','all');dispatchCookieEvent();onClose();}}>Alle akzeptieren</button>
+                <button style={{background:'none',border:'none',color:'var(--smoke)',fontSize:12,cursor:'pointer',textDecoration:'underline',fontFamily:'var(--sans)'}} onClick={()=>{localStorage.removeItem('cookie_consent');dispatchCookieEvent();onClose();}}>Einwilligung zurückziehen</button>
               </div>
             </div>
           ) : LegalContent[title] || <p style={{fontSize:13,color:'var(--smoke)'}}>Inhalt folgt.</p>}
@@ -2366,7 +2374,7 @@ const CookieBanner = () => {
   const [visible, setVisible] = useState(false);
   const [details, setDetails] = useState(false);
   useEffect(()=>{ if(!localStorage.getItem('cookie_consent')) setVisible(true); },[]);
-  const accept = all => { localStorage.setItem('cookie_consent',all?'all':'essential'); setVisible(false); };
+  const accept = all => { localStorage.setItem('cookie_consent',all?'all':'essential'); dispatchCookieEvent(); setVisible(false); };
   if (!visible) return null;
   return (
     <div style={{position:'fixed',bottom:0,left:0,right:0,zIndex:600,background:'var(--dark)',borderTop:'1px solid rgba(255,255,255,.08)',boxShadow:'0 -8px 40px rgba(0,0,0,.4)'}}>
@@ -2503,6 +2511,8 @@ export default function App() {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);
+
+  useEffect(()=>{ window.scrollTo(0,0); },[]);
 
   const scrollBook = () => document.getElementById('termin')?.scrollIntoView({behavior:'smooth'});
 
