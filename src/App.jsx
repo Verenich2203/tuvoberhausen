@@ -1350,16 +1350,53 @@ const BookingSection = ({ openModal }) => {
         )}
 
         {selectedCenter && (sent ? (
-          <motion.div initial={{opacity:0,scale:.97}} animate={{opacity:1,scale:1}} className="bk-card" style={{textAlign:'center',padding:'56px 32px'}}>
-            <div style={{width:64,height:64,borderRadius:'50%',background:'rgba(16,185,129,.1)',border:'2.5px solid #10B981',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',boxShadow:'0 4px 20px rgba(16,185,129,.2)'}}>
-              <Ic.Check s={28} c="#10B981"/>
+          <motion.div initial={{opacity:0,scale:.97}} animate={{opacity:1,scale:1}} className="bk-card" style={{padding:'36px 28px'}}>
+
+            {/* Header */}
+            <div style={{marginBottom:28}}>
+              <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:18}}>
+                <div style={{width:36,height:36,borderRadius:9,background:'rgba(16,185,129,.1)',border:'1.5px solid rgba(16,185,129,.28)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                  <Ic.Check s={17} c="#10B981"/>
+                </div>
+                <div>
+                  <div style={{fontSize:10,fontWeight:700,letterSpacing:'.13em',textTransform:'uppercase',color:'rgba(255,255,255,.3)',marginBottom:2}}>KFZ-Prüfstützpunkt Oberhausen</div>
+                  <div style={{fontWeight:800,fontSize:16,color:'var(--white)',letterSpacing:'-.01em',lineHeight:1.2}}>Termin bestätigt.</div>
+                </div>
+              </div>
+              <p style={{fontSize:13,color:'var(--smoke)',lineHeight:1.65,margin:0}}>
+                Sie wurden erfolgreich für einen Prüftermin eingetragen.{form.email ? ' Eine Bestätigungsmail wurde an Ihre Adresse gesendet.' : ''}
+              </p>
             </div>
-            <h3 style={{fontWeight:800,fontSize:26,marginBottom:10,color:'#1E293B'}}>Termin bestätigt!</h3>
-            <p style={{color:'#64748B',fontSize:14,lineHeight:1.7,marginBottom:6}}>Ihr Termin wurde erfolgreich gebucht.</p>
-            <p style={{fontWeight:800,fontSize:18,color:'var(--accent)',marginBottom:4}}>{fmtGermanDate(form.datum)} · {form.zeit} Uhr</p>
-            <p style={{fontSize:14,color:'#64748B',marginBottom:4}}>{form.services.join(', ')}</p>
-            <p style={{fontSize:13,color:'#64748B',marginBottom:28}}>Bestätigungsmail wurde gesendet.</p>
-            <button className="btn btn-primary" style={{fontSize:13,padding:'12px 28px'}} onClick={()=>{setSent(false);setStep(1);setSelectedCenter(null);setForm({services:[],datum:'',zeit:'',vorname:'',nachname:'',telefon:'',email:'',anmerkungen:'',kennzeichen:'',abholservice:false,abholadresse:''});setTouched({});}}>
+
+            {/* Date block */}
+            <div style={{background:'linear-gradient(135deg,rgba(91,145,244,.08) 0%,rgba(91,145,244,.03) 100%)',border:'1px solid rgba(91,145,244,.15)',borderRadius:10,padding:'16px 18px',marginBottom:16}}>
+              <div style={{fontSize:10,fontWeight:700,letterSpacing:'.12em',textTransform:'uppercase',color:'var(--accent)',marginBottom:6}}>Ihr Termin</div>
+              <div style={{fontWeight:800,fontSize:18,color:'var(--white)',letterSpacing:'-.02em',lineHeight:1.2}}>{fmtGermanDate(form.datum)}</div>
+              <div style={{fontWeight:700,fontSize:15,color:'var(--accent)',marginTop:3}}>{form.zeit} Uhr</div>
+            </div>
+
+            {/* Details rows */}
+            <div style={{border:'1px solid rgba(255,255,255,.06)',borderRadius:10,overflow:'hidden',marginBottom:16}}>
+              {[
+                ['Leistung', form.services.join(', ')],
+                ['Standort', 'Mülheimer Str. 155 · 46045 Oberhausen'],
+                ...(form.kennzeichen ? [['Kennzeichen', form.kennzeichen]] : []),
+                ...(form.abholservice ? [['Abholservice', form.abholadresse || 'Ja']] : []),
+              ].map(([l,r],i,a)=>(
+                <div key={l} style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',padding:'10px 14px',borderBottom:i<a.length-1?'1px solid rgba(255,255,255,.04)':'none',gap:14}}>
+                  <span style={{fontSize:12,color:'var(--smoke)',flexShrink:0}}>{l}</span>
+                  <span style={{fontSize:12,fontWeight:600,color:'var(--white)',textAlign:'right'}}>{r}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Mitbringen note */}
+            <div style={{padding:'12px 15px',background:'rgba(91,145,244,.05)',border:'1px solid rgba(91,145,244,.12)',borderRadius:9,marginBottom:22}}>
+              <div style={{fontSize:10,fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',color:'var(--accent)',marginBottom:4}}>Bitte mitbringen</div>
+              <div style={{fontSize:12,color:'var(--smoke)',lineHeight:1.65}}>Fahrzeugschein (Zulassungsbescheinigung Teil I). Bei Eintragungen alle ABE-Dokumente bereithalten.</div>
+            </div>
+
+            <button className="btn btn-ghost" style={{width:'100%',justifyContent:'center',fontSize:12.5,padding:'11px 0'}} onClick={()=>{setSent(false);setStep(1);setSelectedCenter(null);setForm({services:[],datum:'',zeit:'',vorname:'',nachname:'',telefon:'',email:'',anmerkungen:'',kennzeichen:'',abholservice:false,abholadresse:''});setTouched({});}}>
               Neuen Termin buchen
             </button>
           </motion.div>
