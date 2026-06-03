@@ -977,9 +977,9 @@ const Steps = () => {
                 <div style={{flexShrink:0,width:36,height:36,borderRadius:'50%',background:'var(--dark2)',border:'2px solid var(--accent)',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:800,fontSize:13,color:'var(--accent)'}}>
                   {i+1}
                 </div>
-                <div style={{paddingTop:6}}>
-                  <h3 style={{fontSize:15,fontWeight:700,color:'var(--white)',marginBottom:5}}>{s.title}</h3>
-                  <p style={{color:'var(--smoke)',fontSize:13,lineHeight:1.65}}>{s.desc}</p>
+                <div style={{paddingTop:6,textAlign:'left'}}>
+                  <h3 style={{fontSize:15,fontWeight:700,color:'var(--white)',marginBottom:5,textAlign:'left'}}>{s.title}</h3>
+                  <p style={{color:'var(--smoke)',fontSize:13,lineHeight:1.65,textAlign:'left'}}>{s.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -1100,14 +1100,13 @@ const BookingSection = ({ openModal }) => {
     {ico:<Ic.Cert s={22} c="var(--accent)"/>,title:'HU + AU Kombi',sub:'§29 StVZO · Kombiangebot',tag:'Kombi'},
     {ico:<Ic.Shield s={22} c="var(--accent)"/>,title:'Hauptuntersuchung (HU)',sub:'§29 StVZO · z.B. E-Fahrzeug',tag:'Pflicht'},
     {ico:<Ic.Wrench s={22} c="var(--accent)"/>,title:'Vorab-Check',sub:'Sicherheits-Vorprüfung',tag:'Empfohlen'},
-    {ico:<Ic.Clip s={22} c="var(--accent)"/>,title:'Eintragungen / Abnahmen',sub:'§19 StVZO',tag:'Flexibel'},
     {ico:<Ic.Moto s={22} c="var(--accent)"/>,title:'Motorrad-HU',sub:'Zweiräder · §29 StVZO',tag:'Saisonal'},
     {ico:<Ic.Award s={22} c="var(--accent)"/>,title:'Oldtimer-Gutachten',sub:'§23 StVZO · H-Kennzeichen',tag:'Speziell'},
     {ico:<Ic.Clip s={22} c="var(--accent)"/>,title:'Anhänger HU',sub:'Anhänger · §29 StVZO',tag:'Anhänger'},
     {ico:<Ic.Leaf s={22} c="var(--accent)"/>,title:'Gasanlagenprüfung',sub:'LPG · CNG · Gasfahrzeuge',tag:'Gas'},
-    {ico:<Ic.Award s={22} c="var(--accent)"/>,title:'BO-Kraft Prüfung',sub:'Taxi · Mietwagen · §57a StVZO',tag:'Gewerblich'},
+    {ico:<Ic.Award s={22} c="var(--accent)"/>,title:'BO-Kraft Prüfung',sub:'Taxi · Mietwagen · §41/42 BoKraft',tag:'Gewerblich'},
     {ico:<Ic.Cert s={22} c="var(--accent)"/>,title:'Abnahmen §19.3 / §15 FZV',sub:'§19.3 StVZO · §15 FZV',tag:'Abnahme'},
-    {ico:<Ic.Damage s={22} c="var(--accent)"/>,title:'Schadensgutachten',sub:'Unfallschaden · Wertermittlung',tag:'Gutachten'},
+    {ico:<Ic.Damage s={22} c="var(--accent)"/>,title:'Schadensgutachten',sub:'Terminvereinbarung erforderlich',tag:'Gutachten'},
   ];
 
   const setField = (field, value) => setForm(prev => ({...prev, [field]: value}));
@@ -1251,7 +1250,7 @@ const BookingSection = ({ openModal }) => {
   };
 
   return (
-    <div id="termin" className="section-full sec" style={{position:'relative',background:'linear-gradient(170deg,#0D1019 0%,#111520 55%,#0A0E17 100%)',overflow:'hidden',minHeight:'auto',padding:'60px 0'}}>
+    <div id="termin" className="section-full sec" style={{position:'relative',background:'linear-gradient(170deg,#0D1019 0%,#111520 55%,#0A0E17 100%)',overflow:'hidden'}}>
       {/* Background photo */}
       <div style={{position:'absolute',inset:0,backgroundImage:"url('mainn.png')",backgroundSize:'cover',backgroundPosition:'center',opacity:0.18,pointerEvents:'none',zIndex:0}}/>
       {/* Radial vignette */}
