@@ -1339,7 +1339,8 @@ const BookingSection = ({ openModal }) => {
                   </div>
                   <div style={{fontSize:17,fontWeight:800,color:'#fff',marginBottom:3,letterSpacing:'-.01em',textShadow:'0 2px 8px rgba(0,0,0,.5)'}}>Oberhausen</div>
                   <div style={{fontSize:11,color:'rgba(255,255,255,.7)',marginBottom:4,letterSpacing:'.04em'}}>Prüfstützpunkt Hauptstandort</div>
-                  <div style={{fontSize:10,color:'rgba(255,255,255,.55)',marginBottom:13,letterSpacing:'.02em'}}>Mülheimer Str. 155 · 46045 Oberhausen</div>
+                  <div style={{fontSize:10,color:'rgba(255,255,255,.55)',marginBottom:4,letterSpacing:'.02em'}}>Mülheimer Str. 155 · 46045 Oberhausen</div>
+                  <div style={{fontSize:10,color:'rgba(255,255,255,.4)',marginBottom:13,letterSpacing:'.02em'}}>direkt auf dem Aral Gelände</div>
                   <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'rgba(16,185,129,.15)',border:'1px solid rgba(16,185,129,.35)',backdropFilter:'blur(6px)',borderRadius:10,padding:'4px 12px',fontSize:10,fontWeight:700,color:'#10B981',letterSpacing:'.06em'}}>
                     <span style={{width:5,height:5,borderRadius:'50%',background:'#10B981',animation:'softPulse 2s ease-in-out infinite'}}/>
                     Jetzt buchen
@@ -2628,9 +2629,9 @@ export default function App() {
       <G/>
       <Navbar onBook={scrollBook}/>
       <Hero onBook={scrollBook}/>
+      <BookingSection openModal={setModal}/>
       <Services/>
       <Steps/>
-      <BookingSection openModal={setModal}/>
       <FAQ/>
       <Contact/>
       <Footer openModal={setModal}/>
