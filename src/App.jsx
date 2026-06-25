@@ -1761,7 +1761,7 @@ const BookingSection = ({ openModal }) => {
                     </button>
                   </div>
                   <p style={{fontSize:11,color:'var(--smoke)',textAlign:'center',marginTop:14,lineHeight:1.55}}>
-                    Mit dem Absenden stimmen Sie unserer <a href="#" onClick={e=>{e.preventDefault();openModal('Datenschutz');}} style={{color:'var(--accent)'}}>Datenschutzerklärung</a> zu.
+                    Mit dem Absenden bestätigen Sie, dass Sie unsere <a href="#" onClick={e=>{e.preventDefault();openModal('Datenschutz');}} style={{color:'var(--accent)'}}>Datenschutzerklärung</a> zur Kenntnis genommen haben.
                   </p>
                 </div>
               </motion.div>
@@ -2052,6 +2052,16 @@ const LegalContent = {
       <div style={MS.divider}/>
 
       <div style={MS.section}>
+        <div style={MS.label}>Berufsbezeichnung und berufsrechtliche Regelungen</div>
+        <div style={{display:'flex',flexDirection:'column',gap:6}}>
+          <div style={MS.row}><span style={MS.rowL}>Berufsbezeichnung</span><span style={{fontSize:12.5,color:'var(--text)'}}>Ingenieur (verliehen in der Bundesrepublik Deutschland)</span></div>
+          <div style={{...MS.row,borderBottom:'none'}}><span style={MS.rowL}>Zulassung</span><span style={{fontSize:12.5,color:'var(--text)'}}>Zugelassener Sachverständiger/Prüfer gemäß §29 StVZO i.V.m. Anlage VIIIa StVZO</span></div>
+        </div>
+      </div>
+
+      <div style={MS.divider}/>
+
+      <div style={MS.section}>
         <div style={MS.label}>Aufsichtsbehörde</div>
         <div style={MS.p}>Kraftfahrt-Bundesamt (KBA) · Fördestraße 16 · 24944 Flensburg<br/>Die Tätigkeit unterliegt der Aufsicht gemäß § 29 StVZO i.V.m. Anlage VIII StVZO. Berufsrechtliche Regelungen: <a href="https://www.kba.de" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>www.kba.de</a></div>
       </div>
@@ -2074,13 +2084,13 @@ const LegalContent = {
         <div style={MS.p}>Plattform der EU-Kommission: <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>ec.europa.eu/consumers/odr</a>. Wir nehmen nicht an Verbraucherschlichtungsverfahren teil.</div>
       </div>
 
-      <div style={MS.foot}>Stand: Mai 2026</div>
+      <div style={MS.foot}>Stand: Juni 2026</div>
     </div>
   ),
 
   Datenschutz: (
     <div style={MS.wrap}>
-      <div style={{fontSize:11,color:'rgba(255,255,255,.28)',marginBottom:20,letterSpacing:'.04em'}}>Stand: Mai 2026 · gemäß DSGVO, BDSG n.F., TTDSG</div>
+      <div style={{fontSize:11,color:'rgba(255,255,255,.28)',marginBottom:20,letterSpacing:'.04em'}}>Stand: Juni 2026 · gemäß DSGVO, BDSG n.F., TTDSG</div>
 
       {/* 1. Datenschutz auf einen Blick */}
       <div style={MS.section}>
@@ -2224,19 +2234,60 @@ const LegalContent = {
       <div style={MS.section}>
         <div style={{fontWeight:700,fontSize:13,color:'var(--white)',marginBottom:12,paddingBottom:8,borderBottom:'1px solid rgba(255,255,255,.08)'}}>5. Plugins und Tools</div>
 
-        <div>
+        <div style={{marginBottom:14}}>
           <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Google Maps</div>
-          <div style={MS.p}>Diese Website nutzt den Kartendienst Google Maps. Anbieter ist Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland.<br/><br/>Zur Nutzung der Funktionen von Google Maps ist es notwendig, Ihre IP-Adresse zu speichern. Diese Informationen werden in der Regel an einen Server von Google in den USA übertragen und dort gespeichert. Die Nutzung von Google Maps erfolgt im Interesse einer ansprechenden Darstellung unserer Online-Angebote und an einer leichten Auffindbarkeit unseres Standorts. Dies stellt ein berechtigtes Interesse im Sinne von Art. 6 Abs. 1 lit. f DSGVO dar. Sofern eine entsprechende Einwilligung abgefragt wurde, erfolgt die Verarbeitung ausschließlich auf Grundlage von Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TTDSG; die Einwilligung ist jederzeit widerrufbar.<br/><br/>Die Datenübertragung in die USA wird auf die Standardvertragsklauseln der EU-Kommission gestützt. Mehr Informationen: <a href="https://policies.google.com/privacy?hl=de" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>policies.google.com/privacy</a></div>
+          <div style={MS.p}>Diese Website nutzt den Kartendienst Google Maps. Anbieter ist Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland.<br/><br/>Google Maps wird nur nach Ihrer ausdrücklichen Einwilligung aktiviert (§ 25 Abs. 1 TTDSG, Art. 6 Abs. 1 lit. a DSGVO). Ohne Einwilligung werden keine Daten an Google übertragen. Die Einwilligung ist jederzeit über die Cookie-Einstellungen widerrufbar.<br/><br/>Die Datenübertragung in die USA wird auf die Standardvertragsklauseln der EU-Kommission gestützt. Mehr Informationen: <a href="https://policies.google.com/privacy?hl=de" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>policies.google.com/privacy</a></div>
+        </div>
+
+        <div style={{marginBottom:14}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Google Fonts</div>
+          <div style={MS.p}>Diese Website nutzt zur einheitlichen Darstellung von Schriftarten Google Fonts. Anbieter ist Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland.<br/><br/>Beim Seitenaufruf lädt Ihr Browser die benötigten Schriftarten direkt von Google-Servern — dabei wird Ihre IP-Adresse übertragen und kann in den USA gespeichert werden. Die Nutzung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer einheitlichen Darstellung). Die Datenübertragung in die USA erfolgt auf Basis der EU-Standardvertragsklauseln. Weitere Informationen: <a href="https://policies.google.com/privacy?hl=de" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>policies.google.com/privacy</a></div>
+        </div>
+
+        <div style={{marginBottom:14}}>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>Supabase (Buchungsdatenbank)</div>
+          <div style={MS.p}>Für die Verwaltung von Terminbuchungen nutzen wir Supabase als Datenbankdienstleister. Anbieter ist Supabase Inc., 970 Tresser Blvd, Stamford, CT 06901, USA.<br/><br/>Ihre bei der Buchung angegebenen Daten (Name, Telefonnummer, Fahrzeugtyp, Wunschdatum und -uhrzeit) werden in einer Supabase-Datenbank gespeichert, die auf Servern von Amazon Web Services (AWS) in der Region Frankfurt/Main (EU-West) betrieben wird. Wir haben mit Supabase einen Auftragsverarbeitungsvertrag (AVV) gemäß Art. 28 DSGVO abgeschlossen. Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung). Für mögliche Datentransfers in die USA gelten die EU-Standardvertragsklauseln. Weitere Informationen: <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>supabase.com/privacy</a></div>
+        </div>
+
+        <div>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--white)',marginBottom:5}}>WhatsApp</div>
+          <div style={MS.p}>Auf dieser Website befinden sich Links zum Messenger-Dienst WhatsApp. Anbieter ist WhatsApp Ireland Limited, 4 Grand Canal Square, Grand Canal Harbour, Dublin 2, Irland (als Teil von Meta Platforms).<br/><br/>Das Anklicken eines WhatsApp-Links öffnet die WhatsApp-App oder -Website. Dabei können Ihre IP-Adresse und Geräteinformationen an WhatsApp übertragen werden. Die Nutzung erfolgt auf Basis Ihrer freiwilligen Kontaktaufnahme (Art. 6 Abs. 1 lit. a und b DSGVO). Weitere Informationen: <a href="https://www.whatsapp.com/legal/privacy-policy-eea" target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none'}}>whatsapp.com/legal/privacy-policy-eea</a></div>
         </div>
       </div>
 
-      <div style={MS.foot}>Stand: Mai 2026</div>
+      <div style={MS.divider}/>
+
+      {/* 6. Betroffenenrechte */}
+      <div style={MS.section}>
+        <div style={{fontWeight:700,fontSize:13,color:'var(--white)',marginBottom:12,paddingBottom:8,borderBottom:'1px solid rgba(255,255,255,.08)'}}>6. Ihre Rechte als betroffene Person</div>
+
+        <div style={MS.p}>Sie haben gegenüber uns folgende Rechte hinsichtlich Ihrer personenbezogenen Daten:</div>
+        <div style={{marginTop:12,display:'flex',flexDirection:'column',gap:8}}>
+          {[
+            ['Art. 15 DSGVO','Recht auf Auskunft'],
+            ['Art. 16 DSGVO','Recht auf Berichtigung'],
+            ['Art. 17 DSGVO','Recht auf Löschung'],
+            ['Art. 18 DSGVO','Recht auf Einschränkung der Verarbeitung'],
+            ['Art. 20 DSGVO','Recht auf Datenübertragbarkeit — Sie können Ihre Daten in einem gängigen, maschinenlesbaren Format erhalten'],
+            ['Art. 21 DSGVO','Recht auf Widerspruch gegen die Verarbeitung'],
+            ['Art. 77 DSGVO','Beschwerderecht bei der Aufsichtsbehörde (LDI NRW)'],
+          ].map(([art, text]) => (
+            <div key={art} style={{display:'flex',gap:12,padding:'8px 0',borderBottom:'1px solid rgba(255,255,255,.04)'}}>
+              <span style={{fontSize:11,fontWeight:700,color:'var(--accent)',width:110,flexShrink:0,paddingTop:1}}>{art}</span>
+              <span style={{fontSize:12,color:'var(--smoke)',lineHeight:1.6}}>{text}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{...MS.p,marginTop:14}}>Zur Ausübung Ihrer Rechte wenden Sie sich an: <a href="mailto:aqureischi@extern.tuev-nord.de" style={{color:'var(--accent)',textDecoration:'none'}}>aqureischi@extern.tuev-nord.de</a><br/><br/>Es findet keine automatisierte Entscheidungsfindung einschließlich Profiling gemäß Art. 22 DSGVO statt.</div>
+      </div>
+
+      <div style={MS.foot}>Stand: Juni 2026</div>
     </div>
   ),
 
   AGB: (
     <div style={MS.wrap}>
-      <div style={{fontSize:11,color:'rgba(255,255,255,.28)',marginBottom:20,letterSpacing:'.04em'}}>Stand: Mai 2026 · Ing.-Büro Qureischi, Mülheimer Str. 155, 46045 Oberhausen</div>
+      <div style={{fontSize:11,color:'rgba(255,255,255,.28)',marginBottom:20,letterSpacing:'.04em'}}>Stand: Juni 2026 · Ing.-Büro Qureischi, Mülheimer Str. 155, 46045 Oberhausen</div>
 
       {[
         {p:'§ 1 Geltungsbereich', t:'Diese AGB gelten für alle Terminbuchungen und Dienstleistungen des Ing.-Büro Qureischi (Kooperationspartner des TÜV NORD), Mülheimer Str. 155, 46045 Oberhausen, über diese Website sowie telefonisch vereinbarte Termine.'},
@@ -2473,33 +2524,34 @@ const Modal = ({ title, onClose }) => {
 };
 
 /* ─── COOKIE BANNER ──────────────────────────────────────────────────────── */
-const CookieBanner = () => {
+const CookieBanner = ({ openModal }) => {
   const [visible, setVisible] = useState(false);
   const [details, setDetails] = useState(false);
   useEffect(()=>{ if(!localStorage.getItem('cookie_consent')) setVisible(true); },[]);
   const accept = all => { localStorage.setItem('cookie_consent',all?'all':'essential'); dispatchCookieEvent(); setVisible(false); };
   if (!visible) return null;
   return (
-    <div style={{position:'fixed',bottom:0,left:0,right:0,zIndex:600,background:'var(--dark)',borderTop:'1px solid rgba(255,255,255,.08)',boxShadow:'0 -8px 40px rgba(0,0,0,.4)'}}>
-      <div className="inner" style={{padding:'16px 64px'}}>
+    <div style={{position:'fixed',bottom:0,left:0,right:0,zIndex:600,background:'var(--dark)',borderTop:'2px solid rgba(91,145,244,.25)',boxShadow:'0 -8px 40px rgba(0,0,0,.4)'}}>
+      <div className="inner" style={{padding:'18px 64px'}}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',flexWrap:'wrap',gap:14}}>
           <div style={{flex:1,minWidth:260}}>
             <div style={{fontWeight:700,fontSize:14,color:'var(--white)',marginBottom:4}}>Diese Website verwendet Cookies</div>
             <p style={{fontSize:12,color:'var(--smoke)',lineHeight:1.65,maxWidth:620}}>
-              Technisch notwendige Cookies sind immer aktiv.{' '}
-              <button onClick={()=>setDetails(d=>!d)} style={{background:'none',border:'none',color:'var(--accent)',cursor:'pointer',fontSize:12,padding:0,fontFamily:'var(--sans)',textDecoration:'underline'}}>{details?'Weniger':'Mehr Infos'}</button>
+              Wir verwenden notwendige Cookies (immer aktiv) und — mit Ihrer Einwilligung — Google Maps.{' '}
+              <button onClick={()=>setDetails(d=>!d)} style={{background:'none',border:'none',color:'var(--accent)',cursor:'pointer',fontSize:12,padding:0,fontFamily:'var(--sans)',textDecoration:'underline'}}>{details?'Weniger':'Details'}</button>
+              {' · '}
+              <button onClick={()=>openModal('Datenschutz')} style={{background:'none',border:'none',color:'var(--accent)',cursor:'pointer',fontSize:12,padding:0,fontFamily:'var(--sans)',textDecoration:'underline'}}>Datenschutz</button>
             </p>
             {details && (
               <div style={{marginTop:10,padding:12,background:'var(--dark2)',borderRadius:8,fontSize:11.5,color:'var(--smoke)',lineHeight:1.7,border:'1px solid rgba(255,255,255,.07)'}}>
-                <strong style={{color:'var(--white)'}}>Notwendig:</strong> Session, Sicherheit.<br/>
-                <strong style={{color:'var(--white)'}}>Analyse:</strong> Anonyme Auswertung.<br/>
-                <strong style={{color:'var(--white)'}}>Google Maps:</strong> Nur nach Zustimmung.
+                <strong style={{color:'var(--white)'}}>Notwendig (immer aktiv):</strong> Technische Funktionalität der Website, Cookie-Einwilligung. Rechtsgrundlage: § 25 Abs. 2 TTDSG.<br/>
+                <strong style={{color:'var(--white)'}}>Google Maps (nur mit Einwilligung):</strong> Kartenansicht Ihres Standorts. Datenübertragung an Google (USA). Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO.
               </div>
             )}
           </div>
           <div style={{display:'flex',gap:9,alignItems:'center',flexShrink:0,flexWrap:'wrap'}}>
-            <button className="btn btn-ghost" style={{padding:'9px 16px',fontSize:12}} onClick={()=>accept(false)}>Nur notwendige</button>
-            <button className="btn btn-primary" style={{padding:'9px 16px',fontSize:12}} onClick={()=>accept(true)}>Alle akzeptieren</button>
+            <button className="btn btn-ghost" style={{padding:'9px 18px',fontSize:12}} onClick={()=>accept(false)}>Ablehnen</button>
+            <button className="btn btn-primary" style={{padding:'9px 18px',fontSize:12}} onClick={()=>accept(true)}>Alle akzeptieren</button>
           </div>
         </div>
       </div>
@@ -2646,7 +2698,7 @@ export default function App() {
         {cancelData && <CancelModal data={cancelData} onClose={()=>setCancelData(null)}/>}
       </AnimatePresence>
 
-      <CookieBanner/>
+      <CookieBanner openModal={setModal}/>
     </>
   );
 }
