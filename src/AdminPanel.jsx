@@ -180,6 +180,17 @@ const Icon = {
   ),
 };
 
+// ─── MOBILE HOOK ──────────────────────────────────────────────────────────────
+const useMobile = () => {
+  const [m, setM] = useState(typeof window !== 'undefined' && window.innerWidth < 768);
+  useEffect(() => {
+    const h = () => setM(window.innerWidth < 768);
+    window.addEventListener('resize', h);
+    return () => window.removeEventListener('resize', h);
+  }, []);
+  return m;
+};
+
 // ─── STATUS CONFIG ─────────────────────────────────────────────────────────────
 const ST = {
   pending:   { label: 'Ausstehend',    color: '#F59E0B', bg: '#FFFBEB', border: '#FDE68A', dark: '#B45309', dot: '#F59E0B' },
@@ -310,12 +321,67 @@ const STYLE = `
   .filter-chip{padding:5px 14px;border-radius:5px;border:1.5px solid var(--filter-border);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;background:var(--filter-bg);color:var(--filter-color)}
   .filter-chip:hover{border-color:#C7D2FE;color:#6366F1}
   .filter-chip.active{background:#EEF2FF;border-color:#6366F1;color:#4F46E5}
+
+  /* ── MOBILE BOTTOM NAV ── */
+  .adm-mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;
+    height:60px;background:linear-gradient(180deg,#1E1B4B 0%,#2D2A72 100%);
+    border-top:1px solid rgba(255,255,255,.10);z-index:100000;
+    align-items:center;justify-content:space-around;padding:0 4px;
+    padding-bottom:env(safe-area-inset-bottom,0)}
+  .adm-mob-nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:3px;height:100%;background:none;border:none;cursor:pointer;
+    font-family:inherit;color:#6B6FAA;transition:color .15s;padding:0;position:relative}
+  .adm-mob-nav-btn.active{color:#C7D2FE}
+  .adm-mob-nav-btn span{font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+  .adm-mob-badge{position:absolute;top:6px;right:calc(50% - 16px);background:#F59E0B;
+    color:#fff;font-size:9px;font-weight:800;min-width:16px;height:16px;
+    border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+
+  /* ── MOBILE BOOKING CARD ── */
+  .bk-card{background:var(--card);border-radius:10px;border:1px solid var(--border);
+    padding:14px 14px 12px;display:flex;flex-direction:column;gap:10px;
+    animation:fadeUp .18s ease-out;border-left-width:4px;border-left-style:solid}
+  .bk-card-actions{display:flex;gap:6px;align-items:center}
+  .bk-action-btn{display:inline-flex;align-items:center;justify-content:center;
+    width:40px;height:40px;border-radius:8px;border:1.5px solid;cursor:pointer;
+    background:none;font-family:inherit;transition:all .15s;flex-shrink:0}
+  .bk-action-btn:active{transform:scale(.93)}
+
+  /* ── RESPONSIVE OVERRIDES ── */
+  @media(max-width:767px){
+    .adm-mob-nav{display:flex !important}
+    .adm-sidebar-wrap{display:none !important}
+    .adm-hdr-date{display:none !important}
+    .adm-hdr-refresh-label{display:none !important}
+    .adm-main-pad{padding:14px 14px calc(74px + env(safe-area-inset-bottom,0)) !important}
+    .adm-header{padding:0 14px !important}
+    .adm-table-wrap{display:none !important}
+    .adm-cards-wrap{display:flex !important}
+    .adm-mob-filter-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+    .adm-mob-filter-scroll::-webkit-scrollbar{display:none}
+    .sched-chip{min-height:44px}
+    .toast-item{min-width:unset;width:calc(100vw - 48px)}
+  }
+  @media(min-width:768px){
+    .adm-cards-wrap{display:none !important}
+  }
+  .adm-cards-wrap{flex-direction:column;gap:10px}
 `;
 
 // ─── TOAST STACK ───────────────────────────────────────────────────────────────
 function ToastStack({ toasts }) {
+  const isMobile = useMobile();
   return (
-    <div style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 999999, display: 'flex', flexDirection: 'column-reverse' }}>
+    <div style={{
+      position: 'fixed',
+      bottom: isMobile ? 72 : 24,
+      right: isMobile ? '50%' : 24,
+      transform: isMobile ? 'translateX(50%)' : 'none',
+      zIndex: 999999,
+      display: 'flex',
+      flexDirection: 'column-reverse',
+      alignItems: isMobile ? 'center' : 'flex-end',
+    }}>
       {toasts.map(t => (
         <div key={t.id} className="toast-item" style={{ background: t.ok ? '#1E293B' : '#7F1D1D', color: '#fff' }}>
           {t.ok ? <Icon.Check/> : <Icon.Close/>}
@@ -482,6 +548,7 @@ function LoginScreen({ onLogin }) {
 
 // ─── DASHBOARD ─────────────────────────────────────────────────────────────────
 function DashboardView({ bookings, onStatus, showToast }) {
+  const isMobile  = useMobile();
   const todayStr  = today();
   const todayList = bookings.filter(b => b.date === todayStr).sort((a, b) => (a.time_slot||'').localeCompare(b.time_slot||''));
   const pending   = bookings.filter(b => validStatus(b.status) === 'pending');
@@ -499,7 +566,7 @@ function DashboardView({ bookings, onStatus, showToast }) {
   return (
     <div style={{ display:'flex', flexDirection:'column', gap:20 }}>
       {/* Stats */}
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:12 }}>
+      <div style={{ display:'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: isMobile ? 10 : 12 }}>
         {stats.map(s => (
           <div key={s.label} className="stat-card" style={{ background:s.bg, borderColor:s.border }}>
             <div style={{ fontSize:10, fontWeight:800, color:s.color, textTransform:'uppercase', letterSpacing:'.1em', opacity:.75 }}>{s.label}</div>
@@ -510,7 +577,7 @@ function DashboardView({ bookings, onStatus, showToast }) {
       </div>
 
       {/* Chart + Upcoming */}
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+      <div style={{ display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap:12 }}>
         <div className="adm-card" style={{ padding:'20px 22px' }}>
           <div style={{ fontSize:11, fontWeight:700, color:'#64748B', textTransform:'uppercase', letterSpacing:'.08em', marginBottom:14, display:'flex', alignItems:'center', gap:6 }}>
             <Icon.Stats/> Letzte 7 Tage
@@ -555,6 +622,24 @@ function DashboardView({ bookings, onStatus, showToast }) {
         </div>
         {todayList.length === 0 ? (
           <div style={{ padding:'48px 24px', textAlign:'center', color:'#94A3B8', fontSize:14 }}>☀️ &nbsp;Heute keine Termine geplant.</div>
+        ) : isMobile ? (
+          <div style={{ display:'flex', flexDirection:'column', gap:8, padding:'12px' }}>
+            {todayList.map(b => {
+              const st = validStatus(b.status); const c = ST[st];
+              return (
+                <div key={b.id} style={{ display:'flex', alignItems:'center', gap:12, padding:'12px', borderRadius:8, background:'#F8FAFC', borderLeft:`4px solid ${c.color}` }}>
+                  <div style={{ flexShrink:0, textAlign:'center', minWidth:44 }}>
+                    <div style={{ fontSize:17, fontWeight:800, color:'#1E293B', letterSpacing:'-.01em' }}>{(b.time_slot||'').slice(0,5)}</div>
+                  </div>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <div style={{ fontWeight:700, color:'#1E293B', fontSize:13, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{b.name}</div>
+                    <div style={{ fontSize:11, color:'#94A3B8' }}>{b.plate} · {(b.service||'').split('(')[0].trim()}</div>
+                  </div>
+                  <StatusPicker value={b.status} onChange={v => onStatus(b.id, v)}/>
+                </div>
+              );
+            })}
+          </div>
         ) : (
           <div style={{ overflowX:'auto' }}>
             <table style={{ width:'100%', borderCollapse:'collapse', fontSize:13 }}>
@@ -597,8 +682,57 @@ function DashboardView({ bookings, onStatus, showToast }) {
   );
 }
 
+// ─── MOBILE BOOKING CARD ──────────────────────────────────────────────────────
+function BookingMobileCard({ b, onStatus, onDelete, showToast, sending, handleEmail, openEditModal }) {
+  const st = validStatus(b.status); const c = ST[st];
+  return (
+    <div className="bk-card" style={{ borderLeftColor: c.color }}>
+      {/* Time + name + plate */}
+      <div style={{ display:'flex', alignItems:'flex-start', gap:10 }}>
+        <div style={{ flexShrink:0, textAlign:'center', background:'#F8FAFC', borderRadius:8, padding:'8px 10px', minWidth:52 }}>
+          <div style={{ fontSize:18, fontWeight:800, color:'#1E293B', lineHeight:1, letterSpacing:'-.01em' }}>{(b.time_slot||'--:--').slice(0,5)}</div>
+          <div style={{ fontSize:10, color:'#94A3B8', marginTop:3, fontWeight:600 }}>{fmtDateShort(b.date)}</div>
+        </div>
+        <div style={{ flex:1, minWidth:0 }}>
+          <div style={{ fontSize:15, fontWeight:700, color:'#1E293B', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{b.name||'—'}</div>
+          <div style={{ fontSize:12, color:'#64748B', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', marginTop:2 }}>{b.service||'—'}</div>
+        </div>
+        <span style={{ background:'#EEF2FF', color:'#4F46E5', padding:'4px 10px', borderRadius:6, fontSize:13, fontWeight:800, flexShrink:0 }}>{b.plate||'—'}</span>
+      </div>
+      {/* Phone link */}
+      {b.phone && (
+        <a href={`tel:${b.phone}`} style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:13, color:'#4F46E5', textDecoration:'none', fontWeight:600, padding:'6px 10px', background:'#EEF2FF', borderRadius:7, alignSelf:'flex-start' }}>
+          <Icon.Phone/> {b.phone}
+        </a>
+      )}
+      {/* Status + actions row */}
+      <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap' }}>
+        <StatusPicker value={b.status} onChange={v => onStatus(b.id, v)}/>
+        <div style={{ display:'flex', gap:6, marginLeft:'auto' }}>
+          {b.email && (
+            <button className="bk-action-btn" onClick={() => handleEmail(b)} disabled={sending === b.id}
+              style={{ background:'#F8FAFC', color:'#475569', borderColor:'#E2E8F0', opacity: sending===b.id?.6:1 }}
+              title="Bestätigung senden">
+              {sending === b.id ? <Icon.Refresh spin/> : <Icon.Send/>}
+            </button>
+          )}
+          <button className="bk-action-btn" onClick={() => openEditModal(b)}
+            style={{ background:'#EFF6FF', color:'#2563EB', borderColor:'#BFDBFE' }} title="Bearbeiten">
+            <Icon.Gear size={15}/>
+          </button>
+          <button className="bk-action-btn" onClick={() => onDelete(b.id, b.name)}
+            style={{ background:'#FEF2F2', color:'#B91C1C', borderColor:'#FECACA' }} title="Löschen">
+            <Icon.Trash/>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── DATA TABLE VIEW ───────────────────────────────────────────────────────────
 function TableView({ bookings, onStatus, onPatch, onDelete, showToast }) {
+  const isMobile = useMobile();
   const [search, setSearch]       = useState('');
   const [statusF, setStatusF]     = useState('all');
   const [dateF, setDateF]         = useState('all');
@@ -708,48 +842,74 @@ function TableView({ bookings, onStatus, onPatch, onDelete, showToast }) {
     <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
       {/* Toolbar */}
       <div className="adm-card" style={{ padding:'12px 14px', display:'flex', gap:8, flexWrap:'wrap', alignItems:'center' }}>
-        <div style={{ flex:1, minWidth:200, position:'relative', display:'flex', alignItems:'center' }}>
+        <div style={{ flex:1, minWidth: isMobile ? '100%' : 200, position:'relative', display:'flex', alignItems:'center' }}>
           <span style={{ position:'absolute', left:10, color:'#94A3B8', pointerEvents:'none' }}><Icon.Search/></span>
-          <input className="adm-input" placeholder="Name, Kennzeichen, Telefon suchen…" value={search} onChange={e => setSearch(e.target.value)} style={{ paddingLeft:32 }}/>
+          <input className="adm-input" placeholder="Name, Kennzeichen, Telefon…" value={search} onChange={e => setSearch(e.target.value)} style={{ paddingLeft:32, height: isMobile ? 44 : 36 }}/>
           {search && <button onClick={() => setSearch('')} style={{ position:'absolute', right:8, background:'none', border:'none', cursor:'pointer', color:'#94A3B8', display:'flex' }}><Icon.Close/></button>}
         </div>
-        <select className="adm-select" value={dateF} onChange={e => setDateF(e.target.value)}>
-          <option value="all">Alle Daten</option>
-          <option value="today">Heute</option>
-          <option value="tomorrow">Morgen</option>
-          <option value="week">Diese Woche</option>
-        </select>
-        <select className="adm-select" value={serviceF} onChange={e => setServiceF(e.target.value)}>
-          <option value="all">Alle Leistungen</option>
-          {services.map(s => <option key={s} value={s}>{s}</option>)}
-        </select>
-        <button className="adm-btn" onClick={() => exportCSV(filtered)} style={{ background:'#F8FAFC', color:'#475569', border:'1.5px solid #E2E8F0', padding:'0 14px', height:36, borderRadius:6, fontSize:13, fontWeight:600 }}>
-          <Icon.Export/> CSV
+        {!isMobile && <>
+          <select className="adm-select" value={dateF} onChange={e => setDateF(e.target.value)}>
+            <option value="all">Alle Daten</option>
+            <option value="today">Heute</option>
+            <option value="tomorrow">Morgen</option>
+            <option value="week">Diese Woche</option>
+          </select>
+          <select className="adm-select" value={serviceF} onChange={e => setServiceF(e.target.value)}>
+            <option value="all">Alle Leistungen</option>
+            {services.map(s => <option key={s} value={s}>{s}</option>)}
+          </select>
+        </>}
+        {isMobile && (
+          <div style={{ display:'flex', gap:6, width:'100%' }}>
+            <select className="adm-select" value={dateF} onChange={e => setDateF(e.target.value)} style={{ flex:1, height:40 }}>
+              <option value="all">Alle Daten</option>
+              <option value="today">Heute</option>
+              <option value="tomorrow">Morgen</option>
+              <option value="week">Diese Woche</option>
+            </select>
+            <select className="adm-select" value={serviceF} onChange={e => setServiceF(e.target.value)} style={{ flex:1, height:40 }}>
+              <option value="all">Alle Leistungen</option>
+              {services.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </div>
+        )}
+        <button className="adm-btn" onClick={() => exportCSV(filtered)} style={{ background:'#F8FAFC', color:'#475569', border:'1.5px solid #E2E8F0', padding:'0 14px', height: isMobile ? 40 : 36, borderRadius:6, fontSize:13, fontWeight:600, ...(isMobile && { width:'100%', justifyContent:'center' }) }}>
+          <Icon.Export/> CSV exportieren
         </button>
       </div>
 
       {/* Status filter chips */}
-      <div style={{ display:'flex', gap:6, flexWrap:'wrap', alignItems:'center' }}>
+      <div className="adm-mob-filter-scroll" style={{ display:'flex', gap:6, flexWrap: isMobile ? 'nowrap' : 'wrap', alignItems:'center' }}>
         {[
-          ['all',       'Alle',          { idle:{ bg:'#F8FAFC', border:'#E2E8F0', color:'#64748B' }, active:{ bg:'#EEF2FF', border:'#6366F1', color:'#4F46E5' } }],
-          ['pending',   'Ausstehend',    { idle:{ bg:'#FFFDF5', border:'#FDE68A', color:'#92400E' }, active:{ bg:'#FFFBEB', border:'#F59E0B', color:'#B45309' } }],
-          ['completed', 'Abgeschlossen', { idle:{ bg:'#F4FDF8', border:'#A7F3D0', color:'#065F46' }, active:{ bg:'#ECFDF5', border:'#10B981', color:'#047857' } }],
-          ['cancelled', 'Storniert',     { idle:{ bg:'#FFF8F8', border:'#FECACA', color:'#991B1B' }, active:{ bg:'#FEF2F2', border:'#EF4444', color:'#B91C1C' } }],
+          ['all',       'Alle',       { idle:{ bg:'#F8FAFC', border:'#E2E8F0', color:'#64748B' }, active:{ bg:'#EEF2FF', border:'#6366F1', color:'#4F46E5' } }],
+          ['pending',   'Ausstehend', { idle:{ bg:'#FFFDF5', border:'#FDE68A', color:'#92400E' }, active:{ bg:'#FFFBEB', border:'#F59E0B', color:'#B45309' } }],
+          ['completed', 'Erledigt',   { idle:{ bg:'#F4FDF8', border:'#A7F3D0', color:'#065F46' }, active:{ bg:'#ECFDF5', border:'#10B981', color:'#047857' } }],
+          ['cancelled', 'Storniert',  { idle:{ bg:'#FFF8F8', border:'#FECACA', color:'#991B1B' }, active:{ bg:'#FEF2F2', border:'#EF4444', color:'#B91C1C' } }],
         ].map(([k, l, c]) => {
           const isActive = statusF === k;
           const s = isActive ? c.active : c.idle;
           return (
             <button key={k} onClick={() => setStatusF(k)}
-              style={{ padding:'5px 14px', borderRadius:5, border:`1.5px solid ${s.border}`, fontSize:12, fontWeight: isActive ? 700 : 600, cursor:'pointer', fontFamily:'inherit', transition:'all .15s', background:s.bg, color:s.color, boxShadow: isActive ? `0 0 0 3px ${s.border}33` : 'none' }}>
+              style={{ padding: isMobile ? '7px 14px' : '5px 14px', borderRadius:5, border:`1.5px solid ${s.border}`, fontSize:12, fontWeight: isActive ? 700 : 600, cursor:'pointer', fontFamily:'inherit', transition:'all .15s', background:s.bg, color:s.color, boxShadow: isActive ? `0 0 0 3px ${s.border}33` : 'none', flexShrink:0, whiteSpace:'nowrap' }}>
               {l} <span style={{ opacity:.65, fontSize:11 }}>({statusCounts[k]})</span>
             </button>
           );
         })}
-        <span style={{ marginLeft:'auto', fontSize:12, color:'#94A3B8', fontWeight:500 }}>{filtered.length} von {bookings.length} Einträgen</span>
+        {!isMobile && <span style={{ marginLeft:'auto', fontSize:12, color:'#94A3B8', fontWeight:500 }}>{filtered.length} von {bookings.length}</span>}
       </div>
 
-      {/* Table */}
-      <div className="adm-card" style={{ overflow:'hidden', padding:0 }}>
+      {/* Mobile cards */}
+      <div className="adm-cards-wrap">
+        {filtered.length === 0 ? (
+          <div style={{ textAlign:'center', padding:'40px 0', color:'#94A3B8', fontSize:14 }}>Keine Ergebnisse gefunden.</div>
+        ) : filtered.map(b => (
+          <BookingMobileCard key={b.id} b={b} onStatus={onStatus} onDelete={onDelete}
+            showToast={showToast} sending={sending} handleEmail={handleEmail} openEditModal={openEditModal}/>
+        ))}
+      </div>
+
+      {/* Desktop Table */}
+      <div className="adm-table-wrap adm-card" style={{ overflow:'hidden', padding:0 }}>
         <div style={{ overflowX:'auto' }}>
           <table style={{ width:'100%', borderCollapse:'collapse', fontSize:13, minWidth:800 }}>
             <thead>
@@ -896,8 +1056,8 @@ function TableView({ bookings, onStatus, onPatch, onDelete, showToast }) {
         const lbl = (text) => <label style={{ display:'block', fontSize:11, fontWeight:700, color:'#64748B', textTransform:'uppercase', letterSpacing:'.05em', marginBottom:4 }}>{text}</label>;
         const field = (label, node) => <div style={{ display:'flex', flexDirection:'column', marginBottom:12 }}>{lbl(label)}{node}</div>;
         return (
-          <div onClick={() => setEditModalId(null)} style={{ position:'fixed', inset:0, zIndex:9000, background:'rgba(15,23,42,.55)', backdropFilter:'blur(4px)', display:'flex', alignItems:'center', justifyContent:'center', padding:20 }}>
-            <div onClick={e => e.stopPropagation()} style={{ background:'#fff', borderRadius:12, boxShadow:'0 24px 80px rgba(0,0,0,.25)', width:'100%', maxWidth:560, maxHeight:'90vh', overflow:'auto', animation:'fadeUp .2s ease-out' }}>
+          <div onClick={() => setEditModalId(null)} style={{ position:'fixed', inset:0, zIndex:9000, background:'rgba(15,23,42,.55)', backdropFilter:'blur(4px)', display:'flex', alignItems: isMobile ? 'flex-end' : 'center', justifyContent:'center', padding: isMobile ? 0 : 20 }}>
+            <div onClick={e => e.stopPropagation()} style={{ background:'#fff', borderRadius: isMobile ? '16px 16px 0 0' : 12, boxShadow:'0 24px 80px rgba(0,0,0,.25)', width:'100%', maxWidth: isMobile ? '100%' : 560, maxHeight: isMobile ? '92vh' : '90vh', overflow:'auto', animation: isMobile ? 'slideUp .28s cubic-bezier(.22,1,.36,1)' : 'fadeUp .2s ease-out', paddingBottom: isMobile ? 'env(safe-area-inset-bottom,0)' : 0 }}>
               {/* Header */}
               <div style={{ padding:'18px 22px', borderBottom:'1px solid #F1F5F9', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
                 <div style={{ display:'flex', alignItems:'center', gap:9 }}>
@@ -997,6 +1157,7 @@ function TableView({ bookings, onStatus, onPatch, onDelete, showToast }) {
 
 // ─── SCHEDULER VIEW ────────────────────────────────────────────────────────────
 function SchedulerView({ bookings, onStatus, onPatch, showToast }) {
+  const isMobile = useMobile();
   const [selDate, setSelDate]   = useState(today());
   const [dragId, setDragId]     = useState(null);
   const [dragOver, setDragOver] = useState(null);
@@ -1032,9 +1193,16 @@ function SchedulerView({ bookings, onStatus, onPatch, showToast }) {
   const isWeekend = selDateObj.getDay() === 0 || selDateObj.getDay() === 6;
 
   return (
-    <div style={{ display:'flex', gap:16, alignItems:'flex-start' }}>
-      {/* Left: mini calendar picker */}
-      <div className="adm-card" style={{ width:240, flexShrink:0, padding:16 }}>
+    <div style={{ display:'flex', flexDirection: isMobile ? 'column' : 'row', gap:16, alignItems:'flex-start' }}>
+      {/* Left: mini calendar picker — on mobile collapsible */}
+      {isMobile && (
+        <button onClick={() => setCalOpen(o => !o)}
+          style={{ display:'flex', alignItems:'center', justifyContent:'space-between', width:'100%', background:'#fff', border:'1px solid #E2E8F0', borderRadius:8, padding:'10px 14px', cursor:'pointer', fontFamily:'inherit', fontSize:13, fontWeight:700, color:'#1E293B' }}>
+          <span style={{ display:'flex', alignItems:'center', gap:8 }}><Icon.Scheduler active/> Kalender {calOpen ? 'ausblenden' : 'anzeigen'}</span>
+          {calOpen ? <Icon.ChevronUp/> : <Icon.ChevronDown/>}
+        </button>
+      )}
+      {(!isMobile || calOpen) && <div className="adm-card" style={{ width: isMobile ? '100%' : 240, flexShrink:0, padding:16 }}>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:12 }}>
           <button className="adm-btn" onClick={() => setCalDate(new Date(y,m-1,1))} style={{ background:'#F1F5F9', color:'#475569', padding:'5px 8px', borderRadius:5 }}><Icon.ChevronLeft/></button>
           <span style={{ fontSize:13, fontWeight:700, color:'#1E293B' }}>{MONTHS_DE[m].slice(0,3)} {y}</span>
@@ -1074,7 +1242,7 @@ function SchedulerView({ bookings, onStatus, onPatch, showToast }) {
             </div>
           ))}
         </div>
-      </div>
+      </div>}
 
       {/* Right: timeline */}
       <div style={{ flex:1, display:'flex', flexDirection:'column', gap:12 }}>
@@ -1154,6 +1322,7 @@ function SchedulerView({ bookings, onStatus, onPatch, showToast }) {
 
 // ─── MAIN ADMIN PANEL ──────────────────────────────────────────────────────────
 export default function AdminPanel() {
+  const isMobile = useMobile();
   const [auth, setAuth]         = useState(false);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading]   = useState(false);
@@ -1216,8 +1385,8 @@ export default function AdminPanel() {
       <style>{STYLE}</style>
       <div className="adm-root" style={{ position:'fixed', inset:0, zIndex:99999, display:'flex', fontFamily:'"Inter",sans-serif', background:'var(--bg)' }}>
 
-        {/* SIDEBAR */}
-        <aside style={{ width: sidebarOpen ? 220 : 60, background:'linear-gradient(180deg,#1E1B4B 0%,#2D2A72 100%)', display:'flex', flexDirection:'column', flexShrink:0, transition:'width .2s ease', overflow:'hidden' }}>
+        {/* SIDEBAR — desktop only */}
+        <aside className="adm-sidebar-wrap" style={{ width: sidebarOpen ? 220 : 60, background:'linear-gradient(180deg,#1E1B4B 0%,#2D2A72 100%)', display:'flex', flexDirection:'column', flexShrink:0, transition:'width .2s ease', overflow:'hidden' }}>
           <div style={{ padding:'18px 14px', display:'flex', alignItems:'center', gap:10, borderBottom:'1px solid rgba(255,255,255,.07)', cursor:'pointer', flexShrink:0 }} onClick={() => setSidebarOpen(o => !o)}>
             <Icon.Logo/>
             {sidebarOpen && <div style={{ fontWeight:800, fontSize:15, color:'#fff', whiteSpace:'nowrap', letterSpacing:'-.01em' }}>AutoService</div>}
@@ -1250,21 +1419,27 @@ export default function AdminPanel() {
         {/* MAIN */}
         <div style={{ flex:1, display:'flex', flexDirection:'column', overflow:'hidden' }}>
           {/* Header */}
-          <header style={{ background:'var(--hdr-bg)', borderBottom:'1px solid var(--hdr-border)', padding:'0 24px', height:56, display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0 }}>
-            <h1 style={{ fontSize:16, fontWeight:700, color:'var(--text)', margin:0 }}>{titles[view]}</h1>
+          <header className="adm-header" style={{ background:'var(--hdr-bg)', borderBottom:'1px solid var(--hdr-border)', padding:'0 24px', height:56, display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0 }}>
+            <h1 style={{ fontSize: isMobile ? 15 : 16, fontWeight:700, color:'var(--text)', margin:0 }}>{titles[view]}</h1>
             <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-              <span style={{ fontSize:12, color:'#94A3B8' }}>
+              <span className="adm-hdr-date" style={{ fontSize:12, color:'#94A3B8' }}>
                 {new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}
               </span>
               <button className="adm-btn" onClick={loadData} disabled={loading}
-                style={{ background:'#EEF2FF', color:'#4F46E5', border:'1.5px solid #C7D2FE', padding:'7px 14px', borderRadius:6, fontSize:12, fontWeight:700 }}>
-                <Icon.Refresh spin={loading}/>{loading ? 'Lädt…' : 'Aktualisieren'}
+                style={{ background:'#EEF2FF', color:'#4F46E5', border:'1.5px solid #C7D2FE', padding: isMobile ? '7px 10px' : '7px 14px', borderRadius:6, fontSize:12, fontWeight:700 }}>
+                <Icon.Refresh spin={loading}/>
+                <span className="adm-hdr-refresh-label">{loading ? 'Lädt…' : 'Aktualisieren'}</span>
               </button>
+              {isMobile && (
+                <button onClick={() => setAuth(false)} style={{ background:'#FEF2F2', border:'1px solid #FECACA', borderRadius:6, cursor:'pointer', width:34, height:34, display:'flex', alignItems:'center', justifyContent:'center', color:'#B91C1C' }}>
+                  <Icon.Logout/>
+                </button>
+              )}
             </div>
           </header>
 
           {/* Content */}
-          <main style={{ flex:1, overflowY:'auto', padding:'22px 26px' }}>
+          <main className="adm-main-pad" style={{ flex:1, overflowY:'auto', padding:'22px 26px' }}>
             {loading && bookings.length === 0 ? (
               <div style={{ display:'flex', flexDirection:'column', gap:10, alignItems:'center', paddingTop:80, color:'#94A3B8' }}>
                 <Icon.Refresh spin/><span style={{ fontSize:14 }}>Daten werden geladen…</span>
@@ -1278,6 +1453,17 @@ export default function AdminPanel() {
             )}
           </main>
         </div>
+
+        {/* MOBILE BOTTOM NAV */}
+        <nav className="adm-mob-nav">
+          {navItems.map(item => (
+            <button key={item.id} className={`adm-mob-nav-btn${view===item.id?' active':''}`} onClick={() => setView(item.id)}>
+              <item.Ico active={view===item.id}/>
+              <span>{item.label}</span>
+              {item.id === 'table' && pending > 0 && <span className="adm-mob-badge">{pending}</span>}
+            </button>
+          ))}
+        </nav>
       </div>
 
       <ToastStack toasts={toasts}/>
