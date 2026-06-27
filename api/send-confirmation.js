@@ -233,7 +233,7 @@ export default async function handler(req, res) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "KFZ-Prüfstützpunkt Oberhausen <onboarding@resend.dev>",
+        from: "KFZ-Prüfstützpunkt Oberhausen <noreply@tuev-oberhausen.de>",
         to: [b.email],
         subject: `Terminbestätigung – KFZ-Prüfstützpunkt Oberhausen – ${b.date} um ${b.time_slot} Uhr`,
         html: buildEmailHtml(b, cancelUrl),
