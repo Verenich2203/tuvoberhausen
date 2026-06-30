@@ -2,6 +2,7 @@ const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const SITE_URL = process.env.SITE_URL || "https://tuvoberhausen.vercel.app";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
 function buildEmailHtml(b, cancelUrl) {
   const dateFormatted = b.date
@@ -192,6 +193,99 @@ function buildEmailHtml(b, cancelUrl) {
 </html>`;
 }
 
+function buildAdminEmailHtml(b) {
+  const dateFormatted = b.date
+    ? new Date(b.date + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+    : '—';
+  const adminUrl = `${SITE_URL}/#admin`;
+  const year = new Date().getFullYear();
+
+  const row = (label, value) => value ? `
+    <tr>
+      <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:11px;font-weight:700;color:#8B949E;text-transform:uppercase;letter-spacing:.1em;width:38%;vertical-align:top;font-family:Helvetica Neue,Helvetica,Arial,sans-serif;">${label}</td>
+      <td style="padding:10px 0 10px 16px;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px;font-weight:600;color:#F0F2F5;vertical-align:top;font-family:Helvetica Neue,Helvetica,Arial,sans-serif;">${value}</td>
+    </tr>` : '';
+
+  return `<!DOCTYPE html>
+<html lang="de" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Neue Buchung – Admin</title>
+</head>
+<body style="margin:0;padding:0;background-color:#0D0F15;-webkit-font-smoothing:antialiased;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#0D0F15;padding:36px 16px;">
+  <tr><td align="center">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:540px;margin:0 auto;">
+
+      <!-- HEADER -->
+      <tr>
+        <td style="background-color:#1B1E24;border-radius:12px 12px 0 0;border:1px solid rgba(255,255,255,.07);border-bottom:none;padding:28px 36px 24px;">
+          <table role="presentation" cellpadding="0" cellspacing="0">
+            <tr>
+              <td style="vertical-align:middle;padding-right:12px;">
+                <div style="width:34px;height:34px;background-color:#F59E0B;border-radius:8px;text-align:center;line-height:34px;">
+                  <span style="font-size:17px;line-height:34px;display:inline-block;">📋</span>
+                </div>
+              </td>
+              <td style="vertical-align:middle;">
+                <span style="font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size:11px;font-weight:700;color:#F59E0B;text-transform:uppercase;letter-spacing:.12em;">Neue Buchung</span><br/>
+                <span style="font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size:13px;font-weight:600;color:#8B949E;">KFZ-Prüfstützpunkt Oberhausen</span>
+              </td>
+            </tr>
+          </table>
+          <p style="margin:20px 0 4px;font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size:22px;font-weight:800;color:#F0F2F5;letter-spacing:-.02em;line-height:1.2;">
+            ${dateFormatted}
+          </p>
+          <p style="margin:0;font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size:20px;font-weight:800;color:#5B91F4;letter-spacing:-.01em;">
+            ${b.time_slot ? b.time_slot.slice(0, 5) : '—'} Uhr
+          </p>
+        </td>
+      </tr>
+      <!-- ACCENT LINE -->
+      <tr><td style="height:2px;background:linear-gradient(90deg,#F59E0B 0%,#FCD34D 60%,#1B1E24 100%);"></td></tr>
+
+      <!-- BODY -->
+      <tr>
+        <td style="background-color:#23272F;border:1px solid rgba(255,255,255,.07);border-top:none;border-bottom:none;padding:4px 36px 8px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            ${row('Kunde', b.name)}
+            ${row('Telefon', b.phone ? `<a href="tel:${b.phone}" style="color:#5B91F4;text-decoration:none;">${b.phone}</a>` : null)}
+            ${row('E-Mail', b.email ? `<a href="mailto:${b.email}" style="color:#5B91F4;text-decoration:none;">${b.email}</a>` : null)}
+            ${row('Kennzeichen', b.plate ? `<span style="background:rgba(91,145,244,.15);color:#7AABF8;padding:2px 10px;border-radius:4px;font-family:monospace;font-size:15px;letter-spacing:.06em;">${b.plate}</span>` : null)}
+            ${row('Leistung', b.service)}
+            ${b.pickup_service ? row('Abholservice', [b.pickup_address, b.pickup_date && new Date(b.pickup_date+'T00:00:00').toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'}), b.pickup_time ? b.pickup_time.slice(0,5)+' Uhr' : ''].filter(Boolean).join(' · ') || '—') : ''}
+            ${b.notes ? row('Anmerkungen', `<em style="color:#8B949E;">${b.notes}</em>`) : ''}
+          </table>
+        </td>
+      </tr>
+
+      <!-- CTA -->
+      <tr>
+        <td style="background-color:#1B1E24;border:1px solid rgba(255,255,255,.07);border-top:none;border-bottom:none;padding:20px 36px;">
+          <a href="${adminUrl}"
+            style="display:inline-block;padding:11px 24px;background:linear-gradient(135deg,#5B91F4,#3A72E0);color:#fff;font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size:13px;font-weight:700;text-decoration:none;border-radius:8px;letter-spacing:.02em;">
+            Admin-Panel öffnen →
+          </a>
+        </td>
+      </tr>
+
+      <!-- FOOTER -->
+      <tr>
+        <td style="background-color:#14161A;padding:16px 36px;border-radius:0 0 12px 12px;border:1px solid rgba(255,255,255,.07);border-top:1px solid rgba(255,255,255,.05);">
+          <p style="margin:0;font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size:11px;color:#414A59;line-height:1.7;">
+            Automatische Benachrichtigung · KFZ-Prüfstützpunkt Oberhausen · © ${year}
+          </p>
+        </td>
+      </tr>
+
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`;
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
@@ -247,7 +341,31 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Email sending failed", details: emailData });
     }
 
-    console.log("Письмо успешно отправлено для ID:", bookingId);
+    console.log("Письмо клиенту отправлено для ID:", bookingId);
+
+    // Admin notification
+    if (ADMIN_EMAIL) {
+      const adminRes = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "KFZ-Prüfstützpunkt Oberhausen <noreply@tuev-oberhausen.de>",
+          to: [ADMIN_EMAIL],
+          subject: `📋 Neue Buchung: ${b.name} – ${b.date} um ${b.time_slot ? b.time_slot.slice(0,5) : ''} Uhr`,
+          html: buildAdminEmailHtml(b),
+        }),
+      });
+      if (!adminRes.ok) {
+        const adminErr = await adminRes.json();
+        console.error("Fehler beim Admin-Mail:", adminErr);
+      } else {
+        console.log("Admin-Benachrichtigung gesendet an:", ADMIN_EMAIL);
+      }
+    }
+
     return res.status(200).json({ ok: true });
 
   } catch (error) {
