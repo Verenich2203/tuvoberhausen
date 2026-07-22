@@ -327,7 +327,7 @@ export default async function handler(req, res) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "KFZ-Prüfstützpunkt Oberhausen <noreply@tuev-oberhausen.de>",
+        from: "KFZ-Prüfstützpunkt Oberhausen <noreply@hu-oberhausen.de>",
         to: [b.email],
         subject: `Terminbestätigung – KFZ-Prüfstützpunkt Oberhausen – ${b.date} um ${b.time_slot} Uhr`,
         html: buildEmailHtml(b, cancelUrl),
@@ -352,7 +352,7 @@ export default async function handler(req, res) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "KFZ-Prüfstützpunkt Oberhausen <noreply@tuev-oberhausen.de>",
+          from: "KFZ-Prüfstützpunkt Oberhausen <noreply@hu-oberhausen.de>",
           to: [ADMIN_EMAIL],
           subject: `📋 Neue Buchung: ${b.name} – ${b.date} um ${b.time_slot ? b.time_slot.slice(0,5) : ''} Uhr`,
           html: buildAdminEmailHtml(b),
